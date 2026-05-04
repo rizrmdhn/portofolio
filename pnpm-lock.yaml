@@ -27,6 +27,9 @@ catalogs:
     typescript:
       specifier: ^6
       version: 6.0.3
+    uuid:
+      specifier: ^14.0.0
+      version: 14.0.0
     zod:
       specifier: ^4.1.13
       version: 4.4.2
@@ -233,8 +236,20 @@ importers:
 
   packages/config: {}
 
+  packages/constants:
+    devDependencies:
+      '@portofolio/config':
+        specifier: workspace:*
+        version: link:../config
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
   packages/db:
     dependencies:
+      '@portofolio/constants':
+        specifier: workspace:*
+        version: link:../constants
       '@portofolio/env':
         specifier: workspace:*
         version: link:../env
@@ -243,10 +258,13 @@ importers:
         version: 17.4.2
       drizzle-orm:
         specifier: ^0.45.1
-        version: 0.45.2(@types/pg@8.20.0)(pg@8.20.0)
-      pg:
-        specifier: ^8.17.1
-        version: 8.20.0
+        version: 0.45.2(@types/pg@8.20.0)(pg@8.20.0)(postgres@3.4.9)
+      postgres:
+        specifier: ^3.4.9
+        version: 3.4.9
+      uuid:
+        specifier: 'catalog:'
+        version: 14.0.0
       zod:
         specifier: 'catalog:'
         version: 4.4.2
@@ -254,9 +272,6 @@ importers:
       '@portofolio/config':
         specifier: workspace:*
         version: link:../config
-      '@types/pg':
-        specifier: ^8.16.0
-        version: 8.20.0
       drizzle-kit:
         specifier: ^0.31.8
         version: 0.31.10
@@ -3438,6 +3453,10 @@ packages:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
 
+  postgres@3.4.9:
+    resolution: {integrity: sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw==}
+    engines: {node: '>=12'}
+
   powershell-utils@0.1.0:
     resolution: {integrity: sha512-dM0jVuXJPsDN6DvRpea484tCUaMiXWjuCn++HGTqUWzGDjv5tZkEZldAJ/UMlqRYGFrD/etByo4/xOuC/snX2A==}
     engines: {node: '>=20'}
@@ -3916,6 +3935,10 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  uuid@14.0.0:
+    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
+    hasBin: true
 
   validate-npm-package-name@7.0.2:
     resolution: {integrity: sha512-hVDIBwsRruT73PbK7uP5ebUt+ezEtCmzZz3F59BSr2F6OVFnJ/6h8liuvdLrQ88Xmnk6/+xGGuq+pG9WwTuy3A==}
@@ -5602,6 +5625,7 @@ snapshots:
       '@types/node': 25.6.0
       pg-protocol: 1.13.0
       pg-types: 2.2.0
+    optional: true
 
   '@types/react-dom@19.2.3(@types/react@19.2.14)':
     dependencies:
@@ -5995,10 +6019,11 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.21.0
 
-  drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.20.0):
+  drizzle-orm@0.45.2(@types/pg@8.20.0)(pg@8.20.0)(postgres@3.4.9):
     optionalDependencies:
       '@types/pg': 8.20.0
       pg: 8.20.0
+      postgres: 3.4.9
 
   dunder-proto@1.0.1:
     dependencies:
@@ -6821,15 +6846,19 @@ snapshots:
   pg-cloudflare@1.3.0:
     optional: true
 
-  pg-connection-string@2.12.0: {}
+  pg-connection-string@2.12.0:
+    optional: true
 
-  pg-int8@1.0.1: {}
+  pg-int8@1.0.1:
+    optional: true
 
   pg-pool@3.13.0(pg@8.20.0):
     dependencies:
       pg: 8.20.0
+    optional: true
 
-  pg-protocol@1.13.0: {}
+  pg-protocol@1.13.0:
+    optional: true
 
   pg-types@2.2.0:
     dependencies:
@@ -6838,6 +6867,7 @@ snapshots:
       postgres-bytea: 1.0.1
       postgres-date: 1.0.7
       postgres-interval: 1.2.0
+    optional: true
 
   pg@8.20.0:
     dependencies:
@@ -6848,10 +6878,12 @@ snapshots:
       pgpass: 1.0.5
     optionalDependencies:
       pg-cloudflare: 1.3.0
+    optional: true
 
   pgpass@1.0.5:
     dependencies:
       split2: 4.2.0
+    optional: true
 
   picocolors@1.1.1: {}
 
@@ -6872,15 +6904,21 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postgres-array@2.0.0: {}
+  postgres-array@2.0.0:
+    optional: true
 
-  postgres-bytea@1.0.1: {}
+  postgres-bytea@1.0.1:
+    optional: true
 
-  postgres-date@1.0.7: {}
+  postgres-date@1.0.7:
+    optional: true
 
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
+    optional: true
+
+  postgres@3.4.9: {}
 
   powershell-utils@0.1.0: {}
 
@@ -7221,7 +7259,8 @@ snapshots:
 
   source-map@0.7.6: {}
 
-  split2@4.2.0: {}
+  split2@4.2.0:
+    optional: true
 
   srvx@0.11.15: {}
 
@@ -7392,6 +7431,8 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
+  uuid@14.0.0: {}
+
   validate-npm-package-name@7.0.2: {}
 
   vary@1.1.2: {}
@@ -7506,7 +7547,8 @@ snapshots:
 
   xmlchars@2.2.0: {}
 
-  xtend@4.0.2: {}
+  xtend@4.0.2:
+    optional: true
 
   y18n@5.0.8: {}
 

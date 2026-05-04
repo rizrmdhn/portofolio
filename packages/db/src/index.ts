@@ -1,10 +1,3 @@
-import { env } from "@portofolio/env/server";
-import { drizzle } from "drizzle-orm/node-postgres";
-
-import * as schema from "./schema";
-
-export function createDb() {
-  return drizzle(env.DATABASE_URL, { schema });
-}
-
-export const db = createDb();
+export * from "drizzle-orm";
+export { alias, type PgTableWithColumns } from "drizzle-orm/pg-core";
+export * from "drizzle-orm/sql";

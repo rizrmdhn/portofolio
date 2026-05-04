@@ -21,15 +21,16 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@portofolio/constants": "workspace:*",
     "@portofolio/env": "workspace:*",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
-    "pg": "^8.17.1",
-    "zod": "catalog:"
+    "postgres": "^3.4.9",
+    "zod": "catalog:",
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
-    "@types/pg": "^8.16.0",
     "drizzle-kit": "^0.31.8",
     "typescript": "catalog:"
   }
