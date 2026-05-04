@@ -3,7 +3,16 @@
 
 import { EXPERIENCE_TYPES } from "@portofolio/constants";
 import { sql } from "drizzle-orm";
-import { index, pgEnum, pgTableCreator } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  pgEnum,
+  pgTableCreator,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { v7 as uuidv7 } from "uuid";
 
 /**
@@ -37,33 +46,47 @@ export const users = createTable(
   (t) => [index("users_id_idx").on(t.id), index("users_email_idx").on(t.email)],
 );
 
-export const sessions = createTable(
-  "sessions",
-  (d) => ({
-    id: d
-      .uuid()
+export const refreshTokens = createTable(
+  "refresh_tokens",
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    userId: d
-      .uuid()
-      .references(() => users.id, {
-        onDelete: "cascade",
-      })
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    token: text("token").notNull().unique(),
+    deviceInfo: text("device_info"),
+    os: text("os"),
+    version: varchar("version", { length: 100 }),
+    ipAddress: varchar("ip_address", { length: 45 }),
+    userAgent: text("user_agent"),
+    lastUsedAt: timestamp("last_used_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    expiresAt: timestamp("expires_at", {
+      withTimezone: true,
+      mode: "string",
+    }).notNull(),
+    revoked: boolean("revoked").notNull().default(false),
+    revokedAt: timestamp("revoked_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    expiresAt: d
-      .timestamp("expires_at", { withTimezone: true, mode: "string" })
-      .notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true, mode: "string" })
-      .defaultNow()
-      .notNull(),
-  }),
-  (t) => {
-    return [
-      index("session_id_idx").on(t.id),
-      index("user_id_idx").on(t.userId),
-    ];
   },
+  (table) => [
+    index("refresh_token_user_id_idx").using("btree", table.userId),
+    index("refresh_token_token_idx").using("btree", table.token),
+    index("refresh_token_expires_at_idx").using("btree", table.expiresAt),
+  ],
 );
 
 export const projects = createTable(
