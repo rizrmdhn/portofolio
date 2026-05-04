@@ -33,6 +33,10 @@
       "cache": false,
       "persistent": true
     },
+    "db:pull": {
+      "cache": false,
+      "persistent": true
+    },
     "db:studio": {
       "cache": false,
       "persistent": true
