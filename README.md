@@ -7,7 +7,6 @@ This project was created with [Better-T-Stack](https://github.com/AmanVarshney01
 - **TypeScript** - For type safety and improved developer experience
 - **TanStack Start** - SSR framework with TanStack Router
 - **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
 - **tRPC** - End-to-end type-safe APIs
 - **Drizzle** - TypeScript-first ORM
 - **PostgreSQL** - Database engine
