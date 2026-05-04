@@ -220,6 +220,9 @@ importers:
       '@portofolio/env':
         specifier: workspace:*
         version: link:../env
+      '@portofolio/queries':
+        specifier: workspace:*
+        version: link:../queries
       '@trpc/client':
         specifier: 'catalog:'
         version: 11.17.0(@trpc/server@11.17.0(typescript@6.0.3))(typescript@6.0.3)
@@ -306,6 +309,9 @@ importers:
       '@portofolio/config':
         specifier: workspace:*
         version: link:../config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.19.17
       drizzle-kit:
         specifier: 1.0.0-rc.1
         version: 1.0.0-rc.1
@@ -331,6 +337,19 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 22.19.17
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/queries:
+    dependencies:
+      '@portofolio/db':
+        specifier: workspace:*
+        version: link:../db
+    devDependencies:
+      '@portofolio/config':
+        specifier: workspace:*
+        version: link:../config
       typescript:
         specifier: 'catalog:'
         version: 6.0.3

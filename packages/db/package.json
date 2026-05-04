@@ -32,6 +32,7 @@
   "devDependencies": {
     "@portofolio/config": "workspace:*",
     "drizzle-kit": "1.0.0-rc.1",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   }
 }

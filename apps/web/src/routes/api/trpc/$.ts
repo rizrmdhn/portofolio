@@ -1,5 +1,5 @@
 import { createTRPCContext } from "@portofolio/api";
-import { appRouter } from "@portofolio/api/routers/index";
+import { appRouter } from "@portofolio/api/root";
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
@@ -7,7 +7,7 @@ function handler({ request }: { request: Request }) {
   return fetchRequestHandler({
     req: request,
     router: appRouter,
-    createTRPCContext,
+    createContext: () => createTRPCContext(request),
     endpoint: "/api/trpc",
   });
 }

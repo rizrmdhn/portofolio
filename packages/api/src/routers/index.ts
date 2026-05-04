@@ -1,6 +1,6 @@
-import { publicProcedure, router } from "../index";
+import { createTRPCRouter, publicProcedure } from "..";
 
-export const appRouter = router({
+export const appRouter = createTRPCRouter({
   healthCheck: publicProcedure.query(() => {
     return "OK";
   }),

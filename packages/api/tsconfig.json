@@ -2,6 +2,8 @@
   "extends": "@portofolio/config/compiled-package.json",
   "compilerOptions": {
     "composite": true,
-    "lib": ["ES2023", "dom"]
-  }
+    "lib": ["ES2023", "dom"],
+    "types": ["node"]
+  },
+  "include": ["src"]
 }

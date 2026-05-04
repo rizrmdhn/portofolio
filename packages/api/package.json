@@ -20,6 +20,7 @@
     "@portofolio/auth": "workspace:*",
     "@portofolio/db": "workspace:*",
     "@portofolio/env": "workspace:*",
+    "@portofolio/queries": "workspace:*",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "dotenv": "catalog:",
