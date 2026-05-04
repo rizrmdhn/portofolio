@@ -24,14 +24,14 @@
     "@portofolio/constants": "workspace:*",
     "@portofolio/env": "workspace:*",
     "dotenv": "catalog:",
-    "drizzle-orm": "^0.45.1",
+    "drizzle-orm": "1.0.0-rc.1",
     "postgres": "^3.4.9",
     "zod": "catalog:",
     "uuid": "catalog:"
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "1.0.0-rc.1",
     "typescript": "catalog:"
   }
 }

@@ -1,13 +1,10 @@
 {
-  "name": "@portofolio/api",
+  "name": "@portofolio/auth",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
-    }
+    ".": "./src/index.ts"
   },
   "scripts": {
     "build": "tsc",
@@ -17,14 +14,9 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@portofolio/auth": "workspace:*",
-    "@portofolio/db": "workspace:*",
     "@portofolio/env": "workspace:*",
-    "@trpc/client": "catalog:",
-    "@trpc/server": "catalog:",
-    "dotenv": "catalog:",
-    "zod": "catalog:",
-    "superjson": "catalog:"
+    "jose": "^6.2.3",
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",

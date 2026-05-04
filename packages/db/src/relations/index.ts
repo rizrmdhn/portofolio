@@ -1,16 +1,17 @@
-import { relations } from "drizzle-orm";
-import { projectViews, projects, sessions, users } from "../schema";
+import { defineRelations } from "drizzle-orm";
+import * as schema from "../schema";
 
-export const sessionRelations = relations(sessions, ({ one }) => ({
-  users: one(users, {
-    fields: [sessions.userId],
-    references: [users.id],
-  }),
-}));
-
-export const projectRelations = relations(projects, ({ one }) => ({
-  projectView: one(projectViews, {
-    fields: [projects.id],
-    references: [projectViews.projectId],
-  }),
+export const relations = defineRelations(schema, (r) => ({
+  sessions: {
+    users: r.one.users({
+      from: r.sessions.userId,
+      to: r.users.id,
+    }),
+  },
+  projects: {
+    projectView: r.one.projectViews({
+      from: r.projects.id,
+      to: r.projectViews.projectId,
+    }),
+  },
 }));
