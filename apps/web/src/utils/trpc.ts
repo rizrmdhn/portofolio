@@ -12,6 +12,7 @@ import {
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import SuperJSON from "superjson";
 import { getBaseUrl } from "./get-base-url";
+import { tokenRefreshLink } from "./refresh";
 
 const trpcUrl = `${getBaseUrl()}/api/trpc`;
 
@@ -30,7 +31,7 @@ export const trpcClient = createTRPCClient<AppRouter>({
         process.env.NODE_ENV === "development" ||
         (op.direction === "down" && op.result instanceof Error),
     }),
-    // tokenRefreshLink,
+    tokenRefreshLink,
     splitLink({
       // Route mutations, auth calls, and non-JSON input through httpLink
       // so each mutation gets its own X-Idempotency-Key header

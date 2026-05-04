@@ -19,13 +19,17 @@
   "dependencies": {
     "@portofolio/auth": "workspace:*",
     "@portofolio/db": "workspace:*",
+    "@portofolio/schema": "workspace:*",
     "@portofolio/env": "workspace:*",
     "@portofolio/queries": "workspace:*",
+    "@portofolio/utils": "workspace:*",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:",
-    "superjson": "catalog:"
+    "superjson": "catalog:",
+    "@node-rs/argon2": "catalog:",
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
