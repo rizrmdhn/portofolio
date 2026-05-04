@@ -1,16 +1,18 @@
-import type { AppRouter } from "@portofolio/api/routers/index";
-import { QueryCache, QueryClient } from "@tanstack/react-query";
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
-import "./index.css";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { toast } from "sonner";
+import "./index.css";
 
 import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
-import { TRPCProvider } from "./utils/trpc";
+
+import { trpc } from "./utils/trpc";
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -26,19 +28,6 @@ export const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 60 * 1000 } },
 });
 
-const trpcClient = createTRPCClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: "/api/trpc",
-    }),
-  ],
-});
-
-const trpc = createTRPCOptionsProxy({
-  client: trpcClient,
-  queryClient: queryClient,
-});
-
 export const getRouter = () => {
   const router = createTanStackRouter({
     routeTree,
@@ -48,9 +37,7 @@ export const getRouter = () => {
     defaultPendingComponent: () => <Loader />,
     defaultNotFoundComponent: () => <div>Not Found</div>,
     Wrap: ({ children }) => (
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-        {children}
-      </TRPCProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     ),
   });
 
