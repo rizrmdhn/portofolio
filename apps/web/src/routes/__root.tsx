@@ -51,13 +51,13 @@ function RootDocument() {
         <HeadContent />
       </head>
       <body>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
-          <ThemeProvider defaultTheme="system" storageKey="theme">
+        <ThemeProvider defaultTheme="system" storageKey="theme">
+          <div className="grid h-svh grid-rows-[auto_1fr]">
+            <Header />
             <Outlet />
-          </ThemeProvider>
-        </div>
-        <Toaster richColors />
+          </div>
+          <Toaster richColors />
+        </ThemeProvider>
         <TanStackRouterDevtools position="bottom-left" />
         <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
         <Scripts />

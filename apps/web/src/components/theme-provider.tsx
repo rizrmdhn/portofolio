@@ -1,7 +1,7 @@
 import { ScriptOnce } from "@tanstack/react-router";
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "dark" | "light" | "system";
+type Theme = "dark" | "light" | "system" | "warm";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ function getThemeScript(storageKey: string, defaultTheme: Theme) {
   const key = JSON.stringify(storageKey);
   const fallback = JSON.stringify(defaultTheme);
 
-  return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add(r);e.style.colorScheme=r}catch(e){}})();`;
+  return `(function(){try{var t=localStorage.getItem(${key});if(t!=='light'&&t!=='dark'&&t!=='system'&&t!=='warm'){t=${fallback}}var d=matchMedia('(prefers-color-scheme: dark)').matches;var r=t==='system'?(d?'dark':'light'):t;var e=document.documentElement;e.classList.add(r);e.style.colorScheme=t==='warm'?'light':r}catch(e){}})();`;
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>({
@@ -28,7 +28,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>({
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
-  root.classList.remove("light", "dark");
+  root.classList.remove("light", "dark", "warm");
 
   const resolved =
     theme === "system"
@@ -38,7 +38,7 @@ function applyTheme(theme: Theme) {
       : theme;
 
   root.classList.add(resolved);
-  root.style.colorScheme = resolved;
+  root.style.colorScheme = theme === "warm" ? "light" : resolved;
 }
 
 export function ThemeProvider({
@@ -52,7 +52,10 @@ export function ThemeProvider({
   useEffect(() => {
     const stored = localStorage.getItem(storageKey);
     setThemeState(
-      stored === "light" || stored === "dark" || stored === "system"
+      stored === "light" ||
+        stored === "dark" ||
+        stored === "system" ||
+        stored === "warm"
         ? stored
         : defaultTheme,
     );

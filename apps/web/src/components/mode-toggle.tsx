@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Sunset } from "lucide-react";
 
 import { useTheme } from "@/components/theme-provider";
 
@@ -28,6 +28,10 @@ export function ModeToggle() {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
           System
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("warm")}>
+          <Sunset className="mr-2 h-4 w-4" />
+          Warm
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
