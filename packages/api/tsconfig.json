@@ -1,10 +1,6 @@
 {
-  "extends": "@portofolio/config/tsconfig.base.json",
+  "extends": "@portofolio/config/compiled-package.json",
   "compilerOptions": {
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "dist",
     "composite": true
   }
 }

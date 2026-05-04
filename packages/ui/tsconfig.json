@@ -1,8 +1,8 @@
 {
-  "extends": "@portofolio/config/tsconfig.base.json",
+  "extends": "@portofolio/config/compiled-package.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "paths": {
       "@portofolio/ui/*": ["./src/*"]
     }

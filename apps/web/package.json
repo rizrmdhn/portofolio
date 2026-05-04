@@ -4,8 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "vite dev",
+    "lint": "eslint",
     "serve": "vite preview",
-    "dev": "vite dev"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@portofolio/api": "workspace:*",

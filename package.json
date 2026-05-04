@@ -9,6 +9,9 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "clean": "turbo clean",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
     "check-types": "turbo check-types",
     "dev:web": "turbo -F web dev",
     "db:push": "turbo -F @portofolio/db db:push",
@@ -23,6 +26,7 @@
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
+    "@turbo/gen": "^2.9.8",
     "@types/node": "catalog:",
     "turbo": "^2.8.12",
     "typescript": "catalog:"
