@@ -1,11 +1,16 @@
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import type { AppRouter } from "@portofolio/api/routers/index";
-import { Toaster } from "@portofolio/ui/components/sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { TRPCOptionsProxy } from "@trpc/tanstack-react-query";
-
 import Header from "../components/header";
 
 import appCss from "../index.css?url";
@@ -41,14 +46,16 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 function RootDocument() {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
         <div className="grid h-svh grid-rows-[auto_1fr]">
           <Header />
-          <Outlet />
+          <ThemeProvider defaultTheme="system" storageKey="theme">
+            <Outlet />
+          </ThemeProvider>
         </div>
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />
