@@ -1,0 +1,25 @@
+{
+  "name": "@portofolio/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@portofolio/db": "workspace:*",
+    "@portofolio/env": "workspace:*",
+    "@trpc/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@portofolio/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
