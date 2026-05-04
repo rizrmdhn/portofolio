@@ -13,7 +13,7 @@ import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import SuperJSON from "superjson";
 import { getBaseUrl } from "./get-base-url";
 
-const trpcUrl = `${getBaseUrl()}/trpc`;
+const trpcUrl = `${getBaseUrl()}/api/trpc`;
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
