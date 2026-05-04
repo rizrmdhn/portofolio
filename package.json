@@ -19,6 +19,7 @@
     "db:generate": "turbo -F @portofolio/db db:generate",
     "db:migrate": "turbo -F @portofolio/db db:migrate",
     "db:pull": "turbo -F @portofolio/db db:pull",
+    "db:seed": "turbo -F @portofolio/db db:seed",
     "regenerate:jwt": "node ./scripts/regenerate-jwt-secrets.js",
     "gen": "turbo gen init"
   },

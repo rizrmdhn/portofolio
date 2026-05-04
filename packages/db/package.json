@@ -19,7 +19,8 @@
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
-    "db:pull": "drizzle-kit pull"
+    "db:pull": "drizzle-kit pull",
+    "db:seed": "tsx src/seed.ts"
   },
   "dependencies": {
     "@portofolio/constants": "workspace:*",
@@ -32,8 +33,10 @@
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
+    "@node-rs/argon2": "catalog:",
     "drizzle-kit": "1.0.0-rc.1",
     "@types/node": "catalog:",
+    "tsx": "^4.0.0",
     "typescript": "catalog:"
   }
 }
