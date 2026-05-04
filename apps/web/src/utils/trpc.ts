@@ -44,19 +44,13 @@ export const trpcClient = createTRPCClient<AppRouter>({
       true: httpLink({
         url: trpcUrl,
         transformer: SuperJSON,
-        headers: ({ op }) => {
+        headers: () => {
           const headers = new Headers();
 
           const token = localStorage.getItem("accessToken");
 
           if (token) {
             headers.append("Authorization", `Bearer ${token}`);
-          }
-
-          // Add idempotency key for mutation requests
-          const key = op.context?.idempotencyKey as string | undefined;
-          if (op.type === "mutation" && key) {
-            headers.append("X-Idempotency-Key", key);
           }
 
           return headers;
