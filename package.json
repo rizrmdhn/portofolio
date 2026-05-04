@@ -18,6 +18,7 @@
     "db:studio": "turbo -F @portofolio/db db:studio",
     "db:generate": "turbo -F @portofolio/db db:generate",
     "db:migrate": "turbo -F @portofolio/db db:migrate",
+    "regenerate:jwt": "node ./scripts/regenerate-jwt-secrets.js",
     "gen": "turbo gen init"
   },
   "dependencies": {
