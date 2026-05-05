@@ -1,4 +1,12 @@
-import { getCookie } from "@tanstack/react-start/server";
+function readCookie(name: string): string | null {
+  return (
+    document.cookie
+      .split(";")
+      .map((c) => c.trim())
+      .find((c) => c.startsWith(`${name}=`))
+      ?.slice(name.length + 1) ?? null
+  );
+}
 
 function writeCookie(name: string, value: string, maxAge: number): void {
   const secure = import.meta.env.PROD ? "; Secure" : "";
@@ -11,9 +19,9 @@ function expireCookie(name: string): void {
 }
 
 export const auth = {
-  getAccessToken: (): string | null => getCookie("accessToken") ?? null,
+  getAccessToken: (): string | null => readCookie("accessToken"),
 
-  getRefreshToken: (): string | null => getCookie("refreshToken") ?? null,
+  getRefreshToken: (): string | null => readCookie("refreshToken"),
 
   setTokens: (accessToken: string, refreshToken: string): void => {
     writeCookie("accessToken", accessToken, 60 * 60 * 24);
@@ -26,5 +34,5 @@ export const auth = {
   },
 
   isAuthenticated: (): boolean =>
-    !!(getCookie("accessToken") && getCookie("refreshToken")),
+    !!(readCookie("accessToken") && readCookie("refreshToken")),
 };

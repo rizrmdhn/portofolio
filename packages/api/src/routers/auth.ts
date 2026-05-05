@@ -144,91 +144,98 @@ export const authRouter = createTRPCRouter({
     };
   }),
 
-  refresh: publicProcedure
-    .input(z.object({ token: z.string() }))
-    .mutation(async ({ input }) => {
-      const [verifiedToken, verifyErr] = await tryCatchAsync(() =>
-        verifyRefreshToken(input.token),
-      );
+  refresh: publicProcedure.mutation(async ({ ctx }) => {
+    const { refreshToken } = ctx;
 
-      if (verifyErr) throw toTRPCError(verifyErr);
+    if (!refreshToken) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Refresh token is required",
+      });
+    }
 
-      if (!verifiedToken)
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Invalid refresh token",
-        });
+    const [verifiedToken, verifyErr] = await tryCatchAsync(() =>
+      verifyRefreshToken(refreshToken),
+    );
 
-      const [storedToken, storedTokenErr] = await tryCatchAsync(() =>
-        validateRefreshToken(input.token),
-      );
+    if (verifyErr) throw toTRPCError(verifyErr);
 
-      if (storedTokenErr) throw toTRPCError(storedTokenErr);
+    if (!verifiedToken)
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid refresh token",
+      });
 
-      if (!storedToken)
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Invalid refresh token",
-        });
+    const [storedToken, storedTokenErr] = await tryCatchAsync(() =>
+      validateRefreshToken(refreshToken),
+    );
 
-      const [user, userErr] = await tryCatchAsync(() =>
-        getUserById(storedToken.userId),
-      );
+    if (storedTokenErr) throw toTRPCError(storedTokenErr);
 
-      if (userErr) throw toTRPCError(userErr);
+    if (!storedToken)
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid refresh token",
+      });
 
-      if (!user)
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "User not found",
-        });
+    const [user, userErr] = await tryCatchAsync(() =>
+      getUserById(storedToken.userId),
+    );
 
-      const [accessToken, accessTokenErr] = await tryCatchAsync(() =>
-        createAccessToken({
-          email: user.email,
-          id: user.id,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt ?? null,
-        }),
-      );
+    if (userErr) throw toTRPCError(userErr);
 
-      if (accessTokenErr) throw toTRPCError(accessTokenErr);
+    if (!user)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
 
-      const [newRefreshToken, newRefreshTokenErr] = await tryCatchAsync(() =>
-        createRefreshToken({
-          email: user.email,
-          id: user.id,
-          sessionId: uuidv7(),
-          type: "refresh",
-        }),
-      );
+    const [accessToken, accessTokenErr] = await tryCatchAsync(() =>
+      createAccessToken({
+        email: user.email,
+        id: user.id,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt ?? null,
+      }),
+    );
 
-      if (newRefreshTokenErr) throw toTRPCError(newRefreshTokenErr);
+    if (accessTokenErr) throw toTRPCError(accessTokenErr);
 
-      if (!accessToken || !newRefreshToken)
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create access or refresh token",
-        });
+    const [newRefreshToken, newRefreshTokenErr] = await tryCatchAsync(() =>
+      createRefreshToken({
+        email: user.email,
+        id: user.id,
+        sessionId: uuidv7(),
+        type: "refresh",
+      }),
+    );
 
-      const [_, revokeErr] = await tryCatchAsync(() =>
-        revokeRefreshToken(input.token),
-      );
+    if (newRefreshTokenErr) throw toTRPCError(newRefreshTokenErr);
 
-      if (revokeErr) throw toTRPCError(revokeErr);
+    if (!accessToken || !newRefreshToken)
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to create access or refresh token",
+      });
 
-      const [__, storeErr] = await tryCatchAsync(() =>
-        storeRefreshToken({
-          userId: user.id,
-          token: newRefreshToken,
-          expiresAt: getRefreshTokenExpiry(),
-        }),
-      );
+    const [_, revokeErr] = await tryCatchAsync(() =>
+      revokeRefreshToken(refreshToken),
+    );
 
-      if (storeErr) throw toTRPCError(storeErr);
+    if (revokeErr) throw toTRPCError(revokeErr);
 
-      return { accessToken, refreshToken: newRefreshToken };
-    }),
+    const [__, storeErr] = await tryCatchAsync(() =>
+      storeRefreshToken({
+        userId: user.id,
+        token: newRefreshToken,
+        expiresAt: getRefreshTokenExpiry(),
+      }),
+    );
+
+    if (storeErr) throw toTRPCError(storeErr);
+
+    return { accessToken, refreshToken: newRefreshToken };
+  }),
 
   logout: protectedProcedure
     .input(z.object({ refreshToken: z.string() }))

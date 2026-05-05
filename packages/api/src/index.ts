@@ -25,28 +25,35 @@ const isomorphicGetSession = async (
   authHeader: string,
   cookieHeader = "",
 ) => {
+  const cookies = cookieHeader.split(";").map((c) => c.trim());
+
+  const rawRefreshToken = cookies
+    .find((c) => c.startsWith("refreshToken="))
+    ?.slice("refreshToken=".length) ?? null;
+  const refreshToken = rawRefreshToken
+    ? decodeURIComponent(rawRefreshToken)
+    : null;
+
   if (authHeader) {
     const sessionToken = authHeader.split(" ")[1];
     if (sessionToken) {
       const { session, user } = await validateToken(sessionToken);
-      return { session, user };
+      return { session, user, refreshToken };
     }
   }
 
-  const cookieToken = cookieHeader
-    .split(";")
-    .map((c) => c.trim())
+  const cookieToken = cookies
     .find((c) => c.startsWith("accessToken="))
-    ?.split("=")[1];
+    ?.slice("accessToken=".length);
 
   if (cookieToken) {
     const { session, user } = await validateToken(
       decodeURIComponent(cookieToken),
     );
-    return { session, user };
+    return { session, user, refreshToken };
   }
 
-  return null;
+  return { session: null, user: null, refreshToken };
 };
 
 /**
@@ -67,6 +74,7 @@ export const createTRPCContext = async (
   session: SessionUser | null | undefined;
   user: JWTPayload | null | undefined;
   hasAuthHeader: boolean;
+  refreshToken: string | null;
   c: Request;
 }> => {
   const authHeader = context.headers.get("Authorization") ?? "";
@@ -74,12 +82,16 @@ export const createTRPCContext = async (
   const hasAuthHeader =
     !!authHeader || cookieHeader.includes("accessToken=");
 
-  const data = await isomorphicGetSession(authHeader, cookieHeader);
+  const { session, user, refreshToken } = await isomorphicGetSession(
+    authHeader,
+    cookieHeader,
+  );
 
   return {
-    session: data?.session,
-    user: data?.user,
+    session,
+    user,
     hasAuthHeader,
+    refreshToken,
     c: context,
   };
 };

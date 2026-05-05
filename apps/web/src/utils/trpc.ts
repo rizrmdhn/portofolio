@@ -5,7 +5,6 @@ import {
   QueryClient,
   defaultShouldDehydrateQuery,
 } from "@tanstack/react-query";
-import { getCookie } from "@tanstack/react-start/server";
 import {
   createTRPCClient,
   httpBatchLink,
@@ -20,13 +19,6 @@ import { getBaseUrl } from "./get-base-url";
 import { tokenRefreshLink } from "./refresh";
 
 const trpcUrl = `${getBaseUrl()}/api/trpc`;
-
-function getAuthHeaders(): Headers {
-  const headers = new Headers();
-  const token = getCookie("accessToken") ?? null;
-  if (token) headers.set("Authorization", `Bearer ${token}`);
-  return headers;
-}
 
 function makeQueryClient() {
   return new QueryClient({
@@ -81,12 +73,10 @@ export const trpcClient = createTRPCClient<AppRouter>({
       true: httpLink({
         url: trpcUrl,
         transformer: SuperJSON,
-        headers: getAuthHeaders,
       }),
       false: httpBatchLink({
         url: trpcUrl,
         transformer: SuperJSON,
-        headers: getAuthHeaders,
       }),
     }),
   ],

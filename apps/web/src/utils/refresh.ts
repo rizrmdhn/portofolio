@@ -50,16 +50,8 @@ async function refreshTokens() {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
-      const refreshToken = auth.getRefreshToken();
-
-      if (!refreshToken) {
-        throw new Error("No refresh token available");
-      }
-
       // Use tRPC client to call refresh endpoint
-      const result = await refreshClient.auth.refresh.mutate({
-        token: refreshToken,
-      });
+      const result = await refreshClient.auth.refresh.mutate();
 
       if (result.accessToken && result.refreshToken) {
         auth.setTokens(result.accessToken, result.refreshToken);
