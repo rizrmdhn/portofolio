@@ -244,6 +244,9 @@ importers:
       '@portofolio/schema':
         specifier: workspace:*
         version: link:../schema
+      '@portofolio/uploadthing':
+        specifier: workspace:*
+        version: link:../uploadthing
       '@portofolio/utils':
         specifier: workspace:*
         version: link:../utils

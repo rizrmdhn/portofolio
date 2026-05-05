@@ -13,7 +13,7 @@ import { createProjectView } from "./project-views.queries";
 export async function getAllProjects() {
   const projects = await db.query.projects.findMany({
     orderBy: {
-      createdAt: "desc",
+      order: "desc",
     },
     with: { projectView: true },
   });
