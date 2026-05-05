@@ -219,6 +219,13 @@
     --success-border: oklch(0.88 0.1 80);
 }
 
+@layer utilities {
+  .dot-grid {
+    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

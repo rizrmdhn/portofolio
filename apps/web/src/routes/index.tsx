@@ -1,6 +1,5 @@
 import { MainHeader } from "@/components/main-header";
-import { trpc } from "@/utils/trpc";
-import { useQuery } from "@tanstack/react-query";
+import { Badge } from "@/components/ui/badge";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -8,29 +7,34 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  const healthCheck = useQuery(trpc.health.healthCheck.queryOptions());
-
   return (
-    <div className="flex flex-col bg-background h-dvh">
+    <div className="flex flex-col bg-background h-dvh text-foreground">
       <MainHeader />
 
-      <div className="grid gap-6">
-        <section className="rounded-lg border p-4">
-          <h2 className="mb-2 font-medium">API Status</h2>
-          <div className="flex items-center gap-2">
-            <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
-            />
-            <span className="text-muted-foreground text-sm">
-              {healthCheck.isLoading
-                ? "Checking..."
-                : healthCheck.data
-                  ? "Connected"
-                  : "Disconnected"}
-            </span>
-          </div>
-        </section>
-      </div>
+      <section
+        id="about"
+        className="flex flex-col items-center justify-center gap-6 w-full py-20 dot-grid"
+      >
+        <div className="max-w-175 flex flex-col gap-6">
+          <Badge
+            variant="outline"
+            className="py-3 bg-available text-available-foreground"
+          >
+            {/* the span is just dot green */}
+            <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
+            <h1 className="text-sm">Avaliable for opportunities</h1>
+          </Badge>
+          <h1 className="text-5xl font-bold">Noor Rizki Ramadhan</h1>
+          <p className="text-2xl text-start max-w-2xl text-subtle">
+            Fullstack Developer
+          </p>
+          <p className="text-lg text-start max-w-2xl text-subtle">
+            I build fast, scalable web applications with clean architecture.
+            Focused on developer experience, performance, and shipping things
+            that actually work.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
