@@ -34,7 +34,6 @@
     "dotenv": "catalog:",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
-    "lucide-react": "^1.8.0",
     "next-themes": "catalog:",
     "react": "^19.2.5",
     "react-day-picker": "^9.14.0",
