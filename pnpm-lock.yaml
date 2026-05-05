@@ -376,6 +376,9 @@ importers:
       '@portofolio/types':
         specifier: workspace:*
         version: link:../types
+      '@portofolio/uploadthing':
+        specifier: workspace:*
+        version: link:../uploadthing
     devDependencies:
       '@portofolio/config':
         specifier: workspace:*

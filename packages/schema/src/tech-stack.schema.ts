@@ -6,8 +6,7 @@ export const createTechStackSchema = z.object({
 });
 
 export const updateTechStackSchema = createTechStackSchema.extend({
-  name: z.optional(z.string().max(256)),
-  list: z.optional(z.array(z.string()).min(1)),
+  id: z.string(),
 });
 
 export type CreateTechStackInput = z.infer<typeof createTechStackSchema>;

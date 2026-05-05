@@ -11,6 +11,7 @@ export const createProjectSchema = z.object({
 });
 
 export const updateProjectSchema = z.object({
+  id: z.string(),
   name: z.optional(z.string().max(256)),
   description: z.optional(z.string().max(5000)),
   github_url: z.optional(z.url()),

@@ -5,7 +5,7 @@
   "type": "module",
   "exports": {
     "./*": {
-      "types": "./dist/*.d.ts",
+      "types": "./src/*.ts",
       "default": "./src/*.ts"
     }
   },
@@ -23,6 +23,7 @@
   "dependencies": {
     "@portofolio/db": "workspace:*",
     "@portofolio/schema": "workspace:*",
-    "@portofolio/types": "workspace:*"
+    "@portofolio/types": "workspace:*",
+    "@portofolio/uploadthing": "workspace:*"
   }
 }
