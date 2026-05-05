@@ -16,12 +16,4 @@ export const VIEW_AS_TYPES = ["guest", "owner"] as const;
 
 export type ViewAsType = (typeof VIEW_AS_TYPES)[number];
 
-export const EXPERIENCE_TYPES = [
-  "internship",
-  "full-time",
-  "freelance",
-  "part-time",
-  "contract",
-  "temporary",
-  "volunteer",
-] as const;
+export * from "./colors";
