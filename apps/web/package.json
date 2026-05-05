@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@portofolio/web",
   "private": true,
   "type": "module",
   "scripts": {
