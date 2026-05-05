@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { LoginButton } from "./login-button";
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 
@@ -50,6 +51,8 @@ export function MainHeader() {
         >
           <p className="text-sm font-mono text-subtle">Resume ↗</p>
         </Button>
+
+        <LoginButton />
       </div>
     </div>
   );
