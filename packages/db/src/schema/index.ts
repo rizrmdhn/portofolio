@@ -5,15 +5,18 @@ import { EXPERIENCE_TYPES } from "@portofolio/constants";
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  date,
   index,
+  integer,
+  jsonb,
   pgEnum,
-  pgTableCreator,
   text,
   timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 import { v7 as uuidv7 } from "uuid";
+import { createTable } from "../utils";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -21,29 +24,34 @@ import { v7 as uuidv7 } from "uuid";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator(
-  (name) => `portofolio-webpage-v5_${name}`,
-);
 
 export const experienceEnum = pgEnum("experience_type", EXPERIENCE_TYPES);
 
 export const users = createTable(
   "users",
-  (d) => ({
-    id: d
-      .uuid()
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    name: d.varchar({ length: 256 }).notNull(),
-    email: d.varchar({ length: 256 }).notNull(),
-    password: d.varchar({ length: 256 }).notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+    name: varchar("name", { length: 256 }).notNull(),
+    email: varchar("email", { length: 256 }).notNull(),
+    password: varchar("password", { length: 256 }).notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => [index("users_id_idx").on(t.id), index("users_email_idx").on(t.email)],
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    index("users_id_idx").using("btree", table.id),
+    index("users_email_idx").using("btree", table.email),
+  ],
 );
 
 export const refreshTokens = createTable(
@@ -91,138 +99,148 @@ export const refreshTokens = createTable(
 
 export const projects = createTable(
   "projects",
-  (d) => ({
-    id: d
-      .uuid()
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    name: d.varchar({ length: 256 }).notNull(),
-    description: d.text().notNull(),
-    tech: d.text().array().notNull(),
-    github_url: d.text(),
-    live_url: d.text(),
-    playstore_url: d.text(),
-    appstore_url: d.text(),
-    image_url: d.text(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+    name: varchar("name", { length: 256 }).notNull(),
+    description: text("description").notNull(),
+    tech: text("tech").array().notNull(),
+    githubUrl: text("github_url"),
+    liveUrl: text("live_url"),
+    playstoreUrl: text("playstore_url"),
+    appstoreUrl: text("appstore_url"),
+    imageUrl: text("image_url"),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => {
-    return [index("projects_id_idx").on(t.id)];
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
   },
+  (table) => [index("projects_id_idx").using("btree", table.id)],
 );
 
 export const projectViews = createTable(
   "project_views",
-  (d) => ({
-    id: d
-      .uuid()
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    projectId: d
-      .uuid()
-      .references(() => projects.id, {
-        onDelete: "cascade",
-      })
-      .notNull(),
-    count: d.integer().default(0).notNull(),
-  }),
-  (t) => {
-    return [index("project_views_id_idx").on(t.id)];
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    count: integer("count").default(0).notNull(),
   },
+  (table) => [index("project_views_id_idx").using("btree", table.id)],
 );
 
 export const experiences = createTable(
   "experiences",
-  (d) => ({
-    id: d
-      .uuid()
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    title: d.varchar({ length: 256 }).notNull(),
-    description: d.text().notNull(),
-    company: d.varchar({ length: 256 }).notNull(),
-    type: experienceEnum().notNull(),
-    startDate: d.date().notNull(),
-    endDate: d.date(),
-    currentlyWorking: d.boolean().default(false).notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+    title: varchar("title", { length: 256 }).notNull(),
+    description: text("description").notNull(),
+    company: varchar("company", { length: 256 }).notNull(),
+    type: experienceEnum("type").notNull(),
+    startDate: date("start_date").notNull(),
+    endDate: date("end_date"),
+    currentlyWorking: boolean("currently_working").default(false).notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => {
-    return [index("experiences_id_idx").on(t.id)];
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
   },
+  (table) => [index("experiences_id_idx").using("btree", table.id)],
 );
 
 export const certifications = createTable(
   "certifications",
-  (d) => ({
-    id: d
-      .uuid()
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    name: d.varchar({ length: 256 }).notNull(),
-    issuer: d.varchar({ length: 256 }).notNull(),
-    certificate_url: d.text(),
-    certificate_id: d.varchar({ length: 256 }),
-    issueDate: d.date().notNull(),
-    expiryDate: d.date(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+    name: varchar("name", { length: 256 }).notNull(),
+    issuer: varchar("issuer", { length: 256 }).notNull(),
+    certificateUrl: text("certificate_url"),
+    certificateId: varchar("certificate_id", { length: 256 }),
+    issueDate: date("issue_date").notNull(),
+    expiryDate: date("expiry_date"),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => {
-    return [index("certifications_id_idx").on(t.id)];
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
   },
+  (table) => [index("certifications_id_idx").using("btree", table.id)],
 );
 
 export const applicationSettings = createTable(
   "application_settings",
-  (d) => ({
-    id: d
-      .uuid()
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    key: d.varchar({ length: 256 }).notNull().unique(),
-    data: d.jsonb().notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+    key: varchar("key", { length: 256 }).notNull().unique(),
+    data: jsonb("data").notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => {
-    return [
-      index("application_settings_id_idx").on(t.id),
-      index("application_settings_key_idx").on(t.key),
-    ];
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
   },
+  (table) => [
+    index("application_settings_id_idx").using("btree", table.id),
+    index("application_settings_key_idx").using("btree", table.key),
+  ],
 );
 
 export const techStack = createTable(
   "tech_stack",
-  (d) => ({
-    id: d
-      .uuid()
+  {
+    id: uuid("id")
       .primaryKey()
+      .notNull()
       .$default(() => uuidv7()),
-    name: d.varchar({ length: 256 }).notNull(),
-    list: d.text().array().notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
+    name: varchar("name", { length: 256 }).notNull(),
+    list: text("list").array().notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => {
-    return [index("tech_stack_id_idx").on(t.id)];
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
   },
+  (table) => [index("tech_stack_id_idx").using("btree", table.id)],
 );
