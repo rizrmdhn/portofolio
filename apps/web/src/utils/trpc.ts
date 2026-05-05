@@ -1,6 +1,10 @@
 import { globalErrorToast } from "@/lib/toasts";
 import type { AppRouter } from "@portofolio/api/root";
-import { QueryCache, QueryClient } from "@tanstack/react-query";
+import {
+  QueryCache,
+  QueryClient,
+  defaultShouldDehydrateQuery,
+} from "@tanstack/react-query";
 import {
   createTRPCClient,
   httpBatchLink,
@@ -11,18 +15,41 @@ import {
 } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import SuperJSON from "superjson";
-import { getBaseUrl } from "./get-base-url";
 import { tokenRefreshLink } from "./refresh";
 
-const trpcUrl = `${getBaseUrl()}/api/trpc`;
+const trpcUrl = `/api/trpc`;
 
-export const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error) => {
-      globalErrorToast(error.message || "An unexpected error occurred");
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: { staleTime: 60 * 1000 },
+      dehydrate: {
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) ||
+          query.state.status === "pending",
+      },
     },
-  }),
-});
+    queryCache: new QueryCache({
+      onError: (error) => {
+        if (typeof window !== "undefined") {
+          globalErrorToast(error.message || "An unexpected error occurred");
+        }
+      },
+    }),
+  });
+}
+
+let browserQueryClient: QueryClient | undefined;
+
+export function getQueryClient() {
+  if (typeof window === "undefined") {
+    return makeQueryClient();
+  }
+  if (!browserQueryClient) {
+    browserQueryClient = makeQueryClient();
+  }
+  return browserQueryClient;
+}
 
 export const trpcClient = createTRPCClient<AppRouter>({
   links: [
@@ -77,5 +104,5 @@ export const trpcClient = createTRPCClient<AppRouter>({
 
 export const trpc = createTRPCOptionsProxy<AppRouter>({
   client: trpcClient,
-  queryClient,
+  queryClient: getQueryClient,
 });
