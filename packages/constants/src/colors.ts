@@ -24,6 +24,9 @@ export const SUPPORTED_COLORS: SupportedColorMeta[] = [
   { label: "Slate", value: "#64748b" },
   { label: "Gray", value: "#6b7280" },
   { label: "Stone", value: "#78716c" },
+  { label: "Neutral", value: "#737373" },
+  { label: "Zinc", value: "#71717a" },
+  { label: "White", value: "#ffffff" },
 ];
 
 export const COLOR_VALUES = SUPPORTED_COLORS.map((c) => c.value) as [

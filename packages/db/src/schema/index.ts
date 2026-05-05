@@ -134,7 +134,7 @@ export const projects = createTable(
 
     // ========== Media ==========
     imageUrl: text("image_url"),
-    coverColor: colorEnum("cover_color").notNull().default("#ffffff"),
+    coverColor: colorEnum("cover_color").notNull().default("#ef4444"),
 
     // ========== Settings ==========
     status: projectStatusEnum("status").notNull().default("draft"),

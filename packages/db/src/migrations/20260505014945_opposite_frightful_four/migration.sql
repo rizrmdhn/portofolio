@@ -12,11 +12,11 @@ ALTER TABLE "experiences" ADD COLUMN "status" "experience_status_enum" DEFAULT '
 ALTER TABLE "experiences" ADD COLUMN "order" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
 ALTER TABLE "projects" ADD COLUMN "slug" varchar(256) NOT NULL;--> statement-breakpoint
 ALTER TABLE "projects" ADD COLUMN "long_description" text;--> statement-breakpoint
-ALTER TABLE "projects" ADD COLUMN "cover_color" "color_enum" DEFAULT '#ffffff'::"color_enum" NOT NULL;--> statement-breakpoint
+ALTER TABLE "projects" ADD COLUMN "cover_color" "color_enum" DEFAULT '#ef4444'::"color_enum" NOT NULL;--> statement-breakpoint
 ALTER TABLE "projects" ADD COLUMN "status" "project_status_enum" DEFAULT 'draft'::"project_status_enum" NOT NULL;--> statement-breakpoint
 ALTER TABLE "projects" ADD COLUMN "is_visible" boolean DEFAULT false NOT NULL;--> statement-breakpoint
 ALTER TABLE "projects" ADD COLUMN "order" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
-ALTER TABLE "certifications" ALTER COLUMN "issue_year" SET DATA TYPE integer USING "issue_year"::integer;--> statement-breakpoint
+ALTER TABLE "certifications" ALTER COLUMN "issue_year" SET DATA TYPE integer USING EXTRACT(YEAR FROM "issue_year")::integer;--> statement-breakpoint
 ALTER TABLE "certifications" ALTER COLUMN "issue_year" DROP NOT NULL;--> statement-breakpoint
-ALTER TABLE "certifications" ALTER COLUMN "expiry_year" SET DATA TYPE integer USING "expiry_year"::integer;--> statement-breakpoint
+ALTER TABLE "certifications" ALTER COLUMN "expiry_year" SET DATA TYPE integer USING EXTRACT(YEAR FROM "expiry_year")::integer;--> statement-breakpoint
 ALTER TABLE "projects" ADD CONSTRAINT "projects_slug_key" UNIQUE("slug");

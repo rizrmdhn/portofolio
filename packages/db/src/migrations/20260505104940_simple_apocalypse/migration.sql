@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ALTER COLUMN "cover_color" SET DEFAULT '#ef4444'::"color_enum";
