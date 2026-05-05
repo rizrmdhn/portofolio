@@ -1,42 +1,30 @@
-/**
- * Authentication utility functions
- */
+import { getCookie } from "@tanstack/react-start/server";
+
+function writeCookie(name: string, value: string, maxAge: number): void {
+  const secure = import.meta.env.PROD ? "; Secure" : "";
+  document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=/; SameSite=Strict${secure}`;
+}
+
+function expireCookie(name: string): void {
+  const secure = import.meta.env.PROD ? "; Secure" : "";
+  document.cookie = `${name}=; max-age=0; path=/; SameSite=Strict${secure}`;
+}
 
 export const auth = {
-  /**
-   * Get the access token from localStorage
-   */
-  getAccessToken: (): string | null => {
-    return localStorage.getItem("accessToken");
-  },
+  getAccessToken: (): string | null => getCookie("accessToken") ?? null,
 
-  /**
-   * Get the refresh token from localStorage
-   */
-  getRefreshToken: (): string | null => {
-    return localStorage.getItem("refreshToken");
-  },
+  getRefreshToken: (): string | null => getCookie("refreshToken") ?? null,
 
-  /**
-   * Set both access and refresh tokens
-   */
   setTokens: (accessToken: string, refreshToken: string): void => {
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    writeCookie("accessToken", accessToken, 60 * 60 * 24);
+    writeCookie("refreshToken", refreshToken, 60 * 60 * 24 * 30);
   },
 
-  /**
-   * Clear all auth tokens (logout)
-   */
   clearTokens: (): void => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    expireCookie("accessToken");
+    expireCookie("refreshToken");
   },
 
-  /**
-   * Check if user is authenticated (has tokens)
-   */
-  isAuthenticated: (): boolean => {
-    return !!(auth.getAccessToken() && auth.getRefreshToken());
-  },
+  isAuthenticated: (): boolean =>
+    !!(getCookie("accessToken") && getCookie("refreshToken")),
 };

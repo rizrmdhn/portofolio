@@ -68,9 +68,7 @@ async function refreshTokens() {
       }
     } catch (error) {
       console.error("Token refresh failed:", error);
-      // Clear tokens and redirect to login
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      auth.clearTokens();
       window.location.href = "/login";
       throw error;
     } finally {
@@ -98,7 +96,7 @@ export const tokenRefreshLink: TRPCLink<AppRouter> = () => {
             err instanceof TRPCClientError &&
             err.data?.code === "UNAUTHORIZED"
           ) {
-            const refreshToken = localStorage.getItem("refreshToken");
+            const refreshToken = auth.getRefreshToken();
 
             if (refreshToken) {
               console.log("401 error detected, attempting token refresh...");

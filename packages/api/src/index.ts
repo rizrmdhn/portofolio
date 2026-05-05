@@ -21,28 +21,29 @@ import { parseAndValidateSafe } from "./utils/form-data-parser";
  * - Expo requests will have a session token in the Authorization header
  * - Next.js requests will have a session token in cookies
  */
-const isomorphicGetSession = async (token: string) => {
-  if (token) {
-    const sessionToken = token.split(" ")[1];
+const isomorphicGetSession = async (
+  authHeader: string,
+  cookieHeader = "",
+) => {
+  if (authHeader) {
+    const sessionToken = authHeader.split(" ")[1];
     if (sessionToken) {
       const { session, user } = await validateToken(sessionToken);
       return { session, user };
     }
   }
 
-  // Then try cookie
-  const cookieHeader = token ?? null;
-  if (cookieHeader) {
-    const sessionToken = cookieHeader
-      .split(";")
-      .map((c) => c.trim())
-      .find((c) => c.startsWith("token="))
-      ?.split("=")[1];
+  const cookieToken = cookieHeader
+    .split(";")
+    .map((c) => c.trim())
+    .find((c) => c.startsWith("accessToken="))
+    ?.split("=")[1];
 
-    if (sessionToken) {
-      const { session, user } = await validateToken(sessionToken);
-      return { session, user };
-    }
+  if (cookieToken) {
+    const { session, user } = await validateToken(
+      decodeURIComponent(cookieToken),
+    );
+    return { session, user };
   }
 
   return null;
@@ -68,10 +69,12 @@ export const createTRPCContext = async (
   hasAuthHeader: boolean;
   c: Request;
 }> => {
-  const Authorization = context.headers.get("Authorization") || "";
-  const hasAuthHeader = !!Authorization;
+  const authHeader = context.headers.get("Authorization") ?? "";
+  const cookieHeader = context.headers.get("Cookie") ?? "";
+  const hasAuthHeader =
+    !!authHeader || cookieHeader.includes("accessToken=");
 
-  const data = await isomorphicGetSession(Authorization);
+  const data = await isomorphicGetSession(authHeader, cookieHeader);
 
   return {
     session: data?.session,
