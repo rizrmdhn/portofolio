@@ -18,12 +18,14 @@
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
     "@portofolio/db": "workspace:*",
     "@portofolio/schema": "workspace:*",
     "@portofolio/types": "workspace:*",
-    "@portofolio/uploadthing": "workspace:*"
+    "@portofolio/uploadthing": "workspace:*",
+    "@portofolio/utils": "workspace:*"
   }
 }

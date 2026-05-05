@@ -1,13 +1,17 @@
+import { EXPERIENCE_STATUS_TYPES } from "@portofolio/constants";
+import { createInsertSchema } from "@portofolio/db";
+import { certifications } from "@portofolio/db/schema/index";
 import z from "zod";
 
-export const createCertificationSchema = z.object({
-  name: z.string().min(2).max(256),
+export const createCertificationSchema = createInsertSchema(certifications, {
+  title: z.string().min(2).max(256),
   issuer: z.string().min(2).max(256),
-  certificate_url: z.url().optional(),
-  certificate_id: z.string().min(2).max(256).optional(),
-  issueDate: z.date(),
-  expiryDate: z.date().optional(),
-});
+  certificateUrl: z.url().optional(),
+  certificateId: z.string().min(2).max(256).optional(),
+  issueYear: z.date(),
+  expiryYear: z.date().optional(),
+  status: z.enum(EXPERIENCE_STATUS_TYPES).default("draft"),
+}).omit({ createdAt: true, updatedAt: true });
 
 export const updateCertificationSchema = createCertificationSchema.extend({
   id: z.string(),

@@ -6,6 +6,7 @@ import type {
   UpdateProjectInput,
 } from "@portofolio/schema/project.schema";
 import utapi from "@portofolio/uploadthing";
+import { toUniqueSlug } from "@portofolio/utils/slug";
 import { NotFoundError, QueryError } from "./errors";
 import { createProjectView } from "./project-views.queries";
 
@@ -34,9 +35,11 @@ export async function getProjectById(id: string) {
 }
 
 export async function createProject(data: CreateProjectInput) {
+  const slug = toUniqueSlug(data.title);
+
   const [project] = await db
     .insert(projects)
-    .values({ ...data })
+    .values({ ...data, slug })
     .returning();
 
   if (!project) throw new QueryError("Failed to create project");
@@ -72,7 +75,7 @@ export async function insertImageToProject(
 
   const [result] = await db
     .update(projects)
-    .set({ image_url })
+    .set({ imageUrl: image_url })
     .where(eq(projects.id, id))
     .returning();
 
@@ -93,8 +96,8 @@ export async function deleteProject(id: string) {
 
   if (!result) throw new QueryError("Failed to delete project");
 
-  if (result.image_url) {
-    const imageFiles = result.image_url.split("/").pop();
+  if (result.imageUrl) {
+    const imageFiles = result.imageUrl.split("/").pop();
 
     if (!imageFiles) throw new QueryError("Failed to delete project image");
 

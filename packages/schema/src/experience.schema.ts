@@ -1,15 +1,24 @@
-import { EXPERIENCE_TYPES } from "@portofolio/constants";
+import {
+  EXPERIENCE_STATUS_TYPES,
+  EXPERIENCE_TYPES,
+} from "@portofolio/constants";
+import { createInsertSchema } from "@portofolio/db";
+import { experiences } from "@portofolio/db/schema/index";
 import z from "zod";
 
-export const createExperienceSchema = z.object({
+export const createExperienceSchema = createInsertSchema(experiences, {
   title: z.string().max(256),
-  company: z.string().max(256),
-  type: z.enum(EXPERIENCE_TYPES),
   description: z.string().max(5000),
+  company: z.string().max(256),
+  location: z.string().max(256),
+  type: z.enum(EXPERIENCE_TYPES),
   startDate: z.iso.date(),
   endDate: z.iso.date().optional(),
   currentlyWorking: z.boolean().default(false),
-});
+  skills: z.string().array(),
+  status: z.enum(EXPERIENCE_STATUS_TYPES).default("draft"),
+  order: z.number().default(0),
+}).omit({ createdAt: true, updatedAt: true });
 
 export const updateExperienceSchema = createExperienceSchema.extend({
   id: z.string(),

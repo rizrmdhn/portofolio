@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@portofolio/db": "workspace:*",
     "@portofolio/constants": "workspace:*",
     "zod": "catalog:"
   },

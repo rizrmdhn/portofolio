@@ -379,10 +379,16 @@ importers:
       '@portofolio/uploadthing':
         specifier: workspace:*
         version: link:../uploadthing
+      '@portofolio/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@portofolio/config':
         specifier: workspace:*
         version: link:../config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.19.17
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -392,6 +398,9 @@ importers:
       '@portofolio/constants':
         specifier: workspace:*
         version: link:../constants
+      '@portofolio/db':
+        specifier: workspace:*
+        version: link:../db
       zod:
         specifier: 'catalog:'
         version: 4.4.2
