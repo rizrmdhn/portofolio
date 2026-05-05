@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginInput, loginSchema } from "@portofolio/schema/auth.schema";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -57,12 +57,6 @@ function RouteComponent() {
       <div className="flex flex-1 flex-col items-center justify-center gap-6 w-full">
         <div className="flex flex-col items-center gap-1">
           <h1 className="text-xl font-bold">Welcome Back</h1>
-          <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/register" className="text-blue-500 hover:underline">
-              Sign Up
-            </Link>
-          </p>
         </div>
         <Card className="w-full max-w-md">
           <CardContent>
