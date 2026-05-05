@@ -1,4 +1,4 @@
-import { hash, verify } from "@node-rs/argon2";
+import { verify } from "@node-rs/argon2";
 import {
   createAccessToken,
   createRefreshToken,
@@ -10,12 +10,8 @@ import {
   storeRefreshToken,
   validateRefreshToken,
 } from "@portofolio/queries/refresh-token.queries";
-import {
-  createUser,
-  getUserByEmail,
-  getUserById,
-} from "@portofolio/queries/users.queries";
-import { loginSchema, registerSchema } from "@portofolio/schema/auth.schema";
+import { getUserByEmail, getUserById } from "@portofolio/queries/users.queries";
+import { loginSchema } from "@portofolio/schema/auth.schema";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
 import { TRPCError } from "@trpc/server";
 import { v7 as uuidv7 } from "uuid";
@@ -96,25 +92,25 @@ export const authRouter = createTRPCRouter({
     return { accessToken, refreshToken };
   }),
 
-  register: publicProcedure
-    .input(registerSchema)
-    .mutation(async ({ input }) => {
-      const passwordHash = await hash(input.password);
+  // register: publicProcedure
+  //   .input(registerSchema)
+  //   .mutation(async ({ input }) => {
+  //     const passwordHash = await hash(input.password);
 
-      const [result, err] = await tryCatchAsync(() =>
-        createUser({
-          ...input,
-          passwordHash,
-        }),
-      );
+  //     const [result, err] = await tryCatchAsync(() =>
+  //       createUser({
+  //         ...input,
+  //         passwordHash,
+  //       }),
+  //     );
 
-      if (err) throw toTRPCError(err);
+  //     if (err) throw toTRPCError(err);
 
-      return {
-        ...result,
-        password: undefined,
-      };
-    }),
+  //     return {
+  //       ...result,
+  //       password: undefined,
+  //     };
+  //   }),
 
   me: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.user && !ctx.hasAuthHeader) {
