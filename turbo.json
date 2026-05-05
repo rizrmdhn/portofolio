@@ -27,7 +27,9 @@
       "cache": false
     },
     "db:generate": {
-      "cache": false
+      "cache": false,
+      "persistent": true,
+      "interactive": true
     },
     "db:migrate": {
       "cache": false,
