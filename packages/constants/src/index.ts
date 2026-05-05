@@ -16,5 +16,19 @@ export const VIEW_AS_TYPES = ["guest", "owner"] as const;
 
 export type ViewAsType = (typeof VIEW_AS_TYPES)[number];
 
+export const STATUS_TYPES = ["draft", "published", "archived"] as const;
+
+export type StatusType = (typeof STATUS_TYPES)[number];
+
+export const EXPERIENCE_STATUS_TYPES = ["draft", "published"] as const;
+
+export type ExperienceStatusType = (typeof EXPERIENCE_STATUS_TYPES)[number];
+
+export const STATUS_LABELS: Record<StatusType, string> = {
+  draft: "Draft",
+  published: "Published",
+  archived: "Archived",
+};
+
 export * from "./colors";
 export * from "./experience";

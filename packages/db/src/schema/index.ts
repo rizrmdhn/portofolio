@@ -1,7 +1,12 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { EXPERIENCE_TYPES } from "@portofolio/constants";
+import {
+  COLOR_VALUES,
+  EXPERIENCE_STATUS_TYPES,
+  EXPERIENCE_TYPES,
+  STATUS_TYPES,
+} from "@portofolio/constants";
 import { sql } from "drizzle-orm";
 import {
   boolean,
@@ -26,6 +31,15 @@ import { createTable } from "../utils";
  */
 
 export const experienceEnum = pgEnum("experience_type", EXPERIENCE_TYPES);
+
+export const colorEnum = pgEnum("color_enum", COLOR_VALUES);
+
+export const projectStatusEnum = pgEnum("project_status_enum", STATUS_TYPES);
+
+export const experienceStatusEnum = pgEnum(
+  "experience_status_enum",
+  EXPERIENCE_STATUS_TYPES,
+);
 
 export const users = createTable(
   "users",
@@ -104,14 +118,30 @@ export const projects = createTable(
       .primaryKey()
       .notNull()
       .$default(() => uuidv7()),
-    name: varchar("name", { length: 256 }).notNull(),
+
+    // ========== Content fields ==========
+    title: varchar("title", { length: 256 }).notNull(),
+    slug: varchar("slug", { length: 256 }).notNull().unique(),
     description: text("description").notNull(),
+    longDescription: text("long_description"),
     tech: text("tech").array().notNull(),
+
+    // ========== Links ==========
     githubUrl: text("github_url"),
     liveUrl: text("live_url"),
     playstoreUrl: text("playstore_url"),
     appstoreUrl: text("appstore_url"),
+
+    // ========== Media ==========
     imageUrl: text("image_url"),
+    coverColor: colorEnum("cover_color").notNull().default("#ffffff"),
+
+    // ========== Settings ==========
+    status: projectStatusEnum("status").notNull().default("draft"),
+    isVisible: boolean("is_visible").notNull().default(false),
+    order: integer("order").default(0).notNull(),
+
+    // ========== Metadata ==========
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
@@ -148,13 +178,23 @@ export const experiences = createTable(
       .primaryKey()
       .notNull()
       .$default(() => uuidv7()),
+
+    // ========== Details ==========
     title: varchar("title", { length: 256 }).notNull(),
     description: text("description").notNull(),
     company: varchar("company", { length: 256 }).notNull(),
+    location: varchar("location", { length: 256 }).notNull(),
     type: experienceEnum("type").notNull(),
     startDate: date("start_date").notNull(),
     endDate: date("end_date"),
     currentlyWorking: boolean("currently_working").default(false).notNull(),
+    skills: text("skills").array().notNull(),
+
+    // ========== Settings ==========
+    status: experienceStatusEnum("status").notNull().default("draft"),
+    order: integer("order").default(0).notNull(),
+
+    // ========== Metadata ==========
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
@@ -176,12 +216,13 @@ export const certifications = createTable(
       .primaryKey()
       .notNull()
       .$default(() => uuidv7()),
-    name: varchar("name", { length: 256 }).notNull(),
+    title: varchar("title", { length: 256 }).notNull(),
     issuer: varchar("issuer", { length: 256 }).notNull(),
     certificateUrl: text("certificate_url"),
     certificateId: varchar("certificate_id", { length: 256 }),
-    issueDate: date("issue_date").notNull(),
-    expiryDate: date("expiry_date"),
+    issueYear: integer("issue_year"),
+    expiryYear: integer("expiry_year"),
+    status: experienceStatusEnum("status").notNull().default("draft"),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
