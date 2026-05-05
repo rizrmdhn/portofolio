@@ -383,6 +383,9 @@ importers:
 
   packages/schema:
     dependencies:
+      '@portofolio/constants':
+        specifier: workspace:*
+        version: link:../constants
       zod:
         specifier: 'catalog:'
         version: 4.4.2
