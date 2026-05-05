@@ -16,6 +16,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
+  "dependencies": {
+    "uuid": "catalog:"
+  },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
     "typescript": "catalog:"

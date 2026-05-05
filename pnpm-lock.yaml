@@ -436,6 +436,10 @@ importers:
         version: 6.0.3
 
   packages/utils:
+    dependencies:
+      uuid:
+        specifier: 'catalog:'
+        version: 14.0.0
     devDependencies:
       '@portofolio/config':
         specifier: workspace:*
