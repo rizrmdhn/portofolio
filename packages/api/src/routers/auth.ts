@@ -16,6 +16,7 @@ import { tryCatchAsync } from "@portofolio/utils/try-catch";
 import { TRPCError } from "@trpc/server";
 import { v7 as uuidv7 } from "uuid";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
+import { clearAuthCookies, setAuthCookies } from "../utils/set-auth-cookies";
 import { toTRPCError } from "../utils/to-trpc-error";
 
 function getRefreshTokenExpiry(): string {
@@ -26,7 +27,7 @@ function getRefreshTokenExpiry(): string {
 }
 
 export const authRouter = createTRPCRouter({
-  login: publicProcedure.input(loginSchema).mutation(async ({ input }) => {
+  login: publicProcedure.input(loginSchema).mutation(async ({ ctx, input }) => {
     if (input.email !== env.ALLOWED_EMAIL_LOGIN) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
@@ -88,7 +89,8 @@ export const authRouter = createTRPCRouter({
 
     if (storeErr) throw toTRPCError(storeErr);
 
-    return { accessToken, refreshToken };
+    setAuthCookies(ctx.resHeaders, accessToken, refreshToken);
+    return { success: true };
   }),
 
   // register: publicProcedure
@@ -229,7 +231,8 @@ export const authRouter = createTRPCRouter({
 
     if (storeErr) throw toTRPCError(storeErr);
 
-    return { accessToken, refreshToken: newRefreshToken };
+    setAuthCookies(ctx.resHeaders, accessToken, newRefreshToken);
+    return { success: true };
   }),
 
   logout: protectedProcedure.mutation(async ({ ctx }) => {
@@ -248,6 +251,7 @@ export const authRouter = createTRPCRouter({
 
     if (revokeErr) throw toTRPCError(revokeErr);
 
+    clearAuthCookies(ctx.resHeaders);
     return { success: true, message: "Logged out successfully" };
   }),
 });

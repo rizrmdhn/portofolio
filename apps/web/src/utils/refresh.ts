@@ -10,23 +10,13 @@ import SuperJSON from "superjson";
 import { auth } from "./auth";
 import { getBaseUrl } from "./get-base-url";
 
-const trpcUrl = `${getBaseUrl()}/trpc`;
-
-/**
- * In-flight refresh coordination.
- * Prevents concurrent refresh calls and reuses the same promise.
- */
 let isRefreshing = false;
 let refreshPromise: Promise<void> | null = null;
 
-/**
- * Lightweight tRPC client dedicated to refresh calls
- * to avoid circular dependencies with the main client.
- */
 const refreshClient = createTRPCClient<AppRouter>({
   links: [
     httpLink({
-      url: trpcUrl,
+      url: `${getBaseUrl()}/api/trpc`,
       transformer: SuperJSON,
       headers: () => {
         const headers = new Headers();
@@ -37,12 +27,7 @@ const refreshClient = createTRPCClient<AppRouter>({
   ],
 });
 
-/**
- * Refresh access/refresh tokens with deduped in-flight requests.
- * Throws if refresh fails; clears tokens and redirects to login.
- */
 async function refreshTokens() {
-  // If already refreshing, return the existing promise
   if (isRefreshing && refreshPromise) {
     return refreshPromise;
   }
@@ -50,17 +35,11 @@ async function refreshTokens() {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
-      // Use tRPC client to call refresh endpoint
-      const result = await refreshClient.auth.refresh.mutate();
-
-      if (result.accessToken && result.refreshToken) {
-        auth.setTokens(result.accessToken, result.refreshToken);
-      } else {
-        throw new Error("Invalid refresh response");
-      }
+      // Server sets new HttpOnly cookies via Set-Cookie response header
+      await refreshClient.auth.refresh.mutate();
     } catch (error) {
       console.error("Token refresh failed:", error);
-      auth.clearTokens();
+      auth.clearIndicator();
       window.location.href = "/login";
       throw error;
     } finally {
@@ -72,9 +51,6 @@ async function refreshTokens() {
   return refreshPromise;
 }
 
-/**
- * tRPC link that handles 401 responses by refreshing tokens and retrying once.
- */
 export const tokenRefreshLink: TRPCLink<AppRouter> = () => {
   return ({ next, op }) => {
     return observable((observer) => {
@@ -83,44 +59,28 @@ export const tokenRefreshLink: TRPCLink<AppRouter> = () => {
           observer.next(value);
         },
         error(err) {
-          // Check if it's a 401 UNAUTHORIZED error
           if (
             err instanceof TRPCClientError &&
             err.data?.code === "UNAUTHORIZED"
           ) {
-            const refreshToken = auth.getRefreshToken();
-
-            if (refreshToken) {
-              console.log("401 error detected, attempting token refresh...");
-
-              // Attempt to refresh the token
-              refreshTokens()
-                .then(() => {
-                  console.log("Token refreshed, retrying request...");
-                  // Retry the original operation
-                  next(op).subscribe({
-                    next(value) {
-                      observer.next(value);
-                    },
-                    error(retryErr) {
-                      observer.error(retryErr);
-                    },
-                    complete() {
-                      observer.complete();
-                    },
-                  });
-                })
-                .catch((refreshErr) => {
-                  console.error("Token refresh failed:", refreshErr);
-                  // If refresh fails, pass through the original error
-                  observer.error(err);
+            refreshTokens()
+              .then(() => {
+                next(op).subscribe({
+                  next(value) {
+                    observer.next(value);
+                  },
+                  error(retryErr) {
+                    observer.error(retryErr);
+                  },
+                  complete() {
+                    observer.complete();
+                  },
                 });
-            } else {
-              // No refresh token, pass through the error
-              observer.error(err);
-            }
+              })
+              .catch(() => {
+                observer.error(err);
+              });
           } else {
-            // Not a 401 error, pass it through
             observer.error(err);
           }
         },

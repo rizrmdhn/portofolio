@@ -21,15 +21,13 @@ import { parseAndValidateSafe } from "./utils/form-data-parser";
  * - Expo requests will have a session token in the Authorization header
  * - Next.js requests will have a session token in cookies
  */
-const isomorphicGetSession = async (
-  authHeader: string,
-  cookieHeader = "",
-) => {
+const isomorphicGetSession = async (authHeader: string, cookieHeader = "") => {
   const cookies = cookieHeader.split(";").map((c) => c.trim());
 
-  const rawRefreshToken = cookies
-    .find((c) => c.startsWith("refreshToken="))
-    ?.slice("refreshToken=".length) ?? null;
+  const rawRefreshToken =
+    cookies
+      .find((c) => c.startsWith("refreshToken="))
+      ?.slice("refreshToken=".length) ?? null;
   const refreshToken = rawRefreshToken
     ? decodeURIComponent(rawRefreshToken)
     : null;
@@ -70,17 +68,18 @@ const isomorphicGetSession = async (
  */
 export const createTRPCContext = async (
   context: Request,
+  resHeaders: Headers = new Headers(),
 ): Promise<{
   session: SessionUser | null | undefined;
   user: JWTPayload | null | undefined;
   hasAuthHeader: boolean;
   refreshToken: string | null;
-  c: Request;
+  req: Request;
+  resHeaders: Headers;
 }> => {
   const authHeader = context.headers.get("Authorization") ?? "";
   const cookieHeader = context.headers.get("Cookie") ?? "";
-  const hasAuthHeader =
-    !!authHeader || cookieHeader.includes("accessToken=");
+  const hasAuthHeader = !!authHeader || cookieHeader.includes("accessToken=");
 
   const { session, user, refreshToken } = await isomorphicGetSession(
     authHeader,
@@ -92,7 +91,8 @@ export const createTRPCContext = async (
     user,
     hasAuthHeader,
     refreshToken,
-    c: context,
+    req: context,
+    resHeaders,
   };
 };
 

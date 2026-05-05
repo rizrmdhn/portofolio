@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
-import { auth } from "@/utils/auth";
 import { getQueryClient, trpc } from "@/utils/trpc";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginInput, loginSchema } from "@portofolio/schema/auth.schema";
@@ -35,9 +34,8 @@ function RouteComponent() {
 
   const loginMutation = useMutation(
     trpc.auth.login.mutationOptions({
-      onSuccess: async (data) => {
-        auth.setTokens(data.accessToken, data.refreshToken);
-        await getQueryClient().refetchQueries(trpc.auth.me.queryFilter());
+      onSuccess: () => {
+        getQueryClient().removeQueries({ queryKey: trpc.auth.me.queryKey() });
         globalSuccessToast("Logged in successfully!");
         navigate({ to: "/dashboard" });
       },

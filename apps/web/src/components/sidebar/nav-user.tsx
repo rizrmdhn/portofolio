@@ -1,4 +1,4 @@
-import { IconLogout, IconSelector } from "@tabler/icons-react";
+import { IconHome, IconLogout, IconSelector } from "@tabler/icons-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -18,9 +18,11 @@ import {
 } from "@/components/ui/sidebar";
 import { logout } from "@/lib/logout";
 import { Users } from "@portofolio/types/users.types";
+import { useNavigate } from "@tanstack/react-router";
 
 export function NavUser({ user }: { user: Users }) {
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
 
   function onLogout() {
     logout();
@@ -77,6 +79,10 @@ export function NavUser({ user }: { user: Users }) {
                 </div>
               </DropdownMenuLabel>
             </DropdownMenuGroup>
+            <DropdownMenuItem onClick={() => navigate({ to: "/" })}>
+              <IconHome />
+              Landing Page
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>
               <IconLogout />
