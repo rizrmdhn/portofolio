@@ -23,6 +23,13 @@ import z from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
 import { toTRPCError } from "../utils/to-trpc-error";
 
+function getRefreshTokenExpiry(): string {
+  const days = parseInt(env.JWT_REFRESH_TOKEN_EXPIRY.replace("d", ""));
+  const expiry = new Date();
+  expiry.setDate(expiry.getDate() + days);
+  return expiry.toISOString();
+}
+
 export const authRouter = createTRPCRouter({
   login: publicProcedure.input(loginSchema).mutation(async ({ input }) => {
     if (input.email !== env.ALLOWED_EMAIL_LOGIN) {
@@ -58,10 +65,8 @@ export const authRouter = createTRPCRouter({
       createAccessToken({
         email: user.email,
         id: user.id,
-        createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt?.toISOString()
-          ? user.updatedAt.toISOString()
-          : null,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt ?? null,
       }),
     );
 
@@ -78,19 +83,15 @@ export const authRouter = createTRPCRouter({
 
     if (refreshTokenErr) throw toTRPCError(refreshTokenErr);
 
-    const expiryDays = parseInt(env.JWT_REFRESH_TOKEN_EXPIRY.replace("d", ""));
-    const refreshTokenExpiry = new Date();
-    refreshTokenExpiry.setDate(refreshTokenExpiry.getDate() + expiryDays);
-
-    const [_, storeRefreshTokenErr] = await tryCatchAsync(() =>
+    const [_, storeErr] = await tryCatchAsync(() =>
       storeRefreshToken({
         userId: user.id,
         token: refreshToken,
-        expiresAt: refreshTokenExpiry.toISOString(),
+        expiresAt: getRefreshTokenExpiry(),
       }),
     );
 
-    if (storeRefreshTokenErr) throw toTRPCError(storeRefreshTokenErr);
+    if (storeErr) throw toTRPCError(storeErr);
 
     return { accessToken, refreshToken };
   }),
@@ -186,10 +187,8 @@ export const authRouter = createTRPCRouter({
         createAccessToken({
           email: user.email,
           id: user.id,
-          createdAt: user.createdAt.toISOString(),
-          updatedAt: user.updatedAt?.toISOString()
-            ? user.updatedAt.toISOString()
-            : null,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt ?? null,
         }),
       );
 
@@ -212,29 +211,21 @@ export const authRouter = createTRPCRouter({
           message: "Failed to create access or refresh token",
         });
 
-      // Revoke the old refresh token
       const [_, revokeErr] = await tryCatchAsync(() =>
         revokeRefreshToken(input.token),
       );
 
       if (revokeErr) throw toTRPCError(revokeErr);
 
-      // Store the new refresh token
-      const expiryDays = parseInt(
-        env.JWT_REFRESH_TOKEN_EXPIRY.replace("d", ""),
-      );
-      const refreshTokenExpiry = new Date();
-      refreshTokenExpiry.setDate(refreshTokenExpiry.getDate() + expiryDays);
-
-      const [__, storeRefreshTokenErr] = await tryCatchAsync(() =>
+      const [__, storeErr] = await tryCatchAsync(() =>
         storeRefreshToken({
           userId: user.id,
           token: newRefreshToken,
-          expiresAt: refreshTokenExpiry.toISOString(),
+          expiresAt: getRefreshTokenExpiry(),
         }),
       );
 
-      if (storeRefreshTokenErr) throw toTRPCError(storeRefreshTokenErr);
+      if (storeErr) throw toTRPCError(storeErr);
 
       return { accessToken, refreshToken: newRefreshToken };
     }),
