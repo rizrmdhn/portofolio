@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "default": "./src/*.ts"
+    }
   },
   "scripts": {
     "build": "tsc",
@@ -16,5 +19,8 @@
   "devDependencies": {
     "@portofolio/config": "workspace:*",
     "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@portofolio/db": "workspace:*"
   }
 }

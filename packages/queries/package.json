@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@portofolio/db": "workspace:*",
-    "@portofolio/schema": "workspace:*"
+    "@portofolio/schema": "workspace:*",
+    "@portofolio/types": "workspace:*"
   }
 }
