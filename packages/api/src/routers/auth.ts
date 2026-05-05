@@ -15,7 +15,6 @@ import { loginSchema } from "@portofolio/schema/auth.schema";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
 import { TRPCError } from "@trpc/server";
 import { v7 as uuidv7 } from "uuid";
-import z from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
 import { toTRPCError } from "../utils/to-trpc-error";
 
@@ -233,15 +232,22 @@ export const authRouter = createTRPCRouter({
     return { accessToken, refreshToken: newRefreshToken };
   }),
 
-  logout: protectedProcedure
-    .input(z.object({ refreshToken: z.string() }))
-    .mutation(async ({ input }) => {
-      const [_, revokeErr] = await tryCatchAsync(() =>
-        revokeRefreshToken(input.refreshToken),
-      );
+  logout: protectedProcedure.mutation(async ({ ctx }) => {
+    const { refreshToken } = ctx;
 
-      if (revokeErr) throw toTRPCError(revokeErr);
+    if (!refreshToken) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Refresh token is required for logout",
+      });
+    }
 
-      return { success: true, message: "Logged out successfully" };
-    }),
+    const [_, revokeErr] = await tryCatchAsync(() =>
+      revokeRefreshToken(refreshToken),
+    );
+
+    if (revokeErr) throw toTRPCError(revokeErr);
+
+    return { success: true, message: "Logged out successfully" };
+  }),
 });
