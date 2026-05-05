@@ -370,6 +370,9 @@ importers:
       '@portofolio/db':
         specifier: workspace:*
         version: link:../db
+      '@portofolio/schema':
+        specifier: workspace:*
+        version: link:../schema
     devDependencies:
       '@portofolio/config':
         specifier: workspace:*
