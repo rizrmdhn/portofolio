@@ -30,6 +30,10 @@ function RouteComponent() {
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const loginMutation = useMutation(
