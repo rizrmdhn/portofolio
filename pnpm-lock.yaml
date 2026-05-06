@@ -93,6 +93,9 @@ importers:
       '@portofolio/types':
         specifier: workspace:*
         version: link:../../packages/types
+      '@portofolio/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@tabler/icons-react':
         specifier: ^3.41.1
         version: 3.41.1(react@19.2.5)

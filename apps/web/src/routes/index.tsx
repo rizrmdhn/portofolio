@@ -1,80 +1,215 @@
+import { ExperienceCard } from "@/components/experience-card";
 import { MainHeader } from "@/components/main-header";
+import { ProjectCard } from "@/components/project-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Certification } from "@portofolio/types/certification.types";
+import { Experience } from "@portofolio/types/experience.types";
+import { Project } from "@portofolio/types/project.types";
+import { TechStack } from "@portofolio/types/tech-stack.types";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 
-const experiences = [
+const experiences: Experience[] = [
   {
-    role: "Fullstack Developer",
-    company: "Company Name",
-    period: "2023 – Present",
+    id: "01900000-0000-7000-8000-000000000001",
+    title: "Fullstack Developer",
+    company: "Tech Corp",
+    location: "Jakarta, Indonesia",
+    type: "full-time",
+    startDate: "2023-01-01",
+    endDate: null,
+    currentlyWorking: true,
     description:
       "Built and maintained web applications using React, Node.js, and PostgreSQL. Led migrations to modern tooling and improved CI/CD pipelines.",
+    skills: ["TypeScript", "React", "Node.js", "PostgreSQL", "Docker"],
+    status: "published",
+    order: 1,
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
   },
   {
-    role: "Frontend Developer",
-    company: "Another Company",
-    period: "2022 – 2023",
+    id: "01900000-0000-7000-8000-000000000002",
+    title: "Frontend Developer",
+    company: "Startup Studio",
+    location: "Bandung, Indonesia",
+    type: "contract",
+    startDate: "2022-03-01",
+    endDate: "2022-12-31",
+    currentlyWorking: false,
     description:
       "Developed responsive UIs and collaborated closely with design and backend teams to ship product features on time.",
+    skills: ["React", "Tailwind CSS", "Next.js", "Figma"],
+    status: "published",
+    order: 2,
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
+  },
+  {
+    id: "01900000-0000-7000-8000-000000000003",
+    title: "Backend Developer Intern",
+    company: "Digital Agency",
+    location: "Remote",
+    type: "internship",
+    startDate: "2021-07-01",
+    endDate: "2021-12-31",
+    currentlyWorking: false,
+    description:
+      "Assisted in designing REST APIs, writing unit tests, and optimizing database queries for a high-traffic e-commerce platform.",
+    skills: ["Node.js", "Express", "MySQL", "Jest"],
+    status: "published",
+    order: 3,
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
   },
 ];
 
-const projects = [
+const projects: Project[] = [
   {
-    name: "Portfolio",
+    id: "01900000-0000-7000-8000-000000000011",
+    title: "Portfolio",
+    slug: "portfolio",
     description:
       "Personal portfolio and blog built with TanStack Start, tRPC, and Tailwind CSS.",
-    stack: ["TypeScript", "React", "tRPC", "PostgreSQL"],
-    url: "#",
+    longDescription: null,
+    tech: ["TypeScript", "React", "tRPC", "PostgreSQL", "Tailwind CSS"],
+    githubUrl: "https://github.com/rizrmdhn/portofolio",
+    liveUrl: "#",
+    playstoreUrl: null,
+    appstoreUrl: null,
+    imageUrl: null,
+    coverColor: "#6366f1",
+    status: "published",
+    isVisible: true,
+    order: 1,
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
   },
   {
-    name: "Project Two",
+    id: "01900000-0000-7000-8000-000000000012",
+    title: "SaaS Starter",
+    slug: "saas-starter",
     description:
-      "A full-stack SaaS application with authentication, billing, and real-time updates.",
-    stack: ["Next.js", "Prisma", "Stripe", "Redis"],
-    url: "#",
+      "A full-stack SaaS boilerplate with authentication, billing, and real-time updates.",
+    longDescription: null,
+    tech: ["Next.js", "Prisma", "Stripe", "Redis", "TypeScript"],
+    githubUrl: "https://github.com/rizrmdhn/saas-starter",
+    liveUrl: null,
+    playstoreUrl: null,
+    appstoreUrl: null,
+    imageUrl: null,
+    coverColor: "#3b82f6",
+    status: "published",
+    isVisible: true,
+    order: 2,
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
   },
   {
-    name: "Project Three",
+    id: "01900000-0000-7000-8000-000000000013",
+    title: "Envault",
+    slug: "envault",
     description:
-      "Open-source CLI tool for managing environment variables across projects.",
-    stack: ["Node.js", "TypeScript"],
-    url: "#",
+      "Open-source CLI tool for managing and syncing environment variables across projects.",
+    longDescription: null,
+    tech: ["Node.js", "TypeScript", "SQLite"],
+    githubUrl: "https://github.com/rizrmdhn/envault",
+    liveUrl: null,
+    playstoreUrl: null,
+    appstoreUrl: null,
+    imageUrl: null,
+    coverColor: "#22c55e",
+    status: "published",
+    isVisible: true,
+    order: 3,
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
   },
 ];
 
-const stack = [
-  { category: "Languages", items: ["TypeScript", "Go", "SQL"] },
-  { category: "Frontend", items: ["React", "Tailwind CSS", "TanStack Router"] },
-  { category: "Backend", items: ["Node.js", "tRPC", "Hono"] },
-  { category: "Database", items: ["PostgreSQL", "Redis", "Drizzle ORM"] },
-  { category: "DevOps", items: ["Docker", "GitHub Actions", "Fly.io"] },
-];
-
-const certificates = [
+const stack: TechStack[] = [
   {
-    name: "Certificate Name",
-    issuer: "Issuing Organization",
-    year: "2024",
-    url: "#",
+    id: "01900000-0000-7000-8000-000000000021",
+    name: "Languages",
+    list: ["TypeScript", "Go", "SQL"],
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
   },
   {
-    name: "Another Certificate",
-    issuer: "Issuing Organization",
-    year: "2023",
-    url: "#",
+    id: "01900000-0000-7000-8000-000000000022",
+    name: "Frontend",
+    list: ["React", "Tailwind CSS", "TanStack Router"],
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
+  },
+  {
+    id: "01900000-0000-7000-8000-000000000023",
+    name: "Backend",
+    list: ["Node.js", "tRPC", "Hono"],
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
+  },
+  {
+    id: "01900000-0000-7000-8000-000000000024",
+    name: "Database",
+    list: ["PostgreSQL", "Redis", "Drizzle ORM"],
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
+  },
+  {
+    id: "01900000-0000-7000-8000-000000000025",
+    name: "DevOps",
+    list: ["Docker", "GitHub Actions", "Fly.io"],
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
+  },
+];
+
+const certificates: Certification[] = [
+  {
+    id: "01900000-0000-7000-8000-000000000031",
+    title: "AWS Certified Developer – Associate",
+    issuer: "Amazon Web Services",
+    certificateUrl: "https://aws.amazon.com/certification/",
+    certificateId: "AWS-DEV-2024-001",
+    issueYear: 2024,
+    expiryYear: 2027,
+    status: "published",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
+  },
+  {
+    id: "01900000-0000-7000-8000-000000000032",
+    title: "Professional Scrum Master I",
+    issuer: "Scrum.org",
+    certificateUrl: "https://scrum.org/certificates",
+    certificateId: "PSM-I-2023-042",
+    issueYear: 2023,
+    expiryYear: null,
+    status: "published",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
+  },
+  {
+    id: "01900000-0000-7000-8000-000000000033",
+    title: "Docker Certified Associate",
+    issuer: "Docker Inc.",
+    certificateUrl: null,
+    certificateId: "DCA-2023-789",
+    issueYear: 2023,
+    expiryYear: 2025,
+    status: "published",
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: null,
   },
 ];
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-2xl font-bold tracking-tight">{children}</h2>
+    <h2 className="text-sm text-subtle tracking-tight font-mono">{children}</h2>
   );
 }
 
@@ -86,9 +221,9 @@ function HomeComponent() {
       {/* Hero */}
       <section
         id="about"
-        className="flex flex-col items-center justify-center gap-6 w-full py-24 dot-grid"
+        className="flex flex-col items-center justify-center gap-6 w-full pt-24 dot-grid"
       >
-        <div className="max-w-175 flex flex-col gap-6">
+        <div className="max-w-175 w-full flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto">
           <Badge
             variant="outline"
             className="w-fit py-3 bg-available text-available-foreground"
@@ -106,77 +241,73 @@ function HomeComponent() {
             that actually work.
           </p>
           <div className="flex gap-3">
-            <Button size="lg" onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}>
+            <Button
+              size="lg"
+              onClick={() =>
+                document
+                  .getElementById("projects")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
               View Projects
             </Button>
-            <Button size="lg" variant="outline" onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() =>
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+            >
               Contact Me
             </Button>
           </div>
         </div>
       </section>
 
-      <div className="flex flex-col items-center gap-24 pb-24">
-        {/* Experience */}
-        <section id="experience" className="w-full max-w-175 flex flex-col gap-8">
-          <SectionHeading>Experience</SectionHeading>
+      {/* Experience */}
+      <section
+        id="experience"
+        className="flex flex-col items-center justify-center gap-6 w-full pt-24"
+      >
+        <div className="w-full max-w-175 flex flex-col gap-8 justify-center">
+          <SectionHeading>WORK EXPERIENCE</SectionHeading>
           <div className="flex flex-col gap-6">
             {experiences.map((exp, i) => (
-              <div key={i} className="flex flex-col gap-2 rounded-lg border border-border p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-semibold">{exp.role}</p>
-                    <p className="text-sm text-subtle">{exp.company}</p>
-                  </div>
-                  <span className="text-sm text-subtle shrink-0 font-mono">{exp.period}</span>
-                </div>
-                <Separator />
-                <p className="text-sm text-subtle leading-relaxed">{exp.description}</p>
-              </div>
+              <ExperienceCard key={i} experience={exp} />
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Projects */}
-        <section id="projects" className="w-full max-w-175 flex flex-col gap-8">
+      {/* Projects */}
+      <section
+        id="projects"
+        className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y"
+      >
+        <div className="w-full max-w-175 flex flex-col gap-8 justify-center">
           <SectionHeading>Projects</SectionHeading>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project) => (
-              <a
-                key={project.name}
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex flex-col gap-3 rounded-lg border border-border p-5 hover:bg-muted transition-colors"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="font-semibold">{project.name}</p>
-                  <span className="text-subtle text-sm">↗</span>
-                </div>
-                <p className="text-sm text-subtle leading-relaxed flex-1">{project.description}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.stack.map((tech) => (
-                    <Badge key={tech} variant="secondary" className="text-xs font-mono">
-                      {tech}
-                    </Badge>
-                  ))}
-                </div>
-              </a>
+          <div className="grid grid-cols-[1fr_1fr] gap-3">
+            {projects.map((project, i) => (
+              <ProjectCard key={project.id} project={project} views={[1200, 340, 89][i]} />
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
+      <div className="flex flex-col items-center justify-center gap-24 py-12">
         {/* Tech Stack */}
         <section id="stack" className="w-full max-w-175 flex flex-col gap-8">
           <SectionHeading>Tech Stack</SectionHeading>
           <div className="flex flex-col gap-4">
             {stack.map((group) => (
-              <div key={group.category} className="flex gap-4 items-start">
+              <div key={group.id} className="flex gap-4 items-start">
                 <span className="text-sm text-subtle w-24 shrink-0 pt-0.5 font-mono">
-                  {group.category}
+                  {group.name}
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {group.items.map((item) => (
+                  {group.list.map((item) => (
                     <Badge key={item} variant="outline" className="font-mono">
                       {item}
                     </Badge>
@@ -193,18 +324,21 @@ function HomeComponent() {
           <div className="flex flex-col gap-3">
             {certificates.map((cert) => (
               <a
-                key={cert.name}
-                href={cert.url}
+                key={cert.id}
+                href={cert.certificateUrl ?? "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-between rounded-lg border border-border p-4 hover:bg-muted transition-colors"
               >
                 <div className="flex flex-col gap-0.5">
-                  <p className="font-medium">{cert.name}</p>
+                  <p className="font-medium">{cert.title}</p>
                   <p className="text-sm text-subtle">{cert.issuer}</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-subtle font-mono">{cert.year}</span>
+                  <span className="text-sm text-subtle font-mono">
+                    {cert.issueYear}
+                    {cert.expiryYear ? ` – ${cert.expiryYear}` : ""}
+                  </span>
                   <span className="text-subtle text-sm">↗</span>
                 </div>
               </a>
@@ -217,8 +351,8 @@ function HomeComponent() {
           <SectionHeading>Contact</SectionHeading>
           <div className="rounded-lg border border-border p-8 flex flex-col gap-6 items-start">
             <p className="text-subtle leading-relaxed max-w-lg">
-              I'm open to freelance work, full-time roles, and interesting
-              side projects. If you have something in mind, reach out.
+              I'm open to freelance work, full-time roles, and interesting side
+              projects. If you have something in mind, reach out.
             </p>
             <div className="flex flex-col gap-3 font-mono text-sm">
               <a

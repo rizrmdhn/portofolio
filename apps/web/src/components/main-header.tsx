@@ -16,7 +16,7 @@ export function MainHeader() {
   const navigate = useNavigate();
 
   return (
-    <div className="h-14 flex items-center justify-between border-border border-b px-6">
+    <div className="h-14 flex items-center justify-between border-border border-b px-6 sticky top-0 z-50 bg-background">
       <Button
         className="text-base font-mono text-subtle"
         variant="link"
