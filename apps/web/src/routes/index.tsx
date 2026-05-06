@@ -232,7 +232,7 @@ function HomeComponent() {
         id="about"
         className="flex flex-col items-center justify-center gap-6 w-full pt-24 dot-grid"
       >
-        <div className="max-w-175 w-full flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto">
+        <div className="w-full md:max-w-175 flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto px-4 md:px-0">
           <Badge
             variant="outline"
             className="w-fit py-3 px-3.5 bg-available text-available-foreground border border-available-foreground/20 text-xs font-medium"
@@ -240,7 +240,7 @@ function HomeComponent() {
             <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
             Available for opportunities
           </Badge>
-          <h1 className="text-[54px] font-extrabold leading-[1.05] text-foreground">
+          <h1 className="text-[32px] sm:text-[44px] md:text-[54px] font-extrabold leading-[1.05] text-foreground">
             Noor Rizki Ramadhan
           </h1>
           <p className="text-[18px] text-start max-w-2xl text-muted-foreground">
@@ -252,7 +252,7 @@ function HomeComponent() {
             that actually work.
           </p>
           {/* Social */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Button variant="outline" size="lg" onClick={() => {}}>
               <span className="flex items-center gap-1 text-sm text-subtle font-medium">
                 <IconBrandGithub className="size-4" />
@@ -303,7 +303,7 @@ function HomeComponent() {
         id="experience"
         className="flex flex-col items-center justify-center gap-6 w-full pt-24"
       >
-        <div className="w-full max-w-175 flex flex-col gap-8 justify-center">
+        <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
           <SectionHeading>WORK EXPERIENCE</SectionHeading>
           <div className="flex flex-col gap-6">
             {experiences.map((exp, i) => (
@@ -318,7 +318,7 @@ function HomeComponent() {
         id="projects"
         className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y"
       >
-        <div className="w-full max-w-175 flex flex-col gap-8 justify-center">
+        <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
           <SectionHeading>PROJECTS</SectionHeading>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
             {projects.map((project, i) => (
@@ -334,9 +334,9 @@ function HomeComponent() {
 
       <div className="flex flex-col items-center justify-center gap-24 py-12">
         {/* Tech Stack */}
-        <section id="stack" className="w-full max-w-175 flex flex-col gap-8">
+        <section id="stack" className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0">
           <SectionHeading>TECH STACK</SectionHeading>
-          <div className="flex flex-row gap-6 justify-between">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
             {stack.map((group) => (
               <TechStackList key={group.id} stack={group} />
             ))}
@@ -348,7 +348,7 @@ function HomeComponent() {
           id="certs"
           className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y"
         >
-          <div className="w-full max-w-175 flex flex-col gap-8 justify-center">
+          <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
             <SectionHeading>CERTIFICATES</SectionHeading>
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
               {certificates.map((cert) => (
@@ -359,7 +359,7 @@ function HomeComponent() {
         </section>
 
         {/* Contact */}
-        <section id="contact" className="w-full max-w-175 flex flex-col gap-8">
+        <section id="contact" className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0">
           <SectionHeading>CONTACT</SectionHeading>
           <div className="rounded-lg border border-border p-8 flex flex-col gap-6 items-start">
             <p className="text-subtle leading-relaxed max-w-lg">
@@ -386,7 +386,7 @@ function HomeComponent() {
         </section>
       </div>
 
-      <footer className="border-t border-border py-6 max-w-175 mx-auto w-full flex flex-row justify-between">
+      <footer className="border-t border-border py-6 w-full md:max-w-175 mx-auto flex flex-col sm:flex-row justify-between gap-2 px-4 md:px-0">
         <span className="text-center text-xs text-subtle font-mono">
           © {new Date().getFullYear()} Noor Rizki Ramadhan
         </span>
