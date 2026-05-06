@@ -1,6 +1,7 @@
 import { ExperienceCard } from "@/components/experience-card";
 import { MainHeader } from "@/components/main-header";
 import { ProjectCard } from "@/components/project-card";
+import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Certification } from "@portofolio/types/certification.types";
@@ -333,21 +334,10 @@ function HomeComponent() {
       <div className="flex flex-col items-center justify-center gap-24 py-12">
         {/* Tech Stack */}
         <section id="stack" className="w-full max-w-175 flex flex-col gap-8">
-          <SectionHeading>Tech Stack</SectionHeading>
-          <div className="flex flex-col gap-4">
+          <SectionHeading>TECH STACK</SectionHeading>
+          <div className="flex flex-row gap-6 justify-between">
             {stack.map((group) => (
-              <div key={group.id} className="flex gap-4 items-start">
-                <span className="text-sm text-subtle w-24 shrink-0 pt-0.5 font-mono">
-                  {group.name}
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {group.list.map((item) => (
-                    <Badge key={item} variant="outline" className="font-mono">
-                      {item}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+              <TechStackList key={group.id} stack={group} />
             ))}
           </div>
         </section>
