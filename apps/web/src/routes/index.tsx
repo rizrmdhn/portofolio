@@ -209,7 +209,9 @@ const certificates: Certification[] = [
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-sm text-subtle tracking-tight font-mono">{children}</h2>
+    <h2 className="text-sm text-subtle tracking-[0.15em] font-mono">
+      {children}
+    </h2>
   );
 }
 
@@ -287,10 +289,14 @@ function HomeComponent() {
         className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y"
       >
         <div className="w-full max-w-175 flex flex-col gap-8 justify-center">
-          <SectionHeading>Projects</SectionHeading>
+          <SectionHeading>PROJECTS</SectionHeading>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
             {projects.map((project, i) => (
-              <ProjectCard key={project.id} project={project} views={[1200, 340, 89][i]} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                views={[1200, 340, 89][i]}
+              />
             ))}
           </div>
         </div>

@@ -24,23 +24,27 @@ export function ExperienceCard({
       <div className="flex items-center gap-4">
         {/* Years And Company */}
         <div className="flex flex-col items-start gap-2 flex-1 self-start">
-          <span className="text-sm text-accent font-mono font-semibold">
+          <span className="text-xs text-accent font-mono font-semibold">
             {format(experience.startDate, "MMM yyyy")} - {isCurrent}
           </span>
-          <span className="text-sm font-medium text-subtle">
+          <span className="text-[13px] text-muted-foreground">
             {experience.company}
           </span>
         </div>
 
         {/* Role, Description And Skills */}
         <div className="flex flex-col items-start gap-2 max-w-lg">
-          <span className="text-md font-medium">{experience.title}</span>
-          <p className="text-sm text-subtle">{experience.description}</p>
+          <span className="text-[15px] font-semibold text-foreground">
+            {experience.title}
+          </span>
+          <p className="text-[13px] text-muted-foreground">
+            {experience.description}
+          </p>
           <div className="flex flex-wrap gap-2">
             {experience.skills.map((skill, index) => (
               <span
                 key={index}
-                className="text-xs bg-available text-available-foreground px-2 py-1 rounded font-mono font-semibold"
+                className="text-[10px] bg-tag text-tag-foreground border border-tag-border px-2 py-1 rounded font-mono font-semibold"
               >
                 {skill}
               </span>
