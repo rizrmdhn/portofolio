@@ -23,6 +23,7 @@ export function LoginButton() {
         }
         variant="outline"
         size="lg"
+        className="text-subtle"
       >
         Dashboard
       </Button>
@@ -38,6 +39,7 @@ export function LoginButton() {
       }
       variant="outline"
       size="lg"
+      className="text-subtle"
     >
       Login
     </Button>

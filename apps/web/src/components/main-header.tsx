@@ -41,7 +41,7 @@ export function MainHeader() {
       </nav>
 
       <div className="flex items-center gap-4">
-        <ModeToggle />
+        <ModeToggle type="color" />
 
         {/* Resume Button */}
         <Button

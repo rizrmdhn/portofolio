@@ -15,17 +15,38 @@ import {
 
 import { useTheme } from "@/components/theme-provider";
 
-type ModeToggleType = "default" | "dropdown" | "segmented";
+type ModeToggleType = "default" | "dropdown" | "segmented" | "color";
 
 interface ModeToggleProps {
   type?: ModeToggleType;
 }
 
 const themes = [
-  { value: "light", label: "Light", icon: IconSun },
-  { value: "dark", label: "Dark", icon: IconMoon },
-  { value: "warm", label: "Warm", icon: IconSunset },
-  { value: "system", label: "System", icon: IconDeviceDesktop },
+  {
+    value: "light",
+    label: "Light",
+    icon: IconSun,
+    swatch: "bg-zinc-100 border border-zinc-300",
+  },
+  {
+    value: "dark",
+    label: "Dark",
+    icon: IconMoon,
+    swatch: "bg-zinc-900 border border-zinc-600",
+  },
+  {
+    value: "warm",
+    label: "Warm",
+    icon: IconSunset,
+    swatch: "bg-amber-200 border border-amber-400",
+  },
+  {
+    value: "system",
+    label: "System",
+    icon: IconDeviceDesktop,
+    swatch:
+      "bg-gradient-to-br from-zinc-100 to-zinc-900 border border-zinc-400",
+  },
 ] as const;
 
 function SegmentedToggle() {
@@ -73,9 +94,32 @@ function DropdownToggle() {
   );
 }
 
+function ColorToggle() {
+  const { theme, setTheme } = useTheme();
+  return (
+    <div className="flex items-center gap-2.5">
+      {themes.map(({ value, label, swatch }) => (
+        <button
+          key={value}
+          title={label}
+          onClick={() => setTheme(value)}
+          className={cn(
+            "size-5 rounded-full shrink-0 cursor-pointer transition-all",
+            swatch,
+            theme === value
+              ? "ring-2 ring-offset-2 ring-offset-background ring-foreground/40 scale-110"
+              : "hover:scale-110",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function ModeToggle({ type = "default" }: ModeToggleProps) {
   if (type === "segmented") return <SegmentedToggle />;
   if (type === "dropdown") return <DropdownToggle />;
+  if (type === "color") return <ColorToggle />;
 
   return (
     <>
