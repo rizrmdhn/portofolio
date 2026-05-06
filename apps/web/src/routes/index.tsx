@@ -1,3 +1,4 @@
+import { CertificateCard } from "@/components/certificate-card";
 import { ExperienceCard } from "@/components/experience-card";
 import { MainHeader } from "@/components/main-header";
 import { ProjectCard } from "@/components/project-card";
@@ -343,36 +344,23 @@ function HomeComponent() {
         </section>
 
         {/* Certificates */}
-        <section id="certs" className="w-full max-w-175 flex flex-col gap-8">
-          <SectionHeading>Certificates</SectionHeading>
-          <div className="flex flex-col gap-3">
-            {certificates.map((cert) => (
-              <a
-                key={cert.id}
-                href={cert.certificateUrl ?? "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between rounded-lg border border-border p-4 hover:bg-muted transition-colors"
-              >
-                <div className="flex flex-col gap-0.5">
-                  <p className="font-medium">{cert.title}</p>
-                  <p className="text-sm text-subtle">{cert.issuer}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-subtle font-mono">
-                    {cert.issueYear}
-                    {cert.expiryYear ? ` – ${cert.expiryYear}` : ""}
-                  </span>
-                  <span className="text-subtle text-sm">↗</span>
-                </div>
-              </a>
-            ))}
+        <section
+          id="certs"
+          className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y"
+        >
+          <div className="w-full max-w-175 flex flex-col gap-8 justify-center">
+            <SectionHeading>CERTIFICATES</SectionHeading>
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
+              {certificates.map((cert) => (
+                <CertificateCard key={cert.id} certificate={cert} />
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Contact */}
         <section id="contact" className="w-full max-w-175 flex flex-col gap-8">
-          <SectionHeading>Contact</SectionHeading>
+          <SectionHeading>CONTACT</SectionHeading>
           <div className="rounded-lg border border-border p-8 flex flex-col gap-6 items-start">
             <p className="text-subtle leading-relaxed max-w-lg">
               I'm open to freelance work, full-time roles, and interesting side
@@ -398,8 +386,22 @@ function HomeComponent() {
         </section>
       </div>
 
-      <footer className="border-t border-border py-6 text-center text-sm text-subtle font-mono">
-        © {new Date().getFullYear()} Noor Rizki Ramadhan
+      <footer className="border-t border-border py-6 max-w-175 mx-auto w-full flex flex-row justify-between">
+        <span className="text-center text-xs text-subtle font-mono">
+          © {new Date().getFullYear()} Noor Rizki Ramadhan
+        </span>
+
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <a className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors">
+            Github
+          </a>
+          <a className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors">
+            LinkedIn
+          </a>
+          <a className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors">
+            Email
+          </a>
+        </div>
       </footer>
     </div>
   );
