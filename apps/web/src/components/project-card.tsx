@@ -17,7 +17,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, views }: ProjectCardProps) {
   return (
-    <Card className="flex flex-col  rounded-lg p-5 max-w-md">
+    <Card className="flex flex-col rounded-lg p-5 max-w-md cursor-pointer border border-transparent transition-all hover:bg-project-hover hover:border-card-hover-border hover:shadow-sm">
       <CardContent className="flex flex-col gap-4 p-0">
         <h3 className="text-sm font-semibold">{project.title}</h3>
         <p className="text-xs text-muted-foreground">{project.description}</p>
