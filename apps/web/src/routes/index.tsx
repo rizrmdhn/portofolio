@@ -7,6 +7,11 @@ import { Certification } from "@portofolio/types/certification.types";
 import { Experience } from "@portofolio/types/experience.types";
 import { Project } from "@portofolio/types/project.types";
 import { TechStack } from "@portofolio/types/tech-stack.types";
+import {
+  IconBrandGithub,
+  IconBrandLinkedin,
+  IconMail,
+} from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -228,20 +233,43 @@ function HomeComponent() {
         <div className="max-w-175 w-full flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto">
           <Badge
             variant="outline"
-            className="w-fit py-3 bg-available text-available-foreground"
+            className="w-fit py-3 px-3.5 bg-available text-available-foreground border border-available-foreground/20 text-xs font-medium"
           >
             <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
-            <span className="text-sm">Available for opportunities</span>
+            Available for opportunities
           </Badge>
-          <h1 className="text-5xl font-bold">Noor Rizki Ramadhan</h1>
-          <p className="text-2xl text-start max-w-2xl text-subtle">
+          <h1 className="text-[54px] font-extrabold leading-[1.05] text-foreground">
+            Noor Rizki Ramadhan
+          </h1>
+          <p className="text-[18px] text-start max-w-2xl text-muted-foreground">
             Fullstack Developer
           </p>
-          <p className="text-lg text-start max-w-2xl text-subtle">
+          <p className="text-[15px] text-start max-w-2xl text-muted-foreground leading-[1.75]">
             I build fast, scalable web applications with clean architecture.
             Focused on developer experience, performance, and shipping things
             that actually work.
           </p>
+          {/* Social */}
+          <div className="flex items-center gap-4">
+            <Button variant="outline" size="lg" onClick={() => {}}>
+              <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+                <IconBrandGithub className="size-4" />
+                GitHub
+              </span>
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => {}}>
+              <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+                <IconBrandLinkedin className="size-4" />
+                LinkedIn
+              </span>
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => {}}>
+              <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+                <IconMail className="size-4" />
+                Email
+              </span>
+            </Button>
+          </div>
           <div className="flex gap-3">
             <Button
               size="lg"
@@ -262,7 +290,7 @@ function HomeComponent() {
                   ?.scrollIntoView({ behavior: "smooth" })
               }
             >
-              Contact Me
+              Contact
             </Button>
           </div>
         </div>
