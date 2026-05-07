@@ -3,8 +3,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 
-import "./index.css";
-
 import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
 
