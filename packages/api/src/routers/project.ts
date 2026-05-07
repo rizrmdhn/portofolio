@@ -6,11 +6,13 @@ import {
   getPaginatedProjects,
   getProjectById,
   insertImageToProject,
+  reorderProjects,
   updateProject,
 } from "@portofolio/queries/project.queries";
 import {
   createProjectSchema,
   getProjectsSchema,
+  reorderProjectsSchema,
   updateProjectSchema,
 } from "@portofolio/schema/project.schema";
 import utapi from "@portofolio/uploadthing";
@@ -79,6 +81,16 @@ export const projectRouter = createTRPCRouter({
       if (err) throw toTRPCError(err);
 
       return project;
+    }),
+
+  reorder: protectedProcedure
+    .input(reorderProjectsSchema)
+    .mutation(async ({ input }) => {
+      const [, err] = await tryCatchAsync(() => reorderProjects(input));
+
+      if (err) throw toTRPCError(err);
+
+      return true;
     }),
 
   delete: protectedProcedure

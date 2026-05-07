@@ -3,9 +3,10 @@ import { DataTable } from "@/components/data-table/data-table";
 import { DataTableSortList } from "@/components/data-table/data-table-sort-list";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { useDataTableRouter } from "@/hooks/use-data-table-router";
-import { trpc } from "@/utils/trpc";
+import { globalErrorToast } from "@/lib/toasts";
+import { getQueryClient, trpc } from "@/utils/trpc";
 import { getProjectsSchema } from "@portofolio/schema/project.schema";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 
@@ -27,14 +28,7 @@ function RouteComponent() {
     trpc.project.getPaginatedProjects.queryOptions(params),
   );
 
-  const columns = useMemo(
-    () =>
-      getProjectsColumns({
-        currentPage: params.page,
-        perPage: params.perPage,
-      }),
-    [params.page, params.perPage],
-  );
+  const columns = useMemo(() => getProjectsColumns({}), []);
 
   const { table } = useDataTableRouter({
     data: data?.data ?? [],
@@ -43,10 +37,23 @@ function RouteComponent() {
     search: params,
     navigate: ({ search: updater }) => navigate({ search: updater }),
     initialState: {
-      sorting: [{ id: "createdAt", desc: true }],
+      pagination: { pageIndex: 0, pageSize: 50 },
+      columnVisibility: { order: false },
     },
     getRowId: (row) => row.id,
   });
+
+  const reorder = useMutation(
+    trpc.project.reorder.mutationOptions({
+      onSuccess: () => {
+        getQueryClient().invalidateQueries(
+          trpc.project.getPaginatedProjects.queryOptions(params),
+        );
+      },
+      onError: (err) =>
+        globalErrorToast(`Failed to reorder projects: ${err.message}`),
+    }),
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -54,6 +61,11 @@ function RouteComponent() {
         table={table}
         isLoading={isLoading}
         error={error}
+        onReorder={(reorderedItems) => {
+          reorder.mutate(
+            reorderedItems.map((item, i) => ({ id: item.id, order: i })),
+          );
+        }}
         emptyMessage="No projects found."
         emptyDescription="Try adjusting your filters."
       >

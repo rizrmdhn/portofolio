@@ -25,7 +25,7 @@ const navGroups = [
   {
     title: "Home",
     items: [
-      { name: "Overview", icon: IconHome, url: "/dashboard" },
+      { name: "Overview", icon: IconHome, url: "/dashboard", exact: true },
       { name: "Activity", icon: IconActivity, url: "/dashboard/activity" },
     ],
   },

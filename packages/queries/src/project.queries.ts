@@ -4,6 +4,7 @@ import { projectViews, projects } from "@portofolio/db/schema/index";
 import type {
   CreateProjectInput,
   GetProjectsInput,
+  ReorderProjectsInput,
   UpdateProjectInput,
 } from "@portofolio/schema/project.schema";
 import type { PaginatedProjects } from "@portofolio/types/project.types";
@@ -84,6 +85,14 @@ export async function updateProject(data: UpdateProjectInput) {
   if (!result) throw new QueryError("Failed to update project");
 
   return result;
+}
+
+export async function reorderProjects(items: ReorderProjectsInput) {
+  await db.transaction(async (tx) => {
+    for (const { id, order } of items) {
+      await tx.update(projects).set({ order }).where(eq(projects.id, id));
+    }
+  });
 }
 
 export async function insertImageToProject(

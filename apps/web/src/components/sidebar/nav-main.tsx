@@ -13,6 +13,7 @@ interface NavItem {
   name: string;
   url: string;
   icon: TablerIcon;
+  exact?: boolean;
 }
 
 interface NavGroup {
@@ -24,7 +25,10 @@ export function NavMain({ groups }: { groups: NavGroup[] }) {
   return (
     <>
       {groups.map((group) => (
-        <SidebarGroup key={group.title} className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroup
+          key={group.title}
+          className="group-data-[collapsible=icon]:hidden"
+        >
           <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
           <SidebarMenu>
             {group.items.map((item) => (
@@ -34,7 +38,7 @@ export function NavMain({ groups }: { groups: NavGroup[] }) {
                     <Link
                       to={item.url}
                       activeProps={{ "data-active": true }}
-                      activeOptions={{ exact: true }}
+                      activeOptions={{ exact: item.exact ?? false }}
                     />
                   }
                 >

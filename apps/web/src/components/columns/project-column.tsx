@@ -1,27 +1,44 @@
+import { Button } from "@/components/ui/button";
 import {
   createActionColumn,
   createDateColumn,
-  createNumberColumn,
   createStatusColumn,
   createTextColumn,
 } from "@/lib/column-helpers";
-import { Button } from "@/components/ui/button";
 import type { PaginatedProjects } from "@portofolio/types/project.types";
 import { IconEye } from "@tabler/icons-react";
 import type { ColumnDef } from "@tanstack/react-table";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
-interface ProjectColumnProps {
-  currentPage: number;
-  perPage: number;
-}
+interface ProjectColumnProps {}
 
-export default function getProjectsColumns({
-  currentPage,
-  perPage,
-}: ProjectColumnProps): ColumnDef<PaginatedProjects>[] {
+export default function getProjectsColumns({}: ProjectColumnProps): ColumnDef<PaginatedProjects>[] {
   return [
-    createNumberColumn<PaginatedProjects>(currentPage, perPage),
-    createTextColumn<PaginatedProjects>("title", "Project", { width: "w-64" }),
+    {
+      id: "order",
+      accessorKey: "order",
+      enableSorting: true,
+      enableHiding: false,
+      header: () => null,
+      cell: () => null,
+    },
+    {
+      id: "title",
+      accessorKey: "title",
+      header: () => <span className="font-medium">Project</span>,
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2 flex-row">
+          <Avatar className="rounded-sm after:rounded-sm">
+            <AvatarFallback className="rounded-sm">
+              {/* should get initial from title atleast 2 characters */}
+              {row.getValue<string>("title").slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <span>{row.getValue<string>("title")}</span>
+        </div>
+      ),
+      meta: { label: "Project" },
+    },
     createTextColumn<PaginatedProjects>("description", "Description", {
       width: "w-52",
       nullable: true,

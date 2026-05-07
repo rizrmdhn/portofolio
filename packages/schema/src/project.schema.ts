@@ -35,6 +35,20 @@ export const PROJECT_SORTABLE_FIELDS = [
   "updatedAt",
 ] as const;
 
-export const getProjectsSchema = createPaginationSchema(PROJECT_SORTABLE_FIELDS);
+export const getProjectsSchema = createPaginationSchema(
+  PROJECT_SORTABLE_FIELDS,
+  {
+    id: "order",
+    desc: false,
+  },
+).extend({
+  perPage: z.number().int().min(1).max(100).default(100),
+});
 
 export type GetProjectsInput = z.infer<typeof getProjectsSchema>;
+
+export const reorderProjectsSchema = z
+  .array(z.object({ id: z.string(), order: z.number().int().min(0) }))
+  .min(1);
+
+export type ReorderProjectsInput = z.infer<typeof reorderProjectsSchema>;
