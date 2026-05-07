@@ -15,11 +15,15 @@ export const Route = createFileRoute("/(core)/dashboard")({
         to: "/login",
       });
     }
+
+    return context.session;
   },
   component: CoreLayout,
 });
 
 function CoreLayout() {
+  const { user } = Route.useLoaderData();
+
   return (
     <SidebarProvider
       style={
@@ -29,7 +33,7 @@ function CoreLayout() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="sidebar" />
+      <AppSidebar variant="sidebar" user={user} />
       <SidebarInset className="overflow-hidden contain-inline-size">
         <SiteHeader />
         <div className="overflow-y-auto p-4">

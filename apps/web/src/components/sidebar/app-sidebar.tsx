@@ -16,8 +16,7 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { trpc } from "@/utils/trpc";
-import { useQuery } from "@tanstack/react-query";
+import { User } from "better-auth";
 import { ModeToggle } from "../mode-toggle";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
@@ -56,11 +55,11 @@ const navGroups = [
   },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: user } = useQuery(trpc.auth.me.queryOptions());
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user: User;
+}
 
-  if (!user) return null;
-
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="h-(--header-height) border-border border-b justify-center">

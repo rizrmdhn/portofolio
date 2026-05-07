@@ -17,10 +17,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { logout } from "@/lib/logout";
-import { Users } from "@portofolio/types/users.types";
 import { useNavigate } from "@tanstack/react-router";
+import { User } from "better-auth";
 
-export function NavUser({ user }: { user: Users }) {
+export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
 

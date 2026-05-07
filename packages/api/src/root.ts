@@ -1,16 +1,9 @@
 import { createCallerFactory, createTRPCRouter } from ".";
-import { authRouter } from "./routers/auth";
 import { healthRouter } from "./routers/health";
 import { projectRouter } from "./routers/project";
 
-/**
- * This is the primary router for your server.
- *
- * All routers added in /api/routers should be manually added here.
- */
 export const appRouter = createTRPCRouter({
   health: healthRouter,
-  auth: authRouter,
   project: projectRouter,
 });
 

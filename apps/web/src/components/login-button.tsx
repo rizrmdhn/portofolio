@@ -1,15 +1,14 @@
-import { authMeQueryOptions } from "@/utils/auth-query";
-import { useQuery } from "@tanstack/react-query";
+import { authClient } from "@/lib/auth-client";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 
 export function LoginButton() {
-  const { data, isLoading } = useQuery(authMeQueryOptions());
+  const { data, isPending } = authClient.useSession();
 
   const navigate = useNavigate();
 
-  if (isLoading) {
+  if (isPending) {
     return <Skeleton className="h-8 w-16 rounded" />;
   }
 
