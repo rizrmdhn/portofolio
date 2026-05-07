@@ -23,6 +23,72 @@ import {
 import { v7 as uuidv7 } from "uuid";
 import { createTable } from "../utils";
 
+// ========== Better Auth tables ==========
+
+export const user = createTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("email_verified").notNull(),
+    image: text("image"),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+  },
+);
+
+export const session = createTable(
+  "session",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    token: text("token").notNull().unique(),
+    expiresAt: timestamp("expires_at").notNull(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+  },
+  (table) => [index("session_user_id_idx").using("btree", table.userId)],
+);
+
+export const account = createTable(
+  "account",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    scope: text("scope"),
+    password: text("password"),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+  },
+  (table) => [index("account_user_id_idx").using("btree", table.userId)],
+);
+
+export const verification = createTable(
+  "verification",
+  {
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at"),
+    updatedAt: timestamp("updated_at"),
+  },
+);
+
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
  * database instance for multiple projects.
@@ -41,75 +107,6 @@ export const experienceStatusEnum = pgEnum(
   EXPERIENCE_STATUS_TYPES,
 );
 
-export const users = createTable(
-  "users",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    name: varchar("name", { length: 256 }).notNull(),
-    email: varchar("email", { length: 256 }).notNull(),
-    password: varchar("password", { length: 256 }).notNull(),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    })
-      .$default(() => sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", {
-      withTimezone: true,
-      mode: "string",
-    }).$onUpdate(() => new Date().toISOString()),
-  },
-  (table) => [
-    index("users_id_idx").using("btree", table.id),
-    index("users_email_idx").using("btree", table.email),
-  ],
-);
-
-export const refreshTokens = createTable(
-  "refresh_tokens",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    token: text("token").notNull().unique(),
-    deviceInfo: text("device_info"),
-    os: text("os"),
-    version: varchar("version", { length: 100 }),
-    ipAddress: varchar("ip_address", { length: 45 }),
-    userAgent: text("user_agent"),
-    lastUsedAt: timestamp("last_used_at", {
-      withTimezone: true,
-      mode: "string",
-    }),
-    expiresAt: timestamp("expires_at", {
-      withTimezone: true,
-      mode: "string",
-    }).notNull(),
-    revoked: boolean("revoked").notNull().default(false),
-    revokedAt: timestamp("revoked_at", {
-      withTimezone: true,
-      mode: "string",
-    }),
-    createdAt: timestamp("created_at", {
-      withTimezone: true,
-      mode: "string",
-    })
-      .$default(() => sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-  },
-  (table) => [
-    index("refresh_token_user_id_idx").using("btree", table.userId),
-    index("refresh_token_token_idx").using("btree", table.token),
-    index("refresh_token_expires_at_idx").using("btree", table.expiresAt),
-  ],
-);
 
 export const projects = createTable(
   "projects",

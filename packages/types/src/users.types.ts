@@ -1,15 +1,7 @@
-import type { users } from "@portofolio/db/schema/index";
+import type { user } from "@portofolio/db/schema/index";
 
-import type { InferInsertModel } from "@portofolio/db";
-import type { InferQueryModel } from "./utils.types";
+import type { InferInsertModel, InferSelectModel } from "@portofolio/db";
 
-export type Users = InferQueryModel<
-  "users",
-  {
-    columns: {
-      password: false;
-    };
-  }
->;
+export type Users = InferSelectModel<typeof user>;
 
-export type InsertUser = InferInsertModel<typeof users>;
+export type InsertUser = InferInsertModel<typeof user>;

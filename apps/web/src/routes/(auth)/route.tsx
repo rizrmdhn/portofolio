@@ -1,17 +1,17 @@
-import { authMeQueryOptions } from "@/utils/auth-query";
+import { getUser } from "@/functions/get-user";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(auth)")({
-  beforeLoad: async ({ context }) => {
-    // Attempt to fetch user data
-    const user =
-      await context.queryClient.ensureQueryData(authMeQueryOptions());
-
-    if (user) {
-      throw redirect({ to: "/dashboard" });
+  beforeLoad: async () => {
+    const session = await getUser();
+    return { session };
+  },
+  loader: async ({ context }) => {
+    if (context.session) {
+      throw redirect({
+        to: "/dashboard",
+      });
     }
-
-    return null;
   },
   component: RouteComponent,
 });

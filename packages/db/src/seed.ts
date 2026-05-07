@@ -10,8 +10,9 @@ import { hash } from "@node-rs/argon2";
 import { VIEW_AS_TYPES } from "@portofolio/constants";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { v7 as uuidv7 } from "uuid";
 import { relations } from "./relations/index.js";
-import { applicationSettings, users } from "./schema/index.js";
+import { account, applicationSettings, user } from "./schema/index.js";
 
 const databaseUrl = process.env.DATABASE_URL;
 const email = process.env.ALLOWED_EMAIL_LOGIN;
@@ -36,7 +37,7 @@ const client = postgres(databaseUrl, { max: 1 });
 const db = drizzle({ client, relations });
 
 async function seedUser() {
-  const existing = await db.query.users.findFirst({
+  const existing = await db.query.user.findFirst({
     where: { email: email! },
   });
 
@@ -45,12 +46,27 @@ async function seedUser() {
     return;
   }
 
+  const userId = uuidv7();
+  const now = new Date();
   const passwordHash = await hash(password!);
 
-  await db.insert(users).values({
+  await db.insert(user).values({
+    id: userId,
     name: "Admin",
     email: email!,
+    emailVerified: true,
+    createdAt: now,
+    updatedAt: now,
+  });
+
+  await db.insert(account).values({
+    id: uuidv7(),
+    userId,
+    accountId: email!,
+    providerId: "credential",
     password: passwordHash,
+    createdAt: now,
+    updatedAt: now,
   });
 
   console.log(`Seeded admin user: ${email}`);

@@ -9,10 +9,8 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
-    JWT_SECRET: z.string().min(1),
-    JWT_REFRESH_SECRET: z.string().min(1),
-    JWT_ACCESS_TOKEN_EXPIRY: z.string().default("15m"),
-    JWT_REFRESH_TOKEN_EXPIRY: z.string().default("7d"),
+    BETTER_AUTH_SECRET: z.string().min(32),
+    BETTER_AUTH_URL: z.url(),
     ALLOWED_EMAIL_LOGIN: z.email(),
     ALLOWED_EMAIL_PASSWORD: z.string().min(8).optional(),
     UPLOADTHING_TOKEN: z.string().min(8).optional(),

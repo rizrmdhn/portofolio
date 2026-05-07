@@ -6,53 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import {
-  validateToken,
-  type JWTPayload,
-  type SessionUser,
-} from "@portofolio/auth";
+import { auth } from "@portofolio/auth";
 import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError, z } from "zod";
 import { parseAndValidateSafe } from "./utils/form-data-parser";
-
-/**
- * Isomorphic Session getter for API requests
- * - Expo requests will have a session token in the Authorization header
- * - Next.js requests will have a session token in cookies
- */
-const isomorphicGetSession = async (authHeader: string, cookieHeader = "") => {
-  const cookies = cookieHeader.split(";").map((c) => c.trim());
-
-  const rawRefreshToken =
-    cookies
-      .find((c) => c.startsWith("refreshToken="))
-      ?.slice("refreshToken=".length) ?? null;
-  const refreshToken = rawRefreshToken
-    ? decodeURIComponent(rawRefreshToken)
-    : null;
-
-  if (authHeader) {
-    const sessionToken = authHeader.split(" ")[1];
-    if (sessionToken) {
-      const { session, user } = await validateToken(sessionToken);
-      return { session, user, refreshToken };
-    }
-  }
-
-  const cookieToken = cookies
-    .find((c) => c.startsWith("accessToken="))
-    ?.slice("accessToken=".length);
-
-  if (cookieToken) {
-    const { session, user } = await validateToken(
-      decodeURIComponent(cookieToken),
-    );
-    return { session, user, refreshToken };
-  }
-
-  return { session: null, user: null, refreshToken };
-};
 
 /**
  * 1. CONTEXT
@@ -66,33 +24,14 @@ const isomorphicGetSession = async (authHeader: string, cookieHeader = "") => {
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (
-  context: Request,
-  resHeaders: Headers = new Headers(),
-): Promise<{
-  session: SessionUser | null | undefined;
-  user: JWTPayload | null | undefined;
-  hasAuthHeader: boolean;
-  refreshToken: string | null;
-  req: Request;
-  resHeaders: Headers;
-}> => {
-  const authHeader = context.headers.get("Authorization") ?? "";
-  const cookieHeader = context.headers.get("Cookie") ?? "";
-  const hasAuthHeader = !!authHeader || cookieHeader.includes("accessToken=");
-
-  const { session, user, refreshToken } = await isomorphicGetSession(
-    authHeader,
-    cookieHeader,
-  );
+export const createTRPCContext = async (context: Request) => {
+  const session = await auth.api.getSession({
+    headers: context.headers,
+  });
 
   return {
-    session,
-    user,
-    hasAuthHeader,
-    refreshToken,
-    req: context,
-    resHeaders,
+    user: session?.user,
+    session: session?.session,
   };
 };
 

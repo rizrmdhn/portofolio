@@ -14,9 +14,10 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@node-rs/argon2": "catalog:",
     "@portofolio/env": "workspace:*",
-    "jose": "^6.2.3",
-    "uuid": "catalog:"
+    "@portofolio/db": "workspace:*",
+    "better-auth": "catalog:"
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",

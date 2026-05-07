@@ -1,27 +1,19 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { authMeQueryOptions } from "@/utils/auth-query";
-
+import { getUser } from "@/functions/get-user";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(core)/dashboard")({
-  beforeLoad: async ({ context }) => {
-    try {
-      const user =
-        await context.queryClient.ensureQueryData(authMeQueryOptions());
-
-      if (!user) {
-        throw redirect({ to: "/login" });
-      }
-
-      return null;
-    } catch (error) {
-      if (error && typeof error === "object" && "isRedirect" in error) {
-        throw error;
-      }
-
-      throw redirect({ to: "/login" });
+  beforeLoad: async () => {
+    const session = await getUser();
+    return { session };
+  },
+  loader: async ({ context }) => {
+    if (!context.session) {
+      throw redirect({
+        to: "/login",
+      });
     }
   },
   component: CoreLayout,

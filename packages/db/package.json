@@ -32,8 +32,8 @@
     "uuid": "catalog:"
   },
   "devDependencies": {
-    "@portofolio/config": "workspace:*",
     "@node-rs/argon2": "catalog:",
+    "@portofolio/config": "workspace:*",
     "drizzle-kit": "1.0.0-rc.1",
     "@types/node": "catalog:",
     "tsx": "^4.0.0",

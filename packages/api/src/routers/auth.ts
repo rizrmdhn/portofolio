@@ -1,98 +1,10 @@
-import { verify } from "@node-rs/argon2";
-import {
-  createAccessToken,
-  createRefreshToken,
-  verifyRefreshToken,
-} from "@portofolio/auth";
-import { env } from "@portofolio/env/server";
-import {
-  revokeRefreshToken,
-  storeRefreshToken,
-  validateRefreshToken,
-} from "@portofolio/queries/refresh-token.queries";
-import { getUserByEmail, getUserById } from "@portofolio/queries/users.queries";
-import { loginSchema } from "@portofolio/schema/auth.schema";
+import { getUserById } from "@portofolio/queries/users.queries";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
 import { TRPCError } from "@trpc/server";
-import { v7 as uuidv7 } from "uuid";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
-import { clearAuthCookies, setAuthCookies } from "../utils/set-auth-cookies";
+import { createTRPCRouter, publicProcedure } from "..";
 import { toTRPCError } from "../utils/to-trpc-error";
 
-function getRefreshTokenExpiry(): string {
-  const days = parseInt(env.JWT_REFRESH_TOKEN_EXPIRY.replace("d", ""));
-  const expiry = new Date();
-  expiry.setDate(expiry.getDate() + days);
-  return expiry.toISOString();
-}
-
 export const authRouter = createTRPCRouter({
-  login: publicProcedure.input(loginSchema).mutation(async ({ ctx, input }) => {
-    if (input.email !== env.ALLOWED_EMAIL_LOGIN) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Unauthorized email address",
-      });
-    }
-
-    const [user, err] = await tryCatchAsync(() => getUserByEmail(input.email));
-
-    if (err) throw toTRPCError(err);
-
-    if (!user)
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
-
-    const [isPasswordValid, passwordErr] = await tryCatchAsync(() =>
-      verify(user.password, input.password),
-    );
-
-    if (passwordErr) throw toTRPCError(passwordErr);
-
-    if (!isPasswordValid)
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Invalid password",
-      });
-
-    const [accessToken, accessTokenErr] = await tryCatchAsync(() =>
-      createAccessToken({
-        email: user.email,
-        id: user.id,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt ?? null,
-      }),
-    );
-
-    if (accessTokenErr) throw toTRPCError(accessTokenErr);
-
-    const [refreshToken, refreshTokenErr] = await tryCatchAsync(() =>
-      createRefreshToken({
-        email: user.email,
-        id: user.id,
-        sessionId: uuidv7(),
-        type: "refresh",
-      }),
-    );
-
-    if (refreshTokenErr) throw toTRPCError(refreshTokenErr);
-
-    const [_, storeErr] = await tryCatchAsync(() =>
-      storeRefreshToken({
-        userId: user.id,
-        token: refreshToken,
-        expiresAt: getRefreshTokenExpiry(),
-      }),
-    );
-
-    if (storeErr) throw toTRPCError(storeErr);
-
-    setAuthCookies(ctx.resHeaders, accessToken, refreshToken);
-    return { success: true };
-  }),
-
   // register: publicProcedure
   //   .input(registerSchema)
   //   .mutation(async ({ input }) => {
@@ -114,15 +26,8 @@ export const authRouter = createTRPCRouter({
   //   }),
 
   me: publicProcedure.query(async ({ ctx }) => {
-    if (!ctx.user && !ctx.hasAuthHeader) {
+    if (!ctx.user) {
       return null;
-    }
-
-    if (!ctx.user && ctx.hasAuthHeader) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Invalid or expired access token",
-      });
     }
 
     const [user, err] = await tryCatchAsync(() => getUserById(ctx.user!.id));
@@ -139,119 +44,5 @@ export const authRouter = createTRPCRouter({
       ...user,
       password: undefined,
     };
-  }),
-
-  refresh: publicProcedure.mutation(async ({ ctx }) => {
-    const { refreshToken } = ctx;
-
-    if (!refreshToken) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Refresh token is required",
-      });
-    }
-
-    const [verifiedToken, verifyErr] = await tryCatchAsync(() =>
-      verifyRefreshToken(refreshToken),
-    );
-
-    if (verifyErr) throw toTRPCError(verifyErr);
-
-    if (!verifiedToken)
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Invalid refresh token",
-      });
-
-    const [storedToken, storedTokenErr] = await tryCatchAsync(() =>
-      validateRefreshToken(refreshToken),
-    );
-
-    if (storedTokenErr) throw toTRPCError(storedTokenErr);
-
-    if (!storedToken)
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Invalid refresh token",
-      });
-
-    const [user, userErr] = await tryCatchAsync(() =>
-      getUserById(storedToken.userId),
-    );
-
-    if (userErr) throw toTRPCError(userErr);
-
-    if (!user)
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "User not found",
-      });
-
-    const [accessToken, accessTokenErr] = await tryCatchAsync(() =>
-      createAccessToken({
-        email: user.email,
-        id: user.id,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt ?? null,
-      }),
-    );
-
-    if (accessTokenErr) throw toTRPCError(accessTokenErr);
-
-    const [newRefreshToken, newRefreshTokenErr] = await tryCatchAsync(() =>
-      createRefreshToken({
-        email: user.email,
-        id: user.id,
-        sessionId: uuidv7(),
-        type: "refresh",
-      }),
-    );
-
-    if (newRefreshTokenErr) throw toTRPCError(newRefreshTokenErr);
-
-    if (!accessToken || !newRefreshToken)
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to create access or refresh token",
-      });
-
-    const [_, revokeErr] = await tryCatchAsync(() =>
-      revokeRefreshToken(refreshToken),
-    );
-
-    if (revokeErr) throw toTRPCError(revokeErr);
-
-    const [__, storeErr] = await tryCatchAsync(() =>
-      storeRefreshToken({
-        userId: user.id,
-        token: newRefreshToken,
-        expiresAt: getRefreshTokenExpiry(),
-      }),
-    );
-
-    if (storeErr) throw toTRPCError(storeErr);
-
-    setAuthCookies(ctx.resHeaders, accessToken, newRefreshToken);
-    return { success: true };
-  }),
-
-  logout: protectedProcedure.mutation(async ({ ctx }) => {
-    const { refreshToken } = ctx;
-
-    if (!refreshToken) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Refresh token is required for logout",
-      });
-    }
-
-    const [_, revokeErr] = await tryCatchAsync(() =>
-      revokeRefreshToken(refreshToken),
-    );
-
-    if (revokeErr) throw toTRPCError(revokeErr);
-
-    clearAuthCookies(ctx.resHeaders);
-    return { success: true, message: "Logged out successfully" };
   }),
 });

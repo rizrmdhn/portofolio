@@ -17,20 +17,11 @@ const SKIP_DIRS = new Set([
   "coverage",
 ]);
 
-// JWT secret keys to regenerate (excludes expiry/non-secret values)
-const KEYS = [
-  "JWT_SECRET",
-  "JWT_REFRESH_SECRET",
-  "JWT_RESET_PASSWORD_SECRET",
-  "JWT_DOCUMENT_SECRET",
-  "JWT_LEGAL_DOCUMENT_SECRET",
-  "JWT_TESTING_DOCUMENT_SECRET",
-  "JWT_COMPANY_DOCUMENT_SECRET",
-];
+const KEYS = ["BETTER_AUTH_SECRET"];
 
-// Generate a cryptographically secure random secret
+// 48 bytes → 64 char base64 string, well above better-auth's 32-char minimum
 function generateSecret() {
-  return crypto.randomBytes(36).toString("base64");
+  return crypto.randomBytes(48).toString("base64");
 }
 
 function findEnvFiles(dir) {
@@ -70,7 +61,7 @@ if (envFiles.length === 0) {
 }
 
 console.log(
-  `Found ${envFiles.length} .env* file(s). Regenerating JWT secrets...`,
+  `Found ${envFiles.length} .env* file(s). Regenerating Better Auth secret...`,
 );
 
 envFiles.forEach((envFile) => {
@@ -92,4 +83,4 @@ envFiles.forEach((envFile) => {
   console.log(`  ${relativeFile}: updated ${updatedCount} key(s)`);
 });
 
-console.log("Done. JWT secrets regenerated across all .env* files.");
+console.log("Done. Better Auth secret regenerated across all .env* files.");
