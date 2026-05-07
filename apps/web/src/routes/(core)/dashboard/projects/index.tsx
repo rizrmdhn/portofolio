@@ -3,7 +3,6 @@ import { DataTable } from "@/components/data-table/data-table";
 import { DataTableSortList } from "@/components/data-table/data-table-sort-list";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { useDataTableRouter } from "@/hooks/use-data-table-router";
-import { ssrCall } from "@/utils/ssr-auth.server";
 import { trpc } from "@/utils/trpc";
 import { getProjectsSchema } from "@portofolio/schema/project.schema";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -14,12 +13,6 @@ export const Route = createFileRoute("/(core)/dashboard/projects/")({
   validateSearch: getProjectsSchema,
   beforeLoad: async ({ search, context }) => {
     const queryOptions = trpc.project.getPaginatedProjects.queryOptions(search);
-
-    if (typeof window === "undefined") {
-      const data = await ssrCall((c) => c.project.getPaginatedProjects(search));
-      context.queryClient.setQueryData(queryOptions.queryKey, data);
-      return;
-    }
 
     await context.queryClient.ensureQueryData(queryOptions);
   },

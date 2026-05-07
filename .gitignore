@@ -49,3 +49,8 @@ coverage
 .cache
 tmp
 temp
+
+# Backup Db
+
+bkp.sql
+data-migration.sql

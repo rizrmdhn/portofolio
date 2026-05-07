@@ -2,19 +2,11 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { authMeQueryOptions } from "@/utils/auth-query";
-import { ssrAuthGate } from "@/utils/ssr-auth.server";
 
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(core)/dashboard")({
   beforeLoad: async ({ context }) => {
-    if (typeof window === "undefined") {
-      const user = await ssrAuthGate();
-      if (!user) throw redirect({ to: "/login" });
-      context.queryClient.setQueryData(authMeQueryOptions().queryKey, user);
-      return null;
-    }
-
     try {
       const user =
         await context.queryClient.ensureQueryData(authMeQueryOptions());
