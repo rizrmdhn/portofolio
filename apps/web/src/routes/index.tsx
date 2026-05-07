@@ -4,8 +4,7 @@ import { MainHeader } from "@/components/main-header";
 import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { trpc } from "@/utils/trpc";
 import { Certification } from "@portofolio/types/certification.types";
 import { Experience } from "@portofolio/types/experience.types";
@@ -16,7 +15,7 @@ import {
   IconMail,
 } from "@tabler/icons-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -167,6 +166,8 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 }
 
 function HomeComponent() {
+  const navigate = Route.useNavigate();
+
   const { data: allProjects } = useSuspenseQuery(
     trpc.project.getAll.queryOptions(),
   );
@@ -274,12 +275,13 @@ function HomeComponent() {
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>
-          <Link
-            to="/projects"
-            className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+          <Button
+            onClick={() => navigate("/projects")}
+            variant="outline"
+            size="lg"
           >
             View all projects
-          </Link>
+          </Button>
         </div>
       </section>
 
