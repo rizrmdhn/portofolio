@@ -1,4 +1,4 @@
-import { Project } from "@portofolio/types/project.types";
+import { ProjectWithView } from "@portofolio/types/project.types";
 import { toCompactNumber } from "@portofolio/utils/number";
 import {
   IconBrandAppstore,
@@ -11,11 +11,10 @@ import { Card, CardContent, CardFooter } from "./ui/card";
 import { Separator } from "./ui/separator";
 
 interface ProjectCardProps {
-  project: Project;
-  views?: number;
+  project: ProjectWithView;
 }
 
-export function ProjectCard({ project, views }: ProjectCardProps) {
+export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card className="flex flex-col rounded-lg p-5 max-w-md cursor-pointer border border-transparent transition-all hover:bg-project-hover hover:border-card-hover-border hover:shadow-sm">
       <CardContent className="flex flex-col gap-4 p-0">
@@ -80,10 +79,10 @@ export function ProjectCard({ project, views }: ProjectCardProps) {
             </a>
           )}
         </div>
-        {views !== undefined && (
+        {project.projectView !== undefined && (
           <span className="text-subtle text-[11px] font-mono inline-flex items-center gap-1.25">
             <IconEye className="size-3.25" />
-            {toCompactNumber(views)}
+            {toCompactNumber(project.projectView?.count || 0)}
           </span>
         )}
       </CardFooter>

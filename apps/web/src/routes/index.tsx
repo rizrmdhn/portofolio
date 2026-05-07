@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Certification } from "@portofolio/types/certification.types";
 import { Experience } from "@portofolio/types/experience.types";
-import { Project } from "@portofolio/types/project.types";
+import { ProjectWithView } from "@portofolio/types/project.types";
 import { TechStack } from "@portofolio/types/tech-stack.types";
 import {
   IconBrandGithub,
@@ -74,7 +74,7 @@ const experiences: Experience[] = [
   },
 ];
 
-const projects: Project[] = [
+const projects: ProjectWithView[] = [
   {
     id: "01900000-0000-7000-8000-000000000011",
     title: "Portfolio",
@@ -94,6 +94,11 @@ const projects: Project[] = [
     order: 1,
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: null,
+    projectView: {
+      id: "01900000-0000-7000-8000-000000000101",
+      projectId: "01900000-0000-7000-8000-000000000011",
+      count: 1234,
+    },
   },
   {
     id: "01900000-0000-7000-8000-000000000012",
@@ -114,6 +119,11 @@ const projects: Project[] = [
     order: 2,
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: null,
+    projectView: {
+      id: "01900000-0000-7000-8000-000000000102",
+      projectId: "01900000-0000-7000-8000-00000000<PASSWORD>",
+      count: 567,
+    },
   },
   {
     id: "01900000-0000-7000-8000-000000000013",
@@ -134,6 +144,11 @@ const projects: Project[] = [
     order: 3,
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: null,
+    projectView: {
+      id: "01900000-0000-7000-8000-000000000103",
+      projectId: "01900000-0000-7000-8000-000000000013",
+      count: 890,
+    },
   },
 ];
 
@@ -321,12 +336,8 @@ function HomeComponent() {
         <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
           <SectionHeading>PROJECTS</SectionHeading>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
-            {projects.map((project, i) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                views={[1200, 340, 89][i]}
-              />
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
             ))}
           </div>
         </div>
@@ -334,7 +345,10 @@ function HomeComponent() {
 
       <div className="flex flex-col items-center justify-center gap-24 py-12">
         {/* Tech Stack */}
-        <section id="stack" className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0">
+        <section
+          id="stack"
+          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0"
+        >
           <SectionHeading>TECH STACK</SectionHeading>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
             {stack.map((group) => (
@@ -359,7 +373,10 @@ function HomeComponent() {
         </section>
 
         {/* Contact */}
-        <section id="contact" className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0">
+        <section
+          id="contact"
+          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0"
+        >
           <SectionHeading>CONTACT</SectionHeading>
           <div className="rounded-lg border border-border p-8 flex flex-col gap-6 items-start">
             <p className="text-subtle leading-relaxed max-w-lg">
