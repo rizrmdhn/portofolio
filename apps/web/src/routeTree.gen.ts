@@ -16,6 +16,7 @@ import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as coreDashboardRouteRouteImport } from './routes/(core)/dashboard/route'
 import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboard/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
+import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -51,6 +52,12 @@ const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   path: '/api/trpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const coreDashboardProjectsIndexRoute =
+  coreDashboardProjectsIndexRouteImport.update({
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof authRegisterRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard/': typeof coreDashboardIndexRoute
+  '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
   '/register': typeof authRegisterRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard': typeof coreDashboardIndexRoute
+  '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -76,6 +85,7 @@ export interface FileRoutesById {
   '/(auth)/register': typeof authRegisterRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
+  '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -86,8 +96,15 @@ export interface FileRouteTypes {
     | '/register'
     | '/api/trpc/$'
     | '/dashboard/'
+    | '/dashboard/projects/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/api/trpc/$' | '/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/api/trpc/$'
+    | '/dashboard'
+    | '/dashboard/projects'
   id:
     | '__root__'
     | '/'
@@ -97,6 +114,7 @@ export interface FileRouteTypes {
     | '/(auth)/register'
     | '/api/trpc/$'
     | '/(core)/dashboard/'
+    | '/(core)/dashboard/projects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -157,6 +175,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTrpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(core)/dashboard/projects/': {
+      id: '/(core)/dashboard/projects/'
+      path: '/projects'
+      fullPath: '/dashboard/projects/'
+      preLoaderRoute: typeof coreDashboardProjectsIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
   }
 }
 
@@ -176,10 +201,12 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface coreDashboardRouteRouteChildren {
   coreDashboardIndexRoute: typeof coreDashboardIndexRoute
+  coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
 }
 
 const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardIndexRoute: coreDashboardIndexRoute,
+  coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
 }
 
 const coreDashboardRouteRouteWithChildren =

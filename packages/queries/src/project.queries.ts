@@ -1,14 +1,35 @@
-import { eq } from "@portofolio/db";
+import { eq, getColumns } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
-import { projects } from "@portofolio/db/schema/index";
+import { projectViews, projects } from "@portofolio/db/schema/index";
 import type {
   CreateProjectInput,
+  GetProjectsInput,
   UpdateProjectInput,
 } from "@portofolio/schema/project.schema";
+import type { PaginatedProjects } from "@portofolio/types/project.types";
 import utapi from "@portofolio/uploadthing";
 import { toUniqueSlug } from "@portofolio/utils/slug";
 import { NotFoundError, QueryError } from "./errors";
 import { createProjectView } from "./project-views.queries";
+import { getOffsetPaginated } from "./utils/get-offset-paginated";
+
+export async function getPaginatedProjects(input: GetProjectsInput) {
+  return getOffsetPaginated<typeof projects, PaginatedProjects>({
+    table: projects,
+    input,
+    select: {
+      ...getColumns(projects),
+      views: projectViews.count,
+    },
+    joins: [
+      {
+        type: "left",
+        table: projectViews,
+        on: eq(projects.id, projectViews.projectId),
+      },
+    ],
+  });
+}
 
 export async function getAllProjects() {
   const projects = await db.query.projects.findMany({

@@ -2,6 +2,7 @@ import { COLOR_VALUES, EXPERIENCE_STATUS_TYPES } from "@portofolio/constants";
 import { createInsertSchema } from "@portofolio/db";
 import { projects } from "@portofolio/db/schema/index";
 import z from "zod";
+import { createPaginationSchema } from "./pagination.schema";
 
 export const createProjectSchema = createInsertSchema(projects, {
   title: z.string().max(256),
@@ -25,3 +26,15 @@ export const updateProjectSchema = createProjectSchema.extend({
 export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 
 export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
+
+export const PROJECT_SORTABLE_FIELDS = [
+  "title",
+  "status",
+  "order",
+  "createdAt",
+  "updatedAt",
+] as const;
+
+export const getProjectsSchema = createPaginationSchema(PROJECT_SORTABLE_FIELDS);
+
+export type GetProjectsInput = z.infer<typeof getProjectsSchema>;

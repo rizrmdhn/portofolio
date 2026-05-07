@@ -3,12 +3,14 @@ import {
   createProject,
   deleteProject,
   getAllProjects,
+  getPaginatedProjects,
   getProjectById,
   insertImageToProject,
   updateProject,
 } from "@portofolio/queries/project.queries";
 import {
   createProjectSchema,
+  getProjectsSchema,
   updateProjectSchema,
 } from "@portofolio/schema/project.schema";
 import utapi from "@portofolio/uploadthing";
@@ -26,6 +28,18 @@ export const projectRouter = createTRPCRouter({
 
     return projects;
   }),
+
+  getPaginatedProjects: protectedProcedure
+    .input(getProjectsSchema)
+    .query(async ({ input }) => {
+      const [projects, err] = await tryCatchAsync(() =>
+        getPaginatedProjects(input),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return projects;
+    }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))

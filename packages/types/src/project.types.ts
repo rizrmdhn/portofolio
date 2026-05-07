@@ -10,3 +10,7 @@ export type ProjectWithView = InferQueryModel<
     with: { projectView: true };
   }
 >;
+
+export type PaginatedProjects = Project & {
+  views: number;
+};

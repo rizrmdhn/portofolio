@@ -62,7 +62,7 @@ export const tokenRefreshLink: TRPCLink<AppRouter> = () => {
           if (
             err instanceof TRPCClientError &&
             err.data?.code === "UNAUTHORIZED" &&
-            !op.path.startsWith("auth.")
+            op.path !== "auth.refresh"
           ) {
             refreshTokens()
               .then(() => {
