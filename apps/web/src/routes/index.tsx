@@ -4,19 +4,26 @@ import { MainHeader } from "@/components/main-header";
 import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { trpc } from "@/utils/trpc";
 import { Certification } from "@portofolio/types/certification.types";
 import { Experience } from "@portofolio/types/experience.types";
-import { ProjectWithView } from "@portofolio/types/project.types";
 import { TechStack } from "@portofolio/types/tech-stack.types";
 import {
   IconBrandGithub,
   IconBrandLinkedin,
   IconMail,
 } from "@tabler/icons-react";
-import { createFileRoute } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(
+      context.trpc.project.getAll.queryOptions(),
+    );
+  },
   component: HomeComponent,
 });
 
@@ -71,84 +78,6 @@ const experiences: Experience[] = [
     order: 3,
     createdAt: "2024-01-01T00:00:00Z",
     updatedAt: null,
-  },
-];
-
-const projects: ProjectWithView[] = [
-  {
-    id: "01900000-0000-7000-8000-000000000011",
-    title: "Portfolio",
-    slug: "portfolio",
-    description:
-      "Personal portfolio and blog built with TanStack Start, tRPC, and Tailwind CSS.",
-    longDescription: null,
-    tech: ["TypeScript", "React", "tRPC", "PostgreSQL", "Tailwind CSS"],
-    githubUrl: "https://github.com/rizrmdhn/portofolio",
-    liveUrl: "#",
-    playstoreUrl: null,
-    appstoreUrl: null,
-    imageUrl: null,
-    coverColor: "#6366f1",
-    status: "published",
-    isVisible: true,
-    order: 1,
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-    projectView: {
-      id: "01900000-0000-7000-8000-000000000101",
-      projectId: "01900000-0000-7000-8000-000000000011",
-      count: 1234,
-    },
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000012",
-    title: "SaaS Starter",
-    slug: "saas-starter",
-    description:
-      "A full-stack SaaS boilerplate with authentication, billing, and real-time updates.",
-    longDescription: null,
-    tech: ["Next.js", "Prisma", "Stripe", "Redis", "TypeScript"],
-    githubUrl: "https://github.com/rizrmdhn/saas-starter",
-    liveUrl: null,
-    playstoreUrl: null,
-    appstoreUrl: null,
-    imageUrl: null,
-    coverColor: "#3b82f6",
-    status: "published",
-    isVisible: true,
-    order: 2,
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-    projectView: {
-      id: "01900000-0000-7000-8000-000000000102",
-      projectId: "01900000-0000-7000-8000-00000000<PASSWORD>",
-      count: 567,
-    },
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000013",
-    title: "Envault",
-    slug: "envault",
-    description:
-      "Open-source CLI tool for managing and syncing environment variables across projects.",
-    longDescription: null,
-    tech: ["Node.js", "TypeScript", "SQLite"],
-    githubUrl: "https://github.com/rizrmdhn/envault",
-    liveUrl: null,
-    playstoreUrl: null,
-    appstoreUrl: null,
-    imageUrl: null,
-    coverColor: "#22c55e",
-    status: "published",
-    isVisible: true,
-    order: 3,
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-    projectView: {
-      id: "01900000-0000-7000-8000-000000000103",
-      projectId: "01900000-0000-7000-8000-000000000013",
-      count: 890,
-    },
   },
 ];
 
@@ -238,6 +167,11 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 }
 
 function HomeComponent() {
+  const { data: allProjects } = useSuspenseQuery(
+    trpc.project.getAll.queryOptions(),
+  );
+  const featured = allProjects.slice(0, 6);
+
   return (
     <div className="flex flex-col bg-background text-foreground">
       <MainHeader />
@@ -336,10 +270,16 @@ function HomeComponent() {
         <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
           <SectionHeading>PROJECTS</SectionHeading>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
-            {projects.map((project) => (
+            {featured.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>
+          <Link
+            to="/projects"
+            className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
+          >
+            View all projects
+          </Link>
         </div>
       </section>
 

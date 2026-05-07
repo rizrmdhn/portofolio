@@ -33,14 +33,15 @@ export async function getPaginatedProjects(input: GetProjectsInput) {
 }
 
 export async function getAllProjects() {
-  const projects = await db.query.projects.findMany({
+  const result = await db.query.projects.findMany({
+    where: { isVisible: true, status: "published" },
     orderBy: {
-      order: "desc",
+      order: "asc",
     },
     with: { projectView: true },
   });
 
-  return projects;
+  return result;
 }
 
 export async function getProjectById(id: string) {
