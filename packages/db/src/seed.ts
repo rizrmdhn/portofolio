@@ -37,37 +37,41 @@ const client = postgres(databaseUrl, { max: 1 });
 const db = drizzle({ client, relations });
 
 async function seedUser() {
-  const existing = await db.query.user.findFirst({
-    where: { email: email! },
-  });
-
-  if (existing) {
-    console.log(`User ${email} already exists, skipping.`);
-    return;
-  }
-
   const userId = uuidv7();
   const now = new Date();
   const passwordHash = await hash(password!);
 
-  await db.insert(user).values({
-    id: userId,
-    name: "Admin",
-    email: email!,
-    emailVerified: true,
-    createdAt: now,
-    updatedAt: now,
-  });
+  const [insertedUser] = await db
+    .insert(user)
+    .values({
+      id: userId,
+      name: "Admin",
+      email: email!,
+      emailVerified: true,
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoNothing({ target: user.email })
+    .returning();
 
-  await db.insert(account).values({
-    id: uuidv7(),
-    userId,
-    accountId: email!,
-    providerId: "credential",
-    password: passwordHash,
-    createdAt: now,
-    updatedAt: now,
-  });
+  const resolvedUserId = insertedUser?.id ?? (
+    await db.query.user.findFirst({ where: { email: email! } })
+  )?.id;
+
+  if (!resolvedUserId) throw new Error("Failed to resolve user id");
+
+  await db
+    .insert(account)
+    .values({
+      id: uuidv7(),
+      userId: resolvedUserId,
+      accountId: resolvedUserId,
+      providerId: "credential",
+      password: passwordHash,
+      createdAt: now,
+      updatedAt: now,
+    })
+    .onConflictDoNothing({ target: account.id });
 
   console.log(`Seeded admin user: ${email}`);
 }

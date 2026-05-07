@@ -17,7 +17,8 @@
     "@node-rs/argon2": "catalog:",
     "@portofolio/env": "workspace:*",
     "@portofolio/db": "workspace:*",
-    "better-auth": "catalog:"
+    "better-auth": "catalog:",
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
