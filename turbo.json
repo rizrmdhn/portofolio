@@ -25,7 +25,8 @@
       "persistent": true
     },
     "db:push": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "db:generate": {
       "cache": false,
@@ -45,6 +46,9 @@
       "persistent": true
     },
     "db:seed": {
+      "cache": false
+    },
+    "db:dump": {
       "cache": false
     }
   }

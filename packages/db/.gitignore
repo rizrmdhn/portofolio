@@ -16,6 +16,10 @@ logs
 _.log
 report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
+# local-only seeder with personal data
+src/bkp-seed.ts
+src/bkp.sql
+
 # dotenv environment variable files
 .env
 .env.development.local

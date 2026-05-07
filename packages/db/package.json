@@ -20,7 +20,9 @@
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
     "db:pull": "drizzle-kit pull",
-    "db:seed": "tsx src/seed.ts"
+    "db:seed": "tsx src/seed.ts",
+    "db:dump": "tsx src/dump.ts",
+    "db:bkp-seed": "tsx src/bkp-seed.ts"
   },
   "dependencies": {
     "@portofolio/constants": "workspace:*",
