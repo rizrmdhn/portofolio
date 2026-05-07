@@ -2,13 +2,20 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { authMeQueryOptions } from "@/utils/auth-query";
+import { ssrAuthGate } from "@/utils/ssr-auth.server";
 
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(core)/dashboard")({
   beforeLoad: async ({ context }) => {
+    if (typeof window === "undefined") {
+      const user = await ssrAuthGate();
+      if (!user) throw redirect({ to: "/login" });
+      context.queryClient.setQueryData(authMeQueryOptions().queryKey, user);
+      return null;
+    }
+
     try {
-      // Attempt to fetch user data
       const user =
         await context.queryClient.ensureQueryData(authMeQueryOptions());
 
@@ -18,12 +25,10 @@ export const Route = createFileRoute("/(core)/dashboard")({
 
       return null;
     } catch (error) {
-      // If it's already a redirect, re-throw it
       if (error && typeof error === "object" && "isRedirect" in error) {
         throw error;
       }
 
-      // If auth.me fails (even after token refresh attempt), redirect to login
       throw redirect({ to: "/login" });
     }
   },
