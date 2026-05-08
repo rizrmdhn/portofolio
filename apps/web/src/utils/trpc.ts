@@ -5,6 +5,7 @@ import {
   QueryClient,
   defaultShouldDehydrateQuery,
 } from "@tanstack/react-query";
+import { createIsomorphicFn } from "@tanstack/react-start";
 import {
   createTRPCClient,
   httpBatchLink,
@@ -19,16 +20,12 @@ import { getBaseUrl } from "./get-base-url";
 
 const trpcUrl = `${getBaseUrl()}/api/trpc`;
 
-async function getSsrCookie(): Promise<string | undefined> {
-  if (typeof window !== "undefined") return undefined;
-
-  try {
+const getSsrCookie = createIsomorphicFn()
+  .client(() => undefined)
+  .server(async () => {
     const { getRequestHeader } = await import("@tanstack/react-start/server");
     return getRequestHeader("cookie");
-  } catch {
-    return undefined;
-  }
-}
+  });
 
 async function withSsrCookieHeaders(headers: RequestInit["headers"]) {
   const nextHeaders = new Headers(headers);
