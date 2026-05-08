@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as CertificatesRouteImport } from './routes/certificates'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
@@ -22,6 +23,11 @@ import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificatesRoute = CertificatesRouteImport.update({
+  id: '/certificates',
+  path: '/certificates',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authRouteRoute = authRouteRouteImport.update({
@@ -67,6 +73,7 @@ const coreDashboardProjectsIndexRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
   '/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/login': typeof authLoginRoute
@@ -77,6 +84,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
   '/login': typeof authLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
+  '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
   '/(core)/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
@@ -100,6 +109,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/certificates'
     | '/projects'
     | '/dashboard'
     | '/login'
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/certificates'
     | '/projects'
     | '/login'
     | '/api/auth/$'
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(auth)'
+    | '/certificates'
     | '/projects'
     | '/(core)/dashboard'
     | '/(auth)/login'
@@ -132,6 +144,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
+  CertificatesRoute: typeof CertificatesRoute
   ProjectsRoute: typeof ProjectsRoute
   coreDashboardRouteRoute: typeof coreDashboardRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificates': {
+      id: '/certificates'
+      path: '/certificates'
+      fullPath: '/certificates'
+      preLoaderRoute: typeof CertificatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)': {
@@ -234,6 +254,7 @@ const coreDashboardRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  CertificatesRoute: CertificatesRoute,
   ProjectsRoute: ProjectsRoute,
   coreDashboardRouteRoute: coreDashboardRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

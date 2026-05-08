@@ -17,6 +17,19 @@ export async function getAllCertifications() {
   return certificationsList;
 }
 
+export async function getCertificatesForLandingPage() {
+  const result = await db.query.certifications.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    limit: 7,
+  });
+
+  const isMore = result.length > 6;
+
+  return { data: result.slice(0, 6), isMore };
+}
+
 export async function getCertificationById(id: string) {
   const certification = await db.query.certifications.findFirst({
     where: {

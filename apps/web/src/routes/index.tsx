@@ -6,7 +6,6 @@ import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Certification } from "@portofolio/types/certification.types";
 import { TechStack } from "@portofolio/types/tech-stack.types";
 import {
   IconBrandGithub,
@@ -25,7 +24,11 @@ export const Route = createFileRoute("/")({
       context.trpc.experience.getAll.queryOptions(),
     );
 
-    return { projects, experiences };
+    const certifications = await context.queryClient.ensureQueryData(
+      context.trpc.certification.getForLandingPage.queryOptions(),
+    );
+
+    return { projects, experiences, certifications };
   },
   component: HomeComponent,
 });
@@ -68,45 +71,6 @@ const stack: TechStack[] = [
   },
 ];
 
-const certificates: Certification[] = [
-  {
-    id: "01900000-0000-7000-8000-000000000031",
-    title: "AWS Certified Developer – Associate",
-    issuer: "Amazon Web Services",
-    certificateUrl: "https://aws.amazon.com/certification/",
-    certificateId: "AWS-DEV-2024-001",
-    issueYear: 2024,
-    expiryYear: 2027,
-    status: "published",
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000032",
-    title: "Professional Scrum Master I",
-    issuer: "Scrum.org",
-    certificateUrl: "https://scrum.org/certificates",
-    certificateId: "PSM-I-2023-042",
-    issueYear: 2023,
-    expiryYear: null,
-    status: "published",
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000033",
-    title: "Docker Certified Associate",
-    issuer: "Docker Inc.",
-    certificateUrl: null,
-    certificateId: "DCA-2023-789",
-    issueYear: 2023,
-    expiryYear: 2025,
-    status: "published",
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-];
-
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-sm text-subtle tracking-[0.15em] font-mono">
@@ -121,6 +85,7 @@ function HomeComponent() {
   const {
     projects: { data: featured, isMore },
     experiences,
+    certifications: { data: certificates, isMore: isMoreCerts },
   } = Route.useLoaderData();
 
   return (
@@ -266,6 +231,15 @@ function HomeComponent() {
                 <CertificateCard key={cert.id} certificate={cert} />
               ))}
             </div>
+            {isMoreCerts && (
+              <Button
+                onClick={() => navigate({ to: "/certificates" })}
+                variant="outline"
+                size="lg"
+              >
+                View all certificates
+              </Button>
+            )}
           </FadeIn>
         </section>
 
