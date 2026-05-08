@@ -1,6 +1,7 @@
 import { createCallerFactory, createTRPCRouter } from ".";
 import { certificationRouter } from "./routers/certification";
 import { experienceRouter } from "./routers/experience";
+import { profileRouter } from "./routers/profile";
 import { projectRouter } from "./routers/project";
 import { techStackRouter } from "./routers/tech-stack";
 
@@ -9,6 +10,7 @@ export const appRouter = createTRPCRouter({
   experience: experienceRouter,
   certification: certificationRouter,
   techStack: techStackRouter,
+  profile: profileRouter,
 });
 
 // export type definition of API

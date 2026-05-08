@@ -234,6 +234,31 @@ export const certifications = createTable(
   (table) => [index("certifications_id_idx").using("btree", table.id)],
 );
 
+export const profile = createTable(
+  "profile",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    name: varchar("name", { length: 256 }).notNull(),
+    title: varchar("title", { length: 256 }).notNull(),
+    bio: text("bio").notNull(),
+    email: text("email").notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [index("profile_id_idx").using("btree", table.id)],
+);
+
 export const applicationSettings = createTable(
   "application_settings",
   {

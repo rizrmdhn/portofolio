@@ -12,7 +12,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { v7 as uuidv7 } from "uuid";
 import { relations } from "./relations/index.js";
-import { account, applicationSettings, user } from "./schema/index.js";
+import { account, applicationSettings, profile, user } from "./schema/index.js";
 
 const databaseUrl = process.env.DATABASE_URL;
 const email = process.env.ALLOWED_EMAIL_LOGIN;
@@ -54,9 +54,9 @@ async function seedUser() {
     .onConflictDoNothing({ target: user.email })
     .returning();
 
-  const resolvedUserId = insertedUser?.id ?? (
-    await db.query.user.findFirst({ where: { email: email! } })
-  )?.id;
+  const resolvedUserId =
+    insertedUser?.id ??
+    (await db.query.user.findFirst({ where: { email: email! } }))?.id;
 
   if (!resolvedUserId) throw new Error("Failed to resolve user id");
 
@@ -85,7 +85,22 @@ async function seedApplicationSettings() {
   console.log("Seeded application settings.");
 }
 
+async function seedProfile() {
+  await db
+    .insert(profile)
+    .values({
+      name: "Noor Rizki Ramadhan",
+      title: "Fullstack Developer",
+      bio: "Full-stack Developer with 2+ years building production web and mobile apps using Next.js, tRPC, and Drizzle ORM. Delivered 10+ projects across freelance and institutional settings. Passionate about type-safe, scalable code.",
+      email: "rizrmdhn.work@gmail.com",
+    })
+    .onConflictDoNothing();
+
+  console.log("Seeded profile.");
+}
+
 await seedUser();
 await seedApplicationSettings();
+await seedProfile();
 
 await client.end();
