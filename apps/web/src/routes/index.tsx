@@ -1,5 +1,6 @@
 import { CertificateCard } from "@/components/certificate-card";
 import { ExperienceCard } from "@/components/experience-card";
+import { FadeIn } from "@/components/fade-in";
 import { MainHeader } from "@/components/main-header";
 import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
@@ -179,9 +180,9 @@ function HomeComponent() {
       {/* Hero */}
       <section
         id="about"
-        className="flex flex-col items-center justify-center gap-6 w-full pt-24 dot-grid"
+        className="flex flex-col items-center justify-center gap-6 w-full pt-24 dot-grid scroll-mt-14"
       >
-        <div className="w-full md:max-w-175 flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto px-4 md:px-0">
+        <FadeIn className="w-full md:max-w-175 flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto px-4 md:px-0">
           <Badge
             variant="outline"
             className="w-fit py-3 px-3.5 bg-available text-available-foreground border border-available-foreground/20 text-xs font-medium"
@@ -240,34 +241,35 @@ function HomeComponent() {
                   .getElementById("contact")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
+              className="text-subtle"
             >
               Contact
             </Button>
           </div>
-        </div>
+        </FadeIn>
       </section>
 
       {/* Experience */}
       <section
         id="experience"
-        className="flex flex-col items-center justify-center gap-6 w-full pt-24"
+        className="flex flex-col items-center justify-center gap-6 w-full pt-24 scroll-mt-14"
       >
-        <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
+        <FadeIn className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
           <SectionHeading>WORK EXPERIENCE</SectionHeading>
           <div className="flex flex-col gap-6">
             {experiences.map((exp, i) => (
               <ExperienceCard key={i} experience={exp} />
             ))}
           </div>
-        </div>
+        </FadeIn>
       </section>
 
       {/* Projects */}
       <section
         id="projects"
-        className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y"
+        className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y scroll-mt-14"
       >
-        <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
+        <FadeIn className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
           <SectionHeading>PROJECTS</SectionHeading>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
             {featured.map((project) => (
@@ -283,66 +285,70 @@ function HomeComponent() {
               View all projects
             </Button>
           )}
-        </div>
+        </FadeIn>
       </section>
 
       <div className="flex flex-col items-center justify-center gap-24 py-12">
         {/* Tech Stack */}
         <section
           id="stack"
-          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0"
+          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0 scroll-mt-26"
         >
-          <SectionHeading>TECH STACK</SectionHeading>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-            {stack.map((group) => (
-              <TechStackList key={group.id} stack={group} />
-            ))}
-          </div>
+          <FadeIn className="flex flex-col gap-8">
+            <SectionHeading>TECH STACK</SectionHeading>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+              {stack.map((group) => (
+                <TechStackList key={group.id} stack={group} />
+              ))}
+            </div>
+          </FadeIn>
         </section>
 
         {/* Certificates */}
         <section
           id="certs"
-          className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y"
+          className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y scroll-mt-14"
         >
-          <div className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
+          <FadeIn className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
             <SectionHeading>CERTIFICATES</SectionHeading>
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
               {certificates.map((cert) => (
                 <CertificateCard key={cert.id} certificate={cert} />
               ))}
             </div>
-          </div>
+          </FadeIn>
         </section>
 
         {/* Contact */}
         <section
           id="contact"
-          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0"
+          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0 scroll-mt-14"
         >
-          <SectionHeading>CONTACT</SectionHeading>
-          <div className="rounded-lg border border-border p-8 flex flex-col gap-6 items-start">
-            <p className="text-subtle leading-relaxed max-w-lg">
-              I'm open to freelance work, full-time roles, and interesting side
-              projects. If you have something in mind, reach out.
-            </p>
-            <div className="flex flex-col gap-3 font-mono text-sm">
-              <a
-                href="mailto:rizrmdhn.unity@gmail.com"
-                className="text-subtle hover:text-foreground transition-colors"
-              >
-                rizrmdhn.unity@gmail.com ↗
-              </a>
-              <a
-                href="https://github.com/rizrmdhn"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-subtle hover:text-foreground transition-colors"
-              >
-                github.com/rizrmdhn ↗
-              </a>
+          <FadeIn className="flex flex-col gap-8">
+            <SectionHeading>CONTACT</SectionHeading>
+            <div className="rounded-lg border border-border p-8 flex flex-col gap-6 items-start">
+              <p className="text-subtle leading-relaxed max-w-lg">
+                I'm open to freelance work, full-time roles, and interesting
+                side projects. If you have something in mind, reach out.
+              </p>
+              <div className="flex flex-col gap-3 font-mono text-sm">
+                <a
+                  href="mailto:rizrmdhn.unity@gmail.com"
+                  className="text-subtle hover:text-foreground transition-colors"
+                >
+                  rizrmdhn.unity@gmail.com ↗
+                </a>
+                <a
+                  href="https://github.com/rizrmdhn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-subtle hover:text-foreground transition-colors"
+                >
+                  github.com/rizrmdhn ↗
+                </a>
+              </div>
             </div>
-          </div>
+          </FadeIn>
         </section>
       </div>
 
