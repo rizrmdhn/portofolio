@@ -1,6 +1,5 @@
 import { globalErrorToast } from "@/lib/toasts";
 import type { AppRouter } from "@portofolio/api/root";
-import { getRequestHeaders } from "@tanstack/react-start/server";
 import {
   QueryCache,
   QueryClient,
@@ -76,18 +75,22 @@ export const trpcClient = createTRPCClient<AppRouter>({
       true: httpLink({
         url: trpcUrl,
         transformer: SuperJSON,
-        headers: () =>
-          typeof window === "undefined"
-            ? Object.fromEntries(getRequestHeaders().entries())
-            : {},
+        fetch(url, options) {
+          return fetch(url, {
+            ...options,
+            credentials: "include",
+          });
+        },
       }),
       false: httpBatchLink({
         url: trpcUrl,
         transformer: SuperJSON,
-        headers: () =>
-          typeof window === "undefined"
-            ? Object.fromEntries(getRequestHeaders().entries())
-            : {},
+        fetch(url, options) {
+          return fetch(url, {
+            ...options,
+            credentials: "include",
+          });
+        },
       }),
     }),
   ],

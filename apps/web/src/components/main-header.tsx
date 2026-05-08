@@ -44,7 +44,7 @@ export function MainHeader() {
             className="text-sm text-subtle"
             variant="ghost"
             size="lg"
-            onClick={() => navigate({ to: `#${item.toLowerCase()}` })}
+            onClick={() => navigate({ to: "/", hash: item.toLowerCase() })}
           >
             {item}
           </Button>
@@ -86,7 +86,7 @@ export function MainHeader() {
                   <Button
                     variant="ghost"
                     className="justify-start text-sm text-subtle w-full"
-                    onClick={() => navigate({ to: `#${item.toLowerCase()}` })}
+                    onClick={() => navigate({ to: "/", hash: item.toLowerCase() })}
                   />
                 }
               >

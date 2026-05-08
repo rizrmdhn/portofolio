@@ -1,25 +1,25 @@
 import { MainHeader } from "@/components/main-header";
 import { ProjectCard } from "@/components/project-card";
-import { trpc } from "@/utils/trpc";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/projects")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(
+    const projects = await context.queryClient.ensureQueryData(
       context.trpc.project.getAll.queryOptions(),
     );
+
+    return { projects };
   },
   component: ProjectsPage,
 });
 
 function ProjectsPage() {
-  const { data: projects } = useSuspenseQuery(trpc.project.getAll.queryOptions());
+  const { projects } = Route.useLoaderData();
 
   return (
-    <div className="flex flex-col bg-background text-foreground min-h-screen">
+    <div className="flex flex-col bg-background text-foreground">
       <MainHeader />
-      <main className="w-full md:max-w-175 mx-auto px-4 md:px-0 py-24 flex flex-col gap-8">
+      <main className="w-full md:max-w-175 mx-auto px-4 md:px-0 py-12 flex flex-col gap-8">
         <h1 className="text-sm text-subtle tracking-[0.15em] font-mono">
           ALL PROJECTS
         </h1>

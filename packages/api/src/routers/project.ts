@@ -5,6 +5,7 @@ import {
   getAllProjects,
   getPaginatedProjects,
   getProjectById,
+  getProjectsForLandingPage,
   insertImageToProject,
   reorderProjects,
   updateProject,
@@ -25,6 +26,16 @@ import { toTRPCError } from "../utils/to-trpc-error";
 export const projectRouter = createTRPCRouter({
   getAll: publicProcedure.query(async () => {
     const [projects, err] = await tryCatchAsync(() => getAllProjects());
+
+    if (err) throw toTRPCError(err);
+
+    return projects;
+  }),
+
+  getForLandingPage: publicProcedure.query(async () => {
+    const [projects, err] = await tryCatchAsync(() =>
+      getProjectsForLandingPage(),
+    );
 
     if (err) throw toTRPCError(err);
 

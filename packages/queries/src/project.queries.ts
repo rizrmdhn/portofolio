@@ -2,10 +2,10 @@ import { eq, getColumns } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { projectViews, projects } from "@portofolio/db/schema/index";
 import type {
-  CreateProjectInput,
-  GetProjectsInput,
-  ReorderProjectsInput,
-  UpdateProjectInput,
+    CreateProjectInput,
+    GetProjectsInput,
+    ReorderProjectsInput,
+    UpdateProjectInput,
 } from "@portofolio/schema/project.schema";
 import type { PaginatedProjects } from "@portofolio/types/project.types";
 import utapi from "@portofolio/uploadthing";
@@ -42,6 +42,21 @@ export async function getAllProjects() {
   });
 
   return result;
+}
+
+export async function getProjectsForLandingPage() {
+  const result = await db.query.projects.findMany({
+    where: { isVisible: true, status: "published" },
+    orderBy: {
+      order: "asc",
+    },
+    limit: 7,
+    with: { projectView: true },
+  });
+
+  const isMore = result.length > 6;
+
+  return { data: result.slice(0, 6), isMore };
 }
 
 export async function getProjectById(id: string) {

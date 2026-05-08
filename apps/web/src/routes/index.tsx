@@ -5,7 +5,6 @@ import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/utils/trpc";
 import { Certification } from "@portofolio/types/certification.types";
 import { Experience } from "@portofolio/types/experience.types";
 import { TechStack } from "@portofolio/types/tech-stack.types";
@@ -14,14 +13,15 @@ import {
   IconBrandLinkedin,
   IconMail,
 } from "@tabler/icons-react";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(
-      context.trpc.project.getAll.queryOptions(),
+    const projects = await context.queryClient.ensureQueryData(
+      context.trpc.project.getForLandingPage.queryOptions(),
     );
+
+    return { projects };
   },
   component: HomeComponent,
 });
@@ -168,10 +168,9 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 function HomeComponent() {
   const navigate = Route.useNavigate();
 
-  const { data: allProjects } = useSuspenseQuery(
-    trpc.project.getAll.queryOptions(),
-  );
-  const featured = allProjects.slice(0, 6);
+  const {
+    projects: { data: featured, isMore },
+  } = Route.useLoaderData();
 
   return (
     <div className="flex flex-col bg-background text-foreground">
@@ -275,13 +274,15 @@ function HomeComponent() {
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>
-          <Button
-            onClick={() => navigate("/projects")}
-            variant="outline"
-            size="lg"
-          >
-            View all projects
-          </Button>
+          {isMore && (
+            <Button
+              onClick={() => navigate({ to: "/projects" })}
+              variant="outline"
+              size="lg"
+            >
+              View all projects
+            </Button>
+          )}
         </div>
       </section>
 
