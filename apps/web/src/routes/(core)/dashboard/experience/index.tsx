@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/input-group";
 import { Skeleton } from "@/components/ui/skeleton";
 import useDebounced from "@/hooks/use-debounced";
+import { useOptimisticMutation } from "@/lib/optimistic-update";
 import { globalErrorToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
@@ -35,7 +36,7 @@ import {
   IconSearch,
   IconX,
 } from "@tabler/icons-react";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -98,8 +99,6 @@ function ExperienceListSkeleton() {
 function RouteComponent() {
   const params = Route.useSearch();
   const navigate = Route.useNavigate();
-  const queryClient = useQueryClient();
-
   const [search, setSearch] = useState(params.search ?? "");
   const debouncedSearch = useDebounced(search, 300);
 
@@ -110,20 +109,22 @@ function RouteComponent() {
     });
   }, [debouncedSearch]);
 
-  const { data, isFetching } = useSuspenseQuery(
+  const { data } = useSuspenseQuery(
     trpc.experience.getForDashboard.queryOptions(params),
   );
 
-  const reorder = useMutation(
-    trpc.experience.reorder.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.experience.getForDashboard.queryOptions(params),
-        );
+  const reorder = useOptimisticMutation(
+    trpc.experience.reorder.mutationOptions(),
+    {
+      queryOptions: trpc.experience.getForDashboard.queryOptions(params),
+      operation: {
+        type: "reorder",
+        getOrder: (input) => input,
       },
-      onError: (err) =>
-        globalErrorToast(`Failed to reorder experience: ${err.message}`),
-    }),
+      onError: (err) => {
+        globalErrorToast(`Failed to reorder experience: ${err.message}`);
+      },
+    },
   );
 
   const sensors = useSensors(
@@ -146,12 +147,6 @@ function RouteComponent() {
   }
 
   const renderList = () => {
-    if (isFetching) {
-      return Array.from({ length: 5 }).map((_, i) => (
-        <Skeleton key={i} className="h-18 w-full rounded-lg" />
-      ));
-    }
-
     if (data.length === 0) {
       return (
         <EmptyState

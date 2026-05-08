@@ -11,15 +11,12 @@ import {
 } from "@/components/ui/input-group";
 import { useDataTableRouter } from "@/hooks/use-data-table-router";
 import useDebounced from "@/hooks/use-debounced";
+import { useOptimisticMutation } from "@/lib/optimistic-update";
 import { globalErrorToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import { getProjectsSchema } from "@portofolio/schema/project.schema";
 import { IconFolder, IconPlus, IconSearch, IconX } from "@tabler/icons-react";
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 
@@ -37,8 +34,6 @@ export const Route = createFileRoute("/(core)/dashboard/projects/")({
 function RouteComponent() {
   const params = Route.useSearch();
   const navigate = Route.useNavigate();
-  const queryClient = useQueryClient();
-
   const [search, setSearch] = useState(params.search ?? "");
   const debouncedSearch = useDebounced(search, 300);
 
@@ -50,7 +45,7 @@ function RouteComponent() {
     });
   }, [debouncedSearch]);
 
-  const { data, isFetching, error } = useSuspenseQuery(
+  const { data, error } = useSuspenseQuery(
     trpc.project.getPaginatedProjects.queryOptions(params),
   );
 
@@ -69,16 +64,18 @@ function RouteComponent() {
     getRowId: (row) => row.id,
   });
 
-  const reorder = useMutation(
-    trpc.project.reorder.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.project.getPaginatedProjects.queryOptions(params),
-        );
+  const reorder = useOptimisticMutation(
+    trpc.project.reorder.mutationOptions(),
+    {
+      queryOptions: trpc.project.getPaginatedProjects.queryOptions(params),
+      operation: {
+        type: "reorder",
+        getOrder: (input) => input,
       },
-      onError: (err) =>
-        globalErrorToast(`Failed to reorder projects: ${err.message}`),
-    }),
+      onError: (err) => {
+        globalErrorToast(`Failed to reorder projects: ${err.message}`);
+      },
+    },
   );
 
   return (
@@ -113,7 +110,7 @@ function RouteComponent() {
       </div>
       <DataTable
         table={table}
-        isLoading={isFetching}
+        isLoading={false}
         error={error}
         onReorder={(reorderedItems) => {
           reorder.mutate(
