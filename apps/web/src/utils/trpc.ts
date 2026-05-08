@@ -19,7 +19,27 @@ import { getBaseUrl } from "./get-base-url";
 
 const trpcUrl = `${getBaseUrl()}/api/trpc`;
 
-function makeQueryClient() {
+async function getSsrCookie(): Promise<string | undefined> {
+  if (typeof window !== "undefined") return undefined;
+
+  try {
+    const { getRequestHeader } = await import("@tanstack/react-start/server");
+    return getRequestHeader("cookie");
+  } catch {
+    return undefined;
+  }
+}
+
+async function withSsrCookieHeaders(headers: RequestInit["headers"]) {
+  const nextHeaders = new Headers(headers);
+  const cookie = await getSsrCookie();
+
+  if (cookie) nextHeaders.set("cookie", cookie);
+
+  return nextHeaders;
+}
+
+export function createQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: { staleTime: 60 * 1000 },
@@ -43,58 +63,62 @@ function makeQueryClient() {
   });
 }
 
-let browserQueryClient: QueryClient | undefined = undefined;
+let browserQueryClient: QueryClient | undefined;
 
 export function getQueryClient() {
   if (typeof window === "undefined") {
-    // Server: always make a new query client
-    return makeQueryClient();
-  } else {
-    // Browser: make a new query client if we don't already have one
-    // This is very important, so we don't re-make a new client if React
-    // suspends during the initial render. This may not be needed if we
-    // have a suspense boundary BELOW the creation of the query client
-    if (!browserQueryClient) browserQueryClient = makeQueryClient();
-    return browserQueryClient;
+    return createQueryClient();
   }
+
+  if (!browserQueryClient) browserQueryClient = createQueryClient();
+  return browserQueryClient;
 }
 
-export const trpcClient = createTRPCClient<AppRouter>({
-  links: [
-    loggerLink({
-      enabled: (op) =>
-        process.env.NODE_ENV === "development" ||
-        (op.direction === "down" && op.result instanceof Error),
-    }),
-    splitLink({
-      // Route mutations, auth calls, and non-JSON input through httpLink
-      // so each mutation gets its own X-Idempotency-Key header
-      condition: (op) => {
-        return (
+function createAppTrpcClient() {
+  return createTRPCClient<AppRouter>({
+    links: [
+      loggerLink({
+        enabled: (op) =>
+          process.env.NODE_ENV === "development" ||
+          (op.direction === "down" && op.result instanceof Error),
+      }),
+      splitLink({
+        condition: (op) =>
           op.type === "mutation" ||
           op.path.startsWith("auth.") ||
-          isNonJsonSerializable(op.input)
-        );
-      },
-      true: httpLink({
-        url: trpcUrl,
-        transformer: SuperJSON,
-        fetch(url, options) {
-          return fetch(url, { ...options, credentials: "include" });
-        },
+          isNonJsonSerializable(op.input),
+        true: httpLink({
+          url: trpcUrl,
+          transformer: SuperJSON,
+          async fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: "include",
+              headers: await withSsrCookieHeaders(options?.headers),
+            });
+          },
+        }),
+        false: httpBatchLink({
+          url: trpcUrl,
+          transformer: SuperJSON,
+          async fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: "include",
+              headers: await withSsrCookieHeaders(options?.headers),
+            });
+          },
+        }),
       }),
-      false: httpBatchLink({
-        url: trpcUrl,
-        transformer: SuperJSON,
-        fetch(url, options) {
-          return fetch(url, { ...options, credentials: "include" });
-        },
-      }),
-    }),
-  ],
-});
+    ],
+  });
+}
 
-export const trpc = createTRPCOptionsProxy({
-  client: trpcClient,
-  queryClient: getQueryClient(),
-});
+export function createTrpc(queryClient: QueryClient) {
+  return createTRPCOptionsProxy<AppRouter>({
+    client: createAppTrpcClient(),
+    queryClient,
+  });
+}
+
+export const trpc = createTrpc(getQueryClient());

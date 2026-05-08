@@ -5,10 +5,11 @@ import Loader from "./components/loader";
 import { routeTree } from "./routeTree.gen";
 
 import { QueryClientProvider } from "@tanstack/react-query";
-import { getQueryClient, trpc } from "./utils/trpc";
+import { createTrpc, getQueryClient } from "./utils/trpc";
 
 export const getRouter = () => {
   const queryClient = getQueryClient();
+  const trpc = createTrpc(queryClient);
 
   const router = createTanStackRouter({
     routeTree,

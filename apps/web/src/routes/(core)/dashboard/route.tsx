@@ -7,15 +7,16 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/(core)/dashboard")({
   beforeLoad: async () => {
     const session = await getUser();
-    return { session };
-  },
-  loader: async ({ context }) => {
-    if (!context.session) {
+
+    if (!session) {
       throw redirect({
         to: "/login",
       });
     }
 
+    return { session };
+  },
+  loader: async ({ context }) => {
     return context.session;
   },
   component: CoreLayout,

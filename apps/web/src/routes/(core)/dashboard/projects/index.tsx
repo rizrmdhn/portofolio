@@ -4,16 +4,21 @@ import { DataTableSortList } from "@/components/data-table/data-table-sort-list"
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { useDataTableRouter } from "@/hooks/use-data-table-router";
 import { globalErrorToast } from "@/lib/toasts";
-import { getQueryClient, trpc } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc";
 import { getProjectsSchema } from "@portofolio/schema/project.schema";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 export const Route = createFileRoute("/(core)/dashboard/projects/")({
   validateSearch: getProjectsSchema,
   beforeLoad: async ({ search, context }) => {
-    const queryOptions = trpc.project.getPaginatedProjects.queryOptions(search);
+    const queryOptions =
+      context.trpc.project.getPaginatedProjects.queryOptions(search);
 
     await context.queryClient.ensureQueryData(queryOptions);
   },
@@ -23,6 +28,7 @@ export const Route = createFileRoute("/(core)/dashboard/projects/")({
 function RouteComponent() {
   const params = Route.useSearch();
   const navigate = Route.useNavigate();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useSuspenseQuery(
     trpc.project.getPaginatedProjects.queryOptions(params),
@@ -46,7 +52,7 @@ function RouteComponent() {
   const reorder = useMutation(
     trpc.project.reorder.mutationOptions({
       onSuccess: () => {
-        getQueryClient().invalidateQueries(
+        queryClient.invalidateQueries(
           trpc.project.getPaginatedProjects.queryOptions(params),
         );
       },
