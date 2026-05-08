@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { format } from "date-fns";
 
 interface ExperienceCardProps {
   experience: Experience;
+  dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
 }
 
 function getInitials(company: string) {
@@ -26,7 +28,7 @@ function getStatusVariant(
   return "outline";
 }
 
-export function ExperienceCard({ experience }: ExperienceCardProps) {
+export function ExperienceCard({ experience, dragHandleProps }: ExperienceCardProps) {
   const endLabel = experience.currentlyWorking
     ? "Present"
     : experience.endDate
@@ -39,7 +41,12 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
     <Card className="py-0">
       <CardContent className="flex items-center gap-3 py-3 px-4">
         {/* Drag handle */}
-        <IconGripVertical className="size-4 shrink-0 text-muted-foreground/40 cursor-grab" />
+        <button
+          className="flex items-center text-muted-foreground/40 cursor-grab active:cursor-grabbing hover:text-muted-foreground"
+          {...dragHandleProps}
+        >
+          <IconGripVertical className="size-4 shrink-0" />
+        </button>
 
         {/* Avatar */}
         <Avatar className="size-9 rounded-md shrink-0 after:rounded-md">

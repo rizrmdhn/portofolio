@@ -4,10 +4,12 @@ import {
   getAllExperiences,
   getExperienceById,
   getExperiencesForDashboard,
+  reorderExperiences,
   updateExperience,
 } from "@portofolio/queries/experience.queries";
 import {
   createExperienceSchema,
+  reorderExperiencesSchema,
   updateExperienceSchema,
 } from "@portofolio/schema/experience.schema";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
@@ -70,6 +72,14 @@ export const experienceRouter = createTRPCRouter({
       if (err) throw toTRPCError(err);
 
       return experience;
+    }),
+
+  reorder: protectedProcedure
+    .input(reorderExperiencesSchema)
+    .mutation(async ({ input }) => {
+      const [, err] = await tryCatchAsync(() => reorderExperiences(input));
+
+      if (err) throw toTRPCError(err);
     }),
 
   delete: protectedProcedure

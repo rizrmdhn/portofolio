@@ -9,17 +9,65 @@ import {
 } from "@/components/ui/input-group";
 import { Skeleton } from "@/components/ui/skeleton";
 import useDebounced from "@/hooks/use-debounced";
+import { globalErrorToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Experience } from "@portofolio/types/experience.types";
 import {
   IconBriefcase,
   IconPlus,
   IconSearch,
   IconX,
 } from "@tabler/icons-react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
+
+function SortableExperienceCard({ experience }: { experience: Experience }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: experience.id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+        zIndex: isDragging ? 1 : undefined,
+        position: isDragging ? "relative" : undefined,
+      }}
+    >
+      <ExperienceCard
+        experience={experience}
+        dragHandleProps={{ ...attributes, ...listeners }}
+      />
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/(core)/dashboard/experience/")({
   validateSearch: z.object({
@@ -50,11 +98,11 @@ function ExperienceListSkeleton() {
 function RouteComponent() {
   const params = Route.useSearch();
   const navigate = Route.useNavigate();
+  const queryClient = useQueryClient();
 
   const [search, setSearch] = useState(params.search ?? "");
   const debouncedSearch = useDebounced(search, 300);
 
-  // Sync debounced value into the URL
   useEffect(() => {
     navigate({
       search: (prev) => ({ ...prev, search: debouncedSearch || undefined }),
@@ -66,7 +114,38 @@ function RouteComponent() {
     trpc.experience.getForDashboard.queryOptions(params),
   );
 
-  const renderCard = () => {
+  const reorder = useMutation(
+    trpc.experience.reorder.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries(
+          trpc.experience.getForDashboard.queryOptions(params),
+        );
+      },
+      onError: (err) =>
+        globalErrorToast(`Failed to reorder experience: ${err.message}`),
+    }),
+  );
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = data.findIndex((item) => item.id === active.id);
+    const newIndex = data.findIndex((item) => item.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reordered = arrayMove(data, oldIndex, newIndex);
+    reorder.mutate(reordered.map((item, i) => ({ id: item.id, order: i })));
+  }
+
+  const renderList = () => {
     if (isFetching) {
       return Array.from({ length: 5 }).map((_, i) => (
         <Skeleton key={i} className="h-18 w-full rounded-lg" />
@@ -87,18 +166,30 @@ function RouteComponent() {
             {
               icon: IconPlus,
               label: "Add Experience",
-              onClick: () => {
-                /* open dialog */
-              },
+              onClick: () => {},
             },
           ]}
         />
       );
     }
 
-    return data.map((item) => (
-      <ExperienceCard key={item.id} experience={item} />
-    ));
+    return (
+      <DndContext
+        id="experience-dnd"
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={data.map((item) => item.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          {data.map((item) => (
+            <SortableExperienceCard key={item.id} experience={item} />
+          ))}
+        </SortableContext>
+      </DndContext>
+    );
   };
 
   return (
@@ -125,13 +216,12 @@ function RouteComponent() {
             {data.length} results
           </InputGroupAddon>
         </InputGroup>
-        {/* Add button or other controls can go here */}
         <Button>
           <IconPlus />
           Add Experience
         </Button>
       </div>
-      <div className="flex flex-col gap-2">{renderCard()}</div>
+      <div className="flex flex-col gap-2">{renderList()}</div>
     </div>
   );
 }

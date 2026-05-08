@@ -3,6 +3,7 @@ import { db } from "@portofolio/db/client";
 import { experiences } from "@portofolio/db/schema/index";
 import type {
   CreateExperienceInput,
+  ReorderExperiencesInput,
   UpdateExperienceInput,
 } from "@portofolio/schema/experience.schema";
 import { NotFoundError, QueryError } from "./errors";
@@ -65,6 +66,14 @@ export async function updateExperience(data: UpdateExperienceInput) {
   if (!experience) throw new QueryError("Failed to update experience");
 
   return experience;
+}
+
+export async function reorderExperiences(items: ReorderExperiencesInput) {
+  await db.transaction(async (tx) => {
+    for (const { id, order } of items) {
+      await tx.update(experiences).set({ order }).where(eq(experiences.id, id));
+    }
+  });
 }
 
 export async function deleteExperience(id: string) {
