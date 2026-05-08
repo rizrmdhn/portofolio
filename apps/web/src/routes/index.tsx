@@ -80,9 +80,10 @@ function HomeComponent() {
             Fullstack Developer
           </p>
           <p className="text-[15px] text-start max-w-2xl text-muted-foreground leading-[1.75]">
-            I build fast, scalable web applications with clean architecture.
-            Focused on developer experience, performance, and shipping things
-            that actually work.
+            Full-stack Developer with 2+ years building production web and
+            mobile apps using Next.js, tRPC, and Drizzle ORM. Delivered 10+
+            projects across freelance and institutional settings. Passionate
+            about type-safe, scalable code.
           </p>
           {/* Social */}
           <div className="flex flex-wrap items-center gap-4">
@@ -113,8 +114,10 @@ function HomeComponent() {
                   .getElementById("projects")
                   ?.scrollIntoView({ behavior: "smooth" })
               }
+              className="group"
             >
               View Projects
+              <IconArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
               size="lg"
