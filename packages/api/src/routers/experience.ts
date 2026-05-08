@@ -3,6 +3,7 @@ import {
   deleteExperience,
   getAllExperiences,
   getExperienceById,
+  getExperiencesForDashboard,
   updateExperience,
 } from "@portofolio/queries/experience.queries";
 import {
@@ -15,13 +16,25 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
 import { toTRPCError } from "../utils/to-trpc-error";
 
 export const experienceRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: publicProcedure.query(async () => {
     const [experiences, err] = await tryCatchAsync(() => getAllExperiences());
 
     if (err) throw toTRPCError(err);
 
     return experiences;
   }),
+
+  getForDashboard: protectedProcedure
+    .input(z.object({ search: z.string().optional() }))
+    .query(async ({ input: { search } }) => {
+      const [experiences, err] = await tryCatchAsync(() =>
+        getExperiencesForDashboard(search),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return experiences;
+    }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))

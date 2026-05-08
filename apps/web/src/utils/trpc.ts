@@ -43,16 +43,20 @@ function makeQueryClient() {
   });
 }
 
-let browserQueryClient: QueryClient | undefined;
+let browserQueryClient: QueryClient | undefined = undefined;
 
 export function getQueryClient() {
   if (typeof window === "undefined") {
+    // Server: always make a new query client
     return makeQueryClient();
+  } else {
+    // Browser: make a new query client if we don't already have one
+    // This is very important, so we don't re-make a new client if React
+    // suspends during the initial render. This may not be needed if we
+    // have a suspense boundary BELOW the creation of the query client
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
   }
-  if (!browserQueryClient) {
-    browserQueryClient = makeQueryClient();
-  }
-  return browserQueryClient;
 }
 
 export const trpcClient = createTRPCClient<AppRouter>({
@@ -76,27 +80,21 @@ export const trpcClient = createTRPCClient<AppRouter>({
         url: trpcUrl,
         transformer: SuperJSON,
         fetch(url, options) {
-          return fetch(url, {
-            ...options,
-            credentials: "include",
-          });
+          return fetch(url, { ...options, credentials: "include" });
         },
       }),
       false: httpBatchLink({
         url: trpcUrl,
         transformer: SuperJSON,
         fetch(url, options) {
-          return fetch(url, {
-            ...options,
-            credentials: "include",
-          });
+          return fetch(url, { ...options, credentials: "include" });
         },
       }),
     }),
   ],
 });
 
-export const trpc = createTRPCOptionsProxy<AppRouter>({
+export const trpc = createTRPCOptionsProxy({
   client: trpcClient,
-  queryClient: getQueryClient,
+  queryClient: getQueryClient(),
 });

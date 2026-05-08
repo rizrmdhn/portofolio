@@ -19,6 +19,7 @@ import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboar
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
+import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
 
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
@@ -70,6 +71,12 @@ const coreDashboardProjectsIndexRoute =
     path: '/projects/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardExperienceIndexRoute =
+  coreDashboardExperienceIndexRouteImport.update({
+    id: '/experience/',
+    path: '/experience/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard/': typeof coreDashboardIndexRoute
+  '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -90,6 +98,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard': typeof coreDashboardIndexRoute
+  '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -103,6 +112,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
+  '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard/'
+    | '/dashboard/experience/'
     | '/dashboard/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard'
+    | '/dashboard/experience'
     | '/dashboard/projects'
   id:
     | '__root__'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/(core)/dashboard/'
+    | '/(core)/dashboard/experience/'
     | '/(core)/dashboard/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -223,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardProjectsIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/experience/': {
+      id: '/(core)/dashboard/experience/'
+      path: '/experience'
+      fullPath: '/dashboard/experience/'
+      preLoaderRoute: typeof coreDashboardExperienceIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
   }
 }
 
@@ -240,11 +260,13 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface coreDashboardRouteRouteChildren {
   coreDashboardIndexRoute: typeof coreDashboardIndexRoute
+  coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
 }
 
 const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardIndexRoute: coreDashboardIndexRoute,
+  coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
 }
 

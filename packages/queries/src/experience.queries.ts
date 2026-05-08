@@ -16,6 +16,21 @@ export async function getAllExperiences() {
   return experiences;
 }
 
+export async function getExperiencesForDashboard(search?: string) {
+  const experiences = await db.query.experiences.findMany({
+    where: {
+      title: {
+        ilike: `%${search ?? ""}%`,
+      },
+    },
+    orderBy: {
+      order: "asc",
+    },
+  });
+
+  return experiences;
+}
+
 export async function getExperienceById(id: string) {
   const experience = await db.query.experiences.findFirst({
     where: {
