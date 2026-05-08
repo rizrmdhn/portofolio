@@ -43,6 +43,7 @@ export const getProjectsSchema = createPaginationSchema(
   },
 ).extend({
   perPage: z.number().int().min(1).max(100).default(100),
+  search: z.string().default(""),
 });
 
 export type GetProjectsInput = z.infer<typeof getProjectsSchema>;

@@ -1,11 +1,11 @@
-import { eq, getColumns } from "@portofolio/db";
+import { eq, getColumns, ilike } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { projectViews, projects } from "@portofolio/db/schema/index";
 import type {
-    CreateProjectInput,
-    GetProjectsInput,
-    ReorderProjectsInput,
-    UpdateProjectInput,
+  CreateProjectInput,
+  GetProjectsInput,
+  ReorderProjectsInput,
+  UpdateProjectInput,
 } from "@portofolio/schema/project.schema";
 import type { PaginatedProjects } from "@portofolio/types/project.types";
 import utapi from "@portofolio/uploadthing";
@@ -22,6 +22,9 @@ export async function getPaginatedProjects(input: GetProjectsInput) {
       ...getColumns(projects),
       views: projectViews.count,
     },
+    searchConditions: [
+      input.search ? ilike(projects.title, `%${input.search}%`) : undefined,
+    ],
     joins: [
       {
         type: "left",

@@ -21,6 +21,7 @@ import { IconGripVertical } from "@tabler/icons-react"
 import { flexRender, type Row, type Table } from "@tanstack/react-table"
 
 import { cn } from "@/lib/utils"
+import { EmptyState, type EmptyStateAction } from "@/components/ui/empty-state"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table as UITable,
@@ -30,6 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import type { TablerIcon } from "@tabler/icons-react"
 
 interface DataTableProps<TData> {
   table: Table<TData>
@@ -37,6 +39,8 @@ interface DataTableProps<TData> {
   error?: { message: string } | null
   emptyMessage?: string
   emptyDescription?: string
+  emptyIcon?: TablerIcon | React.ReactNode
+  emptyActions?: EmptyStateAction[]
   className?: string
   children?: React.ReactNode
   onReorder?: (items: TData[]) => void
@@ -82,6 +86,8 @@ export function DataTable<TData>({
   error,
   emptyMessage = "No data found.",
   emptyDescription,
+  emptyIcon,
+  emptyActions,
   className,
   children,
   onReorder,
@@ -128,11 +134,13 @@ export function DataTable<TData>({
         </TableRow>
       ) : rows.length === 0 ? (
         <TableRow className="hover:bg-transparent">
-          <TableCell colSpan={colSpan} className="h-24 text-center">
-            <p className="text-sm font-medium">{emptyMessage}</p>
-            {emptyDescription && (
-              <p className="mt-1 text-xs text-muted-foreground">{emptyDescription}</p>
-            )}
+          <TableCell colSpan={colSpan}>
+            <EmptyState
+              icon={emptyIcon}
+              title={emptyMessage}
+              description={emptyDescription ?? ""}
+              actions={emptyActions}
+            />
           </TableCell>
         </TableRow>
       ) : onReorder ? (
