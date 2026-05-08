@@ -1,13 +1,24 @@
+import { ExperienceCard } from "@/components/dashboard/experience-card";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { Skeleton } from "@/components/ui/skeleton";
+import useDebounced from "@/hooks/use-debounced";
 import { trpc } from "@/utils/trpc";
-import { IconPlus, IconSearch } from "@tabler/icons-react";
+import {
+  IconBriefcase,
+  IconPlus,
+  IconSearch,
+  IconX,
+} from "@tabler/icons-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/(core)/dashboard/experience/")({
@@ -19,25 +30,100 @@ export const Route = createFileRoute("/(core)/dashboard/experience/")({
       context.trpc.experience.getForDashboard.queryOptions(search),
     );
   },
+  pendingComponent: ExperienceListSkeleton,
   component: RouteComponent,
 });
 
+function ExperienceListSkeleton() {
+  return (
+    <div className="flex flex-col gap-4">
+      <Skeleton className="h-9 w-72" /> {/* search bar */}
+      <div className="flex flex-col gap-2">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-18 w-full rounded-lg" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function RouteComponent() {
   const params = Route.useSearch();
+  const navigate = Route.useNavigate();
 
-  const { data } = useSuspenseQuery(
+  const [search, setSearch] = useState(params.search ?? "");
+  const debouncedSearch = useDebounced(search, 300);
+
+  // Sync debounced value into the URL
+  useEffect(() => {
+    navigate({
+      search: (prev) => ({ ...prev, search: debouncedSearch || undefined }),
+      replace: true,
+    });
+  }, [debouncedSearch]);
+
+  const { data, isFetching } = useSuspenseQuery(
     trpc.experience.getForDashboard.queryOptions(params),
   );
+
+  const renderCard = () => {
+    if (isFetching) {
+      return Array.from({ length: 5 }).map((_, i) => (
+        <Skeleton key={i} className="h-18 w-full rounded-lg" />
+      ));
+    }
+
+    if (data.length === 0) {
+      return (
+        <EmptyState
+          icon={IconBriefcase}
+          title="No experience found"
+          description={
+            params.search
+              ? `No results for "${params.search}"`
+              : "Add your first experience to get started."
+          }
+          actions={[
+            {
+              icon: IconPlus,
+              label: "Add Experience",
+              onClick: () => {
+                /* open dialog */
+              },
+            },
+          ]}
+        />
+      );
+    }
+
+    return data.map((item) => (
+      <ExperienceCard key={item.id} experience={item} />
+    ));
+  };
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <InputGroup className="max-w-xs">
-          <InputGroupInput placeholder="Search..." />
           <InputGroupAddon>
             <IconSearch />
           </InputGroupAddon>
-          <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
+          <InputGroupInput
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.key === "Escape" && setSearch("")}
+          />
+          {search && (
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton size="icon-xs" onClick={() => setSearch("")}>
+                <IconX />
+              </InputGroupButton>
+            </InputGroupAddon>
+          )}
+          <InputGroupAddon align="inline-end">
+            {data.length} results
+          </InputGroupAddon>
         </InputGroup>
         {/* Add button or other controls can go here */}
         <Button>
@@ -45,18 +131,7 @@ function RouteComponent() {
           Add Experience
         </Button>
       </div>
-      <div className="flex flex-col gap-2">
-        {data.map((item) => (
-          <div key={item.id} className="rounded border p-4">
-            <h3 className="text-lg font-semibold">{item.title}</h3>
-            <p className="text-sm text-gray-600">{item.company}</p>
-            <p className="text-sm text-gray-500">
-              {item.startDate} - {item.endDate ?? "Present"}
-            </p>
-            <p className="mt-2 text-gray-700">{item.description}</p>
-          </div>
-        ))}
-      </div>
+      <div className="flex flex-col gap-2">{renderCard()}</div>
     </div>
   );
 }
