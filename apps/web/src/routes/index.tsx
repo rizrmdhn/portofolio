@@ -6,7 +6,6 @@ import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TechStack } from "@portofolio/types/tech-stack.types";
 import {
   IconBrandGithub,
   IconBrandLinkedin,
@@ -24,52 +23,18 @@ export const Route = createFileRoute("/")({
       context.trpc.experience.getAll.queryOptions(),
     );
 
+    const stack = await context.queryClient.ensureQueryData(
+      context.trpc.techStack.getAll.queryOptions(),
+    );
+
     const certifications = await context.queryClient.ensureQueryData(
       context.trpc.certification.getForLandingPage.queryOptions(),
     );
 
-    return { projects, experiences, certifications };
+    return { projects, experiences, stack, certifications };
   },
   component: HomeComponent,
 });
-
-const stack: TechStack[] = [
-  {
-    id: "01900000-0000-7000-8000-000000000021",
-    name: "Languages",
-    list: ["TypeScript", "Go", "SQL"],
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000022",
-    name: "Frontend",
-    list: ["React", "Tailwind CSS", "TanStack Router"],
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000023",
-    name: "Backend",
-    list: ["Node.js", "tRPC", "Hono"],
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000024",
-    name: "Database",
-    list: ["PostgreSQL", "Redis", "Drizzle ORM"],
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000025",
-    name: "DevOps",
-    list: ["Docker", "GitHub Actions", "Fly.io"],
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-];
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -85,6 +50,7 @@ function HomeComponent() {
   const {
     projects: { data: featured, isMore },
     experiences,
+    stack,
     certifications: { data: certificates, isMore: isMoreCerts },
   } = Route.useLoaderData();
 
