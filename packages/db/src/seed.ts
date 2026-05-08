@@ -8,6 +8,7 @@ dotenv.config({ path: resolve(__dirname, "../../../apps/web/.env") });
 
 import { hash } from "@node-rs/argon2";
 import { VIEW_AS_TYPES } from "@portofolio/constants";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { v7 as uuidv7 } from "uuid";
@@ -86,15 +87,23 @@ async function seedApplicationSettings() {
 }
 
 async function seedProfile() {
-  await db
-    .insert(profile)
-    .values({
-      name: "Noor Rizki Ramadhan",
-      title: "Fullstack Developer",
-      bio: "Full-stack Developer with 2+ years building production web and mobile apps using Next.js, tRPC, and Drizzle ORM. Delivered 10+ projects across freelance and institutional settings. Passionate about type-safe, scalable code.",
-      email: "rizrmdhn.work@gmail.com",
-    })
-    .onConflictDoNothing();
+  const values = {
+    name: "Noor Rizki Ramadhan",
+    title: "Fullstack Developer",
+    bio: "Full-stack Developer with 2+ years building production web and mobile apps using Next.js, tRPC, and Drizzle ORM. Delivered 10+ projects across freelance and institutional settings. Passionate about type-safe, scalable code.",
+    email: "rizrmdhn.work@gmail.com",
+    githubUrl: "https://github.com/rizrmdhn",
+    linkedinUrl: "https://linkedin.com/in/rizrmdhn",
+    twitterUrl: "https://twitter.com/rizrmdhn",
+  };
+
+  const existing = await db.query.profile.findFirst();
+
+  if (existing) {
+    await db.update(profile).set(values).where(eq(profile.id, existing.id));
+  } else {
+    await db.insert(profile).values(values);
+  }
 
   console.log("Seeded profile.");
 }

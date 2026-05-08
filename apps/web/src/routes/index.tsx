@@ -10,6 +10,7 @@ import {
   IconArrowRight,
   IconBrandGithub,
   IconBrandLinkedin,
+  IconBrandTwitter,
   IconExternalLink,
   IconMail,
 } from "@tabler/icons-react";
@@ -17,6 +18,10 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
+    const profile = await context.queryClient.ensureQueryData(
+      context.trpc.profile.get.queryOptions(),
+    );
+
     const projects = await context.queryClient.ensureQueryData(
       context.trpc.project.getForLandingPage.queryOptions(),
     );
@@ -33,7 +38,7 @@ export const Route = createFileRoute("/")({
       context.trpc.certification.getForLandingPage.queryOptions(),
     );
 
-    return { projects, experiences, stack, certifications };
+    return { profile, projects, experiences, stack, certifications };
   },
   component: HomeComponent,
 });
@@ -50,6 +55,7 @@ function HomeComponent() {
   const navigate = Route.useNavigate();
 
   const {
+    profile,
     projects: { data: featured, isMore },
     experiences,
     stack,
@@ -74,32 +80,57 @@ function HomeComponent() {
             Available for opportunities
           </Badge>
           <h1 className="text-[32px] sm:text-[44px] md:text-[54px] font-extrabold leading-[1.05] text-foreground">
-            Noor Rizki Ramadhan
+            {profile.name}
           </h1>
           <p className="text-[18px] text-start max-w-2xl text-muted-foreground">
-            Fullstack Developer
+            {profile.title}
           </p>
           <p className="text-[15px] text-start max-w-2xl text-muted-foreground leading-[1.75]">
-            Full-stack Developer with 2+ years building production web and
-            mobile apps using Next.js, tRPC, and Drizzle ORM. Delivered 10+
-            projects across freelance and institutional settings. Passionate
-            about type-safe, scalable code.
+            {profile.bio}
           </p>
           {/* Social */}
           <div className="flex flex-wrap items-center gap-4">
-            <Button variant="outline" size="lg" onClick={() => {}}>
-              <span className="flex items-center gap-1 text-sm text-subtle font-medium">
-                <IconBrandGithub className="size-4" />
-                GitHub
-              </span>
-            </Button>
-            <Button variant="outline" size="lg" onClick={() => {}}>
-              <span className="flex items-center gap-1 text-sm text-subtle font-medium">
-                <IconBrandLinkedin className="size-4" />
-                LinkedIn
-              </span>
-            </Button>
-            <Button variant="outline" size="lg" onClick={() => {}}>
+            {profile.githubUrl && (
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => window.open(profile.githubUrl!, "_blank")}
+              >
+                <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+                  <IconBrandGithub className="size-4" />
+                  GitHub
+                </span>
+              </Button>
+            )}
+            {profile.linkedinUrl && (
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => window.open(profile.linkedinUrl!, "_blank")}
+              >
+                <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+                  <IconBrandLinkedin className="size-4" />
+                  LinkedIn
+                </span>
+              </Button>
+            )}
+            {profile.twitterUrl && (
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => window.open(profile.twitterUrl!, "_blank")}
+              >
+                <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+                  <IconBrandTwitter className="size-4" />
+                  Twitter
+                </span>
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => window.location.assign(`mailto:${profile.email}`)}
+            >
               <span className="flex items-center gap-1 text-sm text-subtle font-medium">
                 <IconMail className="size-4" />
                 Email
@@ -232,11 +263,10 @@ function HomeComponent() {
               </p>
               <div className="flex flex-col gap-3 font-mono text-sm">
                 <a
-                  href="mailto:rizrmdhn.work@gmail.com"
+                  href={`mailto:${profile.email}`}
                   className="text-subtle hover:text-foreground transition-colors"
                 >
-                  rizrmdhn.work@gmail.com{" "}
-                  <IconExternalLink className="size-3 inline" />
+                  {profile.email} <IconExternalLink className="size-3 inline" />
                 </a>
                 <a
                   href="https://github.com/rizrmdhn"
@@ -259,13 +289,32 @@ function HomeComponent() {
         </span>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <a className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors">
-            Github
-          </a>
-          <a className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors">
-            LinkedIn
-          </a>
-          <a className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors">
+          {profile.githubUrl && (
+            <a
+              href={profile.githubUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
+            >
+              Github
+            </a>
+          )}
+          {profile.linkedinUrl && (
+            <a
+              href={profile.linkedinUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
+            >
+              LinkedIn
+            </a>
+          )}
+          <a
+            href={`mailto:${profile.email}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
+          >
             Email
           </a>
         </div>

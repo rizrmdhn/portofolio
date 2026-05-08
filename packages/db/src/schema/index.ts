@@ -25,18 +25,15 @@ import { createTable } from "../utils";
 
 // ========== Better Auth tables ==========
 
-export const user = createTable(
-  "user",
-  {
-    id: text("id").primaryKey(),
-    name: text("name").notNull(),
-    email: text("email").notNull().unique(),
-    emailVerified: boolean("email_verified").notNull(),
-    image: text("image"),
-    createdAt: timestamp("created_at").notNull(),
-    updatedAt: timestamp("updated_at").notNull(),
-  },
-);
+export const user = createTable("user", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified").notNull(),
+  image: text("image"),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
+});
 
 export const session = createTable(
   "session",
@@ -77,17 +74,14 @@ export const account = createTable(
   (table) => [index("account_user_id_idx").using("btree", table.userId)],
 );
 
-export const verification = createTable(
-  "verification",
-  {
-    id: text("id").primaryKey(),
-    identifier: text("identifier").notNull(),
-    value: text("value").notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    createdAt: timestamp("created_at"),
-    updatedAt: timestamp("updated_at"),
-  },
-);
+export const verification = createTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at"),
+  updatedAt: timestamp("updated_at"),
+});
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -106,7 +100,6 @@ export const experienceStatusEnum = pgEnum(
   "experience_status_enum",
   EXPERIENCE_STATUS_TYPES,
 );
-
 
 export const projects = createTable(
   "projects",
@@ -245,6 +238,9 @@ export const profile = createTable(
     title: varchar("title", { length: 256 }).notNull(),
     bio: text("bio").notNull(),
     email: text("email").notNull(),
+    githubUrl: text("github_url"),
+    linkedinUrl: text("linkedin_url"),
+    twitterUrl: text("twitter_url"),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
