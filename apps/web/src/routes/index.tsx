@@ -7,7 +7,6 @@ import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Certification } from "@portofolio/types/certification.types";
-import { Experience } from "@portofolio/types/experience.types";
 import { TechStack } from "@portofolio/types/tech-stack.types";
 import {
   IconBrandGithub,
@@ -22,64 +21,14 @@ export const Route = createFileRoute("/")({
       context.trpc.project.getForLandingPage.queryOptions(),
     );
 
-    return { projects };
+    const experiences = await context.queryClient.ensureQueryData(
+      context.trpc.experience.getAll.queryOptions(),
+    );
+
+    return { projects, experiences };
   },
   component: HomeComponent,
 });
-
-const experiences: Experience[] = [
-  {
-    id: "01900000-0000-7000-8000-000000000001",
-    title: "Fullstack Developer",
-    company: "Tech Corp",
-    location: "Jakarta, Indonesia",
-    type: "full-time",
-    startDate: "2023-01-01",
-    endDate: null,
-    currentlyWorking: true,
-    description:
-      "Built and maintained web applications using React, Node.js, and PostgreSQL. Led migrations to modern tooling and improved CI/CD pipelines.",
-    skills: ["TypeScript", "React", "Node.js", "PostgreSQL", "Docker"],
-    status: "published",
-    order: 1,
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000002",
-    title: "Frontend Developer",
-    company: "Startup Studio",
-    location: "Bandung, Indonesia",
-    type: "contract",
-    startDate: "2022-03-01",
-    endDate: "2022-12-31",
-    currentlyWorking: false,
-    description:
-      "Developed responsive UIs and collaborated closely with design and backend teams to ship product features on time.",
-    skills: ["React", "Tailwind CSS", "Next.js", "Figma"],
-    status: "published",
-    order: 2,
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-  {
-    id: "01900000-0000-7000-8000-000000000003",
-    title: "Backend Developer Intern",
-    company: "Digital Agency",
-    location: "Remote",
-    type: "internship",
-    startDate: "2021-07-01",
-    endDate: "2021-12-31",
-    currentlyWorking: false,
-    description:
-      "Assisted in designing REST APIs, writing unit tests, and optimizing database queries for a high-traffic e-commerce platform.",
-    skills: ["Node.js", "Express", "MySQL", "Jest"],
-    status: "published",
-    order: 3,
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: null,
-  },
-];
 
 const stack: TechStack[] = [
   {
@@ -171,6 +120,7 @@ function HomeComponent() {
 
   const {
     projects: { data: featured, isMore },
+    experiences,
   } = Route.useLoaderData();
 
   return (

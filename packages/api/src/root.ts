@@ -1,10 +1,10 @@
 import { createCallerFactory, createTRPCRouter } from ".";
-import { healthRouter } from "./routers/health";
+import { experienceRouter } from "./routers/experience";
 import { projectRouter } from "./routers/project";
 
 export const appRouter = createTRPCRouter({
-  health: healthRouter,
   project: projectRouter,
+  experience: experienceRouter,
 });
 
 // export type definition of API

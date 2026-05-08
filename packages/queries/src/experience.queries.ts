@@ -10,7 +10,7 @@ import { NotFoundError, QueryError } from "./errors";
 export async function getAllExperiences() {
   const experiences = await db.query.experiences.findMany({
     orderBy: {
-      createdAt: "desc",
+      order: "asc",
     },
   });
   return experiences;
