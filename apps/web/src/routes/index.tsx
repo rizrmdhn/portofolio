@@ -7,8 +7,10 @@ import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  IconArrowRight,
   IconBrandGithub,
   IconBrandLinkedin,
+  IconExternalLink,
   IconMail,
 } from "@tabler/icons-react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -160,10 +162,12 @@ function HomeComponent() {
           {isMore && (
             <Button
               onClick={() => navigate({ to: "/projects" })}
-              variant="outline"
+              variant="link"
               size="lg"
+              className="text-subtle group"
             >
               View all projects
+              <IconArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           )}
         </FadeIn>
@@ -200,10 +204,12 @@ function HomeComponent() {
             {isMoreCerts && (
               <Button
                 onClick={() => navigate({ to: "/certificates" })}
-                variant="outline"
+                variant="link"
                 size="lg"
+                className="text-subtle group"
               >
                 View all certificates
+                <IconArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             )}
           </FadeIn>
@@ -223,10 +229,11 @@ function HomeComponent() {
               </p>
               <div className="flex flex-col gap-3 font-mono text-sm">
                 <a
-                  href="mailto:rizrmdhn.unity@gmail.com"
+                  href="mailto:rizrmdhn.work@gmail.com"
                   className="text-subtle hover:text-foreground transition-colors"
                 >
-                  rizrmdhn.unity@gmail.com ↗
+                  rizrmdhn.work@gmail.com{" "}
+                  <IconExternalLink className="size-3 inline" />
                 </a>
                 <a
                   href="https://github.com/rizrmdhn"
@@ -234,7 +241,8 @@ function HomeComponent() {
                   rel="noopener noreferrer"
                   className="text-subtle hover:text-foreground transition-colors"
                 >
-                  github.com/rizrmdhn ↗
+                  github.com/rizrmdhn{" "}
+                  <IconExternalLink className="size-3 inline" />
                 </a>
               </div>
             </div>
