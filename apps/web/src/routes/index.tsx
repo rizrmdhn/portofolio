@@ -268,15 +268,17 @@ function HomeComponent() {
                 >
                   {profile.email} <IconExternalLink className="size-3 inline" />
                 </a>
-                <a
-                  href="https://github.com/rizrmdhn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-subtle hover:text-foreground transition-colors"
-                >
-                  github.com/rizrmdhn{" "}
-                  <IconExternalLink className="size-3 inline" />
-                </a>
+                {profile.githubUrl && (
+                  <a
+                    href={profile.githubUrl!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-subtle hover:text-foreground transition-colors"
+                  >
+                    {profile.githubUrl}
+                    <IconExternalLink className="size-3 inline" />
+                  </a>
+                )}
               </div>
             </div>
           </FadeIn>
