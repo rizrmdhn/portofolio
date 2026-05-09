@@ -1,4 +1,4 @@
-import { eq, getColumns, ilike } from "@portofolio/db";
+import { and, desc, eq, getColumns, gt, ilike, sql } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { projectViews, projects } from "@portofolio/db/schema/index";
 import type {
@@ -60,6 +60,30 @@ export async function getProjectsForLandingPage() {
   const isMore = result.length > 6;
 
   return { data: result.slice(0, 6), isMore };
+}
+
+export async function getAllTimeViewsProjects() {
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const result = await db
+    .select({
+      ...getColumns(projects),
+      views: sql<number>`coalesce(${projectViews.count}, 0)`,
+    })
+    .from(projects)
+    .leftJoin(projectViews, eq(projects.id, projectViews.projectId))
+    .where(
+      and(
+        eq(projects.isVisible, true),
+        eq(projects.status, "published"),
+        gt(projects.createdAt, thirtyDaysAgo.toISOString()),
+      ),
+    )
+    .orderBy(desc(sql`coalesce(${projectViews.count}, 0)`))
+    .limit(5);
+
+  return result;
 }
 
 export async function getProjectById(id: string) {

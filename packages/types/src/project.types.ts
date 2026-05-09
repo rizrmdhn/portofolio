@@ -11,6 +11,10 @@ export type ProjectWithView = InferQueryModel<
   }
 >;
 
+export type AllTimeProject = Project & {
+  views: number;
+};
+
 export type PaginatedProjects = Project & {
   views: number;
 };

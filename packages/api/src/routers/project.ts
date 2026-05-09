@@ -3,6 +3,7 @@ import {
   createProject,
   deleteProject,
   getAllProjects,
+  getAllTimeViewsProjects,
   getPaginatedProjects,
   getProjectById,
   getProjectsForLandingPage,
@@ -26,6 +27,16 @@ import { toTRPCError } from "../utils/to-trpc-error";
 export const projectRouter = createTRPCRouter({
   getAll: publicProcedure.query(async () => {
     const [projects, err] = await tryCatchAsync(() => getAllProjects());
+
+    if (err) throw toTRPCError(err);
+
+    return projects;
+  }),
+
+  getAllTimeViewsProjects: protectedProcedure.query(async () => {
+    const [projects, err] = await tryCatchAsync(() =>
+      getAllTimeViewsProjects(),
+    );
 
     if (err) throw toTRPCError(err);
 
