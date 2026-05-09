@@ -34,12 +34,12 @@ const navGroups = [
     items: [
       { name: "Projects", icon: IconFolder, url: "/dashboard/projects" },
       { name: "Experience", icon: IconBriefcase, url: "/dashboard/experience" },
+      { name: "Tech Stack", icon: IconStack2, url: "/dashboard/tech-stack" },
       {
         name: "Certificate",
         icon: IconCertificate,
         url: "/dashboard/certificate",
       },
-      { name: "Tech Stack", icon: IconStack2, url: "/dashboard/tech-stack" },
     ],
   },
   {
