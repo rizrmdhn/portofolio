@@ -21,6 +21,7 @@ import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
 import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
+import { Route as coreDashboardCertificateIndexRouteImport } from './routes/(core)/dashboard/certificate/index'
 
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
@@ -84,6 +85,12 @@ const coreDashboardExperienceIndexRoute =
     path: '/experience/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardCertificateIndexRoute =
+  coreDashboardCertificateIndexRouteImport.update({
+    id: '/certificate/',
+    path: '/certificate/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard/': typeof coreDashboardIndexRoute
+  '/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
   '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
   '/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard': typeof coreDashboardIndexRoute
+  '/dashboard/certificate': typeof coreDashboardCertificateIndexRoute
   '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
   '/dashboard/tech-stack': typeof coreDashboardTechStackIndexRoute
@@ -121,6 +130,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
+  '/(core)/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
   '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
   '/(core)/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard/'
+    | '/dashboard/certificate/'
     | '/dashboard/experience/'
     | '/dashboard/projects/'
     | '/dashboard/tech-stack/'
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard'
+    | '/dashboard/certificate'
     | '/dashboard/experience'
     | '/dashboard/projects'
     | '/dashboard/tech-stack'
@@ -162,6 +174,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/(core)/dashboard/'
+    | '/(core)/dashboard/certificate/'
     | '/(core)/dashboard/experience/'
     | '/(core)/dashboard/projects/'
     | '/(core)/dashboard/tech-stack/'
@@ -263,6 +276,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardExperienceIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/certificate/': {
+      id: '/(core)/dashboard/certificate/'
+      path: '/certificate'
+      fullPath: '/dashboard/certificate/'
+      preLoaderRoute: typeof coreDashboardCertificateIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
   }
 }
 
@@ -280,6 +300,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface coreDashboardRouteRouteChildren {
   coreDashboardIndexRoute: typeof coreDashboardIndexRoute
+  coreDashboardCertificateIndexRoute: typeof coreDashboardCertificateIndexRoute
   coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
   coreDashboardTechStackIndexRoute: typeof coreDashboardTechStackIndexRoute
@@ -287,6 +308,7 @@ interface coreDashboardRouteRouteChildren {
 
 const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardIndexRoute: coreDashboardIndexRoute,
+  coreDashboardCertificateIndexRoute: coreDashboardCertificateIndexRoute,
   coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
   coreDashboardTechStackIndexRoute: coreDashboardTechStackIndexRoute,
