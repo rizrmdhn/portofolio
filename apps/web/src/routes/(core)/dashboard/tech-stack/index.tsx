@@ -23,10 +23,10 @@ import {
 } from "@dnd-kit/core";
 import {
   arrayMove,
+  rectSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { TechStack } from "@portofolio/types/tech-stack.types";
@@ -85,7 +85,7 @@ function TechStackListSkeleton() {
         <Skeleton className="h-9 w-72" /> {/* search bar */}
         <Skeleton className="h-9 w-32" /> {/* add button */}
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-18 w-full rounded-lg" />
         ))}
@@ -175,7 +175,7 @@ function RouteComponent() {
       >
         <SortableContext
           items={data.map((item) => item.id)}
-          strategy={verticalListSortingStrategy}
+          strategy={rectSortingStrategy}
         >
           {data.map((item) => (
             <SortableTechStackCard key={item.id} techStack={item} />
@@ -214,7 +214,7 @@ function RouteComponent() {
           Add Tech Stack Item
         </Button>
       </div>
-      <div className="flex flex-col gap-2">{renderList()}</div>
+      <div className="grid grid-cols-2 gap-2">{renderList()}</div>
     </div>
   );
 }
