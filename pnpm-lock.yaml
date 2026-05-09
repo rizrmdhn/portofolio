@@ -334,6 +334,10 @@ importers:
   packages/config: {}
 
   packages/constants:
+    dependencies:
+      '@tabler/icons-react':
+        specifier: ^3.41.1
+        version: 3.41.1(react@19.2.5)
     devDependencies:
       '@portofolio/config':
         specifier: workspace:*

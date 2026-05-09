@@ -3,6 +3,7 @@ import { certificationRouter } from "./routers/certification";
 import { experienceRouter } from "./routers/experience";
 import { profileRouter } from "./routers/profile";
 import { projectRouter } from "./routers/project";
+import { socialLinkRouter } from "./routers/social-link";
 import { techStackRouter } from "./routers/tech-stack";
 
 export const appRouter = createTRPCRouter({
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   certification: certificationRouter,
   techStack: techStackRouter,
   profile: profileRouter,
+  socialLink: socialLinkRouter,
 });
 
 // export type definition of API

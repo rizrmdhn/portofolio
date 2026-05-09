@@ -32,3 +32,5 @@ export const STATUS_LABELS: Record<StatusType, string> = {
 
 export * from "./colors";
 export * from "./experience";
+export * from "./icons";
+export * from "./social-icons";

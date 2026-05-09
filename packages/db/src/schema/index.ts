@@ -5,6 +5,7 @@ import {
   COLOR_VALUES,
   EXPERIENCE_STATUS_TYPES,
   EXPERIENCE_TYPES,
+  SOCIAL_ICON_NAMES,
   STATUS_TYPES,
 } from "@portofolio/constants";
 import { sql } from "drizzle-orm";
@@ -100,6 +101,8 @@ export const experienceStatusEnum = pgEnum(
   "experience_status_enum",
   EXPERIENCE_STATUS_TYPES,
 );
+
+export const socialIconEnum = pgEnum("social_icon_enum", SOCIAL_ICON_NAMES);
 
 export const projects = createTable(
   "projects",
@@ -239,9 +242,6 @@ export const profile = createTable(
     title: varchar("title", { length: 256 }).notNull(),
     bio: text("bio").notNull(),
     email: text("email").notNull(),
-    githubUrl: text("github_url"),
-    linkedinUrl: text("linkedin_url"),
-    twitterUrl: text("twitter_url"),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
@@ -304,4 +304,29 @@ export const techStack = createTable(
     }).$onUpdate(() => new Date().toISOString()),
   },
   (table) => [index("tech_stack_id_idx").using("btree", table.id)],
+);
+
+export const socialLinks = createTable(
+  "social_links",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    title: varchar("title", { length: 256 }).notNull(),
+    url: text("url").notNull(),
+    icon: socialIconEnum("icon").notNull(),
+    order: integer("order").default(0).notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [index("social_links_id_idx").using("btree", table.id)],
 );
