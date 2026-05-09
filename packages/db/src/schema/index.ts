@@ -290,6 +290,7 @@ export const techStack = createTable(
       .$default(() => uuidv7()),
     name: varchar("name", { length: 256 }).notNull(),
     list: text("list").array().notNull(),
+    order: integer("order").default(0).notNull(),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
