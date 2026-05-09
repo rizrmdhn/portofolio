@@ -26,6 +26,15 @@
 - [ ] Section order — drag-to-reorder landing page sections
 - [ ] Custom sections — freeform blocks with title + markdown body (e.g. Writing, Speaking)
 
+## Resume / CV Generator
+
+- [ ] ATS template — single column, plain text, no icons/colors, passes resume scanners
+- [ ] Creative template — two-column, accent colors, icons, profile photo
+- [ ] Font picker — store `resumeFont` in profile, applied to both templates
+- [ ] Accent color picker — store `resumeAccentColor` in profile, applied to both templates
+- [ ] Server-side PDF generation via tRPC endpoint (streams downloadable file)
+- [ ] Track resume download count (feeds into dashboard stats)
+
 ## Dashboard Overview Page
 
 ### Ready to build (data already exists)
