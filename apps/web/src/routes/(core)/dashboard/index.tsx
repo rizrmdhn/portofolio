@@ -11,7 +11,7 @@ export const Route = createFileRoute("/(core)/dashboard/")({
     );
 
     await context.queryClient.ensureQueryData(
-      context.trpc.socialLink.getAll.queryOptions(),
+      context.trpc.socialLink.getSocialLinkClickThroughForDashboard.queryOptions(),
     );
   },
   component: RouteComponent,
@@ -22,7 +22,7 @@ function RouteComponent() {
     trpc.project.getAllTimeViewsProjects.queryOptions(),
   );
   const { data: socialLinks } = useSuspenseQuery(
-    trpc.socialLink.getAll.queryOptions(),
+    trpc.socialLink.getSocialLinkClickThroughForDashboard.queryOptions(),
   );
 
   return (

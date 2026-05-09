@@ -33,6 +33,24 @@ export async function getSocialLinksForDashboard(search?: string) {
   return socialLinkItems;
 }
 
+export async function getSocialLinkClickThroughForDashboard(search?: string) {
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const socialLinkItems = await db.query.socialLinks.findMany({
+    where: {
+      createdAt: {
+        gt: thirtyDaysAgo.toISOString(),
+      },
+    },
+    orderBy: {
+      clickCount: "desc",
+    },
+  });
+
+  return socialLinkItems;
+}
+
 export async function getSocialLinkById(id: string) {
   const socialLinkItem = await db.query.socialLinks.findFirst({
     where: {

@@ -19,18 +19,17 @@ export function SocialLinkClickThroughCard({
         <div className="flex items-center justify-between">
           {/* Title */}
           <div className="flex flex-col">
-            <p className="text-sm font-semibold">Top Projects</p>
-            <span className="text-xs text-muted-foreground">
-              By views, last 30 days
-            </span>
+            <p className="text-sm font-semibold text-foreground">
+              Social Link Click-Through
+            </p>
+            <span className="text-xs text-muted-foreground">Last 30 days</span>
           </div>
         </div>
 
         {/* Project List */}
         <div className="grid grid-cols-2 gap-4">
           {socialLinks.map((link, idx) => {
-            const compareLink =
-              socialLinks[idx + 1] ?? socialLinks[idx - 1];
+            const compareLink = socialLinks[idx + 1] ?? socialLinks[idx - 1];
             const compareCount = compareLink?.clickCount ?? 0;
             const growth =
               !compareLink || compareCount === 0

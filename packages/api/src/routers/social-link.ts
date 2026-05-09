@@ -3,6 +3,7 @@ import {
   deleteSocialLink,
   getAllSocialLinks,
   getSocialLinkById,
+  getSocialLinkClickThroughForDashboard,
   getSocialLinksForDashboard,
   incrementClickCount,
   reorderSocialLinks,
@@ -21,6 +22,16 @@ import { toTRPCError } from "../utils/to-trpc-error";
 export const socialLinkRouter = createTRPCRouter({
   getAll: publicProcedure.query(async () => {
     const [socialLinks, err] = await tryCatchAsync(() => getAllSocialLinks());
+
+    if (err) throw toTRPCError(err);
+
+    return socialLinks;
+  }),
+
+  getSocialLinkClickThroughForDashboard: protectedProcedure.query(async () => {
+    const [socialLinks, err] = await tryCatchAsync(() =>
+      getSocialLinkClickThroughForDashboard(),
+    );
 
     if (err) throw toTRPCError(err);
 
