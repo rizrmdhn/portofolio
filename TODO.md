@@ -10,7 +10,7 @@
 
 ## Dynamic / Forkable Features
 
-- [ ] Social links — custom icon + title + url + order, replaces hardcoded githubUrl/linkedinUrl/twitterUrl columns
+- [x] Social links — custom icon + title + url + order, replaces hardcoded githubUrl/linkedinUrl/twitterUrl columns
 
 ### High value, low effort
 
@@ -54,9 +54,8 @@
 ### Needs new DB tables + API
 
 - [ ] Page view chart over time — `viewEvents(projectId, timestamp)` table
-- [ ] Device breakdown — store user-agent on view events
 - [ ] Resume download counter — download event tracking
-- [ ] Social link click-through — click event tracking
+- [x] Social link click-through — click event tracking
 - [ ] Recent activity log — activity log table
 
 ### Use external tool instead (Plausible / Umami / Vercel Analytics)

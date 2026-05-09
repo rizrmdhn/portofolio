@@ -1,9 +1,14 @@
 import { eq } from "@portofolio/db";
 import { db, sql } from "@portofolio/db/client";
 import { projectViews } from "@portofolio/db/schema/index";
-import { QueryError } from "./errors";
+import { NotFoundError, QueryError } from "./errors";
+import { getProjectById } from "./project.queries";
 
 export async function incrementViews(projectId: string): Promise<void> {
+  const isExist = await getProjectById(projectId);
+
+  if (!isExist) throw new NotFoundError(`Project`, projectId);
+
   await db
     .update(projectViews)
     .set({
@@ -23,6 +28,10 @@ export async function getViews(projectId: string): Promise<number> {
 }
 
 export async function createProjectView(projectId: string): Promise<void> {
+  const isExist = await getProjectById(projectId);
+
+  if (!isExist) throw new NotFoundError(`Project`, projectId);
+
   const [projectView] = await db
     .insert(projectViews)
     .values({

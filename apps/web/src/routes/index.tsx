@@ -6,12 +6,14 @@ import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/utils/trpc";
 import { SOCIAL_ICON_MAP, SocialIconName } from "@portofolio/constants";
 import {
   IconArrowRight,
   IconExternalLink,
   IconMail,
 } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -74,6 +76,10 @@ function HomeComponent() {
 
   const socialByIcon = Object.fromEntries(socialLinks.map((l) => [l.icon, l]));
 
+  const incrementSocialLinkClickCount = useMutation(
+    trpc.socialLink.incrementClickCount.mutationOptions(),
+  );
+
   return (
     <div className="flex flex-col bg-background text-foreground">
       <MainHeader />
@@ -109,7 +115,10 @@ function HomeComponent() {
                   key={link.id}
                   variant="outline"
                   size="lg"
-                  onClick={() => window.open(link.url, "_blank")}
+                  onClick={() => {
+                    incrementSocialLinkClickCount.mutate({ id: link.id });
+                    window.open(link.url, "_blank");
+                  }}
                   title={link.title}
                 >
                   <span className="flex items-center gap-1 text-sm text-subtle font-medium">

@@ -1,4 +1,4 @@
-import { eq } from "@portofolio/db";
+import { eq, sql } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { socialLinks } from "@portofolio/db/schema/index";
 import type {
@@ -57,8 +57,23 @@ export async function createSocialLink(data: CreateSocialLinkInput) {
   return socialLinkItem;
 }
 
+export async function incrementClickCount(id: string) {
+  const isExist = await getSocialLinkById(id);
+
+  if (!isExist) throw new NotFoundError(`Social link item`, id);
+
+  await db
+    .update(socialLinks)
+    .set({
+      clickCount: sql`${socialLinks.clickCount} + 1`,
+    })
+    .where(eq(socialLinks.id, id));
+}
+
 export async function updateSocialLink(data: UpdateSocialLinkInput) {
   const isExist = await getSocialLinkById(data.id);
+
+  if (!isExist) throw new NotFoundError(`Social link item`, data.id);
 
   const [socialLinkItem] = await db
     .update(socialLinks)

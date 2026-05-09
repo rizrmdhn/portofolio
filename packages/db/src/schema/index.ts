@@ -317,6 +317,7 @@ export const socialLinks = createTable(
     url: text("url").notNull(),
     icon: socialIconEnum("icon").notNull(),
     order: integer("order").default(0).notNull(),
+    clickCount: integer("click_count").default(0).notNull(),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",

@@ -1,0 +1,1 @@
+ALTER TABLE "social_links" ADD COLUMN "click_count" integer DEFAULT 0 NOT NULL;

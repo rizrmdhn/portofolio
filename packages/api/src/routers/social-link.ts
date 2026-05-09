@@ -4,6 +4,7 @@ import {
   getAllSocialLinks,
   getSocialLinkById,
   getSocialLinksForDashboard,
+  incrementClickCount,
   reorderSocialLinks,
   updateSocialLink,
 } from "@portofolio/queries/social-link.queries";
@@ -60,6 +61,14 @@ export const socialLinkRouter = createTRPCRouter({
       if (err) throw toTRPCError(err);
 
       return socialLink;
+    }),
+
+  incrementClickCount: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input: { id } }) => {
+      const [, err] = await tryCatchAsync(() => incrementClickCount(id));
+
+      if (err) throw toTRPCError(err);
     }),
 
   update: protectedProcedure
