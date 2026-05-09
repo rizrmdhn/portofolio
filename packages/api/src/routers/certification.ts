@@ -4,10 +4,13 @@ import {
   getAllCertifications,
   getCertificatesForLandingPage,
   getCertificationById,
+  getCertificationsForDashboard,
+  reorderCertifications,
   updateCertification,
 } from "@portofolio/queries/certification.queries";
 import {
   createCertificationSchema,
+  reorderCertificationsSchema,
   updateCertificationSchema,
 } from "@portofolio/schema/certifcation.schema";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
@@ -25,6 +28,18 @@ export const certificationRouter = createTRPCRouter({
 
     return certifications;
   }),
+
+  getForDashboard: protectedProcedure
+    .input(z.object({ search: z.string().optional() }))
+    .query(async ({ input: { search } }) => {
+      const [certifications, err] = await tryCatchAsync(() =>
+        getCertificationsForDashboard(search),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return certifications;
+    }),
 
   getForLandingPage: publicProcedure.query(async () => {
     const [certifications, err] = await tryCatchAsync(() =>
@@ -70,6 +85,14 @@ export const certificationRouter = createTRPCRouter({
       if (err) throw toTRPCError(err);
 
       return certification;
+    }),
+
+  reorder: protectedProcedure
+    .input(reorderCertificationsSchema)
+    .mutation(async ({ input }) => {
+      const [, err] = await tryCatchAsync(() => reorderCertifications(input));
+
+      if (err) throw toTRPCError(err);
     }),
 
   delete: protectedProcedure

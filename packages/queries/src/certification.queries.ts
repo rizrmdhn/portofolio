@@ -3,6 +3,7 @@ import { db } from "@portofolio/db/client";
 import { certifications } from "@portofolio/db/schema/index";
 import type {
   CreateCertificationInput,
+  ReorderCertificationsInput,
   UpdateCertificationInput,
 } from "@portofolio/schema/certifcation.schema";
 import { NotFoundError, QueryError } from "./errors";
@@ -10,7 +11,22 @@ import { NotFoundError, QueryError } from "./errors";
 export async function getAllCertifications() {
   const certificationsList = await db.query.certifications.findMany({
     orderBy: {
-      createdAt: "desc",
+      order: "asc",
+    },
+  });
+
+  return certificationsList;
+}
+
+export async function getCertificationsForDashboard(search?: string) {
+  const certificationsList = await db.query.certifications.findMany({
+    where: {
+      title: {
+        ilike: `%${search ?? ""}%`,
+      },
+    },
+    orderBy: {
+      order: "asc",
     },
   });
 
@@ -20,7 +36,7 @@ export async function getAllCertifications() {
 export async function getCertificatesForLandingPage() {
   const result = await db.query.certifications.findMany({
     orderBy: {
-      createdAt: "desc",
+      order: "asc",
     },
     limit: 7,
   });
@@ -79,6 +95,19 @@ export async function updateCertification(data: UpdateCertificationInput) {
   if (!certification) throw new QueryError("Failed to update certification");
 
   return certification;
+}
+
+export async function reorderCertifications(
+  orderedIds: ReorderCertificationsInput,
+) {
+  await db.transaction(async (tx) => {
+    for (const { id, order } of orderedIds) {
+      await tx
+        .update(certifications)
+        .set({ order })
+        .where(eq(certifications.id, id));
+    }
+  });
 }
 
 export async function deleteCertification(id: string) {

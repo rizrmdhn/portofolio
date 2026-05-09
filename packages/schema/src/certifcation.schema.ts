@@ -17,10 +17,18 @@ export const updateCertificationSchema = createCertificationSchema.extend({
   id: z.string(),
 });
 
+export const reorderCertificationsSchema = z
+  .array(z.object({ id: z.string(), order: z.number().int().min(0) }))
+  .min(1);
+
 export type CreateCertificationInput = z.infer<
   typeof createCertificationSchema
 >;
 
 export type UpdateCertificationInput = z.infer<
   typeof updateCertificationSchema
+>;
+
+export type ReorderCertificationsInput = z.infer<
+  typeof reorderCertificationsSchema
 >;

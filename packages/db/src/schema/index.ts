@@ -213,6 +213,7 @@ export const certifications = createTable(
     issueYear: integer("issue_year"),
     expiryYear: integer("expiry_year"),
     status: experienceStatusEnum("status").notNull().default("draft"),
+    order: integer("order").default(0).notNull(),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",
