@@ -49,7 +49,7 @@
 ### Needs new API endpoints
 
 - [ ] Total project views — aggregated sum query
-- [ ] Top projects last 30 days — date-filtered view query
+- [x] Top projects last 30 days — date-filtered view query
 
 ### Needs new DB tables + API
 
