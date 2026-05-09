@@ -13,7 +13,13 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { v7 as uuidv7 } from "uuid";
 import { relations } from "./relations/index.js";
-import { account, applicationSettings, profile, user } from "./schema/index.js";
+import {
+  account,
+  applicationSettings,
+  profile,
+  socialLinks,
+  user,
+} from "./schema/index.js";
 
 const databaseUrl = process.env.DATABASE_URL;
 const email = process.env.ALLOWED_EMAIL_LOGIN;
@@ -108,8 +114,34 @@ async function seedProfile() {
   console.log("Seeded profile.");
 }
 
+async function seedSocialLinks() {
+  const defaults = [
+    { title: "GitHub", url: "https://github.com/rizrmdhn", icon: "github" as const, order: 0 },
+    { title: "LinkedIn", url: "https://linkedin.com/in/rizrmdhn", icon: "linkedin" as const, order: 1 },
+    { title: "X (Twitter)", url: "https://twitter.com/rizrmdhn", icon: "x" as const, order: 2 },
+  ];
+
+  for (const entry of defaults) {
+    const existing = await db.query.socialLinks.findFirst({
+      where: { icon: entry.icon },
+    });
+
+    if (existing) {
+      await db
+        .update(socialLinks)
+        .set({ title: entry.title, url: entry.url, order: entry.order })
+        .where(eq(socialLinks.id, existing.id));
+    } else {
+      await db.insert(socialLinks).values(entry);
+    }
+  }
+
+  console.log("Seeded social links.");
+}
+
 await seedUser();
 await seedApplicationSettings();
 await seedProfile();
+await seedSocialLinks();
 
 await client.end();

@@ -6,11 +6,9 @@ import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SOCIAL_ICON_MAP, SocialIconName } from "@portofolio/constants";
 import {
   IconArrowRight,
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconBrandTwitter,
   IconExternalLink,
   IconMail,
 } from "@tabler/icons-react";
@@ -38,7 +36,18 @@ export const Route = createFileRoute("/")({
       context.trpc.certification.getForLandingPage.queryOptions(),
     );
 
-    return { profile, projects, experiences, stack, certifications };
+    const socialLinks = await context.queryClient.ensureQueryData(
+      context.trpc.socialLink.getAll.queryOptions(),
+    );
+
+    return {
+      profile,
+      projects,
+      experiences,
+      stack,
+      certifications,
+      socialLinks,
+    };
   },
   component: HomeComponent,
 });
@@ -60,7 +69,10 @@ function HomeComponent() {
     experiences,
     stack,
     certifications: { data: certificates, isMore: isMoreCerts },
+    socialLinks,
   } = Route.useLoaderData();
+
+  const socialByIcon = Object.fromEntries(socialLinks.map((l) => [l.icon, l]));
 
   return (
     <div className="flex flex-col bg-background text-foreground">
@@ -90,42 +102,23 @@ function HomeComponent() {
           </p>
           {/* Social */}
           <div className="flex flex-wrap items-center gap-4">
-            {profile.githubUrl && (
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => window.open(profile.githubUrl!, "_blank")}
-              >
-                <span className="flex items-center gap-1 text-sm text-subtle font-medium">
-                  <IconBrandGithub className="size-4" />
-                  GitHub
-                </span>
-              </Button>
-            )}
-            {profile.linkedinUrl && (
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => window.open(profile.linkedinUrl!, "_blank")}
-              >
-                <span className="flex items-center gap-1 text-sm text-subtle font-medium">
-                  <IconBrandLinkedin className="size-4" />
-                  LinkedIn
-                </span>
-              </Button>
-            )}
-            {profile.twitterUrl && (
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => window.open(profile.twitterUrl!, "_blank")}
-              >
-                <span className="flex items-center gap-1 text-sm text-subtle font-medium">
-                  <IconBrandTwitter className="size-4" />
-                  Twitter
-                </span>
-              </Button>
-            )}
+            {socialLinks.map((link) => {
+              const Icon = SOCIAL_ICON_MAP[link.icon as SocialIconName]?.icon;
+              return (
+                <Button
+                  key={link.id}
+                  variant="outline"
+                  size="lg"
+                  onClick={() => window.open(link.url, "_blank")}
+                  title={link.title}
+                >
+                  <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+                    {Icon && <Icon className="size-4" />}
+                    {link.title}
+                  </span>
+                </Button>
+              );
+            })}
             <Button
               variant="outline"
               size="lg"
@@ -268,14 +261,14 @@ function HomeComponent() {
                 >
                   {profile.email} <IconExternalLink className="size-3 inline" />
                 </a>
-                {profile.githubUrl && (
+                {socialByIcon.github && (
                   <a
-                    href={profile.githubUrl!}
+                    href={socialByIcon.github.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-subtle hover:text-foreground transition-colors"
                   >
-                    {profile.githubUrl}
+                    {socialByIcon.github.url}
                     <IconExternalLink className="size-3 inline" />
                   </a>
                 )}
@@ -291,9 +284,9 @@ function HomeComponent() {
         </span>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          {profile.githubUrl && (
+          {socialByIcon.github && (
             <a
-              href={profile.githubUrl!}
+              href={socialByIcon.github.url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
@@ -301,9 +294,9 @@ function HomeComponent() {
               Github
             </a>
           )}
-          {profile.linkedinUrl && (
+          {socialByIcon.linkedin && (
             <a
-              href={profile.linkedinUrl!}
+              href={socialByIcon.linkedin.url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
