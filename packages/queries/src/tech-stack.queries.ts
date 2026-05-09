@@ -3,6 +3,7 @@ import { db } from "@portofolio/db/client";
 import { techStack } from "@portofolio/db/schema/index";
 import type {
   CreateTechStackInput,
+  ReorderTechStacksInput,
   UpdateTechStackInput,
 } from "@portofolio/schema/tech-stack.schema";
 import { NotFoundError, QueryError } from "./errors";
@@ -10,7 +11,22 @@ import { NotFoundError, QueryError } from "./errors";
 export async function getAllTechStacks() {
   const techStacks = await db.query.techStack.findMany({
     orderBy: {
-      createdAt: "desc",
+      order: "asc",
+    },
+  });
+
+  return techStacks;
+}
+
+export async function getTechStacksForDashboard(search?: string) {
+  const techStacks = await db.query.techStack.findMany({
+    where: {
+      name: {
+        ilike: `%${search ?? ""}%`,
+      },
+    },
+    orderBy: {
+      order: "asc",
     },
   });
 
@@ -54,6 +70,14 @@ export async function updateTechStack(data: UpdateTechStackInput) {
   if (!result) throw new QueryError("Failed to update tech stack item");
 
   return result;
+}
+
+export async function reorderTechStacks(orderedIds: ReorderTechStacksInput) {
+  await db.transaction(async (tx) => {
+    for (const { id, order } of orderedIds) {
+      await tx.update(techStack).set({ order }).where(eq(techStack.id, id));
+    }
+  });
 }
 
 export async function deleteTechStack(id: string) {

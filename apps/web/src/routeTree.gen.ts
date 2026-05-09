@@ -18,6 +18,7 @@ import { Route as coreDashboardRouteRouteImport } from './routes/(core)/dashboar
 import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboard/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
 import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
 
@@ -65,6 +66,12 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const coreDashboardTechStackIndexRoute =
+  coreDashboardTechStackIndexRouteImport.update({
+    id: '/tech-stack/',
+    path: '/tech-stack/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardProjectsIndexRoute =
   coreDashboardProjectsIndexRouteImport.update({
     id: '/projects/',
@@ -89,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof coreDashboardIndexRoute
   '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,6 +108,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof coreDashboardIndexRoute
   '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/tech-stack': typeof coreDashboardTechStackIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,6 +123,7 @@ export interface FileRoutesById {
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
   '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/(core)/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/dashboard/experience/'
     | '/dashboard/projects/'
+    | '/dashboard/tech-stack/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/dashboard/experience'
     | '/dashboard/projects'
+    | '/dashboard/tech-stack'
   id:
     | '__root__'
     | '/'
@@ -152,6 +164,7 @@ export interface FileRouteTypes {
     | '/(core)/dashboard/'
     | '/(core)/dashboard/experience/'
     | '/(core)/dashboard/projects/'
+    | '/(core)/dashboard/tech-stack/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -229,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(core)/dashboard/tech-stack/': {
+      id: '/(core)/dashboard/tech-stack/'
+      path: '/tech-stack'
+      fullPath: '/dashboard/tech-stack/'
+      preLoaderRoute: typeof coreDashboardTechStackIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/projects/': {
       id: '/(core)/dashboard/projects/'
       path: '/projects'
@@ -262,12 +282,14 @@ interface coreDashboardRouteRouteChildren {
   coreDashboardIndexRoute: typeof coreDashboardIndexRoute
   coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
+  coreDashboardTechStackIndexRoute: typeof coreDashboardTechStackIndexRoute
 }
 
 const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardIndexRoute: coreDashboardIndexRoute,
   coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
+  coreDashboardTechStackIndexRoute: coreDashboardTechStackIndexRoute,
 }
 
 const coreDashboardRouteRouteWithChildren =

@@ -1,4 +1,4 @@
-import { ExperienceCard } from "@/components/dashboard/experience-card";
+import { TechStackCard } from "@/components/dashboard/tech-stack-card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
@@ -13,48 +13,43 @@ import { useOptimisticMutation } from "@/lib/optimistic-update";
 import { globalErrorToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
+  closestCenter,
   DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
-  closestCenter,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  SortableContext,
   arrayMove,
+  SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Experience } from "@portofolio/types/experience.types";
-import {
-  IconBriefcase,
-  IconPlus,
-  IconSearch,
-  IconX,
-} from "@tabler/icons-react";
+import { TechStack } from "@portofolio/types/tech-stack.types";
+import { IconList, IconPlus, IconSearch, IconX } from "@tabler/icons-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
-export const Route = createFileRoute("/(core)/dashboard/experience/")({
+export const Route = createFileRoute("/(core)/dashboard/tech-stack/")({
   validateSearch: z.object({
     search: z.string().optional(),
   }),
   beforeLoad: async ({ search, context }) => {
     await context.queryClient.ensureQueryData(
-      context.trpc.experience.getForDashboard.queryOptions(search),
+      context.trpc.techStack.getForDashboard.queryOptions(search),
     );
   },
-  pendingComponent: ExperienceListSkeleton,
+  pendingComponent: TechStackListSkeleton,
   component: RouteComponent,
 });
 
-function SortableExperienceCard({ experience }: { experience: Experience }) {
+function SortableTechStackCard({ techStack }: { techStack: TechStack }) {
   const {
     attributes,
     listeners,
@@ -62,7 +57,7 @@ function SortableExperienceCard({ experience }: { experience: Experience }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: experience.id });
+  } = useSortable({ id: techStack.id });
 
   return (
     <div
@@ -75,15 +70,15 @@ function SortableExperienceCard({ experience }: { experience: Experience }) {
         position: isDragging ? "relative" : undefined,
       }}
     >
-      <ExperienceCard
-        experience={experience}
+      <TechStackCard
+        techStack={techStack}
         dragHandleProps={{ ...attributes, ...listeners }}
       />
     </div>
   );
 }
 
-function ExperienceListSkeleton() {
+function TechStackListSkeleton() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -113,19 +108,19 @@ function RouteComponent() {
   }, [debouncedSearch]);
 
   const { data } = useSuspenseQuery(
-    trpc.experience.getForDashboard.queryOptions(params),
+    trpc.techStack.getForDashboard.queryOptions(params),
   );
 
   const reorder = useOptimisticMutation(
-    trpc.experience.reorder.mutationOptions(),
+    trpc.techStack.reorder.mutationOptions(),
     {
-      queryOptions: trpc.experience.getForDashboard.queryOptions(params),
+      queryOptions: trpc.techStack.getForDashboard.queryOptions(params),
       operation: {
         type: "reorder",
         getOrder: (input) => input,
       },
       onError: (err) => {
-        globalErrorToast(`Failed to reorder experience: ${err.message}`);
+        globalErrorToast(`Failed to reorder tech stack: ${err.message}`);
       },
     },
   );
@@ -153,17 +148,17 @@ function RouteComponent() {
     if (data.length === 0) {
       return (
         <EmptyState
-          icon={IconBriefcase}
-          title="No experience found"
+          icon={IconList}
+          title="Your tech stack is empty"
           description={
             params.search
               ? `No results for "${params.search}"`
-              : "Add your first experience to get started."
+              : "Add your first tech stack item to get started."
           }
           actions={[
             {
               icon: IconPlus,
-              label: "Add Experience",
+              label: "Add Tech Stack Item",
               onClick: () => {},
             },
           ]}
@@ -173,7 +168,7 @@ function RouteComponent() {
 
     return (
       <DndContext
-        id="experience-dnd"
+        id="tech-stack-dnd"
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
@@ -183,7 +178,7 @@ function RouteComponent() {
           strategy={verticalListSortingStrategy}
         >
           {data.map((item) => (
-            <SortableExperienceCard key={item.id} experience={item} />
+            <SortableTechStackCard key={item.id} techStack={item} />
           ))}
         </SortableContext>
       </DndContext>
@@ -216,7 +211,7 @@ function RouteComponent() {
         </InputGroup>
         <Button>
           <IconPlus />
-          Add Experience
+          Add Tech Stack Item
         </Button>
       </div>
       <div className="flex flex-col gap-2">{renderList()}</div>

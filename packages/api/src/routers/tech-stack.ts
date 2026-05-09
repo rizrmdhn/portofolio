@@ -3,10 +3,13 @@ import {
   deleteTechStack,
   getAllTechStacks,
   getTechStackById,
+  getTechStacksForDashboard,
+  reorderTechStacks,
   updateTechStack,
 } from "@portofolio/queries/tech-stack.queries";
 import {
   createTechStackSchema,
+  reorderTechStacksSchema,
   updateTechStackSchema,
 } from "@portofolio/schema/tech-stack.schema";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
@@ -22,6 +25,18 @@ export const techStackRouter = createTRPCRouter({
 
     return techStacks;
   }),
+
+  getForDashboard: protectedProcedure
+    .input(z.object({ search: z.string().optional() }))
+    .query(async ({ input: { search } }) => {
+      const [techStacks, err] = await tryCatchAsync(() =>
+        getTechStacksForDashboard(search),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return techStacks;
+    }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -55,6 +70,14 @@ export const techStackRouter = createTRPCRouter({
       if (err) throw toTRPCError(err);
 
       return techStack;
+    }),
+
+  reorder: protectedProcedure
+    .input(reorderTechStacksSchema)
+    .mutation(async ({ input }) => {
+      const [, err] = await tryCatchAsync(() => reorderTechStacks(input));
+
+      if (err) throw toTRPCError(err);
     }),
 
   delete: protectedProcedure
