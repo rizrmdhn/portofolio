@@ -1,5 +1,6 @@
 import { TechStack } from "@portofolio/types/tech-stack.types";
-import { IconGripVertical } from "@tabler/icons-react";
+import { IconGripVertical, IconPencil } from "@tabler/icons-react";
+import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 
 interface TechStackCardProps {
@@ -32,6 +33,11 @@ export function TechStackCard({
             {techStack.list.join(", ")}
           </div>
         </div>
+
+        {/* Action buttons */}
+        <Button variant="ghost" size="icon" className="size-7 shrink-0">
+          <IconPencil className="size-3.5" />
+        </Button>
       </CardContent>
     </Card>
   );
