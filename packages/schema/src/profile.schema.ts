@@ -1,16 +1,14 @@
-import { createInsertSchema } from "@portofolio/db";
-import { profile } from "@portofolio/db/schema/index";
 import z from "zod";
 
-const profileBaseSchema = createInsertSchema(profile, {
+export const updateProfileSchema = z.object({
+  id: z.string(),
   name: z.string().min(2).max(256),
   title: z.string().min(2).max(256),
-  bio: z.string().min(2),
+  bio: z.string().min(2).max(256),
   email: z.email(),
-}).omit({ id: true, createdAt: true, updatedAt: true });
-
-export const updateProfileSchema = profileBaseSchema.extend({
-  id: z.string(),
+  githubUrl: z.url().optional(),
+  linkedinUrl: z.url().optional(),
+  twitterUrl: z.url().optional(),
 });
 
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
