@@ -96,6 +96,9 @@ importers:
       '@portofolio/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@portofolio/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
       '@portofolio/env':
         specifier: workspace:*
         version: link:../../packages/env
