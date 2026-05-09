@@ -1,12 +1,11 @@
 import {
   IconActivity,
   IconBriefcase,
-  IconBuildingCommunity,
   IconCertificate,
   IconFolder,
   IconHome,
-  IconSettings,
   IconStack2,
+  IconUser,
 } from "@tabler/icons-react";
 import * as React from "react";
 
@@ -44,14 +43,7 @@ const navGroups = [
   },
   {
     title: "Settings",
-    items: [
-      { name: "General", icon: IconSettings, url: "/dashboard/settings" },
-      {
-        name: "Workspace",
-        icon: IconBuildingCommunity,
-        url: "/dashboard/workspace",
-      },
-    ],
+    items: [{ name: "Hero / Bio", icon: IconUser, url: "/dashboard/hero" }],
   },
 ];
 
