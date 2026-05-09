@@ -1,4 +1,5 @@
 import {
+  IconAt,
   IconBriefcase,
   IconCertificate,
   IconFolder,
@@ -41,7 +42,14 @@ const navGroups = [
   },
   {
     title: "Settings",
-    items: [{ name: "Hero / Bio", icon: IconUser, url: "/dashboard/hero" }],
+    items: [
+      { name: "Hero / Bio", icon: IconUser, url: "/dashboard/hero" },
+      {
+        name: "Social Links",
+        icon: IconAt,
+        url: "/dashboard/social-links",
+      },
+    ],
   },
 ];
 
