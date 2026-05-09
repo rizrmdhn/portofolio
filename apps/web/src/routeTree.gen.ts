@@ -19,6 +19,7 @@ import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboar
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
+import { Route as coreDashboardSocialLinksIndexRouteImport } from './routes/(core)/dashboard/social-links/index'
 import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
 import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dashboard/hero/index'
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
@@ -74,6 +75,12 @@ const coreDashboardTechStackIndexRoute =
     path: '/tech-stack/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardSocialLinksIndexRoute =
+  coreDashboardSocialLinksIndexRouteImport.update({
+    id: '/social-links/',
+    path: '/social-links/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardProjectsIndexRoute =
   coreDashboardProjectsIndexRouteImport.update({
     id: '/projects/',
@@ -111,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
 }
 export interface FileRoutesByTo {
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
   '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
   '/dashboard/hero': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/social-links': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack': typeof coreDashboardTechStackIndexRoute
 }
 export interface FileRoutesById {
@@ -142,6 +151,7 @@ export interface FileRoutesById {
   '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/(core)/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/(core)/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/(core)/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
 }
 export interface FileRouteTypes {
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/dashboard/experience/'
     | '/dashboard/hero/'
     | '/dashboard/projects/'
+    | '/dashboard/social-links/'
     | '/dashboard/tech-stack/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/dashboard/experience'
     | '/dashboard/hero'
     | '/dashboard/projects'
+    | '/dashboard/social-links'
     | '/dashboard/tech-stack'
   id:
     | '__root__'
@@ -189,6 +201,7 @@ export interface FileRouteTypes {
     | '/(core)/dashboard/experience/'
     | '/(core)/dashboard/hero/'
     | '/(core)/dashboard/projects/'
+    | '/(core)/dashboard/social-links/'
     | '/(core)/dashboard/tech-stack/'
   fileRoutesById: FileRoutesById
 }
@@ -274,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardTechStackIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/social-links/': {
+      id: '/(core)/dashboard/social-links/'
+      path: '/social-links'
+      fullPath: '/dashboard/social-links/'
+      preLoaderRoute: typeof coreDashboardSocialLinksIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/projects/': {
       id: '/(core)/dashboard/projects/'
       path: '/projects'
@@ -323,6 +343,7 @@ interface coreDashboardRouteRouteChildren {
   coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
   coreDashboardHeroIndexRoute: typeof coreDashboardHeroIndexRoute
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
+  coreDashboardSocialLinksIndexRoute: typeof coreDashboardSocialLinksIndexRoute
   coreDashboardTechStackIndexRoute: typeof coreDashboardTechStackIndexRoute
 }
 
@@ -332,6 +353,7 @@ const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
   coreDashboardHeroIndexRoute: coreDashboardHeroIndexRoute,
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
+  coreDashboardSocialLinksIndexRoute: coreDashboardSocialLinksIndexRoute,
   coreDashboardTechStackIndexRoute: coreDashboardTechStackIndexRoute,
 }
 
