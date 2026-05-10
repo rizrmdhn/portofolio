@@ -51,24 +51,21 @@ function RouteComponent() {
       title: data?.title ?? "",
       bio: data?.bio ?? "",
       email: data?.email ?? "",
-      githubUrl: data?.githubUrl ?? "",
-      linkedinUrl: data?.linkedinUrl ?? "",
-      twitterUrl: data?.twitterUrl ?? "",
     },
     onSubmit: async ({ value }) => {
-      await updateProfile.mutateAsync({
-        ...value,
-        githubUrl: value.githubUrl || undefined,
-        linkedinUrl: value.linkedinUrl || undefined,
-        twitterUrl: value.twitterUrl || undefined,
-      }, {
-        onSuccess: () => {
-          globalSuccessToast("Profile updated successfully");
+      await updateProfile.mutateAsync(
+        {
+          ...value,
         },
-        onError: (error) => {
-          globalErrorToast(error.message || "Failed to update profile");
+        {
+          onSuccess: () => {
+            globalSuccessToast("Profile updated successfully");
+          },
+          onError: (error) => {
+            globalErrorToast(error.message || "Failed to update profile");
+          },
         },
-      });
+      );
     },
   });
 
@@ -158,87 +155,6 @@ function RouteComponent() {
                     aria-invalid={isInvalid}
                     placeholder="your@email.com"
                     type="email"
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          />
-
-          <form.Field
-            name="githubUrl"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field
-                  data-invalid={isInvalid}
-                  className="flex flex-col gap-1.5"
-                >
-                  <FieldLabel htmlFor={field.name}>GitHub URL</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                    placeholder="https://github.com/username"
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          />
-
-          <form.Field
-            name="linkedinUrl"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field
-                  data-invalid={isInvalid}
-                  className="flex flex-col gap-1.5"
-                >
-                  <FieldLabel htmlFor={field.name}>LinkedIn URL</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                    placeholder="https://linkedin.com/in/username"
-                  />
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              );
-            }}
-          />
-
-          <form.Field
-            name="twitterUrl"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid;
-
-              return (
-                <Field
-                  data-invalid={isInvalid}
-                  className="flex flex-col gap-1.5"
-                >
-                  <FieldLabel htmlFor={field.name}>Twitter URL</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                    placeholder="https://twitter.com/username"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>

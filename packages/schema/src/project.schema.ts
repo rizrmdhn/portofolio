@@ -13,10 +13,10 @@ export const createProjectSchema = createInsertSchema(projects, {
   liveUrl: z.optional(z.url()),
   playstoreUrl: z.optional(z.url()),
   appstoreUrl: z.optional(z.url()),
-  coverColor: z.enum(COLOR_VALUES).default("#ffffff"),
-  status: z.enum(EXPERIENCE_STATUS_TYPES).default("draft"),
-  isVisible: z.boolean().default(false),
-  order: z.number().default(0),
+  coverColor: z.enum(COLOR_VALUES),
+  status: z.enum(EXPERIENCE_STATUS_TYPES),
+  isVisible: z.boolean(),
+  order: z.number(),
 }).omit({ slug: true, createdAt: true, updatedAt: true });
 
 export const updateProjectSchema = createProjectSchema.extend({

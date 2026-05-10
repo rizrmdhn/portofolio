@@ -103,9 +103,9 @@ function RouteComponent() {
           </InputGroupAddon>
         </InputGroup>
         {/* Add button or other controls can go here */}
-        <Button>
+        <Button onClick={() => navigate({to: "/dashboard/projects/create"})}>
           <IconPlus />
-          Add Project
+          New Project
         </Button>
       </div>
       <DataTable
