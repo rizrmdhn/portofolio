@@ -10,7 +10,7 @@ export const createCertificationSchema = createInsertSchema(certifications, {
   certificateId: z.string().min(2).max(256).optional(),
   issueYear: z.date(),
   expiryYear: z.date().optional(),
-  status: z.enum(EXPERIENCE_STATUS_TYPES).default("draft"),
+  status: z.enum(EXPERIENCE_STATUS_TYPES),
 }).omit({ createdAt: true, updatedAt: true });
 
 export const updateCertificationSchema = createCertificationSchema.extend({

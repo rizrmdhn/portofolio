@@ -6,8 +6,8 @@ import z from "zod";
 export const createSocialLinkSchema = createInsertSchema(socialLinks, {
   title: z.string().min(2).max(256),
   url: z.url(),
-  icon: z.enum(SOCIAL_ICON_NAMES).default("github"),
-  order: z.number().default(0),
+  icon: z.enum(SOCIAL_ICON_NAMES),
+  order: z.number(),
 }).omit({ createdAt: true, updatedAt: true });
 
 export const updateSocialLinkSchema = createSocialLinkSchema.extend({

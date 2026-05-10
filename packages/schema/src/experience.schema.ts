@@ -14,10 +14,10 @@ export const createExperienceSchema = createInsertSchema(experiences, {
   type: z.enum(EXPERIENCE_TYPES),
   startDate: z.iso.date(),
   endDate: z.iso.date().optional(),
-  currentlyWorking: z.boolean().default(false),
+  currentlyWorking: z.boolean(),
   skills: z.string().array(),
-  status: z.enum(EXPERIENCE_STATUS_TYPES).default("draft"),
-  order: z.number().default(0),
+  status: z.enum(EXPERIENCE_STATUS_TYPES),
+  order: z.number(),
 }).omit({ createdAt: true, updatedAt: true });
 
 export const updateExperienceSchema = createExperienceSchema.extend({
