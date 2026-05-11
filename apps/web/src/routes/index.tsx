@@ -6,12 +6,17 @@ import { ProjectCard } from "@/components/project-card";
 import { TechStackList } from "@/components/tech-stack-list";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { trpc } from "@/utils/trpc";
 import { SOCIAL_ICON_MAP, SocialIconName } from "@portofolio/constants";
 import {
   IconArrowRight,
+  IconBriefcase,
+  IconCertificate,
   IconExternalLink,
+  IconFolder,
   IconMail,
+  IconStack2,
 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -171,7 +176,7 @@ function HomeComponent() {
       {/* Experience */}
       <section
         id="experience"
-        className="flex flex-col items-center justify-center gap-6 w-full pt-24 scroll-mt-14"
+        className="flex flex-col items-center justify-center gap-6 w-full py-24 scroll-mt-14"
       >
         <FadeIn className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
           <SectionHeading>WORK EXPERIENCE</SectionHeading>
@@ -180,6 +185,13 @@ function HomeComponent() {
               <ExperienceCard key={i} experience={exp} />
             ))}
           </div>
+          {experiences.length === 0 && (
+            <EmptyState
+              icon={IconBriefcase}
+              title="No experience yet"
+              description="It seems there are no experiences to show at the moment."
+            />
+          )}
         </FadeIn>
       </section>
 
@@ -195,6 +207,13 @@ function HomeComponent() {
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>
+          {featured.length === 0 && (
+            <EmptyState
+              icon={IconFolder}
+              title="No projects yet"
+              description="It seems there are no projects to show at the moment."
+            />
+          )}
           {isMore && (
             <Button
               onClick={() => navigate({ to: "/projects" })}
@@ -222,6 +241,13 @@ function HomeComponent() {
                 <TechStackList key={group.id} stack={group} />
               ))}
             </div>
+            {stack.length === 0 && (
+              <EmptyState
+                icon={IconStack2}
+                title="No tech stack yet"
+                description="It seems there are no tech stacks to show at the moment."
+              />
+            )}
           </FadeIn>
         </section>
 
@@ -237,6 +263,13 @@ function HomeComponent() {
                 <CertificateCard key={cert.id} certificate={cert} />
               ))}
             </div>
+            {certificates.length === 0 && (
+              <EmptyState
+                icon={IconCertificate}
+                title="No certificates yet"
+                description="It seems there are no certificates to show at the moment."
+              />
+            )}
             {isMoreCerts && (
               <Button
                 onClick={() => navigate({ to: "/certificates" })}
