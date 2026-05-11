@@ -20,14 +20,19 @@ export const STATUS_TYPES = ["draft", "published", "archived"] as const;
 
 export type StatusType = (typeof STATUS_TYPES)[number];
 
-export const EXPERIENCE_STATUS_TYPES = ["draft", "published"] as const;
-
-export type ExperienceStatusType = (typeof EXPERIENCE_STATUS_TYPES)[number];
-
 export const STATUS_LABELS: Record<StatusType, string> = {
   draft: "Draft",
   published: "Published",
   archived: "Archived",
+};
+
+export const EXPERIENCE_STATUS_TYPES = ["draft", "published"] as const;
+
+export type ExperienceStatusType = (typeof EXPERIENCE_STATUS_TYPES)[number];
+
+export const EXPERIENCE_STATUS_LABELS: Record<ExperienceStatusType, string> = {
+  draft: "Draft",
+  published: "Published",
 };
 
 export * from "./colors";

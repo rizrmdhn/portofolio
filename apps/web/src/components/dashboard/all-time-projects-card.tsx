@@ -51,10 +51,13 @@ export function AllTimeProjectsCard({
             const maxViews = Math.max(...projects.map((p) => p.views), 1);
             return projects.map((project, idx) => {
               const percentage = Math.round((project.views / maxViews) * 100);
-              const nextViews = (projects[idx + 1] ?? projects[idx - 1])!.views;
-              const growth = Math.round(
-                ((project.views - nextViews) / nextViews) * 100,
-              );
+              const neighbor = projects[idx + 1] ?? projects[idx - 1];
+              const growth =
+                neighbor && neighbor.views > 0
+                  ? Math.round(
+                      ((project.views - neighbor.views) / neighbor.views) * 100,
+                    )
+                  : null;
               return (
                 <div
                   key={project.id}
@@ -73,14 +76,16 @@ export function AllTimeProjectsCard({
                   <span className="text-sm font-semibold text-foreground font-mono shrink-0 w-14 text-right">
                     {project.views.toLocaleString()}
                   </span>
-                  <span
-                    className={cn(
-                      "text-[11px] font-mono shrink-0 w-10 text-right",
-                      growth >= 0 ? "text-green-500" : "text-red-500",
-                    )}
-                  >
-                    {`${growth > 0 ? "+" : ""}${growth}%`}
-                  </span>
+                  {growth !== null && (
+                    <span
+                      className={cn(
+                        "text-[11px] font-mono shrink-0 w-10 text-right",
+                        growth >= 0 ? "text-green-500" : "text-red-500",
+                      )}
+                    >
+                      {`${growth > 0 ? "+" : ""}${growth}%`}
+                    </span>
+                  )}
                 </div>
               );
             });

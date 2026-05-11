@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -8,6 +7,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import InputTag from "@/components/ui/input-tag";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import SingleImageUpload from "@/components/ui/single-image-upload";
@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { hasTabError } from "@/lib/has-tab-error";
 import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { cn } from "@/lib/utils";
 import { toFormData } from "@/utils/form-data-mapper";
@@ -27,13 +28,11 @@ import {
   IconPencil,
   IconSettings,
   IconUpload,
-  IconX,
   TablerIcon,
 } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
 
 export const Route = createFileRoute("/(core)/dashboard/projects/create")({
@@ -54,18 +53,10 @@ const TAB_FIELDS: Record<string, string[]> = {
   settings: ["status", "isVisible", "featured", "order"],
 };
 
-function hasTabError(
-  fieldMeta: Record<string, { errors: unknown[] }>,
-  fields: string[],
-) {
-  return fields.some((f) => (fieldMeta[f]?.errors?.length ?? 0) > 0);
-}
-
 function RouteComponent() {
   const queryClient = useQueryClient();
   const navigate = Route.useNavigate();
-
-  const [techInput, setTechInput] = useState("");
+  const router = useRouter();
 
   const createProjectMutation = useMutation(
     trpc.project.create.mutationOptions({
@@ -264,54 +255,17 @@ function RouteComponent() {
                             className="flex flex-col gap-1.5"
                           >
                             <FieldLabel>Technologies</FieldLabel>
-                            <Input
-                              value={techInput}
-                              onChange={(e) => setTechInput(e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" || e.key === ",") {
-                                  e.preventDefault();
-                                  const trimmed = techInput
-                                    .trim()
-                                    .replace(/,$/, "");
-                                  if (
-                                    trimmed &&
-                                    !field.state.value.includes(trimmed)
-                                  ) {
-                                    field.handleChange([
-                                      ...field.state.value,
-                                      trimmed,
-                                    ]);
-                                    setTechInput("");
-                                  }
-                                }
-                              }}
-                              placeholder="React, TypeScript... (Enter to add)"
+                            <InputTag
+                              value={field.state.value}
+                              onChange={field.handleChange}
+                              onBlur={field.handleBlur}
+                              placeholder="Add a technology..."
+                              error={
+                                isInvalid
+                                  ? String(field.state.meta.errors[0])
+                                  : undefined
+                              }
                             />
-                            {field.state.value.length > 0 && (
-                              <div className="flex flex-wrap gap-1.5">
-                                {field.state.value.map((tech) => (
-                                  <Badge
-                                    key={tech}
-                                    variant="secondary"
-                                    className="gap-1"
-                                  >
-                                    {tech}
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        field.handleChange(
-                                          field.state.value.filter(
-                                            (t) => t !== tech,
-                                          ),
-                                        )
-                                      }
-                                    >
-                                      <IconX className="size-3" />
-                                    </button>
-                                  </Badge>
-                                ))}
-                              </div>
-                            )}
                             {isInvalid && (
                               <FieldError errors={field.state.meta.errors} />
                             )}
@@ -672,7 +626,10 @@ function RouteComponent() {
 
           <Separator />
 
-          <footer className="flex shrink-0 items-center justify-end px-4 py-4 bg-surface">
+          <footer className="flex shrink-0 items-center justify-end px-4 py-4 gap-2">
+            <Button variant="outline" onClick={() => router.history.back()}>
+              Cancel
+            </Button>
             <form.Subscribe
               selector={(state) => state.isSubmitting}
               children={(isSubmitting) => (

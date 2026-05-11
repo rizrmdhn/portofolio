@@ -164,7 +164,7 @@ function RouteComponent() {
             {
               icon: IconPlus,
               label: "Add Experience",
-              onClick: () => {},
+              onClick: () => navigate({ to: "/dashboard/experience/create" }),
             },
           ]}
         />
@@ -214,7 +214,13 @@ function RouteComponent() {
             {data.length} results
           </InputGroupAddon>
         </InputGroup>
-        <Button>
+        <Button
+          onClick={() =>
+            navigate({
+              to: "/dashboard/experience/create",
+            })
+          }
+        >
           <IconPlus />
           Add Experience
         </Button>

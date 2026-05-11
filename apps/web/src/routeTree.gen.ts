@@ -25,6 +25,7 @@ import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dash
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
 import { Route as coreDashboardCertificateIndexRouteImport } from './routes/(core)/dashboard/certificate/index'
 import { Route as coreDashboardProjectsCreateRouteImport } from './routes/(core)/dashboard/projects/create'
+import { Route as coreDashboardExperienceCreateRouteImport } from './routes/(core)/dashboard/experience/create'
 import { Route as coreDashboardProjectsProjectIdEditRouteImport } from './routes/(core)/dashboard/projects/$projectId.edit'
 
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -112,6 +113,12 @@ const coreDashboardProjectsCreateRoute =
     path: '/projects/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardExperienceCreateRoute =
+  coreDashboardExperienceCreateRouteImport.update({
+    id: '/experience/create',
+    path: '/experience/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardProjectsProjectIdEditRoute =
   coreDashboardProjectsProjectIdEditRouteImport.update({
     id: '/projects/$projectId/edit',
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard/': typeof coreDashboardIndexRoute
+  '/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
   '/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
   '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
@@ -145,6 +153,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard': typeof coreDashboardIndexRoute
+  '/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
   '/dashboard/certificate': typeof coreDashboardCertificateIndexRoute
   '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
@@ -165,6 +174,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
+  '/(core)/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/(core)/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
   '/(core)/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
   '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard/'
+    | '/dashboard/experience/create'
     | '/dashboard/projects/create'
     | '/dashboard/certificate/'
     | '/dashboard/experience/'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard'
+    | '/dashboard/experience/create'
     | '/dashboard/projects/create'
     | '/dashboard/certificate'
     | '/dashboard/experience'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/(core)/dashboard/'
+    | '/(core)/dashboard/experience/create'
     | '/(core)/dashboard/projects/create'
     | '/(core)/dashboard/certificate/'
     | '/(core)/dashboard/experience/'
@@ -355,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardProjectsCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/experience/create': {
+      id: '/(core)/dashboard/experience/create'
+      path: '/experience/create'
+      fullPath: '/dashboard/experience/create'
+      preLoaderRoute: typeof coreDashboardExperienceCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/projects/$projectId/edit': {
       id: '/(core)/dashboard/projects/$projectId/edit'
       path: '/projects/$projectId/edit'
@@ -379,6 +399,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface coreDashboardRouteRouteChildren {
   coreDashboardIndexRoute: typeof coreDashboardIndexRoute
+  coreDashboardExperienceCreateRoute: typeof coreDashboardExperienceCreateRoute
   coreDashboardProjectsCreateRoute: typeof coreDashboardProjectsCreateRoute
   coreDashboardCertificateIndexRoute: typeof coreDashboardCertificateIndexRoute
   coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
@@ -391,6 +412,7 @@ interface coreDashboardRouteRouteChildren {
 
 const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardIndexRoute: coreDashboardIndexRoute,
+  coreDashboardExperienceCreateRoute: coreDashboardExperienceCreateRoute,
   coreDashboardProjectsCreateRoute: coreDashboardProjectsCreateRoute,
   coreDashboardCertificateIndexRoute: coreDashboardCertificateIndexRoute,
   coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
