@@ -1,11 +1,12 @@
-import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Experience } from "@portofolio/types/experience.types";
 import { IconGripVertical, IconPencil } from "@tabler/icons-react";
+import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
+import React from "react";
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -28,7 +29,12 @@ function getStatusVariant(
   return "outline";
 }
 
-export function ExperienceCard({ experience, dragHandleProps }: ExperienceCardProps) {
+export function ExperienceCard({
+  experience,
+  dragHandleProps,
+}: ExperienceCardProps) {
+  const navigate = useNavigate();
+
   const endLabel = experience.currentlyWorking
     ? "Present"
     : experience.endDate
@@ -84,7 +90,17 @@ export function ExperienceCard({ experience, dragHandleProps }: ExperienceCardPr
         </div>
 
         {/* Edit action */}
-        <Button variant="ghost" size="icon" className="size-7 shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7 shrink-0"
+          onClick={() =>
+            navigate({
+              to: `/dashboard/experience/${experience.id}/edit`,
+              params: { experienceId: experience.id },
+            })
+          }
+        >
           <IconPencil className="size-3.5" />
         </Button>
       </CardContent>

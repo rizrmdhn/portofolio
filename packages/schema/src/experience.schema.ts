@@ -13,7 +13,7 @@ export const createExperienceSchema = createInsertSchema(experiences, {
   location: z.string().max(256),
   type: z.enum(EXPERIENCE_TYPES),
   startDate: z.iso.date(),
-  endDate: z.iso.date().optional(),
+  endDate: z.optional(z.iso.date()),
   currentlyWorking: z.boolean(),
   skills: z.string().array(),
   status: z.enum(EXPERIENCE_STATUS_TYPES),

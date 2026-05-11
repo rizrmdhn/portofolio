@@ -33,14 +33,27 @@ import {
   EXPERIENCE_TYPES,
   ExperienceType,
 } from "@portofolio/constants";
-import { createExperienceSchema } from "@portofolio/schema/experience.schema";
+import { updateExperienceSchema } from "@portofolio/schema/experience.schema";
 import { IconBriefcase, IconSettings, TablerIcon } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { z } from "zod";
 
-export const Route = createFileRoute("/(core)/dashboard/experience/create")({
+export const Route = createFileRoute(
+  "/(core)/dashboard/experience/$experienceId/edit",
+)({
+  beforeLoad: async ({ context, params }) => {
+    await context.queryClient.ensureQueryData(
+      context.trpc.experience.getById.queryOptions({
+        id: params.experienceId,
+      }),
+    );
+  },
   component: RouteComponent,
 });
 
@@ -66,20 +79,22 @@ const TAB_FIELDS: Record<string, string[]> = {
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const navigate = Route.useNavigate();
   const router = useRouter();
 
-  const createExperienceMutation = useMutation(
-    trpc.experience.create.mutationOptions({
+  const { experienceId } = Route.useParams();
+  const { data: experience } = useSuspenseQuery(
+    trpc.experience.getById.queryOptions({ id: experienceId }),
+  );
+
+  const editExperienceMutation = useMutation(
+    trpc.experience.update.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(
           trpc.experience.getForDashboard.queryFilter(),
         );
 
-        globalSuccessToast("Experience created successfully!");
-        navigate({
-          to: "/dashboard/experience",
-        });
+        globalSuccessToast("Experience updated successfully!");
+        router.history.back();
       },
       onError: (data) => {
         globalErrorToast(data.message);
@@ -88,33 +103,32 @@ function RouteComponent() {
   );
 
   const form = useForm({
-    validators: { onSubmit: createExperienceSchema },
+    validators: { onSubmit: updateExperienceSchema },
     defaultValues: {
-      title: "",
-      description: "",
-      company: "",
-      location: "",
-      type: "contract",
-      startDate: new Date().toISOString().split("T")[0],
-      endDate: undefined,
-      currentlyWorking: false,
-      skills: [],
-      status: "draft",
-      order: 0,
-    } as z.infer<typeof createExperienceSchema>,
+      id: experience.id,
+      title: experience.title,
+      description: experience.description,
+      company: experience.company,
+      location: experience.location,
+      type: experience.type,
+      startDate: experience.startDate,
+      endDate: experience.endDate ?? undefined,
+      currentlyWorking: experience.currentlyWorking,
+      skills: experience.skills,
+      status: experience.status,
+      order: experience.order,
+    } as z.infer<typeof updateExperienceSchema>,
     onSubmit: async ({ value }) => {
-      await createExperienceMutation.mutateAsync(value);
+      await editExperienceMutation.mutateAsync(value);
     },
   });
 
   return (
     <div className="flex min-h-[calc(100svh-var(--header-height)-2rem)] flex-1 flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 className="text-base font-bold text-foreground">
-          Create a new experience
-        </h2>
+        <h2 className="text-base font-bold text-foreground">Edit Experience</h2>
         <p className="text-xs text-muted-foreground">
-          Create a new experience entry for your portfolio. Fill in the details
+          Update your experience entry for your portfolio. Fill in the details
           and settings to showcase your work history and skills effectively.
         </p>
       </div>
@@ -317,8 +331,18 @@ function RouteComponent() {
                             >
                               <FieldLabel>Start Date</FieldLabel>
                               <DatePicker
-                                value={field.state.value ? new Date(field.state.value).getTime() : undefined}
-                                onChange={(value) => field.handleChange(new Date(value).toISOString().split("T")[0]!)}
+                                value={
+                                  field.state.value
+                                    ? new Date(field.state.value).getTime()
+                                    : undefined
+                                }
+                                onChange={(value) =>
+                                  field.handleChange(
+                                    new Date(value)
+                                      .toISOString()
+                                      .split("T")[0]!,
+                                  )
+                                }
                                 placeholder="Select start date"
                               />
                               {isInvalid && (
@@ -342,8 +366,18 @@ function RouteComponent() {
                             >
                               <FieldLabel>End Date</FieldLabel>
                               <DatePicker
-                                value={field.state.value ? new Date(field.state.value).getTime() : undefined}
-                                onChange={(value) => field.handleChange(new Date(value).toISOString().split("T")[0]!)}
+                                value={
+                                  field.state.value
+                                    ? new Date(field.state.value).getTime()
+                                    : undefined
+                                }
+                                onChange={(value) =>
+                                  field.handleChange(
+                                    new Date(value)
+                                      .toISOString()
+                                      .split("T")[0]!,
+                                  )
+                                }
                                 placeholder="Select end date"
                               />
                               {isInvalid && (
@@ -548,7 +582,7 @@ function RouteComponent() {
               children={(isSubmitting) => (
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
-                  Create Experience
+                  Update Experience
                 </Button>
               )}
             />
