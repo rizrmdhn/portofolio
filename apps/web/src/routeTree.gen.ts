@@ -25,6 +25,7 @@ import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dash
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
 import { Route as coreDashboardCertificateIndexRouteImport } from './routes/(core)/dashboard/certificate/index'
 import { Route as coreDashboardProjectsCreateRouteImport } from './routes/(core)/dashboard/projects/create'
+import { Route as coreDashboardProjectsProjectIdEditRouteImport } from './routes/(core)/dashboard/projects/$projectId.edit'
 
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
@@ -111,6 +112,12 @@ const coreDashboardProjectsCreateRoute =
     path: '/projects/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardProjectsProjectIdEditRoute =
+  coreDashboardProjectsProjectIdEditRouteImport.update({
+    id: '/projects/$projectId/edit',
+    path: '/projects/$projectId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
   '/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
+  '/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -144,6 +152,7 @@ export interface FileRoutesByTo {
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
   '/dashboard/social-links': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack': typeof coreDashboardTechStackIndexRoute
+  '/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -163,6 +172,7 @@ export interface FileRoutesById {
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
   '/(core)/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/(core)/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
+  '/(core)/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects/'
     | '/dashboard/social-links/'
     | '/dashboard/tech-stack/'
+    | '/dashboard/projects/$projectId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/dashboard/projects'
     | '/dashboard/social-links'
     | '/dashboard/tech-stack'
+    | '/dashboard/projects/$projectId/edit'
   id:
     | '__root__'
     | '/'
@@ -216,6 +228,7 @@ export interface FileRouteTypes {
     | '/(core)/dashboard/projects/'
     | '/(core)/dashboard/social-links/'
     | '/(core)/dashboard/tech-stack/'
+    | '/(core)/dashboard/projects/$projectId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardProjectsCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/projects/$projectId/edit': {
+      id: '/(core)/dashboard/projects/$projectId/edit'
+      path: '/projects/$projectId/edit'
+      fullPath: '/dashboard/projects/$projectId/edit'
+      preLoaderRoute: typeof coreDashboardProjectsProjectIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
   }
 }
 
@@ -366,6 +386,7 @@ interface coreDashboardRouteRouteChildren {
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
   coreDashboardSocialLinksIndexRoute: typeof coreDashboardSocialLinksIndexRoute
   coreDashboardTechStackIndexRoute: typeof coreDashboardTechStackIndexRoute
+  coreDashboardProjectsProjectIdEditRoute: typeof coreDashboardProjectsProjectIdEditRoute
 }
 
 const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
@@ -377,6 +398,8 @@ const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
   coreDashboardSocialLinksIndexRoute: coreDashboardSocialLinksIndexRoute,
   coreDashboardTechStackIndexRoute: coreDashboardTechStackIndexRoute,
+  coreDashboardProjectsProjectIdEditRoute:
+    coreDashboardProjectsProjectIdEditRoute,
 }
 
 const coreDashboardRouteRouteWithChildren =
