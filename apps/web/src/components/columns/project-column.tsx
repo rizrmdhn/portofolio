@@ -7,12 +7,16 @@ import {
 } from "@/lib/column-helpers";
 import type { PaginatedProjects } from "@portofolio/types/project.types";
 import { IconEye } from "@tabler/icons-react";
+import type { useNavigate } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 
-interface ProjectColumnProps {}
+interface ProjectColumnProps {
+  navigate: ReturnType<typeof useNavigate>;
+}
 
-export default function getProjectsColumns({}: ProjectColumnProps): ColumnDef<PaginatedProjects>[] {
+export default function getProjectsColumns({ navigate }: ProjectColumnProps): ColumnDef<PaginatedProjects>[] {
+
   return [
     {
       id: "order",
@@ -68,8 +72,18 @@ export default function getProjectsColumns({}: ProjectColumnProps): ColumnDef<Pa
       nullable: true,
       format: "dd MMM yyyy",
     }),
-    createActionColumn<PaginatedProjects>(({ row: _ }) => (
-      <Button variant="ghost" size="icon-sm" title="View">
+    createActionColumn<PaginatedProjects>(({ row }) => (
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        title="View"
+        onClick={() =>
+          navigate({
+            to: "/dashboard/projects/$projectId/edit",
+            params: { projectId: row.original.id },
+          })
+        }
+      >
         <IconEye />
       </Button>
     )),

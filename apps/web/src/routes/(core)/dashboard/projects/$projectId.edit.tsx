@@ -16,7 +16,9 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { cn } from "@/lib/utils";
+import { toFormData } from "@/utils/form-data-mapper";
 import { trpc } from "@/utils/trpc";
 import { COLOR_VALUES } from "@portofolio/constants";
 import { updateProjectSchema } from "@portofolio/schema/project.schema";
@@ -29,7 +31,11 @@ import {
   TablerIcon,
 } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
@@ -67,6 +73,8 @@ function hasTabError(
 }
 
 function RouteComponent() {
+  const queryClient = useQueryClient();
+
   const { projectId } = Route.useParams();
   const { data: project } = useSuspenseQuery(
     trpc.project.getById.queryOptions({ id: projectId }),
@@ -75,6 +83,23 @@ function RouteComponent() {
   const [techInput, setTechInput] = useState("");
   const [existingImageUrl, setExistingImageUrl] = useState(
     project.imageUrl ?? null,
+  );
+
+  const editProjectMutation = useMutation(
+    trpc.project.update.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.project.getPaginatedProjects.queryFilter(),
+        );
+        await queryClient.invalidateQueries(
+          trpc.project.getById.queryOptions({ id: projectId }),
+        );
+        globalSuccessToast("Project updated successfully");
+      },
+      onError: (error) => {
+        globalErrorToast(error.message || "Failed to update project");
+      },
+    }),
   );
 
   const form = useForm({
@@ -97,7 +122,9 @@ function RouteComponent() {
       picture: undefined,
     } as z.infer<typeof updateProjectSchema>,
     onSubmit: async ({ value }) => {
-      console.log(value);
+      const formData = toFormData(value);
+
+      await editProjectMutation.mutateAsync(formData);
     },
   });
 

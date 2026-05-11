@@ -16,7 +16,10 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { cn } from "@/lib/utils";
+import { toFormData } from "@/utils/form-data-mapper";
+import { trpc } from "@/utils/trpc";
 import { COLOR_VALUES } from "@portofolio/constants";
 import { createProjectSchema } from "@portofolio/schema/project.schema";
 import {
@@ -28,6 +31,7 @@ import {
   TablerIcon,
 } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
@@ -58,7 +62,26 @@ function hasTabError(
 }
 
 function RouteComponent() {
+  const queryClient = useQueryClient();
+  const navigate = Route.useNavigate();
+
   const [techInput, setTechInput] = useState("");
+
+  const createProjectMutation = useMutation(
+    trpc.project.create.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.project.getPaginatedProjects.queryFilter(),
+        );
+        globalSuccessToast("Project created successfully");
+
+        navigate({ to: "/dashboard/projects" });
+      },
+      onError: (data) => {
+        globalErrorToast(data.message || "Failed to create project");
+      },
+    }),
+  );
 
   const form = useForm({
     validators: { onSubmit: createProjectSchema },
@@ -79,8 +102,9 @@ function RouteComponent() {
       picture: undefined,
     } as z.infer<typeof createProjectSchema>,
     onSubmit: async ({ value }) => {
-      console.log(value);
-      // TODO: wire up API call
+      const formData = toFormData(value);
+
+      await createProjectMutation.mutateAsync(formData);
     },
   });
 

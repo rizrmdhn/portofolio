@@ -49,7 +49,7 @@ function RouteComponent() {
     trpc.project.getPaginatedProjects.queryOptions(params),
   );
 
-  const columns = useMemo(() => getProjectsColumns({}), []);
+  const columns = useMemo(() => getProjectsColumns({ navigate }), [navigate]);
 
   const { table } = useDataTableRouter({
     data: data?.data ?? [],
