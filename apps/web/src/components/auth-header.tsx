@@ -7,7 +7,7 @@ export function AuthHeader() {
   return (
     <div className="h-14 flex items-center justify-between border-border border-b px-6">
       <Button
-        className="text-lg font-bold"
+        className="text-base font-mono text-subtle"
         variant="link"
         size="lg"
         onClick={() => navigate({ to: "/" })}

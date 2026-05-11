@@ -52,7 +52,7 @@ export function MainHeader() {
       </nav>
 
       {/* Desktop right controls */}
-      <div className="hidden md:flex items-center gap-4">
+      <div className="hidden md:flex items-center gap-2">
         <ModeToggle type="color" />
         <Button
           variant="outline"
@@ -86,7 +86,9 @@ export function MainHeader() {
                   <Button
                     variant="ghost"
                     className="justify-start text-sm text-subtle w-full"
-                    onClick={() => navigate({ to: "/", hash: item.toLowerCase() })}
+                    onClick={() =>
+                      navigate({ to: "/", hash: item.toLowerCase() })
+                    }
                   />
                 }
               >
