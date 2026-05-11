@@ -43,6 +43,20 @@ const TAB_TRIGGERS: { icon: TablerIcon; title: string; value: string }[] = [
   { icon: IconSettings, title: "Settings", value: "settings" },
 ];
 
+const TAB_FIELDS: Record<string, string[]> = {
+  content: ["title", "description", "longDescription", "tech"],
+  links: ["githubUrl", "liveUrl", "playstoreUrl", "appstoreUrl"],
+  media: ["picture", "coverColor"],
+  settings: ["status", "isVisible", "featured", "order"],
+};
+
+function hasTabError(
+  fieldMeta: Record<string, { errors: unknown[] }>,
+  fields: string[],
+) {
+  return fields.some((f) => (fieldMeta[f]?.errors?.length ?? 0) > 0);
+}
+
 function RouteComponent() {
   const [techInput, setTechInput] = useState("");
 
@@ -91,14 +105,28 @@ function RouteComponent() {
         >
           <Tabs defaultValue="content" className="min-h-0 flex-1 gap-0">
             <div className="shrink-0 px-4 pt-4 pb-2">
-              <TabsList variant="line">
-                {TAB_TRIGGERS.map((tab) => (
-                  <TabsTrigger key={tab.value} value={tab.value}>
-                    <tab.icon />
-                    {tab.title}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+              <form.Subscribe
+                selector={(state) => state.fieldMeta}
+                children={(fieldMeta) => (
+                  <TabsList variant="line">
+                    {TAB_TRIGGERS.map((tab) => {
+                      const hasError = hasTabError(
+                        fieldMeta as Record<string, { errors: unknown[] }>,
+                        TAB_FIELDS[tab.value] ?? [],
+                      );
+                      return (
+                        <TabsTrigger key={tab.value} value={tab.value}>
+                          <tab.icon />
+                          {tab.title}
+                          {hasError && (
+                            <span className="size-1.5 rounded-full bg-destructive" />
+                          )}
+                        </TabsTrigger>
+                      );
+                    })}
+                  </TabsList>
+                )}
+              />
             </div>
 
             <ScrollArea className="min-h-0 flex-1">
