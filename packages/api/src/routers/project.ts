@@ -1,5 +1,6 @@
 import { incrementViews } from "@portofolio/queries/project-views.queries";
 import {
+  addImageUrlToProject,
   createProject,
   deleteProject,
   getAllProjects,
@@ -21,7 +22,13 @@ import utapi from "@portofolio/uploadthing";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
+import {
+  createTRPCRouter,
+  formDataInput,
+  formDataProcedure,
+  protectedProcedure,
+  publicProcedure,
+} from "..";
 import { toTRPCError } from "../utils/to-trpc-error";
 
 export const projectRouter = createTRPCRouter({
@@ -76,11 +83,36 @@ export const projectRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(createProjectSchema)
-    .mutation(async ({ input }) => {
-      const [project, err] = await tryCatchAsync(() => createProject(input));
+    .input(formDataInput)
+    .use(formDataProcedure(createProjectSchema))
+    .mutation(async ({ ctx }) => {
+      const { picture, ...projectData } = ctx.input;
 
-      if (err) throw toTRPCError(err);
+      const [project, createErr] = await tryCatchAsync(() =>
+        createProject(projectData),
+      );
+
+      if (createErr) throw toTRPCError(createErr);
+
+      if (picture) {
+        const [upload, uploadErr] = await tryCatchAsync(() =>
+          utapi.uploadFiles(picture),
+        );
+
+        if (uploadErr) throw toTRPCError(uploadErr);
+
+        if (!upload.data)
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: upload.error?.message ?? "Upload failed",
+          });
+
+        const [_, imageErr] = await tryCatchAsync(() =>
+          addImageUrlToProject(project.id, upload.data.ufsUrl),
+        );
+
+        if (imageErr) throw toTRPCError(imageErr);
+      }
 
       return project;
     }),
@@ -96,11 +128,41 @@ export const projectRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(updateProjectSchema)
-    .mutation(async ({ input }) => {
-      const [project, err] = await tryCatchAsync(() => updateProject(input));
+    .input(formDataInput)
+    .use(formDataProcedure(updateProjectSchema))
+    .mutation(async ({ ctx }) => {
+      const { picture, ...projectData } = ctx.input;
+
+      const [project, err] = await tryCatchAsync(() =>
+        updateProject(projectData),
+      );
 
       if (err) throw toTRPCError(err);
+
+      if (picture) {
+        if (project.imageUrl) {
+          const fileKey = project.imageUrl.split("/").pop();
+          if (fileKey) await utapi.deleteFiles(fileKey);
+        }
+
+        const [upload, uploadErr] = await tryCatchAsync(() =>
+          utapi.uploadFiles(picture),
+        );
+
+        if (uploadErr) throw toTRPCError(uploadErr);
+
+        if (!upload.data)
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: upload.error?.message ?? "Upload failed",
+          });
+
+        const [_, imageErr] = await tryCatchAsync(() =>
+          addImageUrlToProject(project.id, upload.data.ufsUrl),
+        );
+
+        if (imageErr) throw toTRPCError(imageErr);
+      }
 
       return project;
     }),

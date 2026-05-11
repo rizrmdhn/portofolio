@@ -17,7 +17,11 @@ export const createProjectSchema = createInsertSchema(projects, {
   status: z.enum(EXPERIENCE_STATUS_TYPES),
   isVisible: z.boolean(),
   order: z.number(),
-}).omit({ slug: true, createdAt: true, updatedAt: true });
+})
+  .omit({ slug: true, createdAt: true, updatedAt: true })
+  .extend({
+    picture: z.optional(z.file().max(5 * 1024 * 1024)), // Max 5MB
+  });
 
 export const updateProjectSchema = createProjectSchema.extend({
   id: z.string(),

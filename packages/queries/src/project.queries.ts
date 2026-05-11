@@ -113,6 +113,25 @@ export async function createProject(data: CreateProjectInput) {
   return project;
 }
 
+export async function addImageUrlToProject(
+  projectId: string,
+  imageUrl: string,
+) {
+  const isExist = await getProjectById(projectId);
+
+  if (!isExist) throw new NotFoundError(`Project`, projectId);
+
+  const [result] = await db
+    .update(projects)
+    .set({ imageUrl })
+    .where(eq(projects.id, projectId))
+    .returning();
+
+  if (!result) throw new QueryError("Failed to update project image");
+
+  return result;
+}
+
 export async function updateProject(data: UpdateProjectInput) {
   const isExist = await getProjectById(data.id);
 

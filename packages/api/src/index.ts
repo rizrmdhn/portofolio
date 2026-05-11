@@ -184,7 +184,7 @@ export const formDataProcedure = <T extends z.ZodTypeAny>(schema: T) =>
 
     return next({
       ctx: {
-        input: parsed,
+        input: parsed.data,
       },
     });
   });
