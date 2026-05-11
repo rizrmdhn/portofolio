@@ -8,7 +8,6 @@ import type {
   UpdateProjectInput,
 } from "@portofolio/schema/project.schema";
 import type { PaginatedProjects } from "@portofolio/types/project.types";
-import utapi from "@portofolio/uploadthing";
 import { toUniqueSlug } from "@portofolio/utils/slug";
 import { NotFoundError, QueryError } from "./errors";
 import { createProjectView } from "./project-views.queries";
@@ -168,14 +167,6 @@ export async function deleteProject(id: string) {
     .returning();
 
   if (!result) throw new QueryError("Failed to delete project");
-
-  if (result.imageUrl) {
-    const imageFiles = result.imageUrl.split("/").pop();
-
-    if (!imageFiles) throw new QueryError("Failed to delete project image");
-
-    await utapi.deleteFiles(imageFiles);
-  }
 
   return result;
 }

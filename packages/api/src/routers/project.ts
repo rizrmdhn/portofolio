@@ -122,6 +122,18 @@ export const projectRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      if (result.imageUrl) {
+        const imageFiles = result.imageUrl.split("/").pop();
+
+        if (!imageFiles)
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to parse image file name",
+          });
+
+        await utapi.deleteFiles(imageFiles);
+      }
+
       return result;
     }),
 

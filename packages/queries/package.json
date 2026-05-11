@@ -25,7 +25,6 @@
     "@portofolio/db": "workspace:*",
     "@portofolio/schema": "workspace:*",
     "@portofolio/types": "workspace:*",
-    "@portofolio/uploadthing": "workspace:*",
     "@portofolio/utils": "workspace:*"
   }
 }
