@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import { AllTimeProject } from "@portofolio/types/project.types";
-import { IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconFolder } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import { EmptyState } from "../ui/empty-state";
 import { Progress } from "../ui/progress";
 
 interface AllTimeProjectsCardProps {
@@ -84,6 +85,13 @@ export function AllTimeProjectsCard({
               );
             });
           })()}
+          {projects.length === 0 && (
+            <EmptyState
+              icon={IconFolder}
+              title="No projects yet"
+              description="Your top projects will appear here once they start getting views."
+            />
+          )}
         </div>
       </CardContent>
     </Card>

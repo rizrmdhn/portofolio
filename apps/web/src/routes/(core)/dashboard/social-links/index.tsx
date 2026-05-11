@@ -167,21 +167,23 @@ function RouteComponent() {
     }
 
     return (
-      <DndContext
-        id="social-links-id"
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={data.map((item) => item.id)}
-          strategy={rectSortingStrategy}
+      <div className="grid grid-cols-5 gap-2">
+        <DndContext
+          id="social-links-id"
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          {data.map((item) => (
-            <SortableSocialLinkCard key={item.id} socialLink={item} />
-          ))}
-        </SortableContext>
-      </DndContext>
+          <SortableContext
+            items={data.map((item) => item.id)}
+            strategy={rectSortingStrategy}
+          >
+            {data.map((item) => (
+              <SortableSocialLinkCard key={item.id} socialLink={item} />
+            ))}
+          </SortableContext>
+        </DndContext>
+      </div>
     );
   };
 
@@ -214,7 +216,7 @@ function RouteComponent() {
           Add Social Link
         </Button>
       </div>
-      <div className="grid grid-cols-5 gap-2">{renderList()}</div>
+      {renderList()}
     </div>
   );
 }

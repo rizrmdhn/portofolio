@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils";
 import { SOCIAL_ICON_MAP, SocialIconName } from "@portofolio/constants";
 import { SocialLink } from "@portofolio/types/social-links.types";
+import { IconAt } from "@tabler/icons-react";
 import { Card, CardContent } from "../ui/card";
+import { EmptyState } from "../ui/empty-state";
 
 interface SocialLinkClickThroughCardProps {
   className?: string;
@@ -76,6 +78,13 @@ export function SocialLinkClickThroughCard({
               </Card>
             );
           })}
+          {socialLinks.length === 0 && (
+            <EmptyState
+              icon={IconAt}
+              title="No social links yet"
+              description="Your social link click-through stats will appear here once you add some social links and they start getting clicks."
+            />
+          )}
         </div>
       </CardContent>
     </Card>

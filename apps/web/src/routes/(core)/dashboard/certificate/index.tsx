@@ -176,21 +176,23 @@ function RouteComponent() {
     }
 
     return (
-      <DndContext
-        id="certificate-dnd"
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={data.map((item) => item.id)}
-          strategy={rectSortingStrategy}
+      <div className="grid grid-cols-2 gap-2">
+        <DndContext
+          id="certificate-dnd"
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          {data.map((item) => (
-            <SortableCertificateCard key={item.id} certificate={item} />
-          ))}
-        </SortableContext>
-      </DndContext>
+          <SortableContext
+            items={data.map((item) => item.id)}
+            strategy={rectSortingStrategy}
+          >
+            {data.map((item) => (
+              <SortableCertificateCard key={item.id} certificate={item} />
+            ))}
+          </SortableContext>
+        </DndContext>
+      </div>
     );
   };
 
@@ -223,7 +225,7 @@ function RouteComponent() {
           Add Certificate
         </Button>
       </div>
-      <div className="grid grid-cols-2 gap-2">{renderList()}</div>
+      {renderList()}
     </div>
   );
 }

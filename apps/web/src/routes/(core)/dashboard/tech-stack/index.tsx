@@ -167,21 +167,23 @@ function RouteComponent() {
     }
 
     return (
-      <DndContext
-        id="tech-stack-dnd"
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={data.map((item) => item.id)}
-          strategy={rectSortingStrategy}
+      <div className="grid grid-cols-2 gap-2">
+        <DndContext
+          id="tech-stack-dnd"
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          {data.map((item) => (
-            <SortableTechStackCard key={item.id} techStack={item} />
-          ))}
-        </SortableContext>
-      </DndContext>
+          <SortableContext
+            items={data.map((item) => item.id)}
+            strategy={rectSortingStrategy}
+          >
+            {data.map((item) => (
+              <SortableTechStackCard key={item.id} techStack={item} />
+            ))}
+          </SortableContext>
+        </DndContext>
+      </div>
     );
   };
 
@@ -214,7 +216,7 @@ function RouteComponent() {
           Add Tech Stack Item
         </Button>
       </div>
-      <div className="grid grid-cols-2 gap-2">{renderList()}</div>
+      {renderList()}
     </div>
   );
 }
