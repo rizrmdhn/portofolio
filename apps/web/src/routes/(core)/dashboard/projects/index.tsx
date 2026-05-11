@@ -103,7 +103,7 @@ function RouteComponent() {
           </InputGroupAddon>
         </InputGroup>
         {/* Add button or other controls can go here */}
-        <Button onClick={() => navigate({to: "/dashboard/projects/create"})}>
+        <Button onClick={() => navigate({ to: "/dashboard/projects/create" })}>
           <IconPlus />
           New Project
         </Button>
@@ -117,7 +117,7 @@ function RouteComponent() {
             reorderedItems.map((item, i) => ({ id: item.id, order: i })),
           );
         }}
-        emptyIcon={<IconFolder className="size-12 text-muted-foreground" />}
+        emptyIcon={IconFolder}
         emptyMessage="No projects found."
         emptyDescription="Try adjusting your search or filter to find what you're looking for."
       >
