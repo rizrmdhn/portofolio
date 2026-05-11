@@ -2,19 +2,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Field,
-  FieldContent,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldLegend,
-  FieldSet,
-  FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import SingleImageUpload from "@/components/ui/single-image-upload";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -126,6 +126,7 @@ function RouteComponent() {
                               onChange={(e) =>
                                 field.handleChange(e.target.value)
                               }
+                              aria-invalid={isInvalid}
                               placeholder="My awesome project"
                             />
                             {isInvalid && (
@@ -410,32 +411,70 @@ function RouteComponent() {
                 <TabsContent value="media">
                   <FieldGroup className="gap-4">
                     <form.Field
+                      name="picture"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field
+                            data-invalid={isInvalid}
+                            className="flex flex-col gap-2"
+                          >
+                            <FieldLabel>Cover Image</FieldLabel>
+                            <FieldDescription>
+                              Recommended size: 1200x630px. Max 5MB.
+                            </FieldDescription>
+                            <SingleImageUpload
+                              {...field}
+                              error={field.state.meta.errors.join(", ")}
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+
+                    <form.Field
                       name="coverColor"
-                      children={(field) => (
-                        <Field className="flex flex-col gap-2">
-                          <FieldLabel>Cover Color</FieldLabel>
-                          <FieldDescription>
-                            Fallback when image unavailable
-                          </FieldDescription>
-                          <div className="flex flex-wrap gap-2">
-                            {COLOR_VALUES.map((color) => (
-                              <button
-                                key={color}
-                                type="button"
-                                onClick={() => field.handleChange(color)}
-                                className={cn(
-                                  "size-7 rounded-md border-2 transition-transform hover:scale-110",
-                                  field.state.value === color
-                                    ? "scale-110 border-foreground"
-                                    : "border-transparent",
-                                )}
-                                style={{ backgroundColor: color }}
-                                title={color}
-                              />
-                            ))}
-                          </div>
-                        </Field>
-                      )}
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field
+                            data-invalid={isInvalid}
+                            className="flex flex-col gap-2"
+                          >
+                            <FieldLabel>Cover Color</FieldLabel>
+                            <FieldDescription>
+                              Fallback when image unavailable
+                            </FieldDescription>
+                            <div className="flex flex-wrap gap-2">
+                              {COLOR_VALUES.map((color) => (
+                                <button
+                                  key={color}
+                                  type="button"
+                                  onClick={() => field.handleChange(color)}
+                                  className={cn(
+                                    "size-7 rounded-md border-2 transition-transform hover:scale-110",
+                                    field.state.value === color
+                                      ? "scale-110 border-foreground"
+                                      : "border-transparent",
+                                  )}
+                                  style={{ backgroundColor: color }}
+                                  title={color}
+                                />
+                              ))}
+                            </div>
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
                     />
                   </FieldGroup>
                 </TabsContent>
@@ -450,77 +489,65 @@ function RouteComponent() {
                           field.state.meta.isTouched &&
                           !field.state.meta.isValid;
                         return (
-                          <FieldSet className="flex flex-row">
-                            <FieldLegend>Status</FieldLegend>
-                            <RadioGroup
-                              name={field.name}
-                              value={field.state.value}
-                              onValueChange={field.handleChange}
+                          <Field
+                            data-invalid={isInvalid}
+                            className="flex flex-col gap-1.5"
+                          >
+                            <FieldLabel>Status</FieldLabel>
+                            <ToggleGroup
+                              variant="outline"
+                              value={[field.state.value]}
+                              onValueChange={(values) => {
+                                const next = values.find(
+                                  (v) => v !== field.state.value,
+                                );
+                                if (next) field.handleChange(next as typeof field.state.value);
+                              }}
                             >
-                              <FieldLabel htmlFor={`${field.name}-draft`}>
-                                <Field
-                                  orientation="horizontal"
-                                  data-invalid={isInvalid}
-                                >
-                                  <FieldContent>
-                                    <FieldTitle>Draft</FieldTitle>
-                                  </FieldContent>
-                                  <RadioGroupItem
-                                    value="draft"
-                                    id={`${field.name}-draft`}
-                                    className="peer sr-only"
-                                  />
-                                </Field>
-                              </FieldLabel>
-                            </RadioGroup>
-                            <RadioGroup
-                              name={field.name}
-                              value={field.state.value}
-                              onValueChange={field.handleChange}
-                            >
-                              <FieldLabel htmlFor={`${field.name}-draft`}>
-                                <Field
-                                  orientation="horizontal"
-                                  data-invalid={isInvalid}
-                                >
-                                  <FieldContent>
-                                    <FieldTitle>Draft</FieldTitle>
-                                  </FieldContent>
-                                  <RadioGroupItem
-                                    value="draft"
-                                    id={`${field.name}-draft`}
-                                    className="peer sr-only"
-                                  />
-                                </Field>
-                              </FieldLabel>
-                            </RadioGroup>
-
+                              <ToggleGroupItem value="draft">
+                                Draft
+                              </ToggleGroupItem>
+                              <ToggleGroupItem value="published">
+                                Published
+                              </ToggleGroupItem>
+                            </ToggleGroup>
                             {isInvalid && (
                               <FieldError errors={field.state.meta.errors} />
                             )}
-                          </FieldSet>
+                          </Field>
                         );
                       }}
                     />
 
                     <form.Field
                       name="isVisible"
-                      children={(field) => (
-                        <Field className="flex items-center justify-between">
-                          <div className="flex flex-col gap-0.5">
-                            <FieldLabel>Visibility</FieldLabel>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Switch
-                              checked={field.state.value}
-                              onCheckedChange={field.handleChange}
-                            />
-                            <p className="text-sm text-foreground">
-                              Visible in public portfolio
-                            </p>
-                          </div>
-                        </Field>
-                      )}
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field
+                            data-invalid={isInvalid}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex flex-col gap-0.5">
+                              <FieldLabel>Visibility</FieldLabel>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Switch
+                                checked={field.state.value}
+                                onCheckedChange={field.handleChange}
+                              />
+                              <p className="text-sm text-foreground">
+                                Visible in public portfolio
+                              </p>
+                            </div>
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
                     />
 
                     <form.Field
