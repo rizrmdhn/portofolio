@@ -23,11 +23,11 @@ export function ExperienceCard({
     >
       <div className="flex items-center gap-4">
         {/* Years And Company */}
-        <div className="flex flex-col items-start gap-2 flex-1 self-start">
-          <span className="text-xs text-subtle font-mono font-semibold">
+        <div className="flex flex-col items-start gap-2 w-36 shrink-0 self-start">
+          <span className="text-xs text-subtle font-mono font-semibold whitespace-nowrap">
             {format(experience.startDate, "MMM yyyy")} - {isCurrent}
           </span>
-          <span className="text-[13px] text-muted-foreground">
+          <span className="text-[13px] text-muted-foreground wrap-break-word">
             {experience.company}
           </span>
         </div>
