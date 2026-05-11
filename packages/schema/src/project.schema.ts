@@ -18,9 +18,10 @@ export const createProjectSchema = createInsertSchema(projects, {
   isVisible: z.boolean(),
   order: z.number(),
 })
-  .omit({ slug: true, createdAt: true, updatedAt: true })
+  .omit({ slug: true, createdAt: true, updatedAt: true, featureAt: true })
   .extend({
     picture: z.optional(z.file().max(5 * 1024 * 1024)), // Max 5MB
+    featured: z.boolean(),
   });
 
 export const updateProjectSchema = createProjectSchema.extend({

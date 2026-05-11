@@ -1,0 +1,1 @@
+ALTER TABLE "projects" ADD COLUMN "feature_at" timestamp with time zone;

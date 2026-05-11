@@ -8,10 +8,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import SingleImageUpload from "@/components/ui/single-image-upload";
@@ -19,6 +15,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { COLOR_VALUES } from "@portofolio/constants";
 import { createProjectSchema } from "@portofolio/schema/project.schema";
@@ -64,6 +61,8 @@ function RouteComponent() {
       status: "draft",
       isVisible: false,
       order: 0,
+      featured: false,
+      picture: undefined,
     } as z.infer<typeof createProjectSchema>,
     onSubmit: async ({ value }) => {
       console.log(value);
@@ -501,7 +500,10 @@ function RouteComponent() {
                                 const next = values.find(
                                   (v) => v !== field.state.value,
                                 );
-                                if (next) field.handleChange(next as typeof field.state.value);
+                                if (next)
+                                  field.handleChange(
+                                    next as typeof field.state.value,
+                                  );
                               }}
                             >
                               <ToggleGroupItem value="draft">
@@ -540,6 +542,37 @@ function RouteComponent() {
                               />
                               <p className="text-sm text-foreground">
                                 Visible in public portfolio
+                              </p>
+                            </div>
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+
+                    <form.Field
+                      name="featured"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field
+                            data-invalid={isInvalid}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex flex-col gap-0.5">
+                              <FieldLabel>Feature on homepage</FieldLabel>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Switch
+                                checked={field.state.value}
+                                onCheckedChange={field.handleChange}
+                              />
+                              <p className="text-sm text-foreground">
+                                Show in featured section on homepage
                               </p>
                             </div>
                             {isInvalid && (

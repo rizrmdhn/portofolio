@@ -145,6 +145,10 @@ export const projects = createTable(
       withTimezone: true,
       mode: "string",
     }).$onUpdate(() => new Date().toISOString()),
+    featureAt: timestamp("feature_at", {
+      withTimezone: true,
+      mode: "string",
+    }),
   },
   (table) => [index("projects_id_idx").using("btree", table.id)],
 );

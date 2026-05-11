@@ -1,4 +1,4 @@
-import { and, desc, eq, getColumns, gt, ilike, sql } from "@portofolio/db";
+import { and, count, desc, eq, getColumns, gt, ilike, isNotNull, sql } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { projectViews, projects } from "@portofolio/db/schema/index";
 import type {
@@ -87,9 +87,7 @@ export async function getAllTimeViewsProjects() {
 
 export async function getProjectById(id: string) {
   const project = await db.query.projects.findFirst({
-    where: {
-      id,
-    },
+    where: { id },
     with: { projectView: true },
   });
 
@@ -98,12 +96,36 @@ export async function getProjectById(id: string) {
   return project;
 }
 
+async function countFeaturedProjects() {
+  const [result] = await db
+    .select({ count: count() })
+    .from(projects)
+    .where(isNotNull(projects.featureAt));
+
+  return result?.count ?? 0;
+}
+
 export async function createProject(data: CreateProjectInput) {
-  const slug = toUniqueSlug(data.title);
+  const { featured, ...rest } = data;
+  const slug = toUniqueSlug(rest.title);
+
+  if (featured) {
+    const featuredCount = await countFeaturedProjects();
+
+    if (featuredCount >= 5) {
+      throw new QueryError(
+        "Cannot create project. There are already 5 featured projects.",
+      );
+    }
+  }
 
   const [project] = await db
     .insert(projects)
-    .values({ ...data, slug })
+    .values({
+      ...rest,
+      slug,
+      featureAt: featured ? new Date().toISOString() : null,
+    })
     .returning();
 
   if (!project) throw new QueryError("Failed to create project");
@@ -113,18 +135,14 @@ export async function createProject(data: CreateProjectInput) {
   return project;
 }
 
-export async function addImageUrlToProject(
-  projectId: string,
-  imageUrl: string,
+export async function updateProjectImageUrl(
+  id: string,
+  imageUrl: string | null,
 ) {
-  const isExist = await getProjectById(projectId);
-
-  if (!isExist) throw new NotFoundError(`Project`, projectId);
-
   const [result] = await db
     .update(projects)
     .set({ imageUrl })
-    .where(eq(projects.id, projectId))
+    .where(eq(projects.id, id))
     .returning();
 
   if (!result) throw new QueryError("Failed to update project image");
@@ -133,14 +151,27 @@ export async function addImageUrlToProject(
 }
 
 export async function updateProject(data: UpdateProjectInput) {
-  const isExist = await getProjectById(data.id);
+  const { featured, id, ...rest } = data;
+  const existing = await getProjectById(id);
 
-  if (!isExist) throw new NotFoundError(`Project`, data.id);
+  if (featured && !existing.featureAt) {
+    const featuredCount = await countFeaturedProjects();
+
+    if (featuredCount >= 5) {
+      throw new QueryError(
+        "Cannot feature project. There are already 5 featured projects.",
+      );
+    }
+  }
+
+  const featureAt = featured
+    ? (existing.featureAt ?? new Date().toISOString())
+    : null;
 
   const [result] = await db
     .update(projects)
-    .set({ ...data })
-    .where(eq(projects.id, data.id))
+    .set({ ...rest, featureAt })
+    .where(eq(projects.id, id))
     .returning();
 
   if (!result) throw new QueryError("Failed to update project");
@@ -156,29 +187,8 @@ export async function reorderProjects(items: ReorderProjectsInput) {
   });
 }
 
-export async function insertImageToProject(
-  id: string,
-  image_url: string | null,
-) {
-  const isExist = await getProjectById(id);
-
-  if (!isExist) throw new NotFoundError(`Project`, id);
-
-  const [result] = await db
-    .update(projects)
-    .set({ imageUrl: image_url })
-    .where(eq(projects.id, id))
-    .returning();
-
-  if (!result) throw new QueryError("Failed to update project image");
-
-  return result;
-}
-
 export async function deleteProject(id: string) {
-  const isExist = await getProjectById(id);
-
-  if (!isExist) throw new NotFoundError(`Project`, id);
+  await getProjectById(id);
 
   const [result] = await db
     .delete(projects)

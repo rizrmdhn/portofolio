@@ -1,6 +1,5 @@
 import { incrementViews } from "@portofolio/queries/project-views.queries";
 import {
-  addImageUrlToProject,
   createProject,
   deleteProject,
   getAllProjects,
@@ -8,9 +7,9 @@ import {
   getPaginatedProjects,
   getProjectById,
   getProjectsForLandingPage,
-  insertImageToProject,
   reorderProjects,
   updateProject,
+  updateProjectImageUrl,
 } from "@portofolio/queries/project.queries";
 import {
   createProjectSchema,
@@ -108,7 +107,7 @@ export const projectRouter = createTRPCRouter({
           });
 
         const [_, imageErr] = await tryCatchAsync(() =>
-          addImageUrlToProject(project.id, upload.data.ufsUrl),
+          updateProjectImageUrl(project.id, upload.data.ufsUrl),
         );
 
         if (imageErr) throw toTRPCError(imageErr);
@@ -158,7 +157,7 @@ export const projectRouter = createTRPCRouter({
           });
 
         const [_, imageErr] = await tryCatchAsync(() =>
-          addImageUrlToProject(project.id, upload.data.ufsUrl),
+          updateProjectImageUrl(project.id, upload.data.ufsUrl),
         );
 
         if (imageErr) throw toTRPCError(imageErr);
@@ -223,7 +222,7 @@ export const projectRouter = createTRPCRouter({
       await utapi.deleteFiles(imageFiles);
 
       const [_, updateErr] = await tryCatchAsync(() =>
-        insertImageToProject(id, null),
+        updateProjectImageUrl(id, null),
       );
 
       if (updateErr) throw toTRPCError(updateErr);
