@@ -425,9 +425,6 @@ importers:
       '@portofolio/types':
         specifier: workspace:*
         version: link:../types
-      '@portofolio/uploadthing':
-        specifier: workspace:*
-        version: link:../uploadthing
       '@portofolio/utils':
         specifier: workspace:*
         version: link:../utils
