@@ -1,14 +1,23 @@
+import { IconPointFilled } from '@tabler/icons-react'
 
 export default function Loader() {
   return (
     <div className="flex h-svh items-center justify-center">
-      <div className="border-border border-t-subtle size-5 animate-spin rounded-full border-2" />
+      <div className="flex">
+        {[0, 1, 2].map((i) => (
+          <IconPointFilled
+            key={i}
+            className="text-subtle animate-bounce"
+            style={{ animationDelay: `${i * 0.15}s` }}
+          />
+        ))}
+      </div>
     </div>
   )
 }
 
 function SkeletonBlock({ className }: { className?: string }) {
-  return <div className={`animate-pulse rounded bg-muted ${className ?? ''}`} />
+  return <div className={`bg-muted animate-pulse rounded ${className ?? ''}`} />
 }
 
 function SectionSkeleton({ label, children }: { label?: boolean; children: React.ReactNode }) {
