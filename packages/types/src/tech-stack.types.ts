@@ -1,4 +1,12 @@
 import type { InferSelectModel } from "@portofolio/db";
-import type { techStack } from "@portofolio/db/schema/index";
+import type {
+  techStackCategories,
+  techStackItems,
+} from "@portofolio/db/schema/index";
 
-export type TechStack = InferSelectModel<typeof techStack>;
+export type TechStackCategory = InferSelectModel<typeof techStackCategories>;
+export type TechStackItem = InferSelectModel<typeof techStackItems>;
+
+export type TechStackCategoryWithItems = TechStackCategory & {
+  items: TechStackItem[];
+};

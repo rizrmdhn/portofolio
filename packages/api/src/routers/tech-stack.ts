@@ -1,16 +1,23 @@
 import {
-  createTechStack,
-  deleteTechStack,
-  getAllTechStacks,
-  getTechStackById,
-  getTechStacksForDashboard,
-  reorderTechStacks,
-  updateTechStack,
+  createTechStackCategory,
+  createTechStackItem,
+  deleteTechStackCategory,
+  deleteTechStackItem,
+  getAllTechStackCategories,
+  getTechStackCategoriesForDashboard,
+  getTechStackCategoryById,
+  reorderTechStackCategories,
+  reorderTechStackItems,
+  updateTechStackCategory,
+  updateTechStackItem,
 } from "@portofolio/queries/tech-stack.queries";
 import {
-  createTechStackSchema,
-  reorderTechStacksSchema,
-  updateTechStackSchema,
+  createTechStackCategorySchema,
+  createTechStackItemSchema,
+  reorderTechStackCategoriesSchema,
+  reorderTechStackItemsSchema,
+  updateTechStackCategorySchema,
+  updateTechStackItemSchema,
 } from "@portofolio/schema/tech-stack.schema";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
 import { z } from "zod";
@@ -18,72 +25,126 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
 import { toTRPCError } from "../utils/to-trpc-error";
 
 export const techStackRouter = createTRPCRouter({
+  // ─── Categories ─────────────────────────────────────────────────────────────
   getAll: publicProcedure.query(async () => {
-    const [techStacks, err] = await tryCatchAsync(() => getAllTechStacks());
+    const [categories, err] = await tryCatchAsync(() =>
+      getAllTechStackCategories(),
+    );
 
     if (err) throw toTRPCError(err);
 
-    return techStacks;
+    return categories;
   }),
 
   getForDashboard: protectedProcedure
     .input(z.object({ search: z.string().optional() }))
     .query(async ({ input: { search } }) => {
-      const [techStacks, err] = await tryCatchAsync(() =>
-        getTechStacksForDashboard(search),
+      const [categories, err] = await tryCatchAsync(() =>
+        getTechStackCategoriesForDashboard(search),
       );
 
       if (err) throw toTRPCError(err);
 
-      return techStacks;
+      return categories;
     }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input: { id } }) => {
-      const [techStack, err] = await tryCatchAsync(() => getTechStackById(id));
-
-      if (err) throw toTRPCError(err);
-
-      return techStack;
-    }),
-
-  create: protectedProcedure
-    .input(createTechStackSchema)
-    .mutation(async ({ input }) => {
-      const [techStack, err] = await tryCatchAsync(() =>
-        createTechStack(input),
+      const [category, err] = await tryCatchAsync(() =>
+        getTechStackCategoryById(id),
       );
 
       if (err) throw toTRPCError(err);
 
-      return techStack;
+      return category;
     }),
 
-  update: protectedProcedure
-    .input(updateTechStackSchema)
+  createCategory: protectedProcedure
+    .input(createTechStackCategorySchema)
     .mutation(async ({ input }) => {
-      const [techStack, err] = await tryCatchAsync(() =>
-        updateTechStack(input),
+      const [category, err] = await tryCatchAsync(() =>
+        createTechStackCategory(input),
       );
 
       if (err) throw toTRPCError(err);
 
-      return techStack;
+      return category;
     }),
 
-  reorder: protectedProcedure
-    .input(reorderTechStacksSchema)
+  updateCategory: protectedProcedure
+    .input(updateTechStackCategorySchema)
     .mutation(async ({ input }) => {
-      const [, err] = await tryCatchAsync(() => reorderTechStacks(input));
+      const [category, err] = await tryCatchAsync(() =>
+        updateTechStackCategory(input),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return category;
+    }),
+
+  reorderCategories: protectedProcedure
+    .input(reorderTechStackCategoriesSchema)
+    .mutation(async ({ input }) => {
+      const [, err] = await tryCatchAsync(() =>
+        reorderTechStackCategories(input),
+      );
 
       if (err) throw toTRPCError(err);
     }),
 
-  delete: protectedProcedure
+  deleteCategory: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id } }) => {
-      const [result, err] = await tryCatchAsync(() => deleteTechStack(id));
+      const [result, err] = await tryCatchAsync(() =>
+        deleteTechStackCategory(id),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return result;
+    }),
+
+  // ─── Items ───────────────────────────────────────────────────────────────────
+  createItem: protectedProcedure
+    .input(createTechStackItemSchema)
+    .mutation(async ({ input }) => {
+      const [item, err] = await tryCatchAsync(() =>
+        createTechStackItem(input),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return item;
+    }),
+
+  updateItem: protectedProcedure
+    .input(updateTechStackItemSchema)
+    .mutation(async ({ input }) => {
+      const [item, err] = await tryCatchAsync(() =>
+        updateTechStackItem(input),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return item;
+    }),
+
+  reorderItems: protectedProcedure
+    .input(reorderTechStackItemsSchema)
+    .mutation(async ({ input }) => {
+      const [, err] = await tryCatchAsync(() => reorderTechStackItems(input));
+
+      if (err) throw toTRPCError(err);
+    }),
+
+  deleteItem: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input: { id } }) => {
+      const [result, err] = await tryCatchAsync(() =>
+        deleteTechStackItem(id),
+      );
 
       if (err) throw toTRPCError(err);
 

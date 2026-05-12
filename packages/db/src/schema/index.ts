@@ -286,15 +286,14 @@ export const applicationSettings = createTable(
   ],
 );
 
-export const techStack = createTable(
-  "tech_stack",
+export const techStackCategories = createTable(
+  "tech_stack_categories",
   {
     id: uuid("id")
       .primaryKey()
       .notNull()
       .$default(() => uuidv7()),
     name: varchar("name", { length: 256 }).notNull(),
-    list: text("list").array().notNull(),
     order: integer("order").default(0).notNull(),
     createdAt: timestamp("created_at", {
       withTimezone: true,
@@ -307,7 +306,37 @@ export const techStack = createTable(
       mode: "string",
     }).$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index("tech_stack_id_idx").using("btree", table.id)],
+  (table) => [index("tech_stack_categories_id_idx").using("btree", table.id)],
+);
+
+export const techStackItems = createTable(
+  "tech_stack_items",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    categoryId: uuid("category_id")
+      .notNull()
+      .references(() => techStackCategories.id, { onDelete: "cascade" }),
+    name: varchar("name", { length: 256 }).notNull(),
+    proficiency: integer("proficiency").default(1).notNull(),
+    order: integer("order").default(0).notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", {
+      withTimezone: true,
+      mode: "string",
+    }).$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    index("tech_stack_items_id_idx").using("btree", table.id),
+    index("tech_stack_items_category_id_idx").using("btree", table.categoryId),
+  ],
 );
 
 export const socialLinks = createTable(

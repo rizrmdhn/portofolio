@@ -18,6 +18,8 @@ import {
   applicationSettings,
   profile,
   socialLinks,
+  techStackCategories,
+  techStackItems,
   user,
 } from "./schema/index.js";
 
@@ -139,9 +141,77 @@ async function seedSocialLinks() {
   console.log("Seeded social links.");
 }
 
+async function seedTechStack() {
+  const categories = [
+    {
+      name: "Frontend",
+      order: 0,
+      items: [
+        { name: "React", proficiency: 5, order: 0 },
+        { name: "Next.js", proficiency: 5, order: 1 },
+        { name: "TypeScript", proficiency: 4, order: 2 },
+        { name: "Tailwind CSS", proficiency: 4, order: 3 },
+      ],
+    },
+    {
+      name: "Backend",
+      order: 1,
+      items: [
+        { name: "Node.js", proficiency: 4, order: 0 },
+        { name: "tRPC", proficiency: 4, order: 1 },
+        { name: "Drizzle ORM", proficiency: 4, order: 2 },
+        { name: "PostgreSQL", proficiency: 3, order: 3 },
+      ],
+    },
+    {
+      name: "Mobile",
+      order: 2,
+      items: [
+        { name: "React Native", proficiency: 3, order: 0 },
+        { name: "Expo", proficiency: 3, order: 1 },
+      ],
+    },
+  ];
+
+  for (const { name, order, items } of categories) {
+    const existing = await db.query.techStackCategories.findFirst({
+      where: { name },
+    });
+
+    const categoryId =
+      existing?.id ??
+      (
+        await db
+          .insert(techStackCategories)
+          .values({ name, order })
+          .returning()
+      )[0]?.id;
+
+    if (!categoryId) throw new Error(`Failed to resolve category: ${name}`);
+
+    for (const item of items) {
+      const existingItem = await db.query.techStackItems.findFirst({
+        where: { categoryId, name: item.name },
+      });
+
+      if (existingItem) {
+        await db
+          .update(techStackItems)
+          .set({ proficiency: item.proficiency, order: item.order })
+          .where(eq(techStackItems.id, existingItem.id));
+      } else {
+        await db.insert(techStackItems).values({ ...item, categoryId });
+      }
+    }
+  }
+
+  console.log("Seeded tech stack.");
+}
+
 await seedUser();
 await seedApplicationSettings();
 await seedProfile();
 await seedSocialLinks();
+await seedTechStack();
 
 await client.end();

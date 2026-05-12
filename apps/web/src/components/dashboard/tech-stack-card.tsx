@@ -1,10 +1,10 @@
-import { TechStack } from "@portofolio/types/tech-stack.types";
+import { TechStackCategoryWithItems } from "@portofolio/types/tech-stack.types";
 import { IconGripVertical, IconPencil } from "@tabler/icons-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 
 interface TechStackCardProps {
-  techStack: TechStack;
+  techStack: TechStackCategoryWithItems;
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
 }
 
@@ -29,18 +29,21 @@ export function TechStackCard({
               {techStack.name}
             </span>
             <span className="text-xs text-muted-foreground bg-transparent border border-border py-0.5 px-1.75 rounded">
-              {techStack.list.length}
+              {techStack.items.length}
             </span>
           </div>
           <div className="flex flex-wrap gap-1">
-            {techStack.list.map((item) => (
+            {techStack.items.map((item) => (
               <span
-                key={item}
+                key={item.id}
                 className="inline-flex items-center py-1.25 px-2.5 bg-muted rounded-sm text-xs font-medium"
               >
-                {item}
+                {item.name}
               </span>
             ))}
+            {techStack.items.length === 0 && (
+              <span className="text-xs text-muted-foreground">No items</span>
+            )}
           </div>
         </div>
 

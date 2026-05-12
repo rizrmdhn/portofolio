@@ -29,7 +29,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { TechStack } from "@portofolio/types/tech-stack.types";
+import { TechStackCategoryWithItems } from "@portofolio/types/tech-stack.types";
 import { IconList, IconPlus, IconSearch, IconX } from "@tabler/icons-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -49,7 +49,11 @@ export const Route = createFileRoute("/(core)/dashboard/tech-stack/")({
   component: RouteComponent,
 });
 
-function SortableTechStackCard({ techStack }: { techStack: TechStack }) {
+function SortableTechStackCard({
+  techStack,
+}: {
+  techStack: TechStackCategoryWithItems;
+}) {
   const {
     attributes,
     listeners,
@@ -112,7 +116,7 @@ function RouteComponent() {
   );
 
   const reorder = useOptimisticMutation(
-    trpc.techStack.reorder.mutationOptions(),
+    trpc.techStack.reorderCategories.mutationOptions(),
     {
       queryOptions: trpc.techStack.getForDashboard.queryOptions(params),
       operation: {

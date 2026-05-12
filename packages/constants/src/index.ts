@@ -39,3 +39,4 @@ export * from "./colors";
 export * from "./experience";
 export * from "./icons";
 export * from "./social-icons";
+export * from "./tech-stack";
