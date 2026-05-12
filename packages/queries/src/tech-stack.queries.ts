@@ -1,4 +1,4 @@
-import { eq } from "@portofolio/db";
+import { eq, inArray } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import {
   techStackCategories,
@@ -6,10 +6,12 @@ import {
 } from "@portofolio/db/schema/index";
 import type {
   CreateTechStackCategoryInput,
+  CreateTechStackCategoryWithItemsInput,
   CreateTechStackItemInput,
   ReorderTechStackCategoriesInput,
   ReorderTechStackItemsInput,
   UpdateTechStackCategoryInput,
+  UpdateTechStackCategoryWithItemsInput,
   UpdateTechStackItemInput,
 } from "@portofolio/schema/tech-stack.schema";
 import { NotFoundError, QueryError } from "./errors";
@@ -55,6 +57,31 @@ export async function createTechStackCategory(
   return category;
 }
 
+export async function createTechStackCategoryWithItems(
+  data: CreateTechStackCategoryWithItemsInput,
+) {
+  return db.transaction(async (tx) => {
+    const [category] = await tx
+      .insert(techStackCategories)
+      .values({ name: data.name })
+      .returning();
+
+    if (!category) throw new QueryError("Failed to create tech stack category");
+
+    if (data.items.length > 0) {
+      await tx.insert(techStackItems).values(
+        data.items.map((item, i) => ({
+          ...item,
+          categoryId: category.id,
+          order: i,
+        })),
+      );
+    }
+
+    return category;
+  });
+}
+
 export async function updateTechStackCategory(
   data: UpdateTechStackCategoryInput,
 ) {
@@ -69,6 +96,59 @@ export async function updateTechStackCategory(
   if (!result) throw new QueryError("Failed to update tech stack category");
 
   return result;
+}
+
+export async function updateTechStackCategoryWithItems(
+  data: UpdateTechStackCategoryWithItemsInput,
+) {
+  return db.transaction(async (tx) => {
+    const [category] = await tx
+      .update(techStackCategories)
+      .set({ name: data.name })
+      .where(eq(techStackCategories.id, data.id))
+      .returning();
+
+    if (!category) throw new QueryError("Failed to update tech stack category");
+
+    const incomingIds = data.items
+      .map((i) => i.id)
+      .filter((id): id is string => !!id);
+
+    // delete items removed from the list
+    const existingItems = await tx.query.techStackItems.findMany({
+      where: { categoryId: data.id },
+    });
+    const toDelete = existingItems
+      .filter((e) => !incomingIds.includes(e.id))
+      .map((e) => e.id);
+
+    if (toDelete.length > 0) {
+      await tx
+        .delete(techStackItems)
+        .where(
+          inArray(techStackItems.id, toDelete),
+        );
+    }
+
+    // upsert remaining + new items
+    for (const item of data.items) {
+      if (item.id) {
+        await tx
+          .update(techStackItems)
+          .set({ name: item.name, proficiency: item.proficiency, order: item.order })
+          .where(eq(techStackItems.id, item.id));
+      } else {
+        await tx.insert(techStackItems).values({
+          categoryId: data.id,
+          name: item.name,
+          proficiency: item.proficiency,
+          order: item.order,
+        });
+      }
+    }
+
+    return category;
+  });
 }
 
 export async function reorderTechStackCategories(

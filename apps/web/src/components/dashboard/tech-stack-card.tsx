@@ -1,5 +1,6 @@
 import { TechStackCategoryWithItems } from "@portofolio/types/tech-stack.types";
 import { IconGripVertical, IconPencil } from "@tabler/icons-react";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 
@@ -12,6 +13,8 @@ export function TechStackCard({
   techStack,
   dragHandleProps,
 }: TechStackCardProps) {
+  const navigate = useNavigate();
+
   return (
     <Card className="py-0 h-full">
       <CardContent className="flex items-center gap-3 py-3 px-4 h-full">
@@ -48,7 +51,17 @@ export function TechStackCard({
         </div>
 
         {/* Action buttons */}
-        <Button variant="ghost" size="icon" className="size-7 shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7 shrink-0"
+          onClick={() =>
+            navigate({
+              to: "/dashboard/tech-stack/$techStackId/edit",
+              params: { techStackId: techStack.id },
+            })
+          }
+        >
           <IconPencil className="size-3.5" />
         </Button>
       </CardContent>

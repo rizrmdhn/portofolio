@@ -1,6 +1,8 @@
 import {
   createTechStackCategory,
+  createTechStackCategoryWithItems,
   createTechStackItem,
+  updateTechStackCategoryWithItems,
   deleteTechStackCategory,
   deleteTechStackItem,
   getAllTechStackCategories,
@@ -13,7 +15,9 @@ import {
 } from "@portofolio/queries/tech-stack.queries";
 import {
   createTechStackCategorySchema,
+  createTechStackCategoryWithItemsSchema,
   createTechStackItemSchema,
+  updateTechStackCategoryWithItemsSchema,
   reorderTechStackCategoriesSchema,
   reorderTechStackItemsSchema,
   updateTechStackCategorySchema,
@@ -72,11 +76,35 @@ export const techStackRouter = createTRPCRouter({
       return category;
     }),
 
+  createCategoryWithItems: protectedProcedure
+    .input(createTechStackCategoryWithItemsSchema)
+    .mutation(async ({ input }) => {
+      const [category, err] = await tryCatchAsync(() =>
+        createTechStackCategoryWithItems(input),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return category;
+    }),
+
   updateCategory: protectedProcedure
     .input(updateTechStackCategorySchema)
     .mutation(async ({ input }) => {
       const [category, err] = await tryCatchAsync(() =>
         updateTechStackCategory(input),
+      );
+
+      if (err) throw toTRPCError(err);
+
+      return category;
+    }),
+
+  updateCategoryWithItems: protectedProcedure
+    .input(updateTechStackCategoryWithItemsSchema)
+    .mutation(async ({ input }) => {
+      const [category, err] = await tryCatchAsync(() =>
+        updateTechStackCategoryWithItems(input),
       );
 
       if (err) throw toTRPCError(err);

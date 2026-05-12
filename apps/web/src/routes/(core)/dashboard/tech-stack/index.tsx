@@ -164,7 +164,10 @@ function RouteComponent() {
             {
               icon: IconPlus,
               label: "Add Tech Stack Item",
-              onClick: () => {},
+              onClick: () =>
+                navigate({
+                  to: "/dashboard/tech-stack/create",
+                }),
             },
           ]}
         />
@@ -216,7 +219,9 @@ function RouteComponent() {
             {data.length} results
           </InputGroupAddon>
         </InputGroup>
-        <Button>
+        <Button
+          onClick={() => navigate({ to: "/dashboard/tech-stack/create" })}
+        >
           <IconPlus />
           Add Tech Stack Item
         </Button>
