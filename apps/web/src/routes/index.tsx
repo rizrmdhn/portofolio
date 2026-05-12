@@ -1,6 +1,7 @@
 import { CertificateCard } from '@/components/certificate-card'
 import { ExperienceCard } from '@/components/experience-card'
 import { FadeIn } from '@/components/fade-in'
+import { HomeSkeleton } from '@/components/loader'
 import { MainHeader } from '@/components/main-header'
 import { ProjectCard } from '@/components/project-card'
 import { TechStackList } from '@/components/tech-stack-list'
@@ -21,6 +22,7 @@ import { useMutation } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
+  pendingComponent: HomeSkeleton,
   loader: async ({ context }) => {
     const profile = await context.queryClient.ensureQueryData(
       context.trpc.profile.get.queryOptions(),
