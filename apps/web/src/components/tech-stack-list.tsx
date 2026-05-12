@@ -1,7 +1,7 @@
-import { TechStack } from "@portofolio/types/tech-stack.types";
+import { TechStackCategoryWithItems } from "@portofolio/types/tech-stack.types";
 
 interface TechStackListProps {
-  stack: TechStack;
+  stack: TechStackCategoryWithItems;
 }
 
 export function TechStackList({ stack }: TechStackListProps) {
@@ -11,9 +11,9 @@ export function TechStackList({ stack }: TechStackListProps) {
         {stack.name}
       </h3>
       <div className="flex flex-col gap-2">
-        {stack.list.map((item) => (
-          <span key={item} className="text-[13px] text-muted-foreground">
-            {item}
+        {stack.items.map((item) => (
+          <span key={item.id} className="text-[13px] text-muted-foreground">
+            {item.name}
           </span>
         ))}
       </div>
