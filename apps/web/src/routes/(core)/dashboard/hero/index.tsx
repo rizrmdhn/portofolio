@@ -46,12 +46,11 @@ function RouteComponent() {
       title: data.title,
       bio: data.bio,
       email: data.email,
+      location: data.location ?? undefined,
       availabilityStatus: data.availabilityStatus,
     },
     onSubmit: async ({ value }) => {
-      await updateProfile.mutateAsync({
-        ...value,
-      })
+      await updateProfile.mutateAsync(value)
     },
   })
 
@@ -141,26 +140,22 @@ function RouteComponent() {
           />
 
           <form.Field
-            name="bio"
+            name="location"
             children={(field) => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
 
               return (
                 <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
-                  <FieldLabel htmlFor={field.name}>Bio</FieldLabel>
-                  <Textarea
+                  <FieldLabel htmlFor={field.name}>Location</FieldLabel>
+                  <Input
                     id={field.name}
                     name={field.name}
                     value={field.state.value}
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
-                    placeholder="Write a short bio about yourself"
-                    rows={4}
+                    placeholder="City, State"
                   />
-                  <p className="text-muted-foreground text-right text-xs">
-                    {field.state.value.length} characters
-                  </p>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               )
@@ -188,6 +183,33 @@ function RouteComponent() {
                 </ToggleGroup>
               </Field>
             )}
+          />
+
+          <form.Field
+            name="bio"
+            children={(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+
+              return (
+                <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                  <FieldLabel htmlFor={field.name}>Bio</FieldLabel>
+                  <Textarea
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    aria-invalid={isInvalid}
+                    placeholder="Write a short bio about yourself"
+                    rows={4}
+                  />
+                  <p className="text-muted-foreground text-right text-xs">
+                    {field.state.value.length} characters
+                  </p>
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              )
+            }}
           />
 
           <div className="flex justify-end">
