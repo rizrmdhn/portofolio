@@ -17,7 +17,7 @@ interface ProjectColumnProps {
 
 export default function getProjectsColumns({
   navigate,
-}: ProjectColumnProps): ColumnDef<PaginatedProjects>[] {
+}: ProjectColumnProps): Array<ColumnDef<PaginatedProjects>> {
   return [
     {
       id: "order",

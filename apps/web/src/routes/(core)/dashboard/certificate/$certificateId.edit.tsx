@@ -21,7 +21,8 @@ import {
   EXPERIENCE_STATUS_TYPES,
 } from "@portofolio/constants";
 import { updateCertificationSchema } from "@portofolio/schema/certifcation.schema";
-import { IconCertificate, IconSettings, TablerIcon } from "@tabler/icons-react";
+import { IconCertificate, IconSettings  } from "@tabler/icons-react";
+import type {TablerIcon} from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import {
   useMutation,
@@ -29,7 +30,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { z } from "zod";
+import type {z} from "zod";
 
 export const Route = createFileRoute(
   "/(core)/dashboard/certificate/$certificateId/edit",
@@ -44,12 +45,12 @@ export const Route = createFileRoute(
   component: RouteComponent,
 });
 
-const TAB_TRIGGERS: { icon: TablerIcon; title: string; value: string }[] = [
+const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
   { icon: IconCertificate, title: "Certificate Details", value: "details" },
   { icon: IconSettings, title: "Settings", value: "settings" },
 ];
 
-const TAB_FIELDS: Record<string, string[]> = {
+const TAB_FIELDS: Record<string, Array<string>> = {
   details: [
     "title",
     "issuer",
@@ -99,7 +100,7 @@ function RouteComponent() {
         : undefined,
       status: certificate.status,
       order: certificate.order,
-    } as z.infer<typeof updateCertificationSchema>,
+    },
     onSubmit: async ({ value }) => {
       await updateMutation.mutateAsync(value);
     },
@@ -131,7 +132,7 @@ function RouteComponent() {
                   <TabsList variant="line">
                     {TAB_TRIGGERS.map((tab) => {
                       const hasError = hasTabError(
-                        fieldMeta as Record<string, { errors: unknown[] }>,
+                        fieldMeta as Record<string, { errors: Array<unknown> }>,
                         TAB_FIELDS[tab.value] ?? [],
                       );
                       return (

@@ -6,11 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { auth } from "@portofolio/auth";
-import { TRPCError, initTRPC } from "@trpc/server";
-import superjson from "superjson";
-import { ZodError, z } from "zod";
-import { parseAndValidateSafe } from "./utils/form-data-parser";
+import { auth } from '@portofolio/auth'
+import { TRPCError, initTRPC } from '@trpc/server'
+import superjson from 'superjson'
+import { ZodError, z } from 'zod'
+import { parseAndValidateSafe } from './utils/form-data-parser'
 
 /**
  * 1. CONTEXT
@@ -27,13 +27,13 @@ import { parseAndValidateSafe } from "./utils/form-data-parser";
 export const createTRPCContext = async (context: Request) => {
   const session = await auth.api.getSession({
     headers: context.headers,
-  });
+  })
 
   return {
     user: session?.user,
     session: session?.session,
-  };
-};
+  }
+}
 
 /**
  * 2. INITIALIZATION
@@ -53,19 +53,18 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? z.treeifyError(error.cause) : null,
+        zodError: error.cause instanceof ZodError ? z.treeifyError(error.cause) : null,
       },
-    };
+    }
   },
-});
+})
 
 /**
  * Create a server-side caller.
  *
  * @see https://trpc.io/docs/server/server-side-calls
  */
-export const createCallerFactory = t.createCallerFactory;
+export const createCallerFactory = t.createCallerFactory
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
@@ -79,7 +78,7 @@ export const createCallerFactory = t.createCallerFactory;
  *
  * @see https://trpc.io/docs/router
  */
-export const createTRPCRouter = t.router;
+export const createTRPCRouter = t.router
 
 /**
  * Middleware for timing procedure execution and adding an artificial delay in development.
@@ -88,25 +87,25 @@ export const createTRPCRouter = t.router;
  * network latency that would occur in production but not in local development.
  */
 const timingMiddleware = t.middleware(async ({ next, path }) => {
-  const start = Date.now();
+  const start = Date.now()
 
   if (t._config.isDev) {
     // artificial delay in dev
-    const waitMs = Math.floor(Math.random() * 400) + 100;
-    await new Promise((resolve) => setTimeout(resolve, waitMs));
+    const waitMs = Math.floor(Math.random() * 400) + 100
+    await new Promise((resolve) => setTimeout(resolve, waitMs))
   }
 
-  const result = await next();
+  const result = await next()
 
-  const end = Date.now();
-  const duration = end - start;
+  const end = Date.now()
+  const duration = end - start
 
   if (t._config.isDev) {
-    console.log(`[TRPC] ${path} took ${duration}ms to execute`);
+    console.log(`[TRPC] ${path} took ${duration}ms to execute`)
   }
 
-  return result;
-});
+  return result
+})
 
 /**
  * Public (unauthenticated) procedure
@@ -115,7 +114,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure.use(timingMiddleware)
 
 /**
  * Authenticated procedure
@@ -131,24 +130,22 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure
-  .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.user || !ctx.session) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Anda harus masuk untuk mengakses sumber daya ini.",
-      });
-    }
+export const protectedProcedure = t.procedure.use(timingMiddleware).use(({ ctx, next }) => {
+  if (!ctx.user || !ctx.session) {
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+      message: 'Anda harus masuk untuk mengakses sumber daya ini.',
+    })
+  }
 
-    return next({
-      ctx: {
-        ...ctx,
-        user: ctx.user,
-        session: ctx.session,
-      },
-    });
-  });
+  return next({
+    ctx: {
+      ...ctx,
+      user: ctx.user,
+      session: ctx.session,
+    },
+  })
+})
 
 /**
  * Custom tRPC procedure that accepts FormData
@@ -156,44 +153,43 @@ export const protectedProcedure = t.procedure
  */
 export const formDataProcedure = <T extends z.ZodTypeAny>(schema: T) =>
   t.middleware(async (opts) => {
-    const { getRawInput, next } = opts;
-    const rawInput = await getRawInput();
+    const { getRawInput, next } = opts
+    const rawInput = await getRawInput()
 
     if (!(rawInput instanceof FormData)) {
       throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Expected FormData input",
-      });
+        code: 'BAD_REQUEST',
+        message: 'Expected FormData input',
+      })
     }
 
-    const parsed = parseAndValidateSafe(rawInput as FormData, schema);
+    const parsed = parseAndValidateSafe(rawInput, schema)
 
     if (!parsed.success) {
       // Format Zod errors into user-friendly messages
       const errors = parsed.error.issues.map((err) => {
-        const field = err.path.join(".");
-        return field ? `${field}: ${err.message}` : err.message;
-      });
+        const field = err.path.join('.')
+        return field ? `${field}: ${err.message}` : err.message
+      })
 
       throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: errors.join(", "),
+        code: 'BAD_REQUEST',
+        message: errors.join(', '),
         cause: parsed.error,
-      });
+      })
     }
 
     return next({
       ctx: {
         input: parsed.data,
       },
-    });
-  });
+    })
+  })
 
 /**
  * FormData input schema for tRPC procedures
  * This allows tRPC to properly type mutations that accept FormData
  */
-export const formDataInput = z.custom<FormData>(
-  (val) => val instanceof FormData,
-  { message: "Expected FormData input" },
-);
+export const formDataInput = z.custom<FormData>((val) => val instanceof FormData, {
+  message: 'Expected FormData input',
+})

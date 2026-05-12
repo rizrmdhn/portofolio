@@ -1,16 +1,17 @@
 import { getQueryClient } from "@/utils/trpc";
 import {
-  useMutation,
-  type QueryKey,
-  type UseMutationOptions,
+  
+  
+  useMutation
 } from "@tanstack/react-query";
+import type {QueryKey, UseMutationOptions} from "@tanstack/react-query";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 /** Extract the item type from a paginated response { data: T[], pageCount } */
-type PaginatedData<T> = { data: T[]; pageCount: number };
+type PaginatedData<T> = { data: Array<T>; pageCount: number };
 
 /** Check if a type looks like our paginated shape */
 function isPaginated(value: unknown): value is PaginatedData<unknown> {
@@ -64,7 +65,7 @@ interface CreateConfig<TInput, TItem> {
 interface ReorderConfig<TInput> {
   type: "reorder";
   /** Extract the reorder map from the mutation input */
-  getOrder: (input: TInput) => { id: string; order: number }[];
+  getOrder: (input: TInput) => Array<{ id: string; order: number }>;
 }
 
 type OptimisticOperation<TInput, TItem> =
@@ -198,15 +199,15 @@ function applyOptimisticUpdate<TQueryData, TInput>(
 ): TQueryData {
   // Paginated shape
   if (isPaginated(old)) {
-    const items = old.data as InferItem<TQueryData>[];
+    const items = old.data as Array<InferItem<TQueryData>>;
     const updated = applyToArray(items, input, operation);
-    return { ...old, data: updated } as TQueryData;
+    return { ...old, data: updated };
   }
 
   // Plain array shape
   if (Array.isArray(old)) {
     return applyToArray(
-      old as InferItem<TQueryData>[],
+      old as Array<InferItem<TQueryData>>,
       input,
       operation,
     ) as TQueryData;
@@ -215,17 +216,17 @@ function applyOptimisticUpdate<TQueryData, TInput>(
   // Single item shape (only update makes sense here)
   if (operation.type === "update") {
     const fields = operation.getUpdatedFields(input);
-    return { ...old, ...fields } as TQueryData;
+    return { ...old, ...fields };
   }
 
   return old;
 }
 
 function applyToArray<TItem, TInput>(
-  items: TItem[],
+  items: Array<TItem>,
   input: TInput,
   operation: OptimisticOperation<TInput, TItem>,
-): TItem[] {
+): Array<TItem> {
   switch (operation.type) {
     case "delete":
       return items.filter(

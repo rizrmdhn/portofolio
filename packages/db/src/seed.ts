@@ -1,10 +1,6 @@
 import dotenv from "dotenv";
-import { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
-
-// Must load env before any module that calls createEnv (client.ts → env/server)
-const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: resolve(__dirname, "../../../apps/web/.env") });
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { hash } from "@node-rs/argon2";
 import { VIEW_AS_TYPES } from "@portofolio/constants";
@@ -22,6 +18,10 @@ import {
   techStackItems,
   user,
 } from "./schema/index.js";
+
+// Must load env before any module that calls createEnv (client.ts → env/server)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: resolve(__dirname, "../../../apps/web/.env") });
 
 const databaseUrl = process.env.DATABASE_URL;
 const email = process.env.ALLOWED_EMAIL_LOGIN;

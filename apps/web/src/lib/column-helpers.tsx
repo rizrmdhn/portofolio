@@ -13,7 +13,7 @@ import { cn } from "./utils";
 
 type NestedKeyOf<T> = {
   [K in keyof T & string]: T[K] extends object
-    ? T[K] extends unknown[]
+    ? T[K] extends Array<unknown>
       ? K
       : K | `${K}.${NestedKeyOf<T[K]>}`
     : K;

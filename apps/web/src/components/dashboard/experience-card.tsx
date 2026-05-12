@@ -2,11 +2,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Experience } from "@portofolio/types/experience.types";
+import type {Experience} from "@portofolio/types/experience.types";
 import { IconGripVertical, IconPencil } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import React from "react";
+import type React from "react";
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -21,12 +21,9 @@ function getInitials(company: string) {
     .join("");
 }
 
-function getStatusVariant(
-  status: Experience["status"],
-): "success" | "draft" | "outline" {
+function getStatusVariant(status: Experience["status"]): "success" | "draft" {
   if (status === "published") return "success";
-  if (status === "draft") return "draft";
-  return "outline";
+  return "draft";
 }
 
 export function ExperienceCard({

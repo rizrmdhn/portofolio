@@ -27,26 +27,27 @@ import {
   IconLink,
   IconPencil,
   IconSettings,
-  IconUpload,
-  TablerIcon,
+  IconUpload
+  
 } from "@tabler/icons-react";
+import type {TablerIcon} from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { z } from "zod";
+import type {z} from "zod";
 
 export const Route = createFileRoute("/(core)/dashboard/projects/create")({
   component: RouteComponent,
 });
 
-const TAB_TRIGGERS: { icon: TablerIcon; title: string; value: string }[] = [
+const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
   { icon: IconPencil, title: "Content", value: "content" },
   { icon: IconLink, title: "Links", value: "links" },
   { icon: IconUpload, title: "Media", value: "media" },
   { icon: IconSettings, title: "Settings", value: "settings" },
 ];
 
-const TAB_FIELDS: Record<string, string[]> = {
+const TAB_FIELDS: Record<string, Array<string>> = {
   content: ["title", "description", "longDescription", "tech"],
   links: ["githubUrl", "liveUrl", "playstoreUrl", "appstoreUrl"],
   media: ["picture", "coverColor"],
@@ -91,7 +92,7 @@ function RouteComponent() {
       order: 0,
       featured: false,
       picture: undefined,
-    } as z.infer<typeof createProjectSchema>,
+    },
     onSubmit: async ({ value }) => {
       const formData = toFormData(value);
 
@@ -126,7 +127,7 @@ function RouteComponent() {
                   <TabsList variant="line">
                     {TAB_TRIGGERS.map((tab) => {
                       const hasError = hasTabError(
-                        fieldMeta as Record<string, { errors: unknown[] }>,
+                        fieldMeta as Record<string, { errors: Array<unknown> }>,
                         TAB_FIELDS[tab.value] ?? [],
                       );
                       return (
@@ -508,7 +509,7 @@ function RouteComponent() {
                                 );
                                 if (next)
                                   field.handleChange(
-                                    next as typeof field.state.value,
+                                    next,
                                   );
                               }}
                             >

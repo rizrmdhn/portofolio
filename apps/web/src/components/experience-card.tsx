@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Experience } from "@portofolio/types/experience.types";
+import type {Experience} from "@portofolio/types/experience.types";
 import { format } from "date-fns";
 import { Separator } from "./ui/separator";
 

@@ -1,35 +1,36 @@
-import { eq } from "@portofolio/db";
-import { db } from "@portofolio/db/client";
-import { experiences } from "@portofolio/db/schema/index";
+import { eq } from '@portofolio/db'
+import { db } from '@portofolio/db/client'
+import { experiences } from '@portofolio/db/schema/index'
 import type {
   CreateExperienceInput,
   ReorderExperiencesInput,
   UpdateExperienceInput,
-} from "@portofolio/schema/experience.schema";
-import { NotFoundError, QueryError } from "./errors";
+} from '@portofolio/schema/experience.schema'
+import { NotFoundError, QueryError } from './errors'
 
 export async function getAllExperiences() {
-  const experiences = await db.query.experiences.findMany({
+  const results = await db.query.experiences.findMany({
     orderBy: {
-      order: "asc",
+      order: 'asc',
     },
-  });
-  return experiences;
+  })
+
+  return results
 }
 
 export async function getExperiencesForDashboard(search?: string) {
-  const experiences = await db.query.experiences.findMany({
+  const results = await db.query.experiences.findMany({
     where: {
       title: {
-        ilike: `%${search ?? ""}%`,
+        ilike: `%${search ?? ''}%`,
       },
     },
     orderBy: {
-      order: "asc",
+      order: 'asc',
     },
-  });
+  })
 
-  return experiences;
+  return results
 }
 
 export async function getExperienceById(id: string) {
@@ -37,56 +38,49 @@ export async function getExperienceById(id: string) {
     where: {
       id,
     },
-  });
+  })
 
-  if (!experience) throw new NotFoundError(`Experience`, id);
+  if (!experience) throw new NotFoundError(`Experience`, id)
 
-  return experience;
+  return experience
 }
 
 export async function createExperience(data: CreateExperienceInput) {
-  const [experience] = await db.insert(experiences).values(data).returning();
+  const [experience] = await db.insert(experiences).values(data).returning()
 
-  if (!experience) throw new QueryError("Failed to create experience");
+  if (!experience) throw new QueryError('Failed to create experience')
 
-  return experience;
+  return experience
 }
 
 export async function updateExperience(data: UpdateExperienceInput) {
-  const isExist = await getExperienceById(data.id);
-
-  if (!isExist) throw new NotFoundError(`Experience`, data.id);
+  await getExperienceById(data.id)
 
   const [experience] = await db
     .update(experiences)
     .set(data)
     .where(eq(experiences.id, data.id))
-    .returning();
+    .returning()
 
-  if (!experience) throw new QueryError("Failed to update experience");
+  if (!experience) throw new QueryError('Failed to update experience')
 
-  return experience;
+  return experience
 }
 
 export async function reorderExperiences(items: ReorderExperiencesInput) {
   await db.transaction(async (tx) => {
     for (const { id, order } of items) {
-      await tx.update(experiences).set({ order }).where(eq(experiences.id, id));
+      await tx.update(experiences).set({ order }).where(eq(experiences.id, id))
     }
-  });
+  })
 }
 
 export async function deleteExperience(id: string) {
-  const isExist = await getExperienceById(id);
+  await getExperienceById(id)
 
-  if (!isExist) throw new NotFoundError(`Experience`, id);
+  const [experience] = await db.delete(experiences).where(eq(experiences.id, id)).returning()
 
-  const [experience] = await db
-    .delete(experiences)
-    .where(eq(experiences.id, id))
-    .returning();
+  if (!experience) throw new QueryError('Failed to delete experience')
 
-  if (!experience) throw new QueryError("Failed to delete experience");
-
-  return experience;
+  return experience
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import type * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
 
 import { cn } from "@/lib/utils"
@@ -15,7 +15,7 @@ import {
   InputGroup,
   InputGroupAddon,
 } from "@/components/ui/input-group"
-import { IconSearch, IconCheck } from "@tabler/icons-react"
+import { IconCheck, IconSearch } from "@tabler/icons-react"
 
 function Command({
   className,

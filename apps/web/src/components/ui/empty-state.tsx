@@ -1,4 +1,5 @@
-import { isValidElement, type ElementType, type ReactNode } from "react";
+import {   isValidElement } from "react";
+import type {ElementType, ReactNode} from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +10,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { IconArrowUpRight, type TablerIcon } from "@tabler/icons-react";
+import { IconArrowUpRight  } from "@tabler/icons-react";
+import type {TablerIcon} from "@tabler/icons-react";
 
 export type EmptyStateAction =
   | { render: ReactNode }
@@ -34,7 +36,7 @@ export interface EmptyStateProps {
   iconVariant?: "default" | "icon";
   title: string;
   description: string;
-  actions?: EmptyStateAction[];
+  actions?: Array<EmptyStateAction>;
   learnMoreHref?: string;
   learnMoreLabel?: string;
   className?: string;

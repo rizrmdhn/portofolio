@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Certification } from "@portofolio/types/certification.types";
+import type {Certification} from "@portofolio/types/certification.types";
 import {
   IconAward,
   IconExternalLink,

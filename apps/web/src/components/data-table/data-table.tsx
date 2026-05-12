@@ -1,15 +1,16 @@
 "use client"
 
-import * as React from "react"
+import type * as React from "react"
 import {
   DndContext,
+  
   KeyboardSensor,
   PointerSensor,
   closestCenter,
   useSensor,
-  useSensors,
-  type DragEndEvent,
+  useSensors
 } from "@dnd-kit/core"
+import type {DragEndEvent} from "@dnd-kit/core";
 import {
   SortableContext,
   sortableKeyboardCoordinates,
@@ -18,18 +19,20 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { IconGripVertical } from "@tabler/icons-react"
-import { flexRender, type Row, type Table } from "@tanstack/react-table"
+import {   flexRender } from "@tanstack/react-table"
+import type {Row, Table} from "@tanstack/react-table";
 
 import { cn } from "@/lib/utils"
-import { EmptyState, type EmptyStateAction } from "@/components/ui/empty-state"
+import { EmptyState  } from "@/components/ui/empty-state"
+import type {EmptyStateAction} from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  Table as UITable,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  Table as UITable,
 } from "@/components/ui/table"
 import type { TablerIcon } from "@tabler/icons-react"
 
@@ -40,10 +43,10 @@ interface DataTableProps<TData> {
   emptyMessage?: string
   emptyDescription?: string
   emptyIcon?: TablerIcon | React.ReactNode
-  emptyActions?: EmptyStateAction[]
+  emptyActions?: Array<EmptyStateAction>
   className?: string
   children?: React.ReactNode
-  onReorder?: (items: TData[]) => void
+  onReorder?: (items: Array<TData>) => void
 }
 
 function DraggableRow<TData>({ row }: { row: Row<TData> }) {

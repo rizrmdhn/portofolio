@@ -1,16 +1,17 @@
 import { cn } from "@/lib/utils";
 import { IconX } from "@tabler/icons-react";
 import {
+  
   forwardRef,
-  KeyboardEvent,
   useCallback,
   useRef,
-  useState,
+  useState
 } from "react";
+import type {KeyboardEvent} from "react";
 
 interface InputTagProps {
-  value?: string[];
-  onChange?: (tags: string[]) => void;
+  value?: Array<string>;
+  onChange?: (tags: Array<string>) => void;
   onBlur?: () => void;
   name?: string;
   disabled?: boolean;

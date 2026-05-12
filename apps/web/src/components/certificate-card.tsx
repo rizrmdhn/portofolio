@@ -1,4 +1,4 @@
-import { Certification } from "@portofolio/types/certification.types";
+import type {Certification} from "@portofolio/types/certification.types";
 import { IconExternalLink } from "@tabler/icons-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";

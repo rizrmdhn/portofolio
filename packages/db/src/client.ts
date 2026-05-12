@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
-import path from "path";
+import path from "node:path";
 import postgres from "postgres";
 
 import { env } from "@portofolio/env/server";

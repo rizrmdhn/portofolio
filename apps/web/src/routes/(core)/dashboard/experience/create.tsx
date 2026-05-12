@@ -29,27 +29,29 @@ import { trpc } from "@/utils/trpc";
 import {
   EXPERIENCE_STATUS_LABELS,
   EXPERIENCE_STATUS_TYPES,
-  EXPERIENCE_TYPE_LABELS,
   EXPERIENCE_TYPES,
-  ExperienceType,
+  EXPERIENCE_TYPE_LABELS
+  
 } from "@portofolio/constants";
+import type {ExperienceType} from "@portofolio/constants";
 import { createExperienceSchema } from "@portofolio/schema/experience.schema";
-import { IconBriefcase, IconSettings, TablerIcon } from "@tabler/icons-react";
+import { IconBriefcase, IconSettings  } from "@tabler/icons-react";
+import type {TablerIcon} from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { z } from "zod";
+import type {z} from "zod";
 
 export const Route = createFileRoute("/(core)/dashboard/experience/create")({
   component: RouteComponent,
 });
 
-const TAB_TRIGGERS: { icon: TablerIcon; title: string; value: string }[] = [
+const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
   { icon: IconBriefcase, title: "Role Details", value: "role-details" },
   { icon: IconSettings, title: "Settings", value: "settings" },
 ];
 
-const TAB_FIELDS: Record<string, string[]> = {
+const TAB_FIELDS: Record<string, Array<string>> = {
   "role-details": [
     "title",
     "description",
@@ -101,7 +103,7 @@ function RouteComponent() {
       skills: [],
       status: "draft",
       order: 0,
-    } as z.infer<typeof createExperienceSchema>,
+    },
     onSubmit: async ({ value }) => {
       await createExperienceMutation.mutateAsync(value);
     },
@@ -135,7 +137,7 @@ function RouteComponent() {
                   <TabsList variant="line">
                     {TAB_TRIGGERS.map((tab) => {
                       const hasError = hasTabError(
-                        fieldMeta as Record<string, { errors: unknown[] }>,
+                        fieldMeta as Record<string, { errors: Array<unknown> }>,
                         TAB_FIELDS[tab.value] ?? [],
                       );
                       return (
@@ -318,7 +320,7 @@ function RouteComponent() {
                               <FieldLabel>Start Date</FieldLabel>
                               <DatePicker
                                 value={field.state.value ? new Date(field.state.value).getTime() : undefined}
-                                onChange={(value) => field.handleChange(new Date(value).toISOString().split("T")[0]!)}
+                                onChange={(value) => field.handleChange(new Date(value).toISOString().split("T")[0])}
                                 placeholder="Select start date"
                               />
                               {isInvalid && (
@@ -343,7 +345,7 @@ function RouteComponent() {
                               <FieldLabel>End Date</FieldLabel>
                               <DatePicker
                                 value={field.state.value ? new Date(field.state.value).getTime() : undefined}
-                                onChange={(value) => field.handleChange(new Date(value).toISOString().split("T")[0]!)}
+                                onChange={(value) => field.handleChange(new Date(value).toISOString().split("T")[0])}
                                 placeholder="Select end date"
                               />
                               {isInvalid && (
@@ -475,7 +477,7 @@ function RouteComponent() {
                                 );
                                 if (next)
                                   field.handleChange(
-                                    next as typeof field.state.value,
+                                    next,
                                   );
                               }}
                             >

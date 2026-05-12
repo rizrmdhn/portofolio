@@ -21,9 +21,10 @@ import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
   SOCIAL_ICON_MAP,
-  SOCIAL_ICON_NAMES,
-  SocialIconName,
+  SOCIAL_ICON_NAMES
+  
 } from "@portofolio/constants";
+import type {SocialIconName} from "@portofolio/constants";
 import { updateSocialLinkSchema } from "@portofolio/schema/social-link.schema";
 import { useForm } from "@tanstack/react-form";
 import {
@@ -32,7 +33,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { z } from "zod";
+import type {z} from "zod";
 
 export const Route = createFileRoute(
   "/(core)/dashboard/social-links/$socialLinkId/edit",
@@ -75,9 +76,9 @@ function RouteComponent() {
       id: socialLink.id,
       title: socialLink.title,
       url: socialLink.url,
-      icon: socialLink.icon as SocialIconName,
+      icon: socialLink.icon,
       order: socialLink.order,
-    } as z.infer<typeof updateSocialLinkSchema>,
+    },
     onSubmit: async ({ value }) => {
       await updateMutation.mutateAsync(value);
     },

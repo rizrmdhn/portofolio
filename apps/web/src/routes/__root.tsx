@@ -1,43 +1,39 @@
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
-import type { AppRouter } from "@portofolio/api/root";
-import type { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import {
-  HeadContent,
-  Outlet,
-  Scripts,
-  createRootRouteWithContext,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import type { TRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/sonner'
+import type { AppRouter } from '@portofolio/api/root'
+import type { QueryClient } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
-import appCss from "../index.css?url";
+import appCss from '../index.css?url'
+
 export interface RouterAppContext {
-  trpc: TRPCOptionsProxy<AppRouter>;
-  queryClient: QueryClient;
+  trpc: TRPCOptionsProxy<AppRouter>
+  queryClient: QueryClient
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   head: () => ({
     meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Portfolio" },
-      { name: "robots", content: "index, follow" },
+      { charSet: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { title: 'Portfolio' },
+      { name: 'robots', content: 'index, follow' },
       // Open Graph defaults (overridden per-route)
-      { property: "og:type", content: "website" },
+      { property: 'og:type', content: 'website' },
       // Twitter card defaults
-      { name: "twitter:card", content: "summary_large_image" },
+      { name: 'twitter:card', content: 'summary_large_image' },
     ],
     links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: 'stylesheet', href: appCss },
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
     ],
   }),
 
   component: RootDocument,
-});
+})
 
 function RootDocument() {
   return (
@@ -57,5 +53,5 @@ function RootDocument() {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }

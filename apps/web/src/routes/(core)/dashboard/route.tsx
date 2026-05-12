@@ -2,7 +2,7 @@ import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getUser } from "@/functions/get-user";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(core)/dashboard")({
   beforeLoad: async () => {

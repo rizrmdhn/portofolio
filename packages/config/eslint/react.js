@@ -17,6 +17,7 @@ export default [
     },
     rules: {
       ...reactHooksPlugin.configs.recommended.rules,
+      'react/prop-types': 'off',
     },
   },
 ]

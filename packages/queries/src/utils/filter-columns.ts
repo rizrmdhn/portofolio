@@ -1,4 +1,6 @@
 import {
+  
+  
   and,
   between,
   eq,
@@ -13,16 +15,15 @@ import {
   ne,
   notIlike,
   notInArray,
-  or,
-  type SQL,
-  type Table,
+  or
 } from "@portofolio/db"
+import type {SQL, Table} from "@portofolio/db";
 import type { FilterSchema } from "@portofolio/schema/filter.schema"
 import type { JoinOperator } from "@portofolio/types/data-table.types"
 
 interface FilterColumnsOptions<T extends Table> {
   table: T
-  filters: FilterSchema[]
+  filters: Array<FilterSchema>
   joinOperator: JoinOperator
 }
 
@@ -77,7 +78,7 @@ export function filterColumns<T extends Table>({
           return undefined
       }
     })
-    .filter(Boolean) as SQL[]
+    .filter(Boolean) as Array<SQL>
 
   if (conditions.length === 0) return undefined
 

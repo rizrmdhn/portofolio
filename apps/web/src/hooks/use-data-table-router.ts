@@ -1,5 +1,11 @@
 import {
-  type ColumnFiltersState,
+  
+  
+  
+  
+  
+  
+  
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -7,14 +13,9 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  type PaginationState,
-  type RowSelectionState,
-  type SortingState,
-  type TableOptions,
-  type Updater,
-  useReactTable,
-  type VisibilityState,
+  useReactTable
 } from "@tanstack/react-table";
+import type {ColumnFiltersState, PaginationState, RowSelectionState, SortingState, TableOptions, Updater, VisibilityState} from "@tanstack/react-table";
 import * as React from "react";
 
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
@@ -29,14 +30,14 @@ const DEBOUNCE_MS = 500;
 interface SearchParams {
   page: number;
   perPage: number;
-  sort: { id: string; desc: boolean }[];
-  filters?: {
+  sort: Array<{ id: string; desc: boolean }>;
+  filters?: Array<{
     id: string;
-    value: string | string[];
+    value: string | Array<string>;
     variant: string;
     operator: string;
     filterId: string;
-  }[];
+  }>;
   joinOperator?: string;
   [key: string]: unknown;
 }
@@ -56,7 +57,7 @@ interface UseDataTableRouterProps<TData extends Record<string, unknown>, TSearch
   search: TSearch;
   navigate: (opts: { search: (prev: TSearch) => TSearch }) => void;
   initialState?: {
-    sorting?: ExtendedColumnSort<TData>[];
+    sorting?: Array<ExtendedColumnSort<TData>>;
     pagination?: { pageSize: number; pageIndex: number };
     rowSelection?: RowSelectionState;
     columnVisibility?: VisibilityState;
@@ -112,7 +113,7 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
   );
 
   // Sorting — derived from search params
-  const sorting = search.sort as ExtendedColumnSort<TData>[];
+  const sorting = search.sort as Array<ExtendedColumnSort<TData>>;
 
   const onSortingChange = React.useCallback(
     (updaterOrValue: Updater<SortingState>) => {
@@ -123,7 +124,7 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
       navigate({
         search: (prev) => ({
           ...prev,
-          sort: newSorting as { id: string; desc: boolean }[],
+          sort: newSorting,
           page: 1,
         }),
       });
@@ -199,12 +200,12 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
 
   // Advanced filters — derived from search params, updated via navigate
   const filters = React.useMemo(
-    () => (search.filters ?? []) as ExtendedColumnFilter<TData>[],
+    () => (search.filters ?? []) as Array<ExtendedColumnFilter<TData>>,
     [search.filters],
   );
 
   const debouncedNavigateAdvancedFilters = useDebouncedCallback(
-    (newFilters: ExtendedColumnFilter<TData>[] | null) => {
+    (newFilters: Array<ExtendedColumnFilter<TData>> | null) => {
       navigate({
         search: (prev) => ({
           ...prev,
@@ -219,10 +220,10 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
   const setFilters = React.useCallback(
     (
       value:
-        | ExtendedColumnFilter<TData>[]
+        | Array<ExtendedColumnFilter<TData>>
         | ((
-            prev: ExtendedColumnFilter<TData>[],
-          ) => ExtendedColumnFilter<TData>[])
+            prev: Array<ExtendedColumnFilter<TData>>,
+          ) => Array<ExtendedColumnFilter<TData>>)
         | null,
     ) => {
       if (typeof value === "function") {

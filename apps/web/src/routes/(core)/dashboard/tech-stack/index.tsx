@@ -13,23 +13,24 @@ import { useOptimisticMutation } from "@/lib/optimistic-update";
 import { globalErrorToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
-  closestCenter,
   DndContext,
-  DragEndEvent,
+  
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   useSensor,
-  useSensors,
+  useSensors
 } from "@dnd-kit/core";
+import type {DragEndEvent} from "@dnd-kit/core";
 import {
+  SortableContext,
   arrayMove,
   rectSortingStrategy,
-  SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { TechStackCategoryWithItems } from "@portofolio/types/tech-stack.types";
+import type {TechStackCategoryWithItems} from "@portofolio/types/tech-stack.types";
 import { IconList, IconPlus, IconSearch, IconX } from "@tabler/icons-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";

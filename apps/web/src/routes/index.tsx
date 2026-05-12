@@ -1,18 +1,14 @@
-import { CertificateCard } from "@/components/certificate-card";
-import { ExperienceCard } from "@/components/experience-card";
-import { FadeIn } from "@/components/fade-in";
-import { MainHeader } from "@/components/main-header";
-import { ProjectCard } from "@/components/project-card";
-import { TechStackList } from "@/components/tech-stack-list";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
-import { trpc } from "@/utils/trpc";
-import {
-  AVAILABILITY_STATUS_LABELS,
-  SOCIAL_ICON_MAP,
-  SocialIconName,
-} from "@portofolio/constants";
+import { CertificateCard } from '@/components/certificate-card'
+import { ExperienceCard } from '@/components/experience-card'
+import { FadeIn } from '@/components/fade-in'
+import { MainHeader } from '@/components/main-header'
+import { ProjectCard } from '@/components/project-card'
+import { TechStackList } from '@/components/tech-stack-list'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { EmptyState } from '@/components/ui/empty-state'
+import { trpc } from '@/utils/trpc'
+import { AVAILABILITY_STATUS_LABELS, SOCIAL_ICON_MAP } from '@portofolio/constants'
 import {
   IconArrowRight,
   IconBriefcase,
@@ -21,35 +17,35 @@ import {
   IconFolder,
   IconMail,
   IconStack2,
-} from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+} from '@tabler/icons-react'
+import { useMutation } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   loader: async ({ context }) => {
     const profile = await context.queryClient.ensureQueryData(
       context.trpc.profile.get.queryOptions(),
-    );
+    )
 
     const projects = await context.queryClient.ensureQueryData(
       context.trpc.project.getForLandingPage.queryOptions(),
-    );
+    )
 
     const experiences = await context.queryClient.ensureQueryData(
       context.trpc.experience.getAll.queryOptions(),
-    );
+    )
 
     const stack = await context.queryClient.ensureQueryData(
       context.trpc.techStack.getAll.queryOptions(),
-    );
+    )
 
     const certifications = await context.queryClient.ensureQueryData(
       context.trpc.certification.getForLandingPage.queryOptions(),
-    );
+    )
 
     const socialLinks = await context.queryClient.ensureQueryData(
       context.trpc.socialLink.getAll.queryOptions(),
-    );
+    )
 
     return {
       profile,
@@ -58,39 +54,33 @@ export const Route = createFileRoute("/")({
       stack,
       certifications,
       socialLinks,
-    };
+    }
   },
   head: ({ loaderData }) => {
-    const profile = loaderData?.profile;
-    const title = profile
-      ? `${profile.name} — ${profile.title}`
-      : "Portfolio";
-    const description = profile?.bio ?? "";
+    const profile = loaderData?.profile
+    const title = profile ? `${profile.name} — ${profile.title}` : 'Portfolio'
+    const description = profile?.bio ?? ''
 
     return {
       meta: [
         { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { name: "twitter:title", content: title },
-        { name: "twitter:description", content: description },
+        { name: 'description', content: description },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
       ],
-    };
+    }
   },
   component: HomeComponent,
-});
+})
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-sm text-subtle tracking-[0.15em] font-mono">
-      {children}
-    </h2>
-  );
+  return <h2 className="text-subtle font-mono text-sm tracking-[0.15em]">{children}</h2>
 }
 
 function HomeComponent() {
-  const navigate = Route.useNavigate();
+  const navigate = Route.useNavigate()
 
   const {
     profile,
@@ -99,70 +89,70 @@ function HomeComponent() {
     stack,
     certifications: { data: certificates, isMore: isMoreCerts },
     socialLinks,
-  } = Route.useLoaderData();
+  } = Route.useLoaderData()
 
-  const socialByIcon = Object.fromEntries(socialLinks.map((l) => [l.icon, l]));
+  const socialByIcon: Partial<Record<string, (typeof socialLinks)[number]>> = Object.fromEntries(
+    socialLinks.map((l) => [l.icon, l]),
+  )
 
   const incrementSocialLinkClickCount = useMutation(
     trpc.socialLink.incrementClickCount.mutationOptions(),
-  );
+  )
 
   return (
-    <div className="flex flex-col bg-background text-foreground">
+    <div className="bg-background text-foreground flex flex-col">
       <MainHeader />
 
       {/* Hero */}
       <section
         id="about"
-        className="flex flex-col items-center justify-center gap-6 w-full pt-24 dot-grid scroll-mt-14"
+        className="dot-grid flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 pt-24"
       >
-        <FadeIn className="w-full md:max-w-175 flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto px-4 md:px-0">
-          {profile.availabilityStatus !== "unavailable" && (
+        <FadeIn className="border-border mx-auto flex w-full flex-col gap-6 self-stretch border-b px-4 pb-24 md:max-w-175 md:px-0">
+          {profile.availabilityStatus !== 'unavailable' && (
             <Badge
               variant="outline"
-              className="w-fit py-3 px-3.5 bg-available text-available-foreground border border-available-foreground/20 text-xs font-medium"
+              className="bg-available text-available-foreground border-available-foreground/20 w-fit border px-3.5 py-3 text-xs font-medium"
             >
-              <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
+              <span className="mr-2 h-2 w-2 rounded-full bg-green-500" />
               {AVAILABILITY_STATUS_LABELS[profile.availabilityStatus]}
             </Badge>
           )}
-          <h1 className="text-[32px] sm:text-[44px] md:text-[54px] font-extrabold leading-[1.05] text-foreground">
+          <h1 className="text-foreground text-[32px] leading-[1.05] font-extrabold sm:text-[44px] md:text-[54px]">
             {profile.name}
           </h1>
-          <p className="text-[18px] text-start max-w-2xl text-muted-foreground">
-            {profile.title}
-          </p>
-          <p className="text-[15px] text-start max-w-2xl text-muted-foreground leading-[1.75]">
+          <p className="text-muted-foreground max-w-2xl text-start text-[18px]">{profile.title}</p>
+          <p className="text-muted-foreground max-w-2xl text-start text-[15px] leading-[1.75]">
             {profile.bio}
           </p>
           {/* Social */}
           <div className="flex flex-wrap items-center gap-4">
             {socialLinks.map((link) => {
-              const Icon = SOCIAL_ICON_MAP[link.icon as SocialIconName]?.icon;
+              const Icon = SOCIAL_ICON_MAP[link.icon].icon
               return (
                 <Button
                   key={link.id}
                   variant="outline"
                   size="lg"
                   onClick={() => {
-                    incrementSocialLinkClickCount.mutate({ id: link.id });
-                    window.open(link.url, "_blank");
+                    incrementSocialLinkClickCount.mutate({ id: link.id })
+                    window.open(link.url, '_blank')
                   }}
                   title={link.title}
                 >
-                  <span className="flex items-center gap-1 text-sm text-subtle font-medium">
-                    {Icon && <Icon className="size-4" />}
+                  <span className="text-subtle flex items-center gap-1 text-sm font-medium">
+                    {<Icon className="size-4" />}
                     {link.title}
                   </span>
                 </Button>
-              );
+              )
             })}
             <Button
               variant="outline"
               size="lg"
               onClick={() => window.location.assign(`mailto:${profile.email}`)}
             >
-              <span className="flex items-center gap-1 text-sm text-subtle font-medium">
+              <span className="text-subtle flex items-center gap-1 text-sm font-medium">
                 <IconMail className="size-4" />
                 Email
               </span>
@@ -172,22 +162,18 @@ function HomeComponent() {
             <Button
               size="lg"
               onClick={() =>
-                document
-                  .getElementById("projects")
-                  ?.scrollIntoView({ behavior: "smooth" })
+                document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })
               }
               className="group"
             >
               View Projects
-              <IconArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+              <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Button>
             <Button
               size="lg"
               variant="outline"
               onClick={() =>
-                document
-                  .getElementById("contact")
-                  ?.scrollIntoView({ behavior: "smooth" })
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
               }
               className="text-subtle"
             >
@@ -200,9 +186,9 @@ function HomeComponent() {
       {/* Experience */}
       <section
         id="experience"
-        className="flex flex-col items-center justify-center gap-6 w-full py-24 scroll-mt-14"
+        className="flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 py-24"
       >
-        <FadeIn className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
+        <FadeIn className="mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0">
           <SectionHeading>WORK EXPERIENCE</SectionHeading>
           <div className="flex flex-col gap-6">
             {experiences.map((exp, i) => (
@@ -222,11 +208,11 @@ function HomeComponent() {
       {/* Projects */}
       <section
         id="projects"
-        className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y scroll-mt-14"
+        className="bg-section-alt flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 border-y py-24"
       >
-        <FadeIn className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
+        <FadeIn className="mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0">
           <SectionHeading>PROJECTS</SectionHeading>
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr]">
             {featured.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -240,13 +226,13 @@ function HomeComponent() {
           )}
           {isMore && (
             <Button
-              onClick={() => navigate({ to: "/projects" })}
+              onClick={() => navigate({ to: '/projects' })}
               variant="link"
               size="lg"
               className="text-subtle group"
             >
               View all projects
-              <IconArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+              <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Button>
           )}
         </FadeIn>
@@ -256,11 +242,11 @@ function HomeComponent() {
         {/* Tech Stack */}
         <section
           id="stack"
-          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0 scroll-mt-26"
+          className="mx-auto flex w-full scroll-mt-26 flex-col gap-8 px-4 md:max-w-175 md:px-0"
         >
           <FadeIn className="flex flex-col gap-8">
             <SectionHeading>TECH STACK</SectionHeading>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-5">
               {stack.map((group) => (
                 <TechStackList key={group.id} stack={group} />
               ))}
@@ -278,11 +264,11 @@ function HomeComponent() {
         {/* Certificates */}
         <section
           id="certs"
-          className="flex flex-col items-center justify-center gap-6 w-full py-24 bg-section-alt border-y scroll-mt-14"
+          className="bg-section-alt flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 border-y py-24"
         >
-          <FadeIn className="w-full md:max-w-175 flex flex-col gap-8 justify-center mx-auto px-4 md:px-0">
+          <FadeIn className="mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0">
             <SectionHeading>CERTIFICATES</SectionHeading>
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr]">
               {certificates.map((cert) => (
                 <CertificateCard key={cert.id} certificate={cert} />
               ))}
@@ -296,13 +282,13 @@ function HomeComponent() {
             )}
             {isMoreCerts && (
               <Button
-                onClick={() => navigate({ to: "/certificates" })}
+                onClick={() => navigate({ to: '/certificates' })}
                 variant="link"
                 size="lg"
                 className="text-subtle group"
               >
                 View all certificates
-                <IconArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </Button>
             )}
           </FadeIn>
@@ -311,21 +297,21 @@ function HomeComponent() {
         {/* Contact */}
         <section
           id="contact"
-          className="w-full md:max-w-175 flex flex-col gap-8 mx-auto px-4 md:px-0 scroll-mt-14"
+          className="mx-auto flex w-full scroll-mt-14 flex-col gap-8 px-4 md:max-w-175 md:px-0"
         >
           <FadeIn className="flex flex-col gap-8">
             <SectionHeading>CONTACT</SectionHeading>
-            <div className="rounded-lg border border-border p-8 flex flex-col gap-6 items-start">
-              <p className="text-subtle leading-relaxed max-w-lg">
-                I'm open to freelance work, full-time roles, and interesting
-                side projects. If you have something in mind, reach out.
+            <div className="border-border flex flex-col items-start gap-6 rounded-lg border p-8">
+              <p className="text-subtle max-w-lg leading-relaxed">
+                I&apos;m open to freelance work, full-time roles, and interesting side projects. If
+                you have something in mind, reach out.
               </p>
               <div className="flex flex-col gap-3 font-mono text-sm">
                 <a
                   href={`mailto:${profile.email}`}
                   className="text-subtle hover:text-foreground transition-colors"
                 >
-                  {profile.email} <IconExternalLink className="size-3 inline" />
+                  {profile.email} <IconExternalLink className="inline size-3" />
                 </a>
                 {socialByIcon.github && (
                   <a
@@ -335,7 +321,7 @@ function HomeComponent() {
                     className="text-subtle hover:text-foreground transition-colors"
                   >
                     {socialByIcon.github.url}
-                    <IconExternalLink className="size-3 inline" />
+                    <IconExternalLink className="inline size-3" />
                   </a>
                 )}
               </div>
@@ -344,18 +330,18 @@ function HomeComponent() {
         </section>
       </div>
 
-      <footer className="border-t border-border py-6 w-full md:max-w-175 mx-auto flex flex-col sm:flex-row justify-between gap-2 px-4 md:px-0">
-        <span className="text-center text-xs text-subtle font-mono">
+      <footer className="border-border mx-auto flex w-full flex-col justify-between gap-2 border-t px-4 py-6 sm:flex-row md:max-w-175 md:px-0">
+        <span className="text-subtle text-center font-mono text-xs">
           © {new Date().getFullYear()} Noor Rizki Ramadhan
         </span>
 
-        <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="mb-2 flex items-center justify-center gap-2">
           {socialByIcon.github && (
             <a
               href={socialByIcon.github.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
+              className="text-subtle hover:text-foreground cursor-pointer text-center text-xs transition-colors"
             >
               Github
             </a>
@@ -365,7 +351,7 @@ function HomeComponent() {
               href={socialByIcon.linkedin.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
+              className="text-subtle hover:text-foreground cursor-pointer text-center text-xs transition-colors"
             >
               LinkedIn
             </a>
@@ -374,12 +360,12 @@ function HomeComponent() {
             href={`mailto:${profile.email}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-center text-xs text-subtle cursor-pointer hover:text-foreground transition-colors"
+            className="text-subtle hover:text-foreground cursor-pointer text-center text-xs transition-colors"
           >
             Email
           </a>
         </div>
       </footer>
     </div>
-  );
+  )
 }

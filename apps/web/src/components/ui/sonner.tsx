@@ -7,7 +7,8 @@ import {
   IconInfoCircle,
   IconLoader,
 } from "@tabler/icons-react";
-import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { Toaster as Sonner  } from "sonner";
+import type {ToasterProps} from "sonner";
 import { useTheme } from "../theme-provider";
 
 const Toaster = ({ ...props }: ToasterProps) => {

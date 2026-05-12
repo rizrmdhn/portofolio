@@ -13,9 +13,10 @@ import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
   AVAILABILITY_STATUS_LABELS,
-  AVAILABILITY_STATUS_TYPES,
-  AvailabilityStatus,
+  AVAILABILITY_STATUS_TYPES
+  
 } from "@portofolio/constants";
+import type {AvailabilityStatus} from "@portofolio/constants";
 import { updateProfileSchema } from "@portofolio/schema/profile.schema";
 import { useForm } from "@tanstack/react-form";
 import {
@@ -62,7 +63,7 @@ function RouteComponent() {
       bio: data?.bio ?? "",
       email: data?.email ?? "",
       availabilityStatus: (data?.availabilityStatus ??
-        "unavailable") as AvailabilityStatus,
+        "unavailable"),
     },
     onSubmit: async ({ value }) => {
       await updateProfile.mutateAsync({

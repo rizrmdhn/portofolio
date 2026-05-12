@@ -1,4 +1,4 @@
-import * as React from "react"
+import type * as React from "react"
 import type { Table } from "@tanstack/react-table"
 
 interface DataTableToolbarProps<TData> {

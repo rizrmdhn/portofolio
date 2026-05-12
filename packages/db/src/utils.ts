@@ -1,4 +1,5 @@
-import { sql, type AnyColumn } from "drizzle-orm";
+import {  sql } from "drizzle-orm";
+import type {AnyColumn} from "drizzle-orm";
 import { pgTableCreator, text, timestamp } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `${name}`);
@@ -25,11 +26,11 @@ export const timestamps = {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 
-export function takeFirstOrNull<TData>(data: TData[]) {
+export function takeFirstOrNull<TData>(data: Array<TData>) {
   return data[0] ?? null;
 }
 
-export function takeFirstOrThrow<TData>(data: TData[], errorMessage?: string) {
+export function takeFirstOrThrow<TData>(data: Array<TData>, errorMessage?: string) {
   const first = takeFirstOrNull(data);
 
   if (!first) {

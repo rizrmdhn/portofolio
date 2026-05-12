@@ -1,4 +1,4 @@
-import { type TablerIcon } from "@tabler/icons-react";
+import type {TablerIcon} from "@tabler/icons-react";
 
 import {
   SidebarGroup,
@@ -18,10 +18,10 @@ interface NavItem {
 
 interface NavGroup {
   title: string;
-  items: NavItem[];
+  items: Array<NavItem>;
 }
 
-export function NavMain({ groups }: { groups: NavGroup[] }) {
+export function NavMain({ groups }: { groups: Array<NavGroup> }) {
   return (
     <>
       {groups.map((group) => (

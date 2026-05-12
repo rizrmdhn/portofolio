@@ -8,11 +8,12 @@ import {
   CardTitle,
 } from "../ui/card";
 import {
+  
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
+  ChartTooltipContent
 } from "../ui/chart";
+import type {ChartConfig} from "../ui/chart";
 
 const chartConfig = {
   views: {
@@ -31,7 +32,7 @@ const RANGE_LABELS: Record<ViewRange, string> = {
 
 interface PageViewsChartProps {
   className?: string;
-  data: { date: string; views: number }[];
+  data: Array<{ date: string; views: number }>;
   range: ViewRange;
   onRangeChange: (range: ViewRange) => void;
 }
@@ -53,7 +54,7 @@ export function PageViewsChart({
             <CardDescription>{RANGE_LABELS[range]}</CardDescription>
           </div>
           <div className="flex items-center gap-1 rounded-md border p-1">
-            {(["7d", "30d", "90d"] as ViewRange[]).map((r) => (
+            {(["7d", "30d", "90d"] as Array<ViewRange>).map((r) => (
               <button
                 key={r}
                 onClick={() => onRangeChange(r)}

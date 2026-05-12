@@ -15,7 +15,7 @@ import { filterSchema } from "./filter.schema";
  * ```
  */
 export function createPaginationSchema<
-  T extends readonly [string, ...string[]],
+  T extends readonly [string, ...Array<string>],
 >(
   sortableFields: T,
   defaultSort: { id: T[number]; desc: boolean } = {
@@ -54,7 +54,7 @@ export function createPaginationSchema<
  * ```
  */
 export function createCursorPaginationSchema<
-  T extends readonly [string, ...string[]],
+  T extends readonly [string, ...Array<string>],
 >(
   sortableFields: T,
   defaultSort: { id: T[number]; desc: boolean } = {

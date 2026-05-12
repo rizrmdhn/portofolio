@@ -21,14 +21,15 @@ import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
   SOCIAL_ICON_MAP,
-  SOCIAL_ICON_NAMES,
-  SocialIconName,
+  SOCIAL_ICON_NAMES
+  
 } from "@portofolio/constants";
+import type {SocialIconName} from "@portofolio/constants";
 import { createSocialLinkSchema } from "@portofolio/schema/social-link.schema";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { z } from "zod";
+import type {z} from "zod";
 
 export const Route = createFileRoute(
   "/(core)/dashboard/social-links/create",
@@ -59,9 +60,9 @@ function RouteComponent() {
     defaultValues: {
       title: "",
       url: "",
-      icon: "github" as SocialIconName,
+      icon: "github",
       order: 0,
-    } as z.infer<typeof createSocialLinkSchema>,
+    },
     onSubmit: async ({ value }) => {
       await createMutation.mutateAsync(value);
     },

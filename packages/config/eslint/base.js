@@ -11,9 +11,10 @@ export default [
         'error',
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
       ],
+      'import/order': 'off',
     },
   },
   {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/.cache/**', '**/.turbo/**', '**/*.config.js'],
+    ignores: ['**/dist/**', '**/node_modules/**', '**/.cache/**', '**/.turbo/**', '**/*.config.js', '**/*.config.ts'],
   },
 ]

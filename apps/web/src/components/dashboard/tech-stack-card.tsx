@@ -1,4 +1,4 @@
-import { TechStackCategoryWithItems } from "@portofolio/types/tech-stack.types";
+import type {TechStackCategoryWithItems} from "@portofolio/types/tech-stack.types";
 import { IconGripVertical, IconPencil } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "../ui/button";

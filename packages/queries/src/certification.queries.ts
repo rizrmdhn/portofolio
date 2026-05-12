@@ -1,49 +1,49 @@
-import { eq } from "@portofolio/db";
-import { db } from "@portofolio/db/client";
-import { certifications } from "@portofolio/db/schema/index";
+import { eq } from '@portofolio/db'
+import { db } from '@portofolio/db/client'
+import { certifications } from '@portofolio/db/schema/index'
 import type {
   CreateCertificationInput,
   ReorderCertificationsInput,
   UpdateCertificationInput,
-} from "@portofolio/schema/certifcation.schema";
-import { NotFoundError, QueryError } from "./errors";
+} from '@portofolio/schema/certifcation.schema'
+import { NotFoundError, QueryError } from './errors'
 
 export async function getAllCertifications() {
   const certificationsList = await db.query.certifications.findMany({
     orderBy: {
-      order: "asc",
+      order: 'asc',
     },
-  });
+  })
 
-  return certificationsList;
+  return certificationsList
 }
 
 export async function getCertificationsForDashboard(search?: string) {
   const certificationsList = await db.query.certifications.findMany({
     where: {
       title: {
-        ilike: `%${search ?? ""}%`,
+        ilike: `%${search ?? ''}%`,
       },
     },
     orderBy: {
-      order: "asc",
+      order: 'asc',
     },
-  });
+  })
 
-  return certificationsList;
+  return certificationsList
 }
 
 export async function getCertificatesForLandingPage() {
   const result = await db.query.certifications.findMany({
     orderBy: {
-      order: "asc",
+      order: 'asc',
     },
     limit: 7,
-  });
+  })
 
-  const isMore = result.length > 6;
+  const isMore = result.length > 6
 
-  return { data: result.slice(0, 6), isMore };
+  return { data: result.slice(0, 6), isMore }
 }
 
 export async function getCertificationById(id: string) {
@@ -51,11 +51,11 @@ export async function getCertificationById(id: string) {
     where: {
       id,
     },
-  });
+  })
 
-  if (!certification) throw new NotFoundError("Certification", id);
+  if (!certification) throw new NotFoundError('Certification', id)
 
-  return certification;
+  return certification
 }
 
 export async function createCertification(data: CreateCertificationInput) {
@@ -63,64 +63,51 @@ export async function createCertification(data: CreateCertificationInput) {
     .insert(certifications)
     .values({
       ...data,
-      issueYear: data.issueYear ? new Date(data.issueYear).getFullYear() : null,
-      expiryYear: data.expiryYear
-        ? new Date(data.expiryYear).getFullYear()
-        : null,
+      issueYear: new Date(data.issueYear).getFullYear(),
+      expiryYear: data.expiryYear ? new Date(data.expiryYear).getFullYear() : null,
     })
-    .returning();
+    .returning()
 
-  if (!certification) throw new QueryError("Failed to create certification");
+  if (!certification) throw new QueryError('Failed to create certification')
 
-  return certification;
+  return certification
 }
 
 export async function updateCertification(data: UpdateCertificationInput) {
-  const isExist = await getCertificationById(data.id);
-
-  if (!isExist) throw new NotFoundError("Certification", data.id);
+  await getCertificationById(data.id)
 
   const [certification] = await db
     .update(certifications)
     .set({
       ...data,
-      issueYear: data.issueYear ? new Date(data.issueYear).getFullYear() : null,
-      expiryYear: data.expiryYear
-        ? new Date(data.expiryYear).getFullYear()
-        : null,
+      issueYear: new Date(data.issueYear).getFullYear(),
+      expiryYear: data.expiryYear ? new Date(data.expiryYear).getFullYear() : null,
     })
     .where(eq(certifications.id, data.id))
-    .returning();
+    .returning()
 
-  if (!certification) throw new QueryError("Failed to update certification");
+  if (!certification) throw new QueryError('Failed to update certification')
 
-  return certification;
+  return certification
 }
 
-export async function reorderCertifications(
-  orderedIds: ReorderCertificationsInput,
-) {
+export async function reorderCertifications(orderedIds: ReorderCertificationsInput) {
   await db.transaction(async (tx) => {
     for (const { id, order } of orderedIds) {
-      await tx
-        .update(certifications)
-        .set({ order })
-        .where(eq(certifications.id, id));
+      await tx.update(certifications).set({ order }).where(eq(certifications.id, id))
     }
-  });
+  })
 }
 
 export async function deleteCertification(id: string) {
-  const isExist = await getCertificationById(id);
-
-  if (!isExist) throw new NotFoundError("Certification", id);
+  await getCertificationById(id)
 
   const [certification] = await db
     .delete(certifications)
     .where(eq(certifications.id, id))
-    .returning();
+    .returning()
 
-  if (!certification) throw new QueryError("Failed to delete certification");
+  if (!certification) throw new QueryError('Failed to delete certification')
 
-  return certification;
+  return certification
 }

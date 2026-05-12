@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import {
-  ACTIVITY_LOG_ENTITY_LABELS,
-  type ActivityLogAction,
-  type ActivityLogEntity,
+  ACTIVITY_LOG_ENTITY_LABELS
+  
+  
 } from "@portofolio/constants";
+import type {ActivityLogAction, ActivityLogEntity} from "@portofolio/constants";
 import {
   IconBriefcase,
   IconCertificate,
@@ -56,7 +57,7 @@ interface ActivityEntry {
 
 interface RecentActivityCardProps {
   className?: string;
-  activity: ActivityEntry[];
+  activity: Array<ActivityEntry>;
 }
 
 function timeAgo(dateStr: string): string {

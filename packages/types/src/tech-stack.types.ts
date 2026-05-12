@@ -8,5 +8,5 @@ export type TechStackCategory = InferSelectModel<typeof techStackCategories>;
 export type TechStackItem = InferSelectModel<typeof techStackItems>;
 
 export type TechStackCategoryWithItems = TechStackCategory & {
-  items: TechStackItem[];
+  items: Array<TechStackItem>;
 };

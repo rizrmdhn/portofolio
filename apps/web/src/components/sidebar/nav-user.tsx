@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/sidebar";
 import { logout } from "@/lib/logout";
 import { useNavigate } from "@tanstack/react-router";
-import { User } from "better-auth";
+import type {User} from "better-auth";
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();

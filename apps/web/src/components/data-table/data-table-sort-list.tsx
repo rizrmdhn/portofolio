@@ -18,7 +18,7 @@ export function DataTableSortList<TData>({ table }: DataTableSortListProps<TData
       {sorting.map((sort) => {
         const column = table.getColumn(sort.id)
         const label =
-          (column?.columnDef.meta as { label?: string } | undefined)?.label ??
+          (column?.columnDef.meta)?.label ??
           sort.id
 
         return (

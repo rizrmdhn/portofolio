@@ -7,7 +7,7 @@ import {
   IconStack2,
   IconUser,
 } from "@tabler/icons-react";
-import * as React from "react";
+import type * as React from "react";
 
 import {
   Sidebar,
@@ -15,7 +15,7 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { User } from "better-auth";
+import type {User} from "better-auth";
 import { ModeToggle } from "../mode-toggle";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";

@@ -1,22 +1,13 @@
-import {
-  and,
-  asc,
-  count,
-  desc,
-  gte,
-  type InferSelectModel,
-  lte,
-  type SQL,
-  type Table,
-} from "@portofolio/db"
-import { db } from "@portofolio/db/client"
-import type { FilterSchema } from "@portofolio/schema/filter.schema"
-import type { JoinOperator } from "@portofolio/types/data-table.types"
-import { QueryError } from "../errors"
-import { filterColumns } from "./filter-columns"
+import type { InferSelectModel, SQL, Table } from '@portofolio/db'
+import { and, asc, count, desc, gte, lte } from '@portofolio/db'
+import { db } from '@portofolio/db/client'
+import type { FilterSchema } from '@portofolio/schema/filter.schema'
+import type { JoinOperator } from '@portofolio/types/data-table.types'
+import { QueryError } from '../errors'
+import { filterColumns } from './filter-columns'
 
 interface JoinConfig {
-  type: "left" | "inner" | "right"
+  type: 'left' | 'inner' | 'right'
   table: Table
   on: SQL
 }
@@ -24,33 +15,28 @@ interface JoinConfig {
 interface PaginatedInput {
   page: number
   perPage: number
-  sort: { id: string; desc: boolean }[]
-  filters: FilterSchema[]
+  sort: Array<{ id: string; desc: boolean }>
+  filters: Array<FilterSchema>
   joinOperator: JoinOperator
-  createdAt: number[]
+  createdAt: Array<number>
 }
 
 interface GetOffsetPaginatedOptions<T extends Table, TResult = InferSelectModel<T>> {
   table: T
   input: PaginatedInput
-  searchConditions?: (SQL | undefined)[]
+  searchConditions?: Array<SQL | undefined>
   /** Custom select shape — defaults to all columns of the primary table */
   select?: Record<string, unknown>
   /** Joins applied to both the data and count queries */
-  joins?: JoinConfig[]
+  joins?: Array<JoinConfig>
   /** Type parameter only — used to infer TResult, never passed at runtime */
   _result?: TResult
 }
 
-function applyJoins(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  query: any,
-  joins: JoinConfig[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): any {
+function applyJoins(query: any, joins: Array<JoinConfig>): any {
   for (const join of joins) {
-    if (join.type === "left") query = query.leftJoin(join.table, join.on)
-    else if (join.type === "inner") query = query.innerJoin(join.table, join.on)
+    if (join.type === 'left') query = query.leftJoin(join.table, join.on)
+    else if (join.type === 'inner') query = query.innerJoin(join.table, join.on)
     else query = query.rightJoin(join.table, join.on)
   }
   return query
@@ -62,7 +48,7 @@ export async function getOffsetPaginated<T extends Table, TResult = InferSelectM
   searchConditions,
   select,
   joins = [],
-}: GetOffsetPaginatedOptions<T, TResult>): Promise<{ data: TResult[]; pageCount: number }> {
+}: GetOffsetPaginatedOptions<T, TResult>): Promise<{ data: Array<TResult>; pageCount: number }> {
   const offset = (input.page - 1) * input.perPage
   const advancedFilter = input.filters.length > 0
 
@@ -70,7 +56,7 @@ export async function getOffsetPaginated<T extends Table, TResult = InferSelectM
     ? filterColumns({
         table,
         filters: input.filters,
-        joinOperator: input.joinOperator ?? "and",
+        joinOperator: input.joinOperator,
       })
     : and(
         ...(searchConditions ?? []),
@@ -78,9 +64,9 @@ export async function getOffsetPaginated<T extends Table, TResult = InferSelectM
           ? and(
               input.createdAt[0]
                 ? gte(
-                    (table as Record<string, unknown>)["createdAt"] as SQL,
+                    (table as Record<string, unknown>)['createdAt'] as SQL,
                     (() => {
-                      const date = new Date(input.createdAt[0]!)
+                      const date = new Date(input.createdAt[0])
                       date.setHours(0, 0, 0, 0)
                       return date.toISOString()
                     })(),
@@ -88,9 +74,9 @@ export async function getOffsetPaginated<T extends Table, TResult = InferSelectM
                 : undefined,
               input.createdAt[1]
                 ? lte(
-                    (table as Record<string, unknown>)["createdAt"] as SQL,
+                    (table as Record<string, unknown>)['createdAt'] as SQL,
                     (() => {
-                      const date = new Date(input.createdAt[1]!)
+                      const date = new Date(input.createdAt[1])
                       date.setHours(23, 59, 59, 999)
                       return date.toISOString()
                     })(),
@@ -107,29 +93,29 @@ export async function getOffsetPaginated<T extends Table, TResult = InferSelectM
             ? desc((table as Record<string, unknown>)[item.id] as SQL)
             : asc((table as Record<string, unknown>)[item.id] as SQL),
         )
-      : [desc((table as Record<string, unknown>)["createdAt"] as SQL)]
+      : [desc((table as Record<string, unknown>)['createdAt'] as SQL)]
 
   const { data, total } = await db
     .transaction(async (tx) => {
       // @ts-expect-error - Drizzle's .from() conditional type doesn't resolve with generics
       const baseDataQuery = select ? tx.select(select).from(table) : tx.select().from(table)
-      const data = (await applyJoins(baseDataQuery, joins)
+      const resData = (await applyJoins(baseDataQuery, joins)
         .limit(input.perPage)
         .offset(offset)
         .where(where)
-        .orderBy(...orderBy)) as TResult[]
+        .orderBy(...orderBy)) as Array<TResult>
 
       // @ts-expect-error - Drizzle's .from() conditional type doesn't resolve with generics
       const baseCountQuery = tx.select({ count: count() }).from(table)
-      const total = await applyJoins(baseCountQuery, joins)
+      const resTotal = await applyJoins(baseCountQuery, joins)
         .where(where)
         .execute()
-        .then((res: { count: number }[]) => res[0]?.count ?? 0)
+        .then((res: Array<{ count: number }>) => res[0]?.count ?? 0)
 
-      return { data, total }
+      return { data: resData, total: resTotal }
     })
     .catch((error) => {
-      throw new QueryError("Failed to fetch paginated data", error)
+      throw new QueryError('Failed to fetch paginated data', error)
     })
 
   return {

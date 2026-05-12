@@ -2,17 +2,18 @@
 
 import * as React from "react"
 import {
-  closestCenter,
   DndContext,
+  
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   useSensor,
-  useSensors,
-  type DragEndEvent,
+  useSensors
 } from "@dnd-kit/core"
+import type {DragEndEvent} from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -63,11 +64,11 @@ export interface DataTableColumn<TData> {
 }
 
 interface DataTableProps<TData extends { id: string }> {
-  columns: DataTableColumn<TData>[]
-  data: TData[]
+  columns: Array<DataTableColumn<TData>>
+  data: Array<TData>
   // DnD
   draggable?: boolean
-  onReorder?: (items: TData[]) => void
+  onReorder?: (items: Array<TData>) => void
   // Pagination
   page?: number
   pageCount?: number
@@ -75,8 +76,8 @@ interface DataTableProps<TData extends { id: string }> {
   perPage?: number
   onPerPageChange?: (perPage: number) => void
   // Sort
-  sort?: SortState[]
-  onSortChange?: (sort: SortState[]) => void
+  sort?: Array<SortState>
+  onSortChange?: (sort: Array<SortState>) => void
   className?: string
   emptyMessage?: string
 }
@@ -85,12 +86,12 @@ interface DataTableProps<TData extends { id: string }> {
 
 const PER_PAGE_OPTIONS = [10, 20, 30, 50]
 
-function getPageRange(current: number, total: number): (number | "...")[] {
+function getPageRange(current: number, total: number): Array<number | "..."> {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
 
   const left = Math.max(2, current - 1)
   const right = Math.min(total - 1, current + 1)
-  const pages: (number | "...")[] = [1]
+  const pages: Array<number | "..."> = [1]
 
   if (left > 2) pages.push("...")
   for (let i = left; i <= right; i++) pages.push(i)
@@ -107,7 +108,7 @@ function SortableRow<TData extends { id: string }>({
   columns,
 }: {
   row: TData
-  columns: DataTableColumn<TData>[]
+  columns: Array<DataTableColumn<TData>>
 }) {
   const {
     attributes,
@@ -154,8 +155,8 @@ function SortHeader({
   id: string
   header?: React.ReactNode
   sortable?: boolean
-  sort?: SortState[]
-  onSortChange?: (sort: SortState[]) => void
+  sort?: Array<SortState>
+  onSortChange?: (sort: Array<SortState>) => void
 }) {
   if (!sortable) return <>{header}</>
 
@@ -257,7 +258,7 @@ function DataTablePagination({
                     key={p}
                     variant={p === page ? "outline" : "ghost"}
                     size="icon-sm"
-                    onClick={() => onPageChange(p as number)}
+                    onClick={() => onPageChange(p)}
                   >
                     {p}
                   </Button>
@@ -297,7 +298,7 @@ export function DataTable<TData extends { id: string }>({
   className,
   emptyMessage = "No results.",
 }: DataTableProps<TData>) {
-  const [items, setItems] = React.useState<TData[]>(data)
+  const [items, setItems] = React.useState<Array<TData>>(data)
 
   React.useEffect(() => {
     setItems(data)

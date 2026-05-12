@@ -1,5 +1,5 @@
 import { trpc } from "@/utils/trpc";
-import { ProjectWithViewCount } from "@portofolio/types/project.types";
+import type {ProjectWithViewCount} from "@portofolio/types/project.types";
 import { toCompactNumber } from "@portofolio/utils/number";
 import {
   IconBrandAppstore,

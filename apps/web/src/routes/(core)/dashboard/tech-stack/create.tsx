@@ -19,17 +19,18 @@ import { Spinner } from "@/components/ui/spinner";
 import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
-  closestCenter,
   DndContext,
-  DragEndEvent,
+  
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   useSensor,
-  useSensors,
+  useSensors
 } from "@dnd-kit/core";
+import type {DragEndEvent} from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -37,9 +38,10 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import {
   PROFICIENCY_LABELS,
-  PROFICIENCY_LEVELS,
-  ProficiencyLevel,
+  PROFICIENCY_LEVELS
+  
 } from "@portofolio/constants";
+import type {ProficiencyLevel} from "@portofolio/constants";
 import { IconGripVertical, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -163,7 +165,7 @@ function RouteComponent() {
   const form = useForm({
     defaultValues: {
       name: "",
-      items: [] as ItemField[],
+      items: [] as Array<ItemField>,
     },
     onSubmit: async ({ value }) => {
       await createMutation.mutateAsync({
@@ -237,7 +239,7 @@ function RouteComponent() {
                 <form.Field
                   name="items"
                   children={(field) => {
-                    const items = field.state.value as ItemField[];
+                    const items = field.state.value;
 
                     function handleDragEnd(event: DragEndEvent) {
                       const { active, over } = event;
@@ -258,7 +260,7 @@ function RouteComponent() {
                         {
                           _id: crypto.randomUUID(),
                           name: "",
-                          proficiency: 1 as ProficiencyLevel,
+                          proficiency: 1,
                         },
                       ]);
                     }

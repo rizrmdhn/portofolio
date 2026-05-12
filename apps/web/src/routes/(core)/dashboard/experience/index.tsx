@@ -14,13 +14,14 @@ import { globalErrorToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
 import {
   DndContext,
+  
   KeyboardSensor,
   PointerSensor,
   closestCenter,
   useSensor,
-  useSensors,
-  type DragEndEvent,
+  useSensors
 } from "@dnd-kit/core";
+import type {DragEndEvent} from "@dnd-kit/core";
 import {
   SortableContext,
   arrayMove,
@@ -29,7 +30,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Experience } from "@portofolio/types/experience.types";
+import type {Experience} from "@portofolio/types/experience.types";
 import {
   IconBriefcase,
   IconPlus,

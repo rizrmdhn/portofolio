@@ -1,9 +1,8 @@
-import { createActivityLog } from "@portofolio/queries/activity-log.queries";
+import { createActivityLog } from '@portofolio/queries/activity-log.queries'
 import {
   createTechStackCategory,
   createTechStackCategoryWithItems,
   createTechStackItem,
-  updateTechStackCategoryWithItems,
   deleteTechStackCategory,
   deleteTechStackItem,
   getAllTechStackCategories,
@@ -12,33 +11,32 @@ import {
   reorderTechStackCategories,
   reorderTechStackItems,
   updateTechStackCategory,
+  updateTechStackCategoryWithItems,
   updateTechStackItem,
-} from "@portofolio/queries/tech-stack.queries";
+} from '@portofolio/queries/tech-stack.queries'
 import {
   createTechStackCategorySchema,
   createTechStackCategoryWithItemsSchema,
   createTechStackItemSchema,
-  updateTechStackCategoryWithItemsSchema,
   reorderTechStackCategoriesSchema,
   reorderTechStackItemsSchema,
   updateTechStackCategorySchema,
+  updateTechStackCategoryWithItemsSchema,
   updateTechStackItemSchema,
-} from "@portofolio/schema/tech-stack.schema";
-import { tryCatchAsync } from "@portofolio/utils/try-catch";
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "..";
-import { toTRPCError } from "../utils/to-trpc-error";
+} from '@portofolio/schema/tech-stack.schema'
+import { tryCatchAsync } from '@portofolio/utils/try-catch'
+import { z } from 'zod'
+import { createTRPCRouter, protectedProcedure, publicProcedure } from '..'
+import { toTRPCError } from '../utils/to-trpc-error'
 
 export const techStackRouter = createTRPCRouter({
   // ─── Categories ─────────────────────────────────────────────────────────────
   getAll: publicProcedure.query(async () => {
-    const [categories, err] = await tryCatchAsync(() =>
-      getAllTechStackCategories(),
-    );
+    const [categories, err] = await tryCatchAsync(() => getAllTechStackCategories())
 
-    if (err) throw toTRPCError(err);
+    if (err) throw toTRPCError(err)
 
-    return categories;
+    return categories
   }),
 
   getForDashboard: protectedProcedure
@@ -46,153 +44,167 @@ export const techStackRouter = createTRPCRouter({
     .query(async ({ input: { search } }) => {
       const [categories, err] = await tryCatchAsync(() =>
         getTechStackCategoriesForDashboard(search),
-      );
+      )
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
 
-      return categories;
+      return categories
     }),
 
-  getById: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ input: { id } }) => {
-      const [category, err] = await tryCatchAsync(() =>
-        getTechStackCategoryById(id),
-      );
+  getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input: { id } }) => {
+    const [category, err] = await tryCatchAsync(() => getTechStackCategoryById(id))
 
-      if (err) throw toTRPCError(err);
+    if (err) throw toTRPCError(err)
 
-      return category;
-    }),
+    return category
+  }),
 
   createCategory: protectedProcedure
     .input(createTechStackCategorySchema)
     .mutation(async ({ input }) => {
-      const [category, err] = await tryCatchAsync(() =>
-        createTechStackCategory(input),
-      );
+      const [category, err] = await tryCatchAsync(() => createTechStackCategory(input))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "created", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
+      void createActivityLog({
+        action: 'created',
+        entity: 'techStackCategory',
+        entityId: category.id,
+        entityTitle: category.name,
+      })
 
-      return category;
+      return category
     }),
 
   createCategoryWithItems: protectedProcedure
     .input(createTechStackCategoryWithItemsSchema)
     .mutation(async ({ input }) => {
-      const [category, err] = await tryCatchAsync(() =>
-        createTechStackCategoryWithItems(input),
-      );
+      const [category, err] = await tryCatchAsync(() => createTechStackCategoryWithItems(input))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "created", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
+      void createActivityLog({
+        action: 'created',
+        entity: 'techStackCategory',
+        entityId: category.id,
+        entityTitle: category.name,
+      })
 
-      return category;
+      return category
     }),
 
   updateCategory: protectedProcedure
     .input(updateTechStackCategorySchema)
     .mutation(async ({ input }) => {
-      const [category, err] = await tryCatchAsync(() =>
-        updateTechStackCategory(input),
-      );
+      const [category, err] = await tryCatchAsync(() => updateTechStackCategory(input))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "updated", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
+      void createActivityLog({
+        action: 'updated',
+        entity: 'techStackCategory',
+        entityId: category.id,
+        entityTitle: category.name,
+      })
 
-      return category;
+      return category
     }),
 
   updateCategoryWithItems: protectedProcedure
     .input(updateTechStackCategoryWithItemsSchema)
     .mutation(async ({ input }) => {
-      const [category, err] = await tryCatchAsync(() =>
-        updateTechStackCategoryWithItems(input),
-      );
+      const [category, err] = await tryCatchAsync(() => updateTechStackCategoryWithItems(input))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "updated", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
+      void createActivityLog({
+        action: 'updated',
+        entity: 'techStackCategory',
+        entityId: category.id,
+        entityTitle: category.name,
+      })
 
-      return category;
+      return category
     }),
 
   reorderCategories: protectedProcedure
     .input(reorderTechStackCategoriesSchema)
     .mutation(async ({ input }) => {
-      const [, err] = await tryCatchAsync(() =>
-        reorderTechStackCategories(input),
-      );
+      const [, err] = await tryCatchAsync(() => reorderTechStackCategories(input))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
     }),
 
   deleteCategory: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id } }) => {
-      const [result, err] = await tryCatchAsync(() =>
-        deleteTechStackCategory(id),
-      );
+      const [result, err] = await tryCatchAsync(() => deleteTechStackCategory(id))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "deleted", entity: "techStackCategory", entityId: result.id, entityTitle: result.name });
+      void createActivityLog({
+        action: 'deleted',
+        entity: 'techStackCategory',
+        entityId: result.id,
+        entityTitle: result.name,
+      })
 
-      return result;
+      return result
     }),
 
   // ─── Items ───────────────────────────────────────────────────────────────────
-  createItem: protectedProcedure
-    .input(createTechStackItemSchema)
-    .mutation(async ({ input }) => {
-      const [item, err] = await tryCatchAsync(() =>
-        createTechStackItem(input),
-      );
+  createItem: protectedProcedure.input(createTechStackItemSchema).mutation(async ({ input }) => {
+    const [item, err] = await tryCatchAsync(() => createTechStackItem(input))
 
-      if (err) throw toTRPCError(err);
+    if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "created", entity: "techStackItem", entityId: item.id, entityTitle: item.name });
+    void createActivityLog({
+      action: 'created',
+      entity: 'techStackItem',
+      entityId: item.id,
+      entityTitle: item.name,
+    })
 
-      return item;
-    }),
+    return item
+  }),
 
-  updateItem: protectedProcedure
-    .input(updateTechStackItemSchema)
-    .mutation(async ({ input }) => {
-      const [item, err] = await tryCatchAsync(() =>
-        updateTechStackItem(input),
-      );
+  updateItem: protectedProcedure.input(updateTechStackItemSchema).mutation(async ({ input }) => {
+    const [item, err] = await tryCatchAsync(() => updateTechStackItem(input))
 
-      if (err) throw toTRPCError(err);
+    if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "updated", entity: "techStackItem", entityId: item.id, entityTitle: item.name });
+    void createActivityLog({
+      action: 'updated',
+      entity: 'techStackItem',
+      entityId: item.id,
+      entityTitle: item.name,
+    })
 
-      return item;
-    }),
+    return item
+  }),
 
   reorderItems: protectedProcedure
     .input(reorderTechStackItemsSchema)
     .mutation(async ({ input }) => {
-      const [, err] = await tryCatchAsync(() => reorderTechStackItems(input));
+      const [, err] = await tryCatchAsync(() => reorderTechStackItems(input))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
     }),
 
   deleteItem: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id } }) => {
-      const [result, err] = await tryCatchAsync(() =>
-        deleteTechStackItem(id),
-      );
+      const [result, err] = await tryCatchAsync(() => deleteTechStackItem(id))
 
-      if (err) throw toTRPCError(err);
+      if (err) throw toTRPCError(err)
 
-      void createActivityLog({ action: "deleted", entity: "techStackItem", entityId: result.id, entityTitle: result.name });
+      void createActivityLog({
+        action: 'deleted',
+        entity: 'techStackItem',
+        entityId: result.id,
+        entityTitle: result.name,
+      })
 
-      return result;
+      return result
     }),
-});
+})

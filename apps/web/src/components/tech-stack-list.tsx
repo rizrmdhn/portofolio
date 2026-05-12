@@ -1,4 +1,4 @@
-import { TechStackCategoryWithItems } from "@portofolio/types/tech-stack.types";
+import type {TechStackCategoryWithItems} from "@portofolio/types/tech-stack.types";
 
 interface TechStackListProps {
   stack: TechStackCategoryWithItems;

@@ -27,7 +27,7 @@ export async function getViewEventsByRange(range: ViewRange) {
     .groupBy(sql`DATE(${viewEvents.viewedAt})`)
     .orderBy(sql`DATE(${viewEvents.viewedAt})`);
 
-  const filled: { date: string; views: number }[] = [];
+  const filled: Array<{ date: string; views: number }> = [];
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
