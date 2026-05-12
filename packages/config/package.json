@@ -1,5 +1,13 @@
 {
   "name": "@portofolio/config",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/react": "./eslint/react.js",
+    "./prettier": "./prettier.config.js",
+    "./base.json": "./base.json",
+    "./compiled-package.json": "./compiled-package.json"
+  }
 }

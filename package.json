@@ -22,7 +22,9 @@
     "db:seed": "turbo -F @portofolio/db db:seed",
     "db:dump": "turbo -F @portofolio/db db:dump",
     "regenerate:jwt": "node ./scripts/regenerate-jwt-secrets.js",
-    "gen": "turbo gen init"
+    "gen": "turbo gen init",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\""
   },
   "dependencies": {
     "@portofolio/env": "workspace:*",
@@ -30,11 +32,20 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@portofolio/config": "workspace:*",
+    "@tanstack/eslint-config": "^0.4.0",
     "@turbo/gen": "^2.9.8",
     "@types/node": "catalog:",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "turbo": "^2.8.12",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.59.3"
   },
   "packageManager": "pnpm@10.29.2"
 }
