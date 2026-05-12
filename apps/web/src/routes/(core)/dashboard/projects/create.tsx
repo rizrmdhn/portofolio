@@ -1,123 +1,105 @@
-import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import InputTag from "@/components/ui/input-tag";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import SingleImageUpload from "@/components/ui/single-image-upload";
-import { Spinner } from "@/components/ui/spinner";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { hasTabError } from "@/lib/has-tab-error";
-import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
-import { cn } from "@/lib/utils";
-import { toFormData } from "@/utils/form-data-mapper";
-import { trpc } from "@/utils/trpc";
-import { COLOR_VALUES } from "@portofolio/constants";
-import { createProjectSchema } from "@portofolio/schema/project.schema";
-import {
-  IconLink,
-  IconPencil,
-  IconSettings,
-  IconUpload
-  
-} from "@tabler/icons-react";
-import type {TablerIcon} from "@tabler/icons-react";
-import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import type {z} from "zod";
+import { Button } from '@/components/ui/button'
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import InputTag from '@/components/ui/input-tag'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+import SingleImageUpload from '@/components/ui/single-image-upload'
+import { Spinner } from '@/components/ui/spinner'
+import { Switch } from '@/components/ui/switch'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Textarea } from '@/components/ui/textarea'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { hasTabError } from '@/lib/has-tab-error'
+import { globalErrorToast, globalSuccessToast } from '@/lib/toasts'
+import { cn } from '@/lib/utils'
+import { toFormData } from '@/utils/form-data-mapper'
+import { trpc } from '@/utils/trpc'
+import type { ExperienceStatusType } from '@portofolio/constants'
+import { COLOR_VALUES } from '@portofolio/constants'
+import { createProjectSchema } from '@portofolio/schema/project.schema'
+import type { TablerIcon } from '@tabler/icons-react'
+import { IconLink, IconPencil, IconSettings, IconUpload } from '@tabler/icons-react'
+import { useForm } from '@tanstack/react-form'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/(core)/dashboard/projects/create")({
+export const Route = createFileRoute('/(core)/dashboard/projects/create')({
   component: RouteComponent,
-});
+})
 
 const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
-  { icon: IconPencil, title: "Content", value: "content" },
-  { icon: IconLink, title: "Links", value: "links" },
-  { icon: IconUpload, title: "Media", value: "media" },
-  { icon: IconSettings, title: "Settings", value: "settings" },
-];
+  { icon: IconPencil, title: 'Content', value: 'content' },
+  { icon: IconLink, title: 'Links', value: 'links' },
+  { icon: IconUpload, title: 'Media', value: 'media' },
+  { icon: IconSettings, title: 'Settings', value: 'settings' },
+]
 
 const TAB_FIELDS: Record<string, Array<string>> = {
-  content: ["title", "description", "longDescription", "tech"],
-  links: ["githubUrl", "liveUrl", "playstoreUrl", "appstoreUrl"],
-  media: ["picture", "coverColor"],
-  settings: ["status", "isVisible", "featured", "order"],
-};
+  content: ['title', 'description', 'longDescription', 'tech'],
+  links: ['githubUrl', 'liveUrl', 'playstoreUrl', 'appstoreUrl'],
+  media: ['picture', 'coverColor'],
+  settings: ['status', 'isVisible', 'featured', 'order'],
+}
 
 function RouteComponent() {
-  const queryClient = useQueryClient();
-  const navigate = Route.useNavigate();
-  const router = useRouter();
+  const queryClient = useQueryClient()
+  const navigate = Route.useNavigate()
+  const router = useRouter()
 
   const createProjectMutation = useMutation(
     trpc.project.create.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(
-          trpc.project.getPaginatedProjects.queryFilter(),
-        );
-        globalSuccessToast("Project created successfully");
+        await queryClient.invalidateQueries(trpc.project.getPaginatedProjects.queryFilter())
+        globalSuccessToast('Project created successfully')
 
-        navigate({ to: "/dashboard/projects" });
+        navigate({ to: '/dashboard/projects' })
       },
       onError: (data) => {
-        globalErrorToast(data.message || "Failed to create project");
+        globalErrorToast(data.message || 'Failed to create project')
       },
     }),
-  );
+  )
 
   const form = useForm({
     validators: { onSubmit: createProjectSchema },
     defaultValues: {
-      title: "",
-      description: "",
-      longDescription: undefined,
-      tech: [],
-      githubUrl: undefined,
-      liveUrl: undefined,
-      playstoreUrl: undefined,
-      appstoreUrl: undefined,
-      coverColor: "#ffffff",
-      status: "draft",
+      title: '',
+      description: '',
+      longDescription: undefined as string | undefined,
+      tech: [] as Array<string>,
+      githubUrl: undefined as string | undefined,
+      liveUrl: undefined as string | undefined,
+      playstoreUrl: undefined as string | undefined,
+      appstoreUrl: undefined as string | undefined,
+      coverColor: '#ffffff',
+      status: 'draft' as ExperienceStatusType,
       isVisible: false,
       order: 0,
       featured: false,
-      picture: undefined,
+      picture: undefined as File | undefined,
     },
     onSubmit: async ({ value }) => {
-      const formData = toFormData(value);
+      const formData = toFormData(value)
 
-      await createProjectMutation.mutateAsync(formData);
+      await createProjectMutation.mutateAsync(formData)
     },
-  });
+  })
 
   return (
     <div className="flex min-h-[calc(100svh-var(--header-height)-2rem)] flex-1 flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 className="text-base font-bold text-foreground">
-          Create a new project
-        </h2>
-        <p className="text-xs text-muted-foreground">
-          Create a new portofolio project
-        </p>
+        <h2 className="text-foreground text-base font-bold">Create a new project</h2>
+        <p className="text-muted-foreground text-xs">Create a new portofolio project</p>
       </div>
-      <div className="flex  flex-1">
+      <div className="flex flex-1">
         <form
           onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            form.handleSubmit();
+            e.preventDefault()
+            e.stopPropagation()
+            form.handleSubmit()
           }}
-          className="flex flex-1 w-full flex-col overflow-hidden"
+          className="flex w-full flex-1 flex-col overflow-hidden"
         >
           <Tabs defaultValue="content" className="min-h-0 flex-1 gap-0">
             <div className="shrink-0 px-4 pt-4 pb-2">
@@ -129,16 +111,14 @@ function RouteComponent() {
                       const hasError = hasTabError(
                         fieldMeta as Record<string, { errors: Array<unknown> }>,
                         TAB_FIELDS[tab.value] ?? [],
-                      );
+                      )
                       return (
                         <TabsTrigger key={tab.value} value={tab.value}>
                           <tab.icon />
                           {tab.title}
-                          {hasError && (
-                            <span className="size-1.5 rounded-full bg-destructive" />
-                          )}
+                          {hasError && <span className="bg-destructive size-1.5 rounded-full" />}
                         </TabsTrigger>
-                      );
+                      )
                     })}
                   </TabsList>
                 )}
@@ -153,125 +133,83 @@ function RouteComponent() {
                     <form.Field
                       name="title"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
                             <FieldLabel htmlFor={field.name}>Title</FieldLabel>
                             <Input
                               id={field.name}
                               value={field.state.value}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value)
-                              }
+                              onChange={(e) => field.handleChange(e.target.value)}
                               aria-invalid={isInvalid}
                               placeholder="My awesome project"
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="description"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
-                            <FieldLabel htmlFor={field.name}>
-                              Description
-                            </FieldLabel>
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                            <FieldLabel htmlFor={field.name}>Description</FieldLabel>
                             <Textarea
                               id={field.name}
                               value={field.state.value}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value)
-                              }
+                              onChange={(e) => field.handleChange(e.target.value)}
                               placeholder="Short description of your project"
                               rows={3}
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="longDescription"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
-                            <FieldLabel htmlFor={field.name}>
-                              Long Description
-                            </FieldLabel>
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                            <FieldLabel htmlFor={field.name}>Long Description</FieldLabel>
                             <Textarea
                               id={field.name}
-                              value={field.state.value ?? ""}
+                              value={field.state.value ?? ''}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value)
-                              }
+                              onChange={(e) => field.handleChange(e.target.value)}
                               placeholder="Detailed description of your project"
                               rows={6}
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="tech"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
                             <FieldLabel>Technologies</FieldLabel>
                             <InputTag
                               value={field.state.value}
                               onChange={field.handleChange}
                               onBlur={field.handleBlur}
                               placeholder="Add a technology..."
-                              error={
-                                isInvalid
-                                  ? String(field.state.meta.errors[0])
-                                  : undefined
-                              }
+                              error={isInvalid ? String(field.state.meta.errors[0]) : undefined}
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
                   </FieldGroup>
@@ -286,128 +224,84 @@ function RouteComponent() {
                     <form.Field
                       name="githubUrl"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
-                            <FieldLabel htmlFor={field.name}>
-                              GitHub URL
-                            </FieldLabel>
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                            <FieldLabel htmlFor={field.name}>GitHub URL</FieldLabel>
                             <Input
                               id={field.name}
-                              value={field.state.value ?? ""}
+                              value={field.state.value ?? ''}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value || undefined)
-                              }
+                              onChange={(e) => field.handleChange(e.target.value || undefined)}
                               placeholder="https://github.com/..."
                               type="url"
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="liveUrl"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
-                            <FieldLabel htmlFor={field.name}>
-                              Live URL
-                            </FieldLabel>
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                            <FieldLabel htmlFor={field.name}>Live URL</FieldLabel>
                             <Input
                               id={field.name}
-                              value={field.state.value ?? ""}
+                              value={field.state.value ?? ''}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value || undefined)
-                              }
+                              onChange={(e) => field.handleChange(e.target.value || undefined)}
                               placeholder="https://..."
                               type="url"
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="playstoreUrl"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
-                            <FieldLabel htmlFor={field.name}>
-                              Play Store URL
-                            </FieldLabel>
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                            <FieldLabel htmlFor={field.name}>Play Store URL</FieldLabel>
                             <Input
                               id={field.name}
-                              value={field.state.value ?? ""}
+                              value={field.state.value ?? ''}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value || undefined)
-                              }
+                              onChange={(e) => field.handleChange(e.target.value || undefined)}
                               placeholder="https://play.google.com/..."
                               type="url"
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="appstoreUrl"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
-                            <FieldLabel htmlFor={field.name}>
-                              App Store URL
-                            </FieldLabel>
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                            <FieldLabel htmlFor={field.name}>App Store URL</FieldLabel>
                             <Input
                               id={field.name}
-                              value={field.state.value ?? ""}
+                              value={field.state.value ?? ''}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(e.target.value || undefined)
-                              }
+                              onChange={(e) => field.handleChange(e.target.value || undefined)}
                               placeholder="https://apps.apple.com/..."
                               type="url"
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
                   </FieldGroup>
@@ -419,45 +313,31 @@ function RouteComponent() {
                     <form.Field
                       name="picture"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-2"
-                          >
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-2">
                             <FieldLabel>Cover Image</FieldLabel>
                             <FieldDescription>
                               Recommended size: 1200x630px. Max 5MB.
                             </FieldDescription>
                             <SingleImageUpload
                               {...field}
-                              error={field.state.meta.errors.join(", ")}
+                              error={field.state.meta.errors.join(', ')}
                             />
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="coverColor"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-2"
-                          >
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-2">
                             <FieldLabel>Cover Color</FieldLabel>
-                            <FieldDescription>
-                              Fallback when image unavailable
-                            </FieldDescription>
+                            <FieldDescription>Fallback when image unavailable</FieldDescription>
                             <div className="flex flex-wrap gap-2">
                               {COLOR_VALUES.map((color) => (
                                 <button
@@ -465,21 +345,19 @@ function RouteComponent() {
                                   type="button"
                                   onClick={() => field.handleChange(color)}
                                   className={cn(
-                                    "size-7 rounded-md border-2 transition-transform hover:scale-110",
+                                    'size-7 rounded-md border-2 transition-transform hover:scale-110',
                                     field.state.value === color
-                                      ? "scale-110 border-foreground"
-                                      : "border-transparent",
+                                      ? 'border-foreground scale-110'
+                                      : 'border-transparent',
                                   )}
                                   style={{ backgroundColor: color }}
                                   title={color}
                                 />
                               ))}
                             </div>
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
                   </FieldGroup>
@@ -491,49 +369,31 @@ function RouteComponent() {
                     <form.Field
                       name="status"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
                             <FieldLabel>Status</FieldLabel>
                             <ToggleGroup
                               variant="outline"
                               value={[field.state.value]}
                               onValueChange={(values) => {
-                                const next = values.find(
-                                  (v) => v !== field.state.value,
-                                );
-                                if (next)
-                                  field.handleChange(
-                                    next,
-                                  );
+                                const next = values.find((v) => v !== field.state.value)
+                                if (next) field.handleChange(next as ExperienceStatusType)
                               }}
                             >
-                              <ToggleGroupItem value="draft">
-                                Draft
-                              </ToggleGroupItem>
-                              <ToggleGroupItem value="published">
-                                Published
-                              </ToggleGroupItem>
+                              <ToggleGroupItem value="draft">Draft</ToggleGroupItem>
+                              <ToggleGroupItem value="published">Published</ToggleGroupItem>
                             </ToggleGroup>
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="isVisible"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
                           <Field
                             data-invalid={isInvalid}
@@ -547,24 +407,18 @@ function RouteComponent() {
                                 checked={field.state.value}
                                 onCheckedChange={field.handleChange}
                               />
-                              <p className="text-sm text-foreground">
-                                Visible in public portfolio
-                              </p>
+                              <p className="text-foreground text-sm">Visible in public portfolio</p>
                             </div>
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="featured"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
                           <Field
                             data-invalid={isInvalid}
@@ -578,45 +432,34 @@ function RouteComponent() {
                                 checked={field.state.value}
                                 onCheckedChange={field.handleChange}
                               />
-                              <p className="text-sm text-foreground">
+                              <p className="text-foreground text-sm">
                                 Show in featured section on homepage
                               </p>
                             </div>
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
 
                     <form.Field
                       name="order"
                       children={(field) => {
-                        const isInvalid =
-                          field.state.meta.isTouched &&
-                          !field.state.meta.isValid;
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
-                          <Field
-                            data-invalid={isInvalid}
-                            className="flex flex-col gap-1.5"
-                          >
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
                             <FieldLabel htmlFor={field.name}>Order</FieldLabel>
                             <Input
                               id={field.name}
                               type="number"
                               value={field.state.value}
                               onBlur={field.handleBlur}
-                              onChange={(e) =>
-                                field.handleChange(Number(e.target.value))
-                              }
+                              onChange={(e) => field.handleChange(Number(e.target.value))}
                             />
                             <FieldDescription>Lower = earlier</FieldDescription>
-                            {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
-                            )}
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
-                        );
+                        )
                       }}
                     />
                   </FieldGroup>
@@ -627,7 +470,7 @@ function RouteComponent() {
 
           <Separator />
 
-          <footer className="flex shrink-0 items-center justify-end px-4 py-4 gap-2">
+          <footer className="flex shrink-0 items-center justify-end gap-2 px-4 py-4">
             <Button variant="outline" onClick={() => router.history.back()}>
               Cancel
             </Button>
@@ -644,5 +487,5 @@ function RouteComponent() {
         </form>
       </div>
     </div>
-  );
+  )
 }

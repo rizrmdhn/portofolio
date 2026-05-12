@@ -30,3 +30,5 @@ export const SUPPORTED_COLORS: Array<SupportedColorMeta> = [
 ]
 
 export const COLOR_VALUES = SUPPORTED_COLORS.map((c) => c.value) as [string, ...Array<string>]
+
+export type ColorValue = (typeof COLOR_VALUES)[number]
