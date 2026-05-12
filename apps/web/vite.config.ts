@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
+import { nitro } from 'nitro/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
@@ -13,10 +14,13 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
-  plugins: [tailwindcss(), tanstackStart(), viteReact()],
-  build: {
-    rolldownOptions: {
-      external: ['@node-rs/argon2'],
-    },
-  },
+  plugins: [
+    tailwindcss(),
+    tanstackStart(),
+    nitro({
+      preset: 'vercel',
+      traceDeps: ['@node-rs/argon2'],
+    }),
+    viteReact(),
+  ],
 })

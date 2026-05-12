@@ -3,15 +3,46 @@ import { NotFound } from '@/components/not-found'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import type { AppRouter } from '@portofolio/api/root'
-import { TanStackDevtools } from '@tanstack/react-devtools'
-import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import type { QueryClient } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
+import { Suspense, lazy } from 'react'
 
 import appCss from '../index.css?url'
+
+const TanStackRouterDevtools =
+  process.env.NODE_ENV === 'production'
+    ? () => null
+    : lazy(() =>
+        import('@tanstack/react-router-devtools').then((m) => ({
+          default: m.TanStackRouterDevtools,
+        })),
+      )
+
+const ReactQueryDevtools =
+  process.env.NODE_ENV === 'production'
+    ? () => null
+    : lazy(() =>
+        import('@tanstack/react-query-devtools').then((m) => ({
+          default: m.ReactQueryDevtools,
+        })),
+      )
+
+const TanStackDevtools =
+  process.env.NODE_ENV === 'production'
+    ? () => null
+    : lazy(() =>
+        import('@tanstack/react-devtools').then(async (m) => {
+          const { formDevtoolsPlugin } = await import('@tanstack/react-form-devtools')
+          const Component = () => (
+            <m.TanStackDevtools
+              plugins={[formDevtoolsPlugin()]}
+              config={{ position: 'middle-right' }}
+            />
+          )
+          return { default: Component }
+        }),
+      )
 
 export interface RouterAppContext {
   trpc: TRPCOptionsProxy<AppRouter>
@@ -71,14 +102,11 @@ function RootDocument() {
           </div>
           <Toaster richColors />
         </ThemeProvider>
-        <TanStackRouterDevtools position="bottom-left" />
-        <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
-        <TanStackDevtools
-          plugins={[formDevtoolsPlugin()]}
-          config={{
-            position: 'middle-right',
-          }}
-        />
+        <Suspense>
+          <TanStackRouterDevtools position="bottom-left" />
+          <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+          <TanStackDevtools />
+        </Suspense>
         <Scripts />
       </body>
     </html>
