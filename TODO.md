@@ -45,8 +45,8 @@
 
 ## Resume / CV Generator (Remaining)
 
-- [ ] Education CRUD — dashboard page with create / edit / delete / reorder
-- [ ] Achievements CRUD — dashboard page with create / edit / delete / reorder
+- [x] Education CRUD — dashboard page with create / edit / delete / reorder
+- [x] Achievements CRUD — dashboard page with create / edit / delete / reorder
 
 ## Dashboard Overview Page
 

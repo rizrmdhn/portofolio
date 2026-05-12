@@ -5,7 +5,9 @@ import {
   IconFileText,
   IconFolder,
   IconHome,
+  IconSchool,
   IconStack2,
+  IconTrophy,
   IconUser,
 } from "@tabler/icons-react";
 import type * as React from "react";
@@ -39,6 +41,8 @@ const navGroups = [
         icon: IconCertificate,
         url: "/dashboard/certificate",
       },
+      { name: "Education", icon: IconSchool, url: "/dashboard/education" },
+      { name: "Achievements", icon: IconTrophy, url: "/dashboard/achievement" },
     ],
   },
   {

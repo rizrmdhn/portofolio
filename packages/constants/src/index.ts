@@ -87,6 +87,8 @@ export const ACTIVITY_LOG_ENTITIES = [
   "techStackItem",
   "socialLink",
   "profile",
+  "education",
+  "achievement",
 ] as const;
 export type ActivityLogEntity = (typeof ACTIVITY_LOG_ENTITIES)[number];
 
@@ -98,6 +100,8 @@ export const ACTIVITY_LOG_ENTITY_LABELS: Record<ActivityLogEntity, string> = {
   techStackItem: "Tech Stack Item",
   socialLink: "Social Link",
   profile: "Profile",
+  education: "Education",
+  achievement: "Achievement",
 };
 
 export * from "./colors";
