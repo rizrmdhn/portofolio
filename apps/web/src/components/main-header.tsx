@@ -6,45 +6,38 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { IconMenu2 } from "@tabler/icons-react";
-import { useNavigate } from "@tanstack/react-router";
-import { LoginButton } from "./login-button";
-import { ModeToggle } from "./mode-toggle";
-import { Button } from "./ui/button";
+} from '@/components/ui/sheet'
+import { IconMenu2 } from '@tabler/icons-react'
+import { useNavigate } from '@tanstack/react-router'
+import { LoginButton } from './login-button'
+import { ModeToggle } from './mode-toggle'
+import { Button } from './ui/button'
 
-const navigationItems = [
-  "About",
-  "Experience",
-  "Projects",
-  "Stack",
-  "Certs",
-  "Contact",
-] as const;
+const navigationItems = ['About', 'Experience', 'Projects', 'Stack', 'Certs', 'Contact'] as const
 
 export function MainHeader() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
-    <div className="h-14 flex items-center justify-between border-border border-b px-6 sticky top-0 z-50 bg-nav backdrop-blur-sm">
+    <div className="border-border bg-nav sticky top-0 z-50 flex h-14 items-center justify-between border-b px-6 backdrop-blur-sm">
       <Button
-        className="text-base font-mono text-subtle"
+        className="text-subtle font-mono text-base"
         variant="link"
         size="lg"
-        onClick={() => navigate({ to: "/" })}
+        onClick={() => navigate({ to: '/' })}
       >
         rizrmdhn.com
       </Button>
 
       {/* Desktop nav */}
-      <nav className="hidden md:flex space-x-4">
+      <nav className="hidden space-x-4 md:flex">
         {navigationItems.map((item) => (
           <Button
             key={item}
-            className="text-sm text-subtle"
+            className="text-subtle text-sm"
             variant="ghost"
             size="lg"
-            onClick={() => navigate({ to: "/", hash: item.toLowerCase() })}
+            onClick={() => navigate({ to: '/', hash: item.toLowerCase() })}
           >
             {item}
           </Button>
@@ -52,31 +45,23 @@ export function MainHeader() {
       </nav>
 
       {/* Desktop right controls */}
-      <div className="hidden md:flex items-center gap-2">
+      <div className="hidden items-center gap-2 md:flex">
         <ModeToggle type="color" />
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={() => window.open("/resume.pdf", "_blank")}
-        >
-          <p className="text-sm font-mono text-subtle">Resume ↗</p>
+        <Button variant="outline" size="lg" onClick={() => navigate({ to: '/resume' })}>
+          <p className="text-subtle font-mono text-sm">Resume ↗</p>
         </Button>
         <LoginButton />
       </div>
 
       {/* Mobile hamburger */}
       <Sheet>
-        <SheetTrigger
-          render={<Button variant="ghost" size="icon" className="md:hidden" />}
-        >
-          <IconMenu2 className="size-5 text-subtle" />
+        <SheetTrigger render={<Button variant="ghost" size="icon" className="md:hidden" />}>
+          <IconMenu2 className="text-subtle size-5" />
           <span className="sr-only">Open menu</span>
         </SheetTrigger>
         <SheetContent side="right">
-          <SheetHeader className="border-b border-border pb-4">
-            <SheetTitle className="text-base text-subtle font-mono">
-              Menu
-            </SheetTitle>
+          <SheetHeader className="border-border border-b pb-4">
+            <SheetTitle className="text-subtle font-mono text-base">Menu</SheetTitle>
           </SheetHeader>
           <nav className="flex flex-col gap-1 p-4">
             {navigationItems.map((item) => (
@@ -85,10 +70,8 @@ export function MainHeader() {
                 render={
                   <Button
                     variant="ghost"
-                    className="justify-start text-sm text-subtle w-full"
-                    onClick={() =>
-                      navigate({ to: "/", hash: item.toLowerCase() })
-                    }
+                    className="text-subtle w-full justify-start text-sm"
+                    onClick={() => navigate({ to: '/', hash: item.toLowerCase() })}
                   />
                 }
               >
@@ -96,9 +79,9 @@ export function MainHeader() {
               </SheetClose>
             ))}
           </nav>
-          <SheetFooter className="flex flex-col gap-3 px-4 pt-4 border-t border-border">
+          <SheetFooter className="border-border flex flex-col gap-3 border-t px-4 pt-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-subtle font-mono">Theme</span>
+              <span className="text-subtle font-mono text-xs">Theme</span>
               <ModeToggle type="color" />
             </div>
             <LoginButton />
@@ -106,13 +89,13 @@ export function MainHeader() {
               variant="outline"
               size="lg"
               className="w-full"
-              onClick={() => window.open("/resume.pdf", "_blank")}
+              onClick={() => window.open('/resume.pdf', '_blank')}
             >
-              <p className="text-sm font-mono text-subtle">Resume ↗</p>
+              <p className="text-subtle font-mono text-sm">Resume ↗</p>
             </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
     </div>
-  );
+  )
 }
