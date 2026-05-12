@@ -94,6 +94,41 @@ async function seedApplicationSettings() {
   console.log("Seeded application settings.");
 }
 
+async function seedSeoSettings() {
+  const data = {
+    pages: {
+      home: {
+        title: "Noor Rizki Ramadhan — Fullstack Developer",
+        description:
+          "Full-stack Developer with 2+ years building production web and mobile apps using Next.js, tRPC, and Drizzle ORM.",
+        ogImage: undefined,
+      },
+      projects: {
+        title: "Projects — Noor Rizki Ramadhan",
+        description: "A collection of web and mobile projects I've built.",
+        ogImage: undefined,
+      },
+      certificates: {
+        title: "Certificates — Noor Rizki Ramadhan",
+        description: "Certifications and credentials I've earned.",
+        ogImage: undefined,
+      },
+      resume: {
+        title: "Resume — Noor Rizki Ramadhan",
+        description: "View and download my resume / CV.",
+        ogImage: undefined,
+      },
+    },
+  };
+
+  await db
+    .insert(applicationSettings)
+    .values({ key: "seo-settings", data })
+    .onConflictDoNothing({ target: applicationSettings.key });
+
+  console.log("Seeded SEO settings.");
+}
+
 async function seedProfile() {
   const values = {
     name: "Noor Rizki Ramadhan",
@@ -210,6 +245,7 @@ async function seedTechStack() {
 
 await seedUser();
 await seedApplicationSettings();
+await seedSeoSettings();
 await seedProfile();
 await seedSocialLinks();
 await seedTechStack();

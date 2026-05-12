@@ -21,7 +21,7 @@
 
 - [x] Tech stack categories — group by category (Languages, Frameworks, Tools), needs `category` field
 - [x] Featured projects — pin flag to surface 2–3 projects at the top regardless of order
-- [ ] SEO metadata — editable page title, description, and OG image per page
+- [x] SEO metadata — editable page title, description, and OG image per page
 
 ### Bigger lift
 

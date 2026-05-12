@@ -21,6 +21,7 @@ import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
 import { Route as coreDashboardSocialLinksIndexRouteImport } from './routes/(core)/dashboard/social-links/index'
+import { Route as coreDashboardSeoIndexRouteImport } from './routes/(core)/dashboard/seo/index'
 import { Route as coreDashboardResumeIndexRouteImport } from './routes/(core)/dashboard/resume/index'
 import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
 import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dashboard/hero/index'
@@ -104,6 +105,11 @@ const coreDashboardSocialLinksIndexRoute =
     path: '/social-links/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardSeoIndexRoute = coreDashboardSeoIndexRouteImport.update({
+  id: '/seo/',
+  path: '/seo/',
+  getParentRoute: () => coreDashboardRouteRoute,
+} as any)
 const coreDashboardResumeIndexRoute =
   coreDashboardResumeIndexRouteImport.update({
     id: '/resume/',
@@ -254,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
   '/dashboard/resume/': typeof coreDashboardResumeIndexRoute
+  '/dashboard/seo/': typeof coreDashboardSeoIndexRoute
   '/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
   '/dashboard/achievement/$achievementId/edit': typeof coreDashboardAchievementAchievementIdEditRoute
@@ -287,6 +294,7 @@ export interface FileRoutesByTo {
   '/dashboard/hero': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
   '/dashboard/resume': typeof coreDashboardResumeIndexRoute
+  '/dashboard/seo': typeof coreDashboardSeoIndexRoute
   '/dashboard/social-links': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack': typeof coreDashboardTechStackIndexRoute
   '/dashboard/achievement/$achievementId/edit': typeof coreDashboardAchievementAchievementIdEditRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/(core)/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
   '/(core)/dashboard/resume/': typeof coreDashboardResumeIndexRoute
+  '/(core)/dashboard/seo/': typeof coreDashboardSeoIndexRoute
   '/(core)/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/(core)/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
   '/(core)/dashboard/achievement/$achievementId/edit': typeof coreDashboardAchievementAchievementIdEditRoute
@@ -359,6 +368,7 @@ export interface FileRouteTypes {
     | '/dashboard/hero/'
     | '/dashboard/projects/'
     | '/dashboard/resume/'
+    | '/dashboard/seo/'
     | '/dashboard/social-links/'
     | '/dashboard/tech-stack/'
     | '/dashboard/achievement/$achievementId/edit'
@@ -392,6 +402,7 @@ export interface FileRouteTypes {
     | '/dashboard/hero'
     | '/dashboard/projects'
     | '/dashboard/resume'
+    | '/dashboard/seo'
     | '/dashboard/social-links'
     | '/dashboard/tech-stack'
     | '/dashboard/achievement/$achievementId/edit'
@@ -427,6 +438,7 @@ export interface FileRouteTypes {
     | '/(core)/dashboard/hero/'
     | '/(core)/dashboard/projects/'
     | '/(core)/dashboard/resume/'
+    | '/(core)/dashboard/seo/'
     | '/(core)/dashboard/social-links/'
     | '/(core)/dashboard/tech-stack/'
     | '/(core)/dashboard/achievement/$achievementId/edit'
@@ -533,6 +545,13 @@ declare module '@tanstack/react-router' {
       path: '/social-links'
       fullPath: '/dashboard/social-links/'
       preLoaderRoute: typeof coreDashboardSocialLinksIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/seo/': {
+      id: '/(core)/dashboard/seo/'
+      path: '/seo'
+      fullPath: '/dashboard/seo/'
+      preLoaderRoute: typeof coreDashboardSeoIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
     '/(core)/dashboard/resume/': {
@@ -713,6 +732,7 @@ interface coreDashboardRouteRouteChildren {
   coreDashboardHeroIndexRoute: typeof coreDashboardHeroIndexRoute
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
   coreDashboardResumeIndexRoute: typeof coreDashboardResumeIndexRoute
+  coreDashboardSeoIndexRoute: typeof coreDashboardSeoIndexRoute
   coreDashboardSocialLinksIndexRoute: typeof coreDashboardSocialLinksIndexRoute
   coreDashboardTechStackIndexRoute: typeof coreDashboardTechStackIndexRoute
   coreDashboardAchievementAchievementIdEditRoute: typeof coreDashboardAchievementAchievementIdEditRoute
@@ -740,6 +760,7 @@ const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardHeroIndexRoute: coreDashboardHeroIndexRoute,
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
   coreDashboardResumeIndexRoute: coreDashboardResumeIndexRoute,
+  coreDashboardSeoIndexRoute: coreDashboardSeoIndexRoute,
   coreDashboardSocialLinksIndexRoute: coreDashboardSocialLinksIndexRoute,
   coreDashboardTechStackIndexRoute: coreDashboardTechStackIndexRoute,
   coreDashboardAchievementAchievementIdEditRoute:

@@ -1,3 +1,4 @@
+import { buildSeoMeta } from "@/lib/seo";
 import { MainHeader } from "@/components/main-header";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -6,17 +7,18 @@ import { trpc } from "@/utils/trpc";
 
 export const Route = createFileRoute("/resume")({
   loader: async ({ context }) => {
-    const cv = await context.queryClient.ensureQueryData(
-      context.trpc.resume.get.queryOptions(),
-    );
+    const [cv, seo] = await Promise.all([
+      context.queryClient.ensureQueryData(context.trpc.resume.get.queryOptions()),
+      context.queryClient.ensureQueryData(context.trpc.seo.getPage.queryOptions({ page: "resume" })),
+    ]);
 
-    return { cv };
+    return { cv, seo };
   },
-  head: () => ({
-    meta: [
-      { title: "Resume" },
-      { name: "description", content: "View and download my resume / CV." },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildSeoMeta(loaderData?.seo, {
+      title: "Resume",
+      description: "View and download my resume / CV.",
+    }),
   }),
   component: ResumePage,
 });

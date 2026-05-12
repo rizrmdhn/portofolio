@@ -6,6 +6,7 @@ import {
   IconFolder,
   IconHome,
   IconSchool,
+  IconSearch,
   IconStack2,
   IconTrophy,
   IconUser,
@@ -55,6 +56,7 @@ const navGroups = [
         url: "/dashboard/social-links",
       },
       { name: "Resume", icon: IconFileText, url: "/dashboard/resume" },
+      { name: "SEO", icon: IconSearch, url: "/dashboard/seo" },
     ],
   },
 ];
