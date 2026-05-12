@@ -10,10 +10,9 @@ import { relations } from "./relations";
 export { sql };
 
 const client = postgres(env.DATABASE_URL, {
-  max: 10,
+  max: 1,
   idle_timeout: 20,
   connect_timeout: 10,
-  max_lifetime: 1800,
 });
 
 export const db = drizzle({ client, relations });
