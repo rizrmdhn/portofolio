@@ -20,7 +20,7 @@
 
 ### Medium effort
 
-- [ ] Tech stack categories — group by category (Languages, Frameworks, Tools), needs `category` field
+- [x] Tech stack categories — group by category (Languages, Frameworks, Tools), needs `category` field
 - [ ] Featured projects — pin flag to surface 2–3 projects at the top regardless of order
 - [ ] SEO metadata — editable page title, description, and OG image per page
 
@@ -49,7 +49,7 @@
 ### Needs new API endpoints
 
 - [ ] Total project views — aggregated sum query
-- [x] Top projects last 30 days — date-filtered view query
+- [ ] Top projects last 30 days — date-filtered view query
 
 ### Needs new DB tables + API
 
