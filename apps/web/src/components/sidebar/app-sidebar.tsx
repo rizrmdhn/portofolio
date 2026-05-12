@@ -2,9 +2,13 @@ import {
   IconAt,
   IconBriefcase,
   IconCertificate,
+  IconFileText,
   IconFolder,
   IconHome,
+  IconSchool,
+  IconSearch,
   IconStack2,
+  IconTrophy,
   IconUser,
 } from "@tabler/icons-react";
 import type * as React from "react";
@@ -38,6 +42,8 @@ const navGroups = [
         icon: IconCertificate,
         url: "/dashboard/certificate",
       },
+      { name: "Education", icon: IconSchool, url: "/dashboard/education" },
+      { name: "Achievements", icon: IconTrophy, url: "/dashboard/achievement" },
     ],
   },
   {
@@ -49,6 +55,8 @@ const navGroups = [
         icon: IconAt,
         url: "/dashboard/social-links",
       },
+      { name: "Resume", icon: IconFileText, url: "/dashboard/resume" },
+      { name: "SEO", icon: IconSearch, url: "/dashboard/seo" },
     ],
   },
 ];

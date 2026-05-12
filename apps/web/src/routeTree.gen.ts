@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as CertificatesRouteImport } from './routes/certificates'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
@@ -20,21 +21,34 @@ import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
 import { Route as coreDashboardSocialLinksIndexRouteImport } from './routes/(core)/dashboard/social-links/index'
+import { Route as coreDashboardSeoIndexRouteImport } from './routes/(core)/dashboard/seo/index'
+import { Route as coreDashboardResumeIndexRouteImport } from './routes/(core)/dashboard/resume/index'
 import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
 import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dashboard/hero/index'
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
+import { Route as coreDashboardEducationIndexRouteImport } from './routes/(core)/dashboard/education/index'
 import { Route as coreDashboardCertificateIndexRouteImport } from './routes/(core)/dashboard/certificate/index'
+import { Route as coreDashboardAchievementIndexRouteImport } from './routes/(core)/dashboard/achievement/index'
 import { Route as coreDashboardTechStackCreateRouteImport } from './routes/(core)/dashboard/tech-stack/create'
 import { Route as coreDashboardSocialLinksCreateRouteImport } from './routes/(core)/dashboard/social-links/create'
 import { Route as coreDashboardProjectsCreateRouteImport } from './routes/(core)/dashboard/projects/create'
 import { Route as coreDashboardExperienceCreateRouteImport } from './routes/(core)/dashboard/experience/create'
+import { Route as coreDashboardEducationCreateRouteImport } from './routes/(core)/dashboard/education/create'
 import { Route as coreDashboardCertificateCreateRouteImport } from './routes/(core)/dashboard/certificate/create'
+import { Route as coreDashboardAchievementCreateRouteImport } from './routes/(core)/dashboard/achievement/create'
 import { Route as coreDashboardTechStackTechStackIdEditRouteImport } from './routes/(core)/dashboard/tech-stack/$techStackId.edit'
 import { Route as coreDashboardSocialLinksSocialLinkIdEditRouteImport } from './routes/(core)/dashboard/social-links/$socialLinkId.edit'
 import { Route as coreDashboardProjectsProjectIdEditRouteImport } from './routes/(core)/dashboard/projects/$projectId.edit'
 import { Route as coreDashboardExperienceExperienceIdEditRouteImport } from './routes/(core)/dashboard/experience/$experienceId.edit'
+import { Route as coreDashboardEducationEducationIdEditRouteImport } from './routes/(core)/dashboard/education/$educationId.edit'
 import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
+import { Route as coreDashboardAchievementAchievementIdEditRouteImport } from './routes/(core)/dashboard/achievement/$achievementId.edit'
 
+const ResumeRoute = ResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -91,6 +105,17 @@ const coreDashboardSocialLinksIndexRoute =
     path: '/social-links/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardSeoIndexRoute = coreDashboardSeoIndexRouteImport.update({
+  id: '/seo/',
+  path: '/seo/',
+  getParentRoute: () => coreDashboardRouteRoute,
+} as any)
+const coreDashboardResumeIndexRoute =
+  coreDashboardResumeIndexRouteImport.update({
+    id: '/resume/',
+    path: '/resume/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardProjectsIndexRoute =
   coreDashboardProjectsIndexRouteImport.update({
     id: '/projects/',
@@ -108,10 +133,22 @@ const coreDashboardExperienceIndexRoute =
     path: '/experience/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardEducationIndexRoute =
+  coreDashboardEducationIndexRouteImport.update({
+    id: '/education/',
+    path: '/education/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardCertificateIndexRoute =
   coreDashboardCertificateIndexRouteImport.update({
     id: '/certificate/',
     path: '/certificate/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardAchievementIndexRoute =
+  coreDashboardAchievementIndexRouteImport.update({
+    id: '/achievement/',
+    path: '/achievement/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 const coreDashboardTechStackCreateRoute =
@@ -138,10 +175,22 @@ const coreDashboardExperienceCreateRoute =
     path: '/experience/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardEducationCreateRoute =
+  coreDashboardEducationCreateRouteImport.update({
+    id: '/education/create',
+    path: '/education/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardCertificateCreateRoute =
   coreDashboardCertificateCreateRouteImport.update({
     id: '/certificate/create',
     path: '/certificate/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardAchievementCreateRoute =
+  coreDashboardAchievementCreateRouteImport.update({
+    id: '/achievement/create',
+    path: '/achievement/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 const coreDashboardTechStackTechStackIdEditRoute =
@@ -168,10 +217,22 @@ const coreDashboardExperienceExperienceIdEditRoute =
     path: '/experience/$experienceId/edit',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardEducationEducationIdEditRoute =
+  coreDashboardEducationEducationIdEditRouteImport.update({
+    id: '/education/$educationId/edit',
+    path: '/education/$educationId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardCertificateCertificateIdEditRoute =
   coreDashboardCertificateCertificateIdEditRouteImport.update({
     id: '/certificate/$certificateId/edit',
     path: '/certificate/$certificateId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardAchievementAchievementIdEditRoute =
+  coreDashboardAchievementAchievementIdEditRouteImport.update({
+    id: '/achievement/$achievementId/edit',
+    path: '/achievement/$achievementId/edit',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 
@@ -179,23 +240,32 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
+  '/resume': typeof ResumeRoute
   '/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard/': typeof coreDashboardIndexRoute
+  '/dashboard/achievement/create': typeof coreDashboardAchievementCreateRoute
   '/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
+  '/dashboard/education/create': typeof coreDashboardEducationCreateRoute
   '/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
   '/dashboard/social-links/create': typeof coreDashboardSocialLinksCreateRoute
   '/dashboard/tech-stack/create': typeof coreDashboardTechStackCreateRoute
+  '/dashboard/achievement/': typeof coreDashboardAchievementIndexRoute
   '/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
+  '/dashboard/education/': typeof coreDashboardEducationIndexRoute
   '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/resume/': typeof coreDashboardResumeIndexRoute
+  '/dashboard/seo/': typeof coreDashboardSeoIndexRoute
   '/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
+  '/dashboard/achievement/$achievementId/edit': typeof coreDashboardAchievementAchievementIdEditRoute
   '/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
+  '/dashboard/education/$educationId/edit': typeof coreDashboardEducationEducationIdEditRoute
   '/dashboard/experience/$experienceId/edit': typeof coreDashboardExperienceExperienceIdEditRoute
   '/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
   '/dashboard/social-links/$socialLinkId/edit': typeof coreDashboardSocialLinksSocialLinkIdEditRoute
@@ -205,22 +275,31 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
+  '/resume': typeof ResumeRoute
   '/login': typeof authLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard': typeof coreDashboardIndexRoute
+  '/dashboard/achievement/create': typeof coreDashboardAchievementCreateRoute
   '/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
+  '/dashboard/education/create': typeof coreDashboardEducationCreateRoute
   '/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
   '/dashboard/social-links/create': typeof coreDashboardSocialLinksCreateRoute
   '/dashboard/tech-stack/create': typeof coreDashboardTechStackCreateRoute
+  '/dashboard/achievement': typeof coreDashboardAchievementIndexRoute
   '/dashboard/certificate': typeof coreDashboardCertificateIndexRoute
+  '/dashboard/education': typeof coreDashboardEducationIndexRoute
   '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
   '/dashboard/hero': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/resume': typeof coreDashboardResumeIndexRoute
+  '/dashboard/seo': typeof coreDashboardSeoIndexRoute
   '/dashboard/social-links': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack': typeof coreDashboardTechStackIndexRoute
+  '/dashboard/achievement/$achievementId/edit': typeof coreDashboardAchievementAchievementIdEditRoute
   '/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
+  '/dashboard/education/$educationId/edit': typeof coreDashboardEducationEducationIdEditRoute
   '/dashboard/experience/$experienceId/edit': typeof coreDashboardExperienceExperienceIdEditRoute
   '/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
   '/dashboard/social-links/$socialLinkId/edit': typeof coreDashboardSocialLinksSocialLinkIdEditRoute
@@ -232,23 +311,32 @@ export interface FileRoutesById {
   '/(auth)': typeof authRouteRouteWithChildren
   '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
+  '/resume': typeof ResumeRoute
   '/(core)/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
+  '/(core)/dashboard/achievement/create': typeof coreDashboardAchievementCreateRoute
   '/(core)/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
+  '/(core)/dashboard/education/create': typeof coreDashboardEducationCreateRoute
   '/(core)/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/(core)/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
   '/(core)/dashboard/social-links/create': typeof coreDashboardSocialLinksCreateRoute
   '/(core)/dashboard/tech-stack/create': typeof coreDashboardTechStackCreateRoute
+  '/(core)/dashboard/achievement/': typeof coreDashboardAchievementIndexRoute
   '/(core)/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
+  '/(core)/dashboard/education/': typeof coreDashboardEducationIndexRoute
   '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/(core)/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/(core)/dashboard/resume/': typeof coreDashboardResumeIndexRoute
+  '/(core)/dashboard/seo/': typeof coreDashboardSeoIndexRoute
   '/(core)/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/(core)/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
+  '/(core)/dashboard/achievement/$achievementId/edit': typeof coreDashboardAchievementAchievementIdEditRoute
   '/(core)/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
+  '/(core)/dashboard/education/$educationId/edit': typeof coreDashboardEducationEducationIdEditRoute
   '/(core)/dashboard/experience/$experienceId/edit': typeof coreDashboardExperienceExperienceIdEditRoute
   '/(core)/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
   '/(core)/dashboard/social-links/$socialLinkId/edit': typeof coreDashboardSocialLinksSocialLinkIdEditRoute
@@ -260,23 +348,32 @@ export interface FileRouteTypes {
     | '/'
     | '/certificates'
     | '/projects'
+    | '/resume'
     | '/dashboard'
     | '/login'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard/'
+    | '/dashboard/achievement/create'
     | '/dashboard/certificate/create'
+    | '/dashboard/education/create'
     | '/dashboard/experience/create'
     | '/dashboard/projects/create'
     | '/dashboard/social-links/create'
     | '/dashboard/tech-stack/create'
+    | '/dashboard/achievement/'
     | '/dashboard/certificate/'
+    | '/dashboard/education/'
     | '/dashboard/experience/'
     | '/dashboard/hero/'
     | '/dashboard/projects/'
+    | '/dashboard/resume/'
+    | '/dashboard/seo/'
     | '/dashboard/social-links/'
     | '/dashboard/tech-stack/'
+    | '/dashboard/achievement/$achievementId/edit'
     | '/dashboard/certificate/$certificateId/edit'
+    | '/dashboard/education/$educationId/edit'
     | '/dashboard/experience/$experienceId/edit'
     | '/dashboard/projects/$projectId/edit'
     | '/dashboard/social-links/$socialLinkId/edit'
@@ -286,22 +383,31 @@ export interface FileRouteTypes {
     | '/'
     | '/certificates'
     | '/projects'
+    | '/resume'
     | '/login'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard'
+    | '/dashboard/achievement/create'
     | '/dashboard/certificate/create'
+    | '/dashboard/education/create'
     | '/dashboard/experience/create'
     | '/dashboard/projects/create'
     | '/dashboard/social-links/create'
     | '/dashboard/tech-stack/create'
+    | '/dashboard/achievement'
     | '/dashboard/certificate'
+    | '/dashboard/education'
     | '/dashboard/experience'
     | '/dashboard/hero'
     | '/dashboard/projects'
+    | '/dashboard/resume'
+    | '/dashboard/seo'
     | '/dashboard/social-links'
     | '/dashboard/tech-stack'
+    | '/dashboard/achievement/$achievementId/edit'
     | '/dashboard/certificate/$certificateId/edit'
+    | '/dashboard/education/$educationId/edit'
     | '/dashboard/experience/$experienceId/edit'
     | '/dashboard/projects/$projectId/edit'
     | '/dashboard/social-links/$socialLinkId/edit'
@@ -312,23 +418,32 @@ export interface FileRouteTypes {
     | '/(auth)'
     | '/certificates'
     | '/projects'
+    | '/resume'
     | '/(core)/dashboard'
     | '/(auth)/login'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/(core)/dashboard/'
+    | '/(core)/dashboard/achievement/create'
     | '/(core)/dashboard/certificate/create'
+    | '/(core)/dashboard/education/create'
     | '/(core)/dashboard/experience/create'
     | '/(core)/dashboard/projects/create'
     | '/(core)/dashboard/social-links/create'
     | '/(core)/dashboard/tech-stack/create'
+    | '/(core)/dashboard/achievement/'
     | '/(core)/dashboard/certificate/'
+    | '/(core)/dashboard/education/'
     | '/(core)/dashboard/experience/'
     | '/(core)/dashboard/hero/'
     | '/(core)/dashboard/projects/'
+    | '/(core)/dashboard/resume/'
+    | '/(core)/dashboard/seo/'
     | '/(core)/dashboard/social-links/'
     | '/(core)/dashboard/tech-stack/'
+    | '/(core)/dashboard/achievement/$achievementId/edit'
     | '/(core)/dashboard/certificate/$certificateId/edit'
+    | '/(core)/dashboard/education/$educationId/edit'
     | '/(core)/dashboard/experience/$experienceId/edit'
     | '/(core)/dashboard/projects/$projectId/edit'
     | '/(core)/dashboard/social-links/$socialLinkId/edit'
@@ -340,6 +455,7 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   CertificatesRoute: typeof CertificatesRoute
   ProjectsRoute: typeof ProjectsRoute
+  ResumeRoute: typeof ResumeRoute
   coreDashboardRouteRoute: typeof coreDashboardRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
@@ -347,6 +463,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/resume': {
+      id: '/resume'
+      path: '/resume'
+      fullPath: '/resume'
+      preLoaderRoute: typeof ResumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
@@ -424,6 +547,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardSocialLinksIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/seo/': {
+      id: '/(core)/dashboard/seo/'
+      path: '/seo'
+      fullPath: '/dashboard/seo/'
+      preLoaderRoute: typeof coreDashboardSeoIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/resume/': {
+      id: '/(core)/dashboard/resume/'
+      path: '/resume'
+      fullPath: '/dashboard/resume/'
+      preLoaderRoute: typeof coreDashboardResumeIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/projects/': {
       id: '/(core)/dashboard/projects/'
       path: '/projects'
@@ -445,11 +582,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardExperienceIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/education/': {
+      id: '/(core)/dashboard/education/'
+      path: '/education'
+      fullPath: '/dashboard/education/'
+      preLoaderRoute: typeof coreDashboardEducationIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/certificate/': {
       id: '/(core)/dashboard/certificate/'
       path: '/certificate'
       fullPath: '/dashboard/certificate/'
       preLoaderRoute: typeof coreDashboardCertificateIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/achievement/': {
+      id: '/(core)/dashboard/achievement/'
+      path: '/achievement'
+      fullPath: '/dashboard/achievement/'
+      preLoaderRoute: typeof coreDashboardAchievementIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
     '/(core)/dashboard/tech-stack/create': {
@@ -480,11 +631,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardExperienceCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/education/create': {
+      id: '/(core)/dashboard/education/create'
+      path: '/education/create'
+      fullPath: '/dashboard/education/create'
+      preLoaderRoute: typeof coreDashboardEducationCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/certificate/create': {
       id: '/(core)/dashboard/certificate/create'
       path: '/certificate/create'
       fullPath: '/dashboard/certificate/create'
       preLoaderRoute: typeof coreDashboardCertificateCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/achievement/create': {
+      id: '/(core)/dashboard/achievement/create'
+      path: '/achievement/create'
+      fullPath: '/dashboard/achievement/create'
+      preLoaderRoute: typeof coreDashboardAchievementCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
     '/(core)/dashboard/tech-stack/$techStackId/edit': {
@@ -515,11 +680,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardExperienceExperienceIdEditRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/education/$educationId/edit': {
+      id: '/(core)/dashboard/education/$educationId/edit'
+      path: '/education/$educationId/edit'
+      fullPath: '/dashboard/education/$educationId/edit'
+      preLoaderRoute: typeof coreDashboardEducationEducationIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/certificate/$certificateId/edit': {
       id: '/(core)/dashboard/certificate/$certificateId/edit'
       path: '/certificate/$certificateId/edit'
       fullPath: '/dashboard/certificate/$certificateId/edit'
       preLoaderRoute: typeof coreDashboardCertificateCertificateIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/achievement/$achievementId/edit': {
+      id: '/(core)/dashboard/achievement/$achievementId/edit'
+      path: '/achievement/$achievementId/edit'
+      fullPath: '/dashboard/achievement/$achievementId/edit'
+      preLoaderRoute: typeof coreDashboardAchievementAchievementIdEditRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
   }
@@ -539,18 +718,26 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 
 interface coreDashboardRouteRouteChildren {
   coreDashboardIndexRoute: typeof coreDashboardIndexRoute
+  coreDashboardAchievementCreateRoute: typeof coreDashboardAchievementCreateRoute
   coreDashboardCertificateCreateRoute: typeof coreDashboardCertificateCreateRoute
+  coreDashboardEducationCreateRoute: typeof coreDashboardEducationCreateRoute
   coreDashboardExperienceCreateRoute: typeof coreDashboardExperienceCreateRoute
   coreDashboardProjectsCreateRoute: typeof coreDashboardProjectsCreateRoute
   coreDashboardSocialLinksCreateRoute: typeof coreDashboardSocialLinksCreateRoute
   coreDashboardTechStackCreateRoute: typeof coreDashboardTechStackCreateRoute
+  coreDashboardAchievementIndexRoute: typeof coreDashboardAchievementIndexRoute
   coreDashboardCertificateIndexRoute: typeof coreDashboardCertificateIndexRoute
+  coreDashboardEducationIndexRoute: typeof coreDashboardEducationIndexRoute
   coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
   coreDashboardHeroIndexRoute: typeof coreDashboardHeroIndexRoute
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
+  coreDashboardResumeIndexRoute: typeof coreDashboardResumeIndexRoute
+  coreDashboardSeoIndexRoute: typeof coreDashboardSeoIndexRoute
   coreDashboardSocialLinksIndexRoute: typeof coreDashboardSocialLinksIndexRoute
   coreDashboardTechStackIndexRoute: typeof coreDashboardTechStackIndexRoute
+  coreDashboardAchievementAchievementIdEditRoute: typeof coreDashboardAchievementAchievementIdEditRoute
   coreDashboardCertificateCertificateIdEditRoute: typeof coreDashboardCertificateCertificateIdEditRoute
+  coreDashboardEducationEducationIdEditRoute: typeof coreDashboardEducationEducationIdEditRoute
   coreDashboardExperienceExperienceIdEditRoute: typeof coreDashboardExperienceExperienceIdEditRoute
   coreDashboardProjectsProjectIdEditRoute: typeof coreDashboardProjectsProjectIdEditRoute
   coreDashboardSocialLinksSocialLinkIdEditRoute: typeof coreDashboardSocialLinksSocialLinkIdEditRoute
@@ -559,19 +746,29 @@ interface coreDashboardRouteRouteChildren {
 
 const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardIndexRoute: coreDashboardIndexRoute,
+  coreDashboardAchievementCreateRoute: coreDashboardAchievementCreateRoute,
   coreDashboardCertificateCreateRoute: coreDashboardCertificateCreateRoute,
+  coreDashboardEducationCreateRoute: coreDashboardEducationCreateRoute,
   coreDashboardExperienceCreateRoute: coreDashboardExperienceCreateRoute,
   coreDashboardProjectsCreateRoute: coreDashboardProjectsCreateRoute,
   coreDashboardSocialLinksCreateRoute: coreDashboardSocialLinksCreateRoute,
   coreDashboardTechStackCreateRoute: coreDashboardTechStackCreateRoute,
+  coreDashboardAchievementIndexRoute: coreDashboardAchievementIndexRoute,
   coreDashboardCertificateIndexRoute: coreDashboardCertificateIndexRoute,
+  coreDashboardEducationIndexRoute: coreDashboardEducationIndexRoute,
   coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
   coreDashboardHeroIndexRoute: coreDashboardHeroIndexRoute,
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
+  coreDashboardResumeIndexRoute: coreDashboardResumeIndexRoute,
+  coreDashboardSeoIndexRoute: coreDashboardSeoIndexRoute,
   coreDashboardSocialLinksIndexRoute: coreDashboardSocialLinksIndexRoute,
   coreDashboardTechStackIndexRoute: coreDashboardTechStackIndexRoute,
+  coreDashboardAchievementAchievementIdEditRoute:
+    coreDashboardAchievementAchievementIdEditRoute,
   coreDashboardCertificateCertificateIdEditRoute:
     coreDashboardCertificateCertificateIdEditRoute,
+  coreDashboardEducationEducationIdEditRoute:
+    coreDashboardEducationEducationIdEditRoute,
   coreDashboardExperienceExperienceIdEditRoute:
     coreDashboardExperienceExperienceIdEditRoute,
   coreDashboardProjectsProjectIdEditRoute:
@@ -590,6 +787,7 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   CertificatesRoute: CertificatesRoute,
   ProjectsRoute: ProjectsRoute,
+  ResumeRoute: ResumeRoute,
   coreDashboardRouteRoute: coreDashboardRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,

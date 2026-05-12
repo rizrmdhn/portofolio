@@ -1,0 +1,1 @@
+ALTER TABLE "certifications" ADD COLUMN "featured_at_resume" boolean DEFAULT false NOT NULL;

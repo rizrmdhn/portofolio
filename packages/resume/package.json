@@ -1,0 +1,32 @@
+{
+  "name": "@portofolio/resume",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "@portofolio/constants": "workspace:*",
+    "@portofolio/queries": "workspace:*",
+    "@portofolio/types": "workspace:*",
+    "@react-pdf/renderer": "^4.3.0",
+    "clsx": "^2.1.1",
+    "react": "^19.2.0",
+    "react-pdf-tailwind": "^3.0.0"
+  },
+  "devDependencies": {
+    "@portofolio/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "^19.1.8",
+    "typescript": "catalog:"
+  }
+}

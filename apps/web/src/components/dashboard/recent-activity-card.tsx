@@ -10,7 +10,9 @@ import {
   IconCertificate,
   IconFolder,
   IconHistory,
+  IconSchool,
   IconStack2,
+  IconTrophy,
   IconUser,
   IconWorldWww,
 } from "@tabler/icons-react";
@@ -32,6 +34,8 @@ const ENTITY_ICONS: Record<ActivityLogEntity, TablerIcon> = {
   techStackItem: IconStack2,
   socialLink: IconWorldWww,
   profile: IconUser,
+  education: IconSchool,
+  achievement: IconTrophy,
 };
 
 const ACTION_LABELS: Record<ActivityLogAction, string> = {

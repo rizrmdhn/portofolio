@@ -6,6 +6,7 @@ import {
   ACTIVITY_LOG_ENTITIES,
   AVAILABILITY_STATUS_TYPES,
   COLOR_VALUES,
+  DEGREE_TYPES,
   EXPERIENCE_STATUS_TYPES,
   EXPERIENCE_TYPES,
   SOCIAL_ICON_NAMES,
@@ -106,6 +107,8 @@ export const experienceStatusEnum = pgEnum('experience_status_enum', EXPERIENCE_
 
 export const socialIconEnum = pgEnum('social_icon_enum', SOCIAL_ICON_NAMES)
 
+export const degreeEnum = pgEnum('degree_enum', DEGREE_TYPES)
+
 export const projects = createTable(
   'projects',
   {
@@ -134,6 +137,7 @@ export const projects = createTable(
     // ========== Settings ==========
     status: projectStatusEnum('status').notNull().default('draft'),
     isVisible: boolean('is_visible').notNull().default(false),
+    featuredAtResume: boolean('featured_at_resume').notNull().default(false),
     order: integer('order').default(0).notNull(),
 
     // ========== Metadata ==========
@@ -202,6 +206,7 @@ export const certifications = createTable(
       .$default(() => uuidv7()),
     title: varchar('title', { length: 256 }).notNull(),
     issuer: varchar('issuer', { length: 256 }).notNull(),
+    featuredAtResume: boolean('featured_at_resume').notNull().default(false),
     certificateUrl: text('certificate_url'),
     certificateId: varchar('certificate_id', { length: 256 }),
     issueYear: timestamp('issue_year', {
@@ -228,6 +233,71 @@ export const certifications = createTable(
   (table) => [index('certifications_id_idx').using('btree', table.id)],
 )
 
+export const education = createTable(
+  'education',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    institution: varchar('institution', { length: 256 }).notNull(),
+    degreeLevel: degreeEnum('degree_level').notNull(),
+    major: varchar('major', { length: 256 }).notNull(),
+    gpa: varchar('gpa', { length: 64 }),
+    startYear: timestamp('start_year', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
+    endYear: timestamp('end_year', {
+      withTimezone: true,
+      mode: 'string',
+    }),
+    status: experienceStatusEnum('status').notNull().default('draft'),
+    order: integer('order').default(0).notNull(),
+    createdAt: timestamp('created_at', {
+      withTimezone: true,
+      mode: 'string',
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp('updated_at', {
+      withTimezone: true,
+      mode: 'string',
+    }).$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [index('education_id_idx').using('btree', table.id)],
+)
+
+export const achievements = createTable(
+  'achievements',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    title: varchar('title', { length: 256 }).notNull(),
+    issuer: varchar('issuer', { length: 256 }).notNull(),
+    description: text('description'),
+    date: timestamp('date', {
+      withTimezone: true,
+      mode: 'string',
+    }).notNull(),
+    status: experienceStatusEnum('status').notNull().default('draft'),
+    order: integer('order').default(0).notNull(),
+    createdAt: timestamp('created_at', {
+      withTimezone: true,
+      mode: 'string',
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp('updated_at', {
+      withTimezone: true,
+      mode: 'string',
+    }).$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [index('achievements_id_idx').using('btree', table.id)],
+)
+
 export const profile = createTable(
   'profile',
   {
@@ -239,6 +309,7 @@ export const profile = createTable(
     title: varchar('title', { length: 256 }).notNull(),
     bio: text('bio').notNull(),
     email: text('email').notNull(),
+    location: varchar('location', { length: 256 }),
     availabilityStatus: availabilityStatusEnum('availability_status')
       .notNull()
       .default('unavailable'),

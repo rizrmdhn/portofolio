@@ -8,6 +8,7 @@ import { TechStackList } from '@/components/tech-stack-list'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
+import { buildSeoMeta } from '@/lib/seo'
 import { trpc } from '@/utils/trpc'
 import { AVAILABILITY_STATUS_LABELS, SOCIAL_ICON_MAP } from '@portofolio/constants'
 import {
@@ -48,6 +49,10 @@ export const Route = createFileRoute('/')({
       context.trpc.socialLink.getAll.queryOptions(),
     )
 
+    const seo = await context.queryClient.ensureQueryData(
+      context.trpc.seo.getPage.queryOptions({ page: 'home' }),
+    )
+
     return {
       profile,
       projects,
@@ -55,22 +60,19 @@ export const Route = createFileRoute('/')({
       stack,
       certifications,
       socialLinks,
+      seo,
     }
   },
   head: ({ loaderData }) => {
     const profile = loaderData?.profile
-    const title = profile ? `${profile.name} — ${profile.title}` : 'Portfolio'
-    const description = profile?.bio ?? ''
+    const defaultTitle = profile ? `${profile.name} — ${profile.title}` : 'Portfolio'
+    const defaultDescription = profile?.bio ?? ''
 
     return {
-      meta: [
-        { title },
-        { name: 'description', content: description },
-        { property: 'og:title', content: title },
-        { property: 'og:description', content: description },
-        { name: 'twitter:title', content: title },
-        { name: 'twitter:description', content: description },
-      ],
+      meta: buildSeoMeta(loaderData?.seo, {
+        title: defaultTitle,
+        description: defaultDescription,
+      }),
     }
   },
   component: HomeComponent,

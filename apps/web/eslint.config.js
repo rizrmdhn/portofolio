@@ -7,6 +7,7 @@ export default [
       'dist/**',
       '.cache/**',
       '.turbo/**',
+      '.vercel/**',
       'vite.config.ts.*',
       'src/components/ui/**',
     ],

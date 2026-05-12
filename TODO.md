@@ -15,27 +15,38 @@
 ### High value, low effort
 
 - [x] Availability status — "open to work" toggle with custom label, shown as badge on hero
-- [ ] Resume download counter — track PDF download count (generated, not uploaded)
+- [x] Resume download counter — track PDF download count (generated, not uploaded)
 
 ### Medium effort
 
 - [x] Tech stack categories — group by category (Languages, Frameworks, Tools), needs `category` field
 - [x] Featured projects — pin flag to surface 2–3 projects at the top regardless of order
-- [ ] SEO metadata — editable page title, description, and OG image per page
+- [x] SEO metadata — editable page title, description, and OG image per page
 
 ### Bigger lift
 
 - [ ] Section order — drag-to-reorder landing page sections
 - [ ] Custom sections — freeform blocks with title + markdown body (e.g. Writing, Speaking)
 
-## Resume / CV Generator
+## Resume / CV Generator (Done)
 
-- [ ] ATS template — single column, plain text, no icons/colors, passes resume scanners
-- [ ] Creative template — two-column, accent colors, icons, profile photo
-- [ ] Font picker — store `resumeFont` in profile, applied to both templates
-- [ ] Accent color picker — store `resumeAccentColor` in profile, applied to both templates
-- [ ] Server-side PDF generation via tRPC endpoint (streams downloadable file)
-- [ ] Track resume download count (feeds into dashboard stats)
+- [x] ATS template — single-column, plain text, 1-page compact layout, no word hyphenation
+- [x] Creative template — two-column, accent colors, sidebar layout
+- [x] Font picker — Liberation Sans / Inter / Arimo, applied per render
+- [x] Accent color picker — hex color stored in resume settings
+- [x] Server-side PDF generation via tRPC `resume.generate` → uploads to Uploadthing
+- [x] Server-side preview via tRPC `resume.preview` → returns base64, shown in dashboard iframe
+- [x] Track resume download count — `resume.trackDownload` mutation + dashboard stat card
+- [x] Featured projects on resume — per-project `featuredAtResume` toggle in dashboard
+- [x] Featured certifications on resume — per-certification `featuredAtResume` toggle in dashboard
+- [x] Education section — separate `education` table (institution, degree enum, major, GPA)
+- [x] Achievements section — separate `achievements` table (title, issuer, description, date)
+- [x] Profile location field — shown in resume header as `location · email`
+
+## Resume / CV Generator (Remaining)
+
+- [x] Education CRUD — dashboard page with create / edit / delete / reorder
+- [x] Achievements CRUD — dashboard page with create / edit / delete / reorder
 
 ## Dashboard Overview Page
 
@@ -50,7 +61,7 @@
 ### Needs new DB tables + API
 
 - [x] Page view chart over time — `viewEvents(projectId, timestamp)` table
-- [ ] Resume download counter — download event tracking
+- [x] Resume download counter — download event tracking
 - [x] Social link click-through — click event tracking
 - [x] Recent activity log — activity log table
 

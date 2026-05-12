@@ -1,9 +1,13 @@
 import { createCallerFactory, createTRPCRouter } from ".";
+import { achievementRouter } from "./routers/achievement";
 import { certificationRouter } from "./routers/certification";
 import { dashboardRouter } from "./routers/dashboard";
+import { educationRouter } from "./routers/education";
 import { experienceRouter } from "./routers/experience";
 import { profileRouter } from "./routers/profile";
 import { projectRouter } from "./routers/project";
+import { resumeRouter } from "./routers/resume";
+import { seoRouter } from "./routers/seo";
 import { socialLinkRouter } from "./routers/social-link";
 import { techStackRouter } from "./routers/tech-stack";
 
@@ -11,10 +15,14 @@ export const appRouter = createTRPCRouter({
   project: projectRouter,
   experience: experienceRouter,
   certification: certificationRouter,
+  education: educationRouter,
+  achievement: achievementRouter,
   techStack: techStackRouter,
   profile: profileRouter,
   socialLink: socialLinkRouter,
   dashboard: dashboardRouter,
+  resume: resumeRouter,
+  seo: seoRouter,
 });
 
 // export type definition of API

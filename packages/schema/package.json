@@ -20,6 +20,7 @@
   "dependencies": {
     "@portofolio/db": "workspace:*",
     "@portofolio/constants": "workspace:*",
+    "@portofolio/types": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {

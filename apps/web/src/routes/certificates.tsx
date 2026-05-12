@@ -1,15 +1,23 @@
+import { buildSeoMeta } from "@/lib/seo";
 import { CertificateCard } from "@/components/certificate-card";
 import { MainHeader } from "@/components/main-header";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/certificates")({
   loader: async ({ context }) => {
-    const certifications = await context.queryClient.ensureQueryData(
-      context.trpc.certification.getAll.queryOptions(),
-    );
+    const [certifications, seo] = await Promise.all([
+      context.queryClient.ensureQueryData(context.trpc.certification.getAll.queryOptions()),
+      context.queryClient.ensureQueryData(context.trpc.seo.getPage.queryOptions({ page: "certificates" })),
+    ]);
 
-    return { certifications };
+    return { certifications, seo };
   },
+  head: ({ loaderData }) => ({
+    meta: buildSeoMeta(loaderData?.seo, {
+      title: "Certificates",
+      description: "Certifications and credentials I've earned.",
+    }),
+  }),
   component: CertificatesPage,
 });
 
