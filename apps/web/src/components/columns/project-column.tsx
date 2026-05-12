@@ -6,7 +6,7 @@ import {
   createTextColumn,
 } from "@/lib/column-helpers";
 import type { PaginatedProjects } from "@portofolio/types/project.types";
-import { IconEye } from "@tabler/icons-react";
+import { IconEye, IconPin } from "@tabler/icons-react";
 import type { useNavigate } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -15,8 +15,9 @@ interface ProjectColumnProps {
   navigate: ReturnType<typeof useNavigate>;
 }
 
-export default function getProjectsColumns({ navigate }: ProjectColumnProps): ColumnDef<PaginatedProjects>[] {
-
+export default function getProjectsColumns({
+  navigate,
+}: ProjectColumnProps): ColumnDef<PaginatedProjects>[] {
   return [
     {
       id: "order",
@@ -53,7 +54,23 @@ export default function getProjectsColumns({ navigate }: ProjectColumnProps): Co
         draft: { text: "Draft", color: "yellow" },
         archived: { text: "Archived", color: "gray" },
       },
+      width: "w-24",
     }),
+    {
+      id: "featureAt",
+      accessorKey: "featureAt",
+      header: () => <span className="font-medium">Featured</span>,
+      cell: ({ row }) => (
+        <div className="w-20">
+          {row.original.featureAt ? (
+            <IconPin className="size-3.5 text-foreground" />
+          ) : (
+            <span className="text-muted-foreground/40">—</span>
+          )}
+        </div>
+      ),
+      meta: { label: "Featured" },
+    },
     {
       id: "views",
       accessorKey: "views",

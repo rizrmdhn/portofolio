@@ -1,4 +1,14 @@
-import { and, count, desc, eq, getColumns, gt, ilike, isNotNull, sql } from "@portofolio/db";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  getColumns,
+  gt,
+  ilike,
+  isNotNull,
+  sql,
+} from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { projectViews, projects } from "@portofolio/db/schema/index";
 import type {
@@ -50,6 +60,7 @@ export async function getProjectsForLandingPage() {
   const result = await db.query.projects.findMany({
     where: { isVisible: true, status: "published" },
     orderBy: {
+      featureAt: "asc",
       order: "asc",
     },
     limit: 7,
