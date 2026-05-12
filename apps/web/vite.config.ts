@@ -19,12 +19,8 @@ export default defineConfig({
     tanstackStart(),
     nitro({
       preset: 'vercel',
+      traceDeps: ['@node-rs/argon2'],
     }),
     viteReact(),
   ],
-  build: {
-    rolldownOptions: {
-      external: ['@node-rs/argon2'],
-    },
-  },
 })
