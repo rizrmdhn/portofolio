@@ -33,7 +33,7 @@ export async function getSocialLinksForDashboard(search?: string) {
   return socialLinkItems;
 }
 
-export async function getSocialLinkClickThroughForDashboard(search?: string) {
+export async function getSocialLinkClickThroughForDashboard() {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 

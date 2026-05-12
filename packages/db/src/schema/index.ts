@@ -161,20 +161,6 @@ export const projects = createTable(
   (table) => [index("projects_id_idx").using("btree", table.id)],
 );
 
-export const projectViews = createTable(
-  "project_views",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    projectId: uuid("project_id")
-      .notNull()
-      .references(() => projects.id, { onDelete: "cascade" }),
-    count: integer("count").default(0).notNull(),
-  },
-  (table) => [index("project_views_id_idx").using("btree", table.id)],
-);
 
 export const experiences = createTable(
   "experiences",

@@ -125,9 +125,7 @@ export async function updateTechStackCategoryWithItems(
     if (toDelete.length > 0) {
       await tx
         .delete(techStackItems)
-        .where(
-          inArray(techStackItems.id, toDelete),
-        );
+        .where(inArray(techStackItems.id, toDelete));
     }
 
     // upsert remaining + new items
@@ -135,7 +133,11 @@ export async function updateTechStackCategoryWithItems(
       if (item.id) {
         await tx
           .update(techStackItems)
-          .set({ name: item.name, proficiency: item.proficiency, order: item.order })
+          .set({
+            name: item.name,
+            proficiency: item.proficiency,
+            order: item.order,
+          })
           .where(eq(techStackItems.id, item.id));
       } else {
         await tx.insert(techStackItems).values({

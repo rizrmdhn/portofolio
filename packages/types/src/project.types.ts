@@ -1,17 +1,13 @@
 import type { InferSelectModel } from "@portofolio/db";
 import type { projects } from "@portofolio/db/schema/index";
-import type { InferQueryModel } from "./utils.types";
 
 export type Project = InferSelectModel<typeof projects>;
 
-export type ProjectWithView = InferQueryModel<
-  "projects",
-  {
-    with: { projectView: true };
-  }
->;
+export type ProjectWithViewCount = Project & { viewCount: number };
 
-export type AllTimeProject = Project & {
+export type AllTimeProject = {
+  id: string;
+  title: string;
   views: number;
 };
 

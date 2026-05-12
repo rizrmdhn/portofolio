@@ -1,5 +1,5 @@
 import { trpc } from "@/utils/trpc";
-import { ProjectWithView } from "@portofolio/types/project.types";
+import { ProjectWithViewCount } from "@portofolio/types/project.types";
 import { toCompactNumber } from "@portofolio/utils/number";
 import {
   IconBrandAppstore,
@@ -13,7 +13,7 @@ import { Card, CardContent, CardFooter } from "./ui/card";
 import { Separator } from "./ui/separator";
 
 interface ProjectCardProps {
-  project: ProjectWithView;
+  project: ProjectWithViewCount;
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
@@ -87,12 +87,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
             </a>
           )}
         </div>
-        {project.projectView !== undefined && (
-          <span className="text-subtle text-[11px] font-mono inline-flex items-center gap-1.25">
-            <IconEye className="size-3.25" />
-            {toCompactNumber(project.projectView?.count || 0)}
-          </span>
-        )}
+        <span className="text-subtle text-[11px] font-mono inline-flex items-center gap-1.25">
+          <IconEye className="size-3.25" />
+          {toCompactNumber(Number(project.viewCount) || 0)}
+        </span>
       </CardFooter>
     </Card>
   );

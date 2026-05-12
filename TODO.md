@@ -45,14 +45,14 @@
 - [x] Content summary — total counts of projects, experiences, certifications, tech stack
 - [x] Total project views — aggregated sum query
 - [ ] Profile completeness indicator
-- [ ] Top projects last 30 days — date-filtered view query
+- [x] Top projects last 30 days — date-filtered view query
 
 ### Needs new DB tables + API
 
-- [ ] Page view chart over time — `viewEvents(projectId, timestamp)` table
+- [x] Page view chart over time — `viewEvents(projectId, timestamp)` table
 - [ ] Resume download counter — download event tracking
 - [x] Social link click-through — click event tracking
-- [ ] Recent activity log — activity log table
+- [x] Recent activity log — activity log table
 
 ### Use external tool instead (Plausible / Umami / Vercel Analytics)
 

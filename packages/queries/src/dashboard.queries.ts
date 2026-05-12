@@ -1,9 +1,8 @@
-import { count, gte, sql, sum } from "@portofolio/db";
+import { count, gte, sql } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import {
   certifications,
   experiences,
-  projectViews,
   projects,
   techStackCategories,
   techStackItems,
@@ -43,18 +42,24 @@ export async function getViewEventsByRange(range: ViewRange) {
 export { getRecentActivity };
 
 export async function getDashboardStats() {
-  const [[totalViewsRow], [projectCount], [experienceCount], [certCount], [stackCategoryCount], [stackItemCount]] =
-    await Promise.all([
-      db.select({ total: sum(projectViews.count) }).from(projectViews),
-      db.select({ total: count() }).from(projects),
-      db.select({ total: count() }).from(experiences),
-      db.select({ total: count() }).from(certifications),
-      db.select({ total: count() }).from(techStackCategories),
-      db.select({ total: count() }).from(techStackItems),
-    ]);
+  const [
+    [totalViewsRow],
+    [projectCount],
+    [experienceCount],
+    [certCount],
+    [stackCategoryCount],
+    [stackItemCount],
+  ] = await Promise.all([
+    db.select({ total: count() }).from(viewEvents),
+    db.select({ total: count() }).from(projects),
+    db.select({ total: count() }).from(experiences),
+    db.select({ total: count() }).from(certifications),
+    db.select({ total: count() }).from(techStackCategories),
+    db.select({ total: count() }).from(techStackItems),
+  ]);
 
   return {
-    totalProjectViews: Number(totalViewsRow?.total ?? 0),
+    totalProjectViews: totalViewsRow?.total ?? 0,
     counts: {
       projects: projectCount?.total ?? 0,
       experiences: experienceCount?.total ?? 0,

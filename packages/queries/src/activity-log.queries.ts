@@ -1,5 +1,7 @@
-import type { ActivityLogAction, ActivityLogEntity } from "@portofolio/constants";
-import { desc } from "@portofolio/db";
+import type {
+  ActivityLogAction,
+  ActivityLogEntity,
+} from "@portofolio/constants";
 import { db } from "@portofolio/db/client";
 import { activityLog } from "@portofolio/db/schema/index";
 import { QueryError } from "./errors";
@@ -11,7 +13,9 @@ interface CreateActivityLogParams {
   entityTitle: string;
 }
 
-export async function createActivityLog(params: CreateActivityLogParams): Promise<void> {
+export async function createActivityLog(
+  params: CreateActivityLogParams,
+): Promise<void> {
   const [row] = await db
     .insert(activityLog)
     .values(params)

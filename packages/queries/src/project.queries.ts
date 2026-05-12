@@ -4,13 +4,13 @@ import {
   desc,
   eq,
   getColumns,
-  gt,
+  gte,
   ilike,
   isNotNull,
   sql,
 } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
-import { projectViews, projects } from "@portofolio/db/schema/index";
+import { projects, viewEvents } from "@portofolio/db/schema/index";
 import type {
   CreateProjectInput,
   GetProjectsInput,
@@ -20,7 +20,6 @@ import type {
 import type { PaginatedProjects } from "@portofolio/types/project.types";
 import { toUniqueSlug } from "@portofolio/utils/slug";
 import { NotFoundError, QueryError } from "./errors";
-import { createProjectView } from "./project-views.queries";
 import { getOffsetPaginated } from "./utils/get-offset-paginated";
 
 export async function getPaginatedProjects(input: GetProjectsInput) {
@@ -29,43 +28,37 @@ export async function getPaginatedProjects(input: GetProjectsInput) {
     input,
     select: {
       ...getColumns(projects),
-      views: projectViews.count,
+      views: sql<number>`(select count(*) from view_events where project_id = ${projects.id})`,
     },
     searchConditions: [
       input.search ? ilike(projects.title, `%${input.search}%`) : undefined,
-    ],
-    joins: [
-      {
-        type: "left",
-        table: projectViews,
-        on: eq(projects.id, projectViews.projectId),
-      },
     ],
   });
 }
 
 export async function getAllProjects() {
-  const result = await db.query.projects.findMany({
-    where: { isVisible: true, status: "published" },
-    orderBy: {
-      order: "asc",
-    },
-    with: { projectView: true },
-  });
+  const result = await db
+    .select({
+      ...getColumns(projects),
+      viewCount: sql<number>`(select count(*) from view_events where project_id = ${projects.id})`,
+    })
+    .from(projects)
+    .where(and(eq(projects.isVisible, true), eq(projects.status, "published")))
+    .orderBy(projects.order);
 
   return result;
 }
 
 export async function getProjectsForLandingPage() {
-  const result = await db.query.projects.findMany({
-    where: { isVisible: true, status: "published" },
-    orderBy: {
-      featureAt: "asc",
-      order: "asc",
-    },
-    limit: 7,
-    with: { projectView: true },
-  });
+  const result = await db
+    .select({
+      ...getColumns(projects),
+      viewCount: sql<number>`(select count(*) from view_events where project_id = ${projects.id})`,
+    })
+    .from(projects)
+    .where(and(eq(projects.isVisible, true), eq(projects.status, "published")))
+    .orderBy(projects.featureAt, projects.order)
+    .limit(7);
 
   const isMore = result.length > 6;
 
@@ -78,19 +71,21 @@ export async function getAllTimeViewsProjects() {
 
   const result = await db
     .select({
-      ...getColumns(projects),
-      views: sql<number>`coalesce(${projectViews.count}, 0)`,
+      id: projects.id,
+      title: projects.title,
+      views: count(viewEvents.id),
     })
     .from(projects)
-    .leftJoin(projectViews, eq(projects.id, projectViews.projectId))
-    .where(
+    .leftJoin(
+      viewEvents,
       and(
-        eq(projects.isVisible, true),
-        eq(projects.status, "published"),
-        gt(projects.createdAt, thirtyDaysAgo.toISOString()),
+        eq(projects.id, viewEvents.projectId),
+        gte(viewEvents.viewedAt, thirtyDaysAgo.toISOString()),
       ),
     )
-    .orderBy(desc(sql`coalesce(${projectViews.count}, 0)`))
+    .where(and(eq(projects.isVisible, true), eq(projects.status, "published")))
+    .groupBy(projects.id, projects.title)
+    .orderBy(desc(count(viewEvents.id)))
     .limit(5);
 
   return result;
@@ -99,7 +94,6 @@ export async function getAllTimeViewsProjects() {
 export async function getProjectById(id: string) {
   const project = await db.query.projects.findFirst({
     where: { id },
-    with: { projectView: true },
   });
 
   if (!project) throw new NotFoundError(`Project`, id);
@@ -140,8 +134,6 @@ export async function createProject(data: CreateProjectInput) {
     .returning();
 
   if (!project) throw new QueryError("Failed to create project");
-
-  await createProjectView(project.id);
 
   return project;
 }
