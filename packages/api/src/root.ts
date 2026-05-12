@@ -1,5 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from ".";
 import { certificationRouter } from "./routers/certification";
+import { dashboardRouter } from "./routers/dashboard";
 import { experienceRouter } from "./routers/experience";
 import { profileRouter } from "./routers/profile";
 import { projectRouter } from "./routers/project";
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   techStack: techStackRouter,
   profile: profileRouter,
   socialLink: socialLinkRouter,
+  dashboard: dashboardRouter,
 });
 
 // export type definition of API

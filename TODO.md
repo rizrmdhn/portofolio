@@ -42,12 +42,9 @@
 ### Ready to build (data already exists)
 
 - [x] Top projects by views (all-time)
-- [ ] Content summary — total counts of projects, experiences, certifications, tech stack
+- [x] Content summary — total counts of projects, experiences, certifications, tech stack
+- [x] Total project views — aggregated sum query
 - [ ] Profile completeness indicator
-
-### Needs new API endpoints
-
-- [ ] Total project views — aggregated sum query
 - [ ] Top projects last 30 days — date-filtered view query
 
 ### Needs new DB tables + API
