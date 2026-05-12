@@ -99,6 +99,18 @@ export async function reorderCertifications(orderedIds: ReorderCertificationsInp
   })
 }
 
+export async function toggleCertificationFeaturedAtResume(id: string, value: boolean) {
+  const [result] = await db
+    .update(certifications)
+    .set({ featuredAtResume: value })
+    .where(eq(certifications.id, id))
+    .returning()
+
+  if (!result) throw new QueryError('Failed to update featuredAtResume')
+
+  return result
+}
+
 export async function deleteCertification(id: string) {
   await getCertificationById(id)
 

@@ -4,6 +4,7 @@ import { dashboardRouter } from "./routers/dashboard";
 import { experienceRouter } from "./routers/experience";
 import { profileRouter } from "./routers/profile";
 import { projectRouter } from "./routers/project";
+import { resumeRouter } from "./routers/resume";
 import { socialLinkRouter } from "./routers/social-link";
 import { techStackRouter } from "./routers/tech-stack";
 
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   profile: profileRouter,
   socialLink: socialLinkRouter,
   dashboard: dashboardRouter,
+  resume: resumeRouter,
 });
 
 // export type definition of API

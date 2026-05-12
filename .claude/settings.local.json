@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(curl -sL \"https://ui.shadcn.com/code/apps/v4/registry/bases/base/examples/card-example.tsx\")",
-      "Bash(curl -sL \"https://ui.shadcn.com/code/apps/v4/registry/bases/base/examples/chart-example.tsx\")"
-    ]
-  }
-}

@@ -178,3 +178,15 @@ export async function deleteProject(id: string) {
 
   return result
 }
+
+export async function toggleProjectFeaturedAtResume(id: string, value: boolean) {
+  const [result] = await db
+    .update(projects)
+    .set({ featuredAtResume: value })
+    .where(eq(projects.id, id))
+    .returning()
+
+  if (!result) throw new QueryError('Failed to update project featuredAtResume')
+
+  return result
+}

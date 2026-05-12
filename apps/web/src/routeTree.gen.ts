@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as CertificatesRouteImport } from './routes/certificates'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
@@ -20,6 +21,7 @@ import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
 import { Route as coreDashboardSocialLinksIndexRouteImport } from './routes/(core)/dashboard/social-links/index'
+import { Route as coreDashboardResumeIndexRouteImport } from './routes/(core)/dashboard/resume/index'
 import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
 import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dashboard/hero/index'
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
@@ -35,6 +37,11 @@ import { Route as coreDashboardProjectsProjectIdEditRouteImport } from './routes
 import { Route as coreDashboardExperienceExperienceIdEditRouteImport } from './routes/(core)/dashboard/experience/$experienceId.edit'
 import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
 
+const ResumeRoute = ResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -89,6 +96,12 @@ const coreDashboardSocialLinksIndexRoute =
   coreDashboardSocialLinksIndexRouteImport.update({
     id: '/social-links/',
     path: '/social-links/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardResumeIndexRoute =
+  coreDashboardResumeIndexRouteImport.update({
+    id: '/resume/',
+    path: '/resume/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 const coreDashboardProjectsIndexRoute =
@@ -179,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
+  '/resume': typeof ResumeRoute
   '/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -193,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/resume/': typeof coreDashboardResumeIndexRoute
   '/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
   '/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
@@ -205,6 +220,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
+  '/resume': typeof ResumeRoute
   '/login': typeof authLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -218,6 +234,7 @@ export interface FileRoutesByTo {
   '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
   '/dashboard/hero': typeof coreDashboardHeroIndexRoute
   '/dashboard/projects': typeof coreDashboardProjectsIndexRoute
+  '/dashboard/resume': typeof coreDashboardResumeIndexRoute
   '/dashboard/social-links': typeof coreDashboardSocialLinksIndexRoute
   '/dashboard/tech-stack': typeof coreDashboardTechStackIndexRoute
   '/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
@@ -232,6 +249,7 @@ export interface FileRoutesById {
   '/(auth)': typeof authRouteRouteWithChildren
   '/certificates': typeof CertificatesRoute
   '/projects': typeof ProjectsRoute
+  '/resume': typeof ResumeRoute
   '/(core)/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -246,6 +264,7 @@ export interface FileRoutesById {
   '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
   '/(core)/dashboard/hero/': typeof coreDashboardHeroIndexRoute
   '/(core)/dashboard/projects/': typeof coreDashboardProjectsIndexRoute
+  '/(core)/dashboard/resume/': typeof coreDashboardResumeIndexRoute
   '/(core)/dashboard/social-links/': typeof coreDashboardSocialLinksIndexRoute
   '/(core)/dashboard/tech-stack/': typeof coreDashboardTechStackIndexRoute
   '/(core)/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
@@ -260,6 +279,7 @@ export interface FileRouteTypes {
     | '/'
     | '/certificates'
     | '/projects'
+    | '/resume'
     | '/dashboard'
     | '/login'
     | '/api/auth/$'
@@ -274,6 +294,7 @@ export interface FileRouteTypes {
     | '/dashboard/experience/'
     | '/dashboard/hero/'
     | '/dashboard/projects/'
+    | '/dashboard/resume/'
     | '/dashboard/social-links/'
     | '/dashboard/tech-stack/'
     | '/dashboard/certificate/$certificateId/edit'
@@ -286,6 +307,7 @@ export interface FileRouteTypes {
     | '/'
     | '/certificates'
     | '/projects'
+    | '/resume'
     | '/login'
     | '/api/auth/$'
     | '/api/trpc/$'
@@ -299,6 +321,7 @@ export interface FileRouteTypes {
     | '/dashboard/experience'
     | '/dashboard/hero'
     | '/dashboard/projects'
+    | '/dashboard/resume'
     | '/dashboard/social-links'
     | '/dashboard/tech-stack'
     | '/dashboard/certificate/$certificateId/edit'
@@ -312,6 +335,7 @@ export interface FileRouteTypes {
     | '/(auth)'
     | '/certificates'
     | '/projects'
+    | '/resume'
     | '/(core)/dashboard'
     | '/(auth)/login'
     | '/api/auth/$'
@@ -326,6 +350,7 @@ export interface FileRouteTypes {
     | '/(core)/dashboard/experience/'
     | '/(core)/dashboard/hero/'
     | '/(core)/dashboard/projects/'
+    | '/(core)/dashboard/resume/'
     | '/(core)/dashboard/social-links/'
     | '/(core)/dashboard/tech-stack/'
     | '/(core)/dashboard/certificate/$certificateId/edit'
@@ -340,6 +365,7 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   CertificatesRoute: typeof CertificatesRoute
   ProjectsRoute: typeof ProjectsRoute
+  ResumeRoute: typeof ResumeRoute
   coreDashboardRouteRoute: typeof coreDashboardRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
@@ -347,6 +373,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/resume': {
+      id: '/resume'
+      path: '/resume'
+      fullPath: '/resume'
+      preLoaderRoute: typeof ResumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
@@ -422,6 +455,13 @@ declare module '@tanstack/react-router' {
       path: '/social-links'
       fullPath: '/dashboard/social-links/'
       preLoaderRoute: typeof coreDashboardSocialLinksIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/resume/': {
+      id: '/(core)/dashboard/resume/'
+      path: '/resume'
+      fullPath: '/dashboard/resume/'
+      preLoaderRoute: typeof coreDashboardResumeIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
     '/(core)/dashboard/projects/': {
@@ -548,6 +588,7 @@ interface coreDashboardRouteRouteChildren {
   coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
   coreDashboardHeroIndexRoute: typeof coreDashboardHeroIndexRoute
   coreDashboardProjectsIndexRoute: typeof coreDashboardProjectsIndexRoute
+  coreDashboardResumeIndexRoute: typeof coreDashboardResumeIndexRoute
   coreDashboardSocialLinksIndexRoute: typeof coreDashboardSocialLinksIndexRoute
   coreDashboardTechStackIndexRoute: typeof coreDashboardTechStackIndexRoute
   coreDashboardCertificateCertificateIdEditRoute: typeof coreDashboardCertificateCertificateIdEditRoute
@@ -568,6 +609,7 @@ const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
   coreDashboardHeroIndexRoute: coreDashboardHeroIndexRoute,
   coreDashboardProjectsIndexRoute: coreDashboardProjectsIndexRoute,
+  coreDashboardResumeIndexRoute: coreDashboardResumeIndexRoute,
   coreDashboardSocialLinksIndexRoute: coreDashboardSocialLinksIndexRoute,
   coreDashboardTechStackIndexRoute: coreDashboardTechStackIndexRoute,
   coreDashboardCertificateCertificateIdEditRoute:
@@ -590,6 +632,7 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   CertificatesRoute: CertificatesRoute,
   ProjectsRoute: ProjectsRoute,
+  ResumeRoute: ResumeRoute,
   coreDashboardRouteRoute: coreDashboardRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,

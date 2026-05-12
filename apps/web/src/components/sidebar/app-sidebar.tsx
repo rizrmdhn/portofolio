@@ -2,6 +2,7 @@ import {
   IconAt,
   IconBriefcase,
   IconCertificate,
+  IconFileText,
   IconFolder,
   IconHome,
   IconStack2,
@@ -49,6 +50,7 @@ const navGroups = [
         icon: IconAt,
         url: "/dashboard/social-links",
       },
+      { name: "Resume", icon: IconFileText, url: "/dashboard/resume" },
     ],
   },
 ];

@@ -42,6 +42,30 @@ export const AVAILABILITY_STATUS_LABELS: Record<AvailabilityStatus, string> = {
   limited: "Limited availability",
 };
 
+export const DEGREE_TYPES = [
+  "bachelor",
+  "master",
+  "doctorate",
+  "diploma",
+  "associate",
+  "high-school",
+  "bootcamp",
+  "other",
+] as const;
+
+export type DegreeType = (typeof DEGREE_TYPES)[number];
+
+export const DEGREE_TYPE_LABELS: Record<DegreeType, string> = {
+  bachelor: "Bachelor's Degree",
+  master: "Master's Degree",
+  doctorate: "Doctorate (PhD)",
+  diploma: "Diploma",
+  associate: "Associate's Degree",
+  "high-school": "High School",
+  bootcamp: "Bootcamp",
+  other: "Other",
+};
+
 export const EXPERIENCE_STATUS_TYPES = ["draft", "published"] as const;
 
 export type ExperienceStatusType = (typeof EXPERIENCE_STATUS_TYPES)[number];
@@ -50,6 +74,7 @@ export const EXPERIENCE_STATUS_LABELS: Record<ExperienceStatusType, string> = {
   draft: "Draft",
   published: "Published",
 };
+
 
 export const ACTIVITY_LOG_ACTIONS = ["created", "updated", "deleted"] as const;
 export type ActivityLogAction = (typeof ACTIVITY_LOG_ACTIONS)[number];
