@@ -1,14 +1,16 @@
-import { createEnv } from "@t3-oss/env-core";
-import "dotenv/config";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-core'
+import 'dotenv/config'
+import { z } from 'zod'
 
 export const env = createEnv({
+  onValidationError: (issues) => {
+    console.error('❌ Invalid environment variables:', JSON.stringify(issues, null, 2))
+    throw new Error('Invalid environment variables')
+  },
   server: {
     DATABASE_URL: z.string().min(1),
     CORS_ORIGIN: z.string().min(1),
-    NODE_ENV: z
-      .enum(["development", "production", "test"])
-      .default("development"),
+    NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.url(),
     ALLOWED_EMAIL_LOGIN: z.email(),
@@ -17,4 +19,4 @@ export const env = createEnv({
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
-});
+})
