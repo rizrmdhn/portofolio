@@ -63,8 +63,8 @@ export async function createCertification(data: CreateCertificationInput) {
     .insert(certifications)
     .values({
       ...data,
-      issueYear: new Date(data.issueYear).getFullYear(),
-      expiryYear: data.expiryYear ? new Date(data.expiryYear).getFullYear() : null,
+      issueYear: data.issueYear,
+      expiryYear: data.expiryYear ?? null,
     })
     .returning()
 
@@ -80,8 +80,8 @@ export async function updateCertification(data: UpdateCertificationInput) {
     .update(certifications)
     .set({
       ...data,
-      issueYear: new Date(data.issueYear).getFullYear(),
-      expiryYear: data.expiryYear ? new Date(data.expiryYear).getFullYear() : null,
+      issueYear: data.issueYear,
+      expiryYear: data.expiryYear ?? null,
     })
     .where(eq(certifications.id, data.id))
     .returning()

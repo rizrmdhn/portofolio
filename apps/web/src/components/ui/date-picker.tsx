@@ -1,40 +1,32 @@
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { IconCalendar } from "@tabler/icons-react";
-import { format } from "date-fns";
-import { useState } from "react";
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { IconCalendar } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { useState } from 'react'
 
 interface DatePickerProps {
-  value?: number;
-  onChange: (value: number) => void;
-  placeholder?: string;
+  value?: Date
+  onChange: (value: Date) => void
+  placeholder?: string
 }
 
 export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
-  const resolvedPlaceholder = placeholder ?? "Select a date";
+  const resolvedPlaceholder = placeholder ?? 'Select a date'
 
-  const [open, setOpen] = useState(false);
-  const selected = value ? new Date(value) : undefined;
+  const [open, setOpen] = useState(false)
+  const selected = value ? new Date(value) : undefined
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={
-          <Button
-            variant="outline"
-            type="button"
-            className="w-full justify-start font-normal"
-          />
+          <Button variant="outline" type="button" className="w-full justify-start font-normal" />
         }
       >
-        <IconCalendar className="size-3.5 text-muted-foreground" />
+        <IconCalendar className="text-muted-foreground size-3.5" />
         {selected ? (
-          <span>{format(selected, "dd MMM yyyy")}</span>
+          <span>{format(selected, 'dd MMM yyyy')}</span>
         ) : (
           <span className="text-muted-foreground">{resolvedPlaceholder}</span>
         )}
@@ -45,8 +37,8 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
           selected={selected}
           onSelect={(date) => {
             if (date) {
-              onChange(date.getTime());
-              setOpen(false);
+              onChange(date)
+              setOpen(false)
             }
           }}
           captionLayout="dropdown"
@@ -54,5 +46,5 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
         />
       </PopoverContent>
     </Popover>
-  );
+  )
 }

@@ -1,6 +1,8 @@
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import type { AppRouter } from '@portofolio/api/root'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
@@ -50,6 +52,12 @@ function RootDocument() {
         </ThemeProvider>
         <TanStackRouterDevtools position="bottom-left" />
         <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+        <TanStackDevtools
+          plugins={[formDevtoolsPlugin()]}
+          config={{
+            position: 'middle-right',
+          }}
+        />
         <Scripts />
       </body>
     </html>
