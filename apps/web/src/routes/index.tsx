@@ -13,7 +13,6 @@ import {
   IconArrowRight,
   IconBriefcase,
   IconCertificate,
-  IconExternalLink,
   IconFolder,
   IconMail,
   IconStack2,
@@ -301,29 +300,41 @@ function HomeComponent() {
         >
           <FadeIn className="flex flex-col gap-8">
             <SectionHeading>CONTACT</SectionHeading>
-            <div className="border-border flex flex-col items-start gap-6 rounded-lg border p-8">
-              <p className="text-subtle max-w-lg leading-relaxed">
-                I&apos;m open to freelance work, full-time roles, and interesting side projects. If
-                you have something in mind, reach out.
-              </p>
-              <div className="flex flex-col gap-3 font-mono text-sm">
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="text-subtle hover:text-foreground transition-colors"
+            <div className="border-border flex flex-col gap-8 rounded-lg border p-8 sm:flex-row sm:items-start sm:justify-between">
+              <div className="flex flex-col gap-4">
+                <p className="text-foreground text-lg font-semibold">Let&apos;s work together.</p>
+                <p className="text-subtle max-w-sm leading-relaxed">
+                  I&apos;m open to freelance work, full-time roles, and interesting side projects.
+                  If you have something in mind, reach out.
+                </p>
+                <Button
+                  size="lg"
+                  className="w-fit"
+                  onClick={() => window.location.assign(`mailto:${profile.email}`)}
                 >
-                  {profile.email} <IconExternalLink className="inline size-3" />
-                </a>
-                {socialByIcon.github && (
-                  <a
-                    href={socialByIcon.github.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-subtle hover:text-foreground transition-colors"
-                  >
-                    {socialByIcon.github.url}
-                    <IconExternalLink className="inline size-3" />
-                  </a>
-                )}
+                  <IconMail className="size-4" />
+                  Send me an email
+                </Button>
+              </div>
+              <div className="flex flex-col gap-3">
+                {socialLinks.map((link) => {
+                  const Icon = SOCIAL_ICON_MAP[link.icon].icon
+                  return (
+                    <Button
+                      key={link.id}
+                      variant="outline"
+                      size="sm"
+                      className="justify-start"
+                      onClick={() => {
+                        incrementSocialLinkClickCount.mutate({ id: link.id })
+                        window.open(link.url, '_blank')
+                      }}
+                    >
+                      <Icon className="size-4" />
+                      {link.title}
+                    </Button>
+                  )
+                })}
               </div>
             </div>
           </FadeIn>
