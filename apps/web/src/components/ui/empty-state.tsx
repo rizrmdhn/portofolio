@@ -1,7 +1,7 @@
-import {   isValidElement } from "react";
-import type {ElementType, ReactNode} from "react";
+import type { ElementType, ReactNode } from 'react'
+import { isValidElement } from 'react'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -9,48 +9,47 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import { IconArrowUpRight  } from "@tabler/icons-react";
-import type {TablerIcon} from "@tabler/icons-react";
+} from '@/components/ui/empty'
+import { cn } from '@/lib/utils'
+import type { TablerIcon } from '@tabler/icons-react'
+import { IconArrowUpRight } from '@tabler/icons-react'
 
 export type EmptyStateAction =
   | { render: ReactNode }
   | {
-      render?: never;
-      label: string;
-      icon?: TablerIcon | ReactNode;
-      onClick?: () => void;
-      href?: string;
-      variant?:
-        | "default"
-        | "outline"
-        | "ghost"
-        | "link"
-        | "destructive"
-        | "secondary";
-      className?: string;
-    };
+      render?: never
+      label: string
+      icon?: TablerIcon | ReactNode
+      onClick?: () => void
+      href?: string
+      variant?: 'default' | 'outline' | 'ghost' | 'link' | 'destructive' | 'secondary'
+      className?: string
+    }
 
 export interface EmptyStateProps {
-  icon?: TablerIcon | ReactNode;
-  iconVariant?: "default" | "icon";
-  title: string;
-  description: string;
-  actions?: Array<EmptyStateAction>;
-  learnMoreHref?: string;
-  learnMoreLabel?: string;
-  className?: string;
+  icon?: TablerIcon | ReactNode
+  iconVariant?: 'default' | 'icon'
+  title: string
+  description: string
+  actions?: Array<EmptyStateAction>
+  learnMoreHref?: string
+  learnMoreLabel?: string
+  className?: string
+  titleClassName?: string
+  descriptionClassName?: string
 }
 
 export function EmptyState({
   icon: Icon,
-  iconVariant = "icon",
+  iconVariant = 'icon',
   title,
   description,
   actions = [],
   learnMoreHref,
-  learnMoreLabel = "Learn More",
+  learnMoreLabel = 'Learn More',
   className,
+  titleClassName,
+  descriptionClassName,
 }: EmptyStateProps) {
   return (
     <Empty className={className}>
@@ -60,55 +59,57 @@ export function EmptyState({
             {isValidElement(Icon)
               ? Icon
               : (() => {
-                  const I = Icon as ElementType;
-                  return <I />;
+                  const I = Icon as ElementType
+                  return <I />
                 })()}
           </EmptyMedia>
         )}
-        <EmptyTitle>{title}</EmptyTitle>
-        <EmptyDescription>{description}</EmptyDescription>
+        <EmptyTitle className={cn('text-center', titleClassName)}>{title}</EmptyTitle>
+        <EmptyDescription className={cn('text-center', descriptionClassName)}>
+          {description}
+        </EmptyDescription>
       </EmptyHeader>
       {actions.length > 0 && (
         <EmptyContent>
           <div className="flex gap-2">
             {actions.map((action, index) => {
-              if (!("label" in action)) {
-                return <span key={index}>{action.render}</span>;
+              if (!('label' in action)) {
+                return <span key={index}>{action.render}</span>
               }
 
               const actionIcon = action.icon
                 ? isValidElement(action.icon)
                   ? action.icon
                   : (() => {
-                      const I = action.icon as ElementType;
-                      return <I />;
+                      const I = action.icon as ElementType
+                      return <I />
                     })()
-                : null;
+                : null
 
               if (action.href) {
                 return (
                   <Button
                     key={index}
-                    variant={action.variant || "default"}
+                    variant={action.variant || 'default'}
                     render={<a href={action.href} />}
                     className={action.className}
                   >
                     {actionIcon}
                     {action.label}
                   </Button>
-                );
+                )
               }
               return (
                 <Button
                   key={index}
-                  variant={action.variant || "default"}
+                  variant={action.variant || 'default'}
                   onClick={action.onClick}
                   className={action.className}
                 >
                   {actionIcon}
                   {action.label}
                 </Button>
-              );
+              )
             })}
           </div>
         </EmptyContent>
@@ -124,5 +125,5 @@ export function EmptyState({
         </Button>
       )}
     </Empty>
-  );
+  )
 }

@@ -1,3 +1,5 @@
+import { ErrorBoundary } from '@/components/error-boundary'
+import { NotFound } from '@/components/not-found'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import type { AppRouter } from '@portofolio/api/root'
@@ -51,7 +53,8 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       { rel: 'icon', href: '/favicon.ico' },
     ],
   }),
-
+  notFoundComponent: NotFound,
+  errorComponent: ErrorBoundary,
   component: RootDocument,
 })
 
