@@ -6,7 +6,13 @@ import {
   IconFolder,
   IconStack2,
 } from "@tabler/icons-react";
-import { Card, CardContent } from "../ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 interface StatCardProps {
   label: string;
@@ -17,12 +23,14 @@ interface StatCardProps {
 function StatCard({ label, value, icon: Icon }: StatCardProps) {
   return (
     <Card className="flex-1 min-w-0">
-      <CardContent className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">{label}</span>
-          <Icon className="size-3.5 text-muted-foreground" />
-        </div>
-        <span className="text-2xl font-bold font-mono tabular-nums truncate">
+      <CardHeader>
+        <CardTitle>{label}</CardTitle>
+        <CardAction>
+          <Icon className="size-4 text-muted-foreground" />
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <span className="text-2xl font-bold font-mono tabular-nums">
           {typeof value === "number" ? value.toLocaleString() : value}
         </span>
       </CardContent>

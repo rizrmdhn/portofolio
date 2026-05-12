@@ -2,7 +2,13 @@ import { cn } from "@/lib/utils";
 import { SOCIAL_ICON_MAP, SocialIconName } from "@portofolio/constants";
 import { SocialLink } from "@portofolio/types/social-links.types";
 import { IconAt } from "@tabler/icons-react";
-import { Card, CardContent } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { EmptyState } from "../ui/empty-state";
 
 interface SocialLinkClickThroughCardProps {
@@ -16,19 +22,11 @@ export function SocialLinkClickThroughCard({
 }: SocialLinkClickThroughCardProps) {
   return (
     <Card className={cn("w-1/2", className)}>
-      <CardContent className="flex flex-col gap-3">
-        {/* Header Section */}
-        <div className="flex items-center justify-between">
-          {/* Title */}
-          <div className="flex flex-col">
-            <p className="text-sm font-semibold text-foreground">
-              Social Link Click-Through
-            </p>
-            <span className="text-xs text-muted-foreground">Last 30 days</span>
-          </div>
-        </div>
-
-        {/* Project List */}
+      <CardHeader className="border-b">
+        <CardTitle>Social Link Click-Through</CardTitle>
+        <CardDescription>Last 30 days</CardDescription>
+      </CardHeader>
+      <CardContent>
         <div className="grid grid-cols-2 gap-4">
           {socialLinks.map((link, idx) => {
             const compareLink = socialLinks[idx + 1] ?? socialLinks[idx - 1];
@@ -42,24 +40,19 @@ export function SocialLinkClickThroughCard({
             const Icon = SOCIAL_ICON_MAP[link.icon as SocialIconName]?.icon;
 
             return (
-              <Card
-                key={link.id}
-                className="flex flex-row items-center gap-3 py-2.5"
-              >
-                <CardContent className="flex flex-col gap-3 flex-1">
-                  <div className="flex items-center gap-3 flex-row">
-                    {Icon && <Icon className="size-3.5" />}
-                    <span className="text-xs font-medium text-foreground">
-                      {link.title}
-                    </span>
+              <Card key={link.id}>
+                <CardContent className="flex flex-col gap-3">
+                  <div className="flex items-center gap-2">
+                    {Icon && <Icon className="size-3.5 text-muted-foreground" />}
+                    <span className="text-xs font-medium">{link.title}</span>
                   </div>
-                  <div className="flex flex-row justify-between w-full">
-                    <span className="text-xl font-bold text-foreground">
+                  <div className="flex items-end justify-between">
+                    <span className="text-xl font-bold font-mono tabular-nums">
                       {link.clickCount}
                     </span>
                     <span
                       className={cn(
-                        "text-sm",
+                        "text-xs font-mono",
                         growth === null
                           ? "text-muted-foreground"
                           : growth > 0
@@ -79,11 +72,13 @@ export function SocialLinkClickThroughCard({
             );
           })}
           {socialLinks.length === 0 && (
-            <EmptyState
-              icon={IconAt}
-              title="No social links yet"
-              description="Your social link click-through stats will appear here once you add some social links and they start getting clicks."
-            />
+            <div className="col-span-2">
+              <EmptyState
+                icon={IconAt}
+                title="No social links yet"
+                description="Your social link click-through stats will appear here once you add some social links and they start getting clicks."
+              />
+            </div>
           )}
         </div>
       </CardContent>
