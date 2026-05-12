@@ -118,7 +118,7 @@ function ResumeSettingsPage() {
           <h2 className="text-foreground text-base font-bold">Resume</h2>
           <p className="text-muted-foreground text-xs">Configure and generate your PDF resume.</p>
         </div>
-        {cv?.data?.url && (
+        {cv?.data.url && (
           <Link to="/resume" target="_blank">
             <Button variant="outline" size="sm">
               <IconFileText className="size-4" />
@@ -134,7 +134,7 @@ function ResumeSettingsPage() {
           Total Downloads
         </p>
         <p className="text-foreground mt-1 text-3xl font-bold">{stats.downloadCount}</p>
-        {cv?.data?.uploadedAt && (
+        {cv?.data.uploadedAt && (
           <p className="text-muted-foreground mt-1 text-xs">
             Last generated:{' '}
             {new Date(cv.data.uploadedAt).toLocaleString('en-US', {
