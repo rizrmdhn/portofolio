@@ -220,7 +220,9 @@ function RouteComponent() {
             {data.length} results
           </InputGroupAddon>
         </InputGroup>
-        <Button>
+        <Button
+          onClick={() => navigate({ to: "/dashboard/certificate/create" })}
+        >
           <IconPlus />
           Add Certificate
         </Button>

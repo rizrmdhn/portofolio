@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Certification } from "@portofolio/types/certification.types";
 import {
   IconAward,
@@ -5,8 +6,9 @@ import {
   IconGripVertical,
   IconPencil,
 } from "@tabler/icons-react";
+import { useNavigate } from "@tanstack/react-router";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Separator } from "../ui/separator";
 
@@ -19,6 +21,8 @@ export function CertificateCard({
   certificate,
   dragHandleProps,
 }: CertificateCardProps) {
+  const navigate = useNavigate();
+
   return (
     <Card className="py-3 px-4">
       <CardContent className="flex items-center gap-3 px-0">
@@ -52,14 +56,30 @@ export function CertificateCard({
       </CardContent>
       <Separator />
       <CardFooter className="flex items-center justify-start p-0 gap-2">
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            navigate({
+              to: "/dashboard/certificate/$certificateId/edit",
+              params: { certificateId: certificate.id },
+            })
+          }
+        >
           <IconPencil className="size-3.5" />
           Edit
         </Button>
-        <Button variant="outline" size="sm">
-          <IconExternalLink className="size-3.5" />
-          View
-        </Button>
+        {certificate.certificateUrl && (
+          <a
+            href={certificate.certificateUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+          >
+            <IconExternalLink className="size-3.5" />
+            View
+          </a>
+        )}
       </CardFooter>
     </Card>
   );
