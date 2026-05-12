@@ -428,6 +428,9 @@ importers:
 
   packages/queries:
     dependencies:
+      '@portofolio/constants':
+        specifier: workspace:*
+        version: link:../constants
       '@portofolio/db':
         specifier: workspace:*
         version: link:../db

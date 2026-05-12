@@ -1,3 +1,4 @@
+import { createActivityLog } from "@portofolio/queries/activity-log.queries";
 import {
   createTechStackCategory,
   createTechStackCategoryWithItems,
@@ -73,6 +74,8 @@ export const techStackRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "created", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
+
       return category;
     }),
 
@@ -84,6 +87,8 @@ export const techStackRouter = createTRPCRouter({
       );
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "created", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
 
       return category;
     }),
@@ -97,6 +102,8 @@ export const techStackRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "updated", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
+
       return category;
     }),
 
@@ -108,6 +115,8 @@ export const techStackRouter = createTRPCRouter({
       );
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "updated", entity: "techStackCategory", entityId: category.id, entityTitle: category.name });
 
       return category;
     }),
@@ -131,6 +140,8 @@ export const techStackRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "deleted", entity: "techStackCategory", entityId: result.id, entityTitle: result.name });
+
       return result;
     }),
 
@@ -144,6 +155,8 @@ export const techStackRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "created", entity: "techStackItem", entityId: item.id, entityTitle: item.name });
+
       return item;
     }),
 
@@ -155,6 +168,8 @@ export const techStackRouter = createTRPCRouter({
       );
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "updated", entity: "techStackItem", entityId: item.id, entityTitle: item.name });
 
       return item;
     }),
@@ -175,6 +190,8 @@ export const techStackRouter = createTRPCRouter({
       );
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "deleted", entity: "techStackItem", entityId: result.id, entityTitle: result.name });
 
       return result;
     }),

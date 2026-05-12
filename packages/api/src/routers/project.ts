@@ -1,3 +1,4 @@
+import { createActivityLog } from "@portofolio/queries/activity-log.queries";
 import { incrementViews } from "@portofolio/queries/project-views.queries";
 import {
   createProject,
@@ -113,6 +114,8 @@ export const projectRouter = createTRPCRouter({
         if (imageErr) throw toTRPCError(imageErr);
       }
 
+      void createActivityLog({ action: "created", entity: "project", entityId: project.id, entityTitle: project.title });
+
       return project;
     }),
 
@@ -163,6 +166,8 @@ export const projectRouter = createTRPCRouter({
         if (imageErr) throw toTRPCError(imageErr);
       }
 
+      void createActivityLog({ action: "updated", entity: "project", entityId: project.id, entityTitle: project.title });
+
       return project;
     }),
 
@@ -194,6 +199,8 @@ export const projectRouter = createTRPCRouter({
 
         await utapi.deleteFiles(imageFiles);
       }
+
+      void createActivityLog({ action: "deleted", entity: "project", entityId: result.id, entityTitle: result.title });
 
       return result;
     }),

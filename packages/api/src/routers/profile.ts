@@ -1,3 +1,4 @@
+import { createActivityLog } from "@portofolio/queries/activity-log.queries";
 import {
   getProfile,
   updateProfile,
@@ -22,6 +23,8 @@ export const profileRouter = createTRPCRouter({
       const [result, err] = await tryCatchAsync(() => updateProfile(input));
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "updated", entity: "profile", entityId: result.id, entityTitle: result.name });
 
       return result;
     }),

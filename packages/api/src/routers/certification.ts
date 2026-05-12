@@ -1,3 +1,4 @@
+import { createActivityLog } from "@portofolio/queries/activity-log.queries";
 import {
   createCertification,
   deleteCertification,
@@ -72,6 +73,8 @@ export const certificationRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "created", entity: "certification", entityId: certification.id, entityTitle: certification.title });
+
       return certification;
     }),
 
@@ -83,6 +86,8 @@ export const certificationRouter = createTRPCRouter({
       );
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "updated", entity: "certification", entityId: certification.id, entityTitle: certification.title });
 
       return certification;
     }),
@@ -101,6 +106,8 @@ export const certificationRouter = createTRPCRouter({
       const [result, err] = await tryCatchAsync(() => deleteCertification(id));
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "deleted", entity: "certification", entityId: result.id, entityTitle: result.title });
 
       return result;
     }),

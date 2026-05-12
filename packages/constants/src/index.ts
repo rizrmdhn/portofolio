@@ -51,6 +51,30 @@ export const EXPERIENCE_STATUS_LABELS: Record<ExperienceStatusType, string> = {
   published: "Published",
 };
 
+export const ACTIVITY_LOG_ACTIONS = ["created", "updated", "deleted"] as const;
+export type ActivityLogAction = (typeof ACTIVITY_LOG_ACTIONS)[number];
+
+export const ACTIVITY_LOG_ENTITIES = [
+  "project",
+  "experience",
+  "certification",
+  "techStackCategory",
+  "techStackItem",
+  "socialLink",
+  "profile",
+] as const;
+export type ActivityLogEntity = (typeof ACTIVITY_LOG_ENTITIES)[number];
+
+export const ACTIVITY_LOG_ENTITY_LABELS: Record<ActivityLogEntity, string> = {
+  project: "Project",
+  experience: "Experience",
+  certification: "Certification",
+  techStackCategory: "Tech Stack Category",
+  techStackItem: "Tech Stack Item",
+  socialLink: "Social Link",
+  profile: "Profile",
+};
+
 export * from "./colors";
 export * from "./experience";
 export * from "./icons";

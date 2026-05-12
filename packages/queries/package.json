@@ -22,6 +22,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@portofolio/constants": "workspace:*",
     "@portofolio/db": "workspace:*",
     "@portofolio/schema": "workspace:*",
     "@portofolio/types": "workspace:*",

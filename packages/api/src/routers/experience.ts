@@ -1,3 +1,4 @@
+import { createActivityLog } from "@portofolio/queries/activity-log.queries";
 import {
   createExperience,
   deleteExperience,
@@ -59,6 +60,8 @@ export const experienceRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "created", entity: "experience", entityId: experience.id, entityTitle: experience.title });
+
       return experience;
     }),
 
@@ -70,6 +73,8 @@ export const experienceRouter = createTRPCRouter({
       );
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "updated", entity: "experience", entityId: experience.id, entityTitle: experience.title });
 
       return experience;
     }),
@@ -88,6 +93,8 @@ export const experienceRouter = createTRPCRouter({
       const [success, err] = await tryCatchAsync(() => deleteExperience(id));
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "deleted", entity: "experience", entityId: success.id, entityTitle: success.title });
 
       return success;
     }),

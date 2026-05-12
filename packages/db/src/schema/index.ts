@@ -2,6 +2,8 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import {
+  ACTIVITY_LOG_ACTIONS,
+  ACTIVITY_LOG_ENTITIES,
   AVAILABILITY_STATUS_TYPES,
   COLOR_VALUES,
   EXPERIENCE_STATUS_TYPES,
@@ -345,6 +347,63 @@ export const techStackItems = createTable(
   (table) => [
     index("tech_stack_items_id_idx").using("btree", table.id),
     index("tech_stack_items_category_id_idx").using("btree", table.categoryId),
+  ],
+);
+
+export const activityLogActionEnum = pgEnum(
+  "activity_log_action_enum",
+  ACTIVITY_LOG_ACTIONS,
+);
+
+export const activityLogEntityEnum = pgEnum(
+  "activity_log_entity_enum",
+  ACTIVITY_LOG_ENTITIES,
+);
+
+export const viewEvents = createTable(
+  "view_events",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    viewedAt: timestamp("viewed_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => new Date().toISOString())
+      .notNull(),
+  },
+  (table) => [
+    index("view_events_project_id_idx").using("btree", table.projectId),
+    index("view_events_viewed_at_idx").using("btree", table.viewedAt),
+  ],
+);
+
+export const activityLog = createTable(
+  "activity_log",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    action: activityLogActionEnum("action").notNull(),
+    entity: activityLogEntityEnum("entity").notNull(),
+    entityId: uuid("entity_id").notNull(),
+    entityTitle: varchar("entity_title", { length: 256 }).notNull(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+      mode: "string",
+    })
+      .$default(() => new Date().toISOString())
+      .notNull(),
+  },
+  (table) => [
+    index("activity_log_id_idx").using("btree", table.id),
+    index("activity_log_created_at_idx").using("btree", table.createdAt),
   ],
 );
 

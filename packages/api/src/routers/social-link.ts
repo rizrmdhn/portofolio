@@ -1,3 +1,4 @@
+import { createActivityLog } from "@portofolio/queries/activity-log.queries";
 import {
   createSocialLink,
   deleteSocialLink,
@@ -71,6 +72,8 @@ export const socialLinkRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "created", entity: "socialLink", entityId: socialLink.id, entityTitle: socialLink.title });
+
       return socialLink;
     }),
 
@@ -91,6 +94,8 @@ export const socialLinkRouter = createTRPCRouter({
 
       if (err) throw toTRPCError(err);
 
+      void createActivityLog({ action: "updated", entity: "socialLink", entityId: socialLink.id, entityTitle: socialLink.title });
+
       return socialLink;
     }),
 
@@ -108,6 +113,8 @@ export const socialLinkRouter = createTRPCRouter({
       const [result, err] = await tryCatchAsync(() => deleteSocialLink(id));
 
       if (err) throw toTRPCError(err);
+
+      void createActivityLog({ action: "deleted", entity: "socialLink", entityId: result.id, entityTitle: result.title });
 
       return result;
     }),
