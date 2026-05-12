@@ -13,13 +13,16 @@ export default defineConfig({
   },
   resolve: {
     tsconfigPaths: true,
+    alias: {
+      tslib: 'tslib/tslib.es6.mjs',
+    },
   },
   plugins: [
     tailwindcss(),
     tanstackStart(),
     nitro({
       preset: 'vercel',
-      traceDeps: ['@node-rs/argon2'],
+      traceDeps: ['@node-rs/argon2', '@react-pdf/renderer'],
     }),
     viteReact(),
   ],
