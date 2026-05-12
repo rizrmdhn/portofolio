@@ -1,11 +1,13 @@
+import type {
+  ColumnFiltersState,
+  PaginationState,
+  RowSelectionState,
+  SortingState,
+  TableOptions,
+  Updater,
+  VisibilityState,
+} from '@tanstack/react-table'
 import {
-  
-  
-  
-  
-  
-  
-  
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -13,62 +15,65 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable
-} from "@tanstack/react-table";
-import type {ColumnFiltersState, PaginationState, RowSelectionState, SortingState, TableOptions, Updater, VisibilityState} from "@tanstack/react-table";
-import * as React from "react";
+  useReactTable,
+} from '@tanstack/react-table'
+import * as React from 'react'
 
-import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
+import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import type {
   ExtendedColumnFilter,
   ExtendedColumnSort,
   JoinOperator,
-} from "@portofolio/types/data-table.types";
+} from '@portofolio/types/data-table.types'
 
-const DEBOUNCE_MS = 500;
+const DEBOUNCE_MS = 500
 
 interface SearchParams {
-  page: number;
-  perPage: number;
-  sort: Array<{ id: string; desc: boolean }>;
+  page: number
+  perPage: number
+  sort: Array<{ id: string; desc: boolean }>
   filters?: Array<{
-    id: string;
-    value: string | Array<string>;
-    variant: string;
-    operator: string;
-    filterId: string;
-  }>;
-  joinOperator?: string;
-  [key: string]: unknown;
+    id: string
+    value: string | Array<string>
+    variant: string
+    operator: string
+    filterId: string
+  }>
+  joinOperator?: string
+  [key: string]: unknown
 }
 
-interface UseDataTableRouterProps<TData extends Record<string, unknown>, TSearch extends SearchParams>
+interface UseDataTableRouterProps<
+  TData extends Record<string, unknown>,
+  TSearch extends SearchParams,
+>
   extends
     Omit<
       TableOptions<TData>,
-      | "state"
-      | "pageCount"
-      | "getCoreRowModel"
-      | "manualFiltering"
-      | "manualPagination"
-      | "manualSorting"
+      | 'state'
+      | 'pageCount'
+      | 'getCoreRowModel'
+      | 'manualFiltering'
+      | 'manualPagination'
+      | 'manualSorting'
     >,
-    Required<Pick<TableOptions<TData>, "pageCount">> {
-  search: TSearch;
-  navigate: (opts: { search: (prev: TSearch) => TSearch }) => void;
+    Required<Pick<TableOptions<TData>, 'pageCount'>> {
+  search: TSearch
+  navigate: (opts: { search: (prev: TSearch) => TSearch }) => void
   initialState?: {
-    sorting?: Array<ExtendedColumnSort<TData>>;
-    pagination?: { pageSize: number; pageIndex: number };
-    rowSelection?: RowSelectionState;
-    columnVisibility?: VisibilityState;
-  };
-  debounceMs?: number;
-  enableAdvancedFilter?: boolean;
+    sorting?: Array<ExtendedColumnSort<TData>>
+    pagination?: { pageSize: number; pageIndex: number }
+    rowSelection?: RowSelectionState
+    columnVisibility?: VisibilityState
+  }
+  debounceMs?: number
+  enableAdvancedFilter?: boolean
 }
 
-export function useDataTableRouter<TData extends Record<string, unknown>, TSearch extends SearchParams>(
-  props: UseDataTableRouterProps<TData, TSearch>,
-) {
+export function useDataTableRouter<
+  TData extends Record<string, unknown>,
+  TSearch extends SearchParams,
+>(props: UseDataTableRouterProps<TData, TSearch>) {
   const {
     columns,
     pageCount = -1,
@@ -78,13 +83,14 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
     debounceMs = DEBOUNCE_MS,
     enableAdvancedFilter = false,
     ...tableProps
-  } = props;
+  } = props
 
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>(
     initialState?.rowSelection ?? {},
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(initialState?.columnVisibility ?? {});
+  )
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
+    initialState?.columnVisibility ?? {},
+  )
 
   // Pagination — derived from search params
   const pagination: PaginationState = React.useMemo(
@@ -93,68 +99,63 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
       pageSize: search.perPage,
     }),
     [search.page, search.perPage],
-  );
+  )
 
   const onPaginationChange = React.useCallback(
     (updaterOrValue: Updater<PaginationState>) => {
       const newPagination =
-        typeof updaterOrValue === "function"
-          ? updaterOrValue(pagination)
-          : updaterOrValue;
+        typeof updaterOrValue === 'function' ? updaterOrValue(pagination) : updaterOrValue
       navigate({
         search: (prev) => ({
           ...prev,
           page: newPagination.pageIndex + 1,
           perPage: newPagination.pageSize,
         }),
-      });
+      })
     },
     [pagination, navigate],
-  );
+  )
 
   // Sorting — derived from search params
-  const sorting = search.sort as Array<ExtendedColumnSort<TData>>;
+  const sorting = search.sort as Array<ExtendedColumnSort<TData>>
 
   const onSortingChange = React.useCallback(
     (updaterOrValue: Updater<SortingState>) => {
       const newSorting =
-        typeof updaterOrValue === "function"
-          ? updaterOrValue(sorting)
-          : updaterOrValue;
+        typeof updaterOrValue === 'function' ? updaterOrValue(sorting) : updaterOrValue
       navigate({
         search: (prev) => ({
           ...prev,
           sort: newSorting,
           page: 1,
         }),
-      });
+      })
     },
     [sorting, navigate],
-  );
+  )
 
   // Column filters
   const filterableColumns = React.useMemo(() => {
-    if (enableAdvancedFilter) return [];
-    return columns.filter((column) => column.enableColumnFilter);
-  }, [columns, enableAdvancedFilter]);
+    if (enableAdvancedFilter) return []
+    return columns.filter((column) => column.enableColumnFilter)
+  }, [columns, enableAdvancedFilter])
 
   const initialColumnFilters: ColumnFiltersState = React.useMemo(() => {
-    if (enableAdvancedFilter) return [];
+    if (enableAdvancedFilter) return []
     return filterableColumns.reduce<ColumnFiltersState>((filters, column) => {
-      const key = column.id ?? "";
-      const value = search[key];
-      if (value !== undefined && value !== null && value !== "") {
+      const key = column.id ?? ''
+      const value = search[key]
+      if (value !== undefined && value !== null && value !== '') {
         filters.push({
           id: key,
           value: Array.isArray(value) ? value : [value],
-        });
+        })
       }
-      return filters;
-    }, []);
-  }, [filterableColumns, search, enableAdvancedFilter]);
+      return filters
+    }, [])
+  }, [filterableColumns, search, enableAdvancedFilter])
 
-  const [columnFilters, setColumnFilters] =
-    React.useState<ColumnFiltersState>(initialColumnFilters);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(initialColumnFilters)
 
   const debouncedNavigateFilters = useDebouncedCallback(
     (filterUpdates: Record<string, unknown>) => {
@@ -164,45 +165,42 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
           ...filterUpdates,
           page: 1,
         }),
-      });
+      })
     },
     debounceMs,
-  );
+  )
 
   const onColumnFiltersChange = React.useCallback(
     (updaterOrValue: Updater<ColumnFiltersState>) => {
-      if (enableAdvancedFilter) return;
+      if (enableAdvancedFilter) return
 
       setColumnFilters((prev) => {
-        const next =
-          typeof updaterOrValue === "function"
-            ? updaterOrValue(prev)
-            : updaterOrValue;
+        const next = typeof updaterOrValue === 'function' ? updaterOrValue(prev) : updaterOrValue
 
-        const filterUpdates: Record<string, unknown> = {};
+        const filterUpdates: Record<string, unknown> = {}
         for (const filter of next) {
           if (filterableColumns.find((column) => column.id === filter.id)) {
-            filterUpdates[filter.id] = filter.value;
+            filterUpdates[filter.id] = filter.value
           }
         }
         for (const prevFilter of prev) {
           if (!next.some((filter) => filter.id === prevFilter.id)) {
-            filterUpdates[prevFilter.id] = "";
+            filterUpdates[prevFilter.id] = ''
           }
         }
 
-        debouncedNavigateFilters(filterUpdates);
-        return next;
-      });
+        debouncedNavigateFilters(filterUpdates)
+        return next
+      })
     },
     [debouncedNavigateFilters, filterableColumns, enableAdvancedFilter],
-  );
+  )
 
   // Advanced filters — derived from search params, updated via navigate
   const filters = React.useMemo(
     () => (search.filters ?? []) as Array<ExtendedColumnFilter<TData>>,
     [search.filters],
-  );
+  )
 
   const debouncedNavigateAdvancedFilters = useDebouncedCallback(
     (newFilters: Array<ExtendedColumnFilter<TData>> | null) => {
@@ -212,30 +210,28 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
           filters: newFilters ?? [],
           page: 1,
         }),
-      });
+      })
     },
     debounceMs,
-  );
+  )
 
   const setFilters = React.useCallback(
     (
       value:
         | Array<ExtendedColumnFilter<TData>>
-        | ((
-            prev: Array<ExtendedColumnFilter<TData>>,
-          ) => Array<ExtendedColumnFilter<TData>>)
+        | ((prev: Array<ExtendedColumnFilter<TData>>) => Array<ExtendedColumnFilter<TData>>)
         | null,
     ) => {
-      if (typeof value === "function") {
-        debouncedNavigateAdvancedFilters(value(filters));
+      if (typeof value === 'function') {
+        debouncedNavigateAdvancedFilters(value(filters))
       } else {
-        debouncedNavigateAdvancedFilters(value);
+        debouncedNavigateAdvancedFilters(value)
       }
     },
     [filters, debouncedNavigateAdvancedFilters],
-  );
+  )
 
-  const joinOperator = (search.joinOperator ?? "and") as JoinOperator;
+  const joinOperator = (search.joinOperator ?? 'and') as JoinOperator
 
   const setJoinOperator = React.useCallback(
     (value: JoinOperator) => {
@@ -244,11 +240,12 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
           ...prev,
           joinOperator: value,
         }),
-      });
+      })
     },
     [navigate],
-  );
+  )
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     ...tableProps,
     columns,
@@ -287,7 +284,7 @@ export function useDataTableRouter<TData extends Record<string, unknown>, TSearc
       joinOperator,
       setJoinOperator,
     },
-  });
+  })
 
-  return { table };
+  return { table }
 }
