@@ -25,10 +25,12 @@ import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dash
 import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
 import { Route as coreDashboardCertificateIndexRouteImport } from './routes/(core)/dashboard/certificate/index'
 import { Route as coreDashboardTechStackCreateRouteImport } from './routes/(core)/dashboard/tech-stack/create'
+import { Route as coreDashboardSocialLinksCreateRouteImport } from './routes/(core)/dashboard/social-links/create'
 import { Route as coreDashboardProjectsCreateRouteImport } from './routes/(core)/dashboard/projects/create'
 import { Route as coreDashboardExperienceCreateRouteImport } from './routes/(core)/dashboard/experience/create'
 import { Route as coreDashboardCertificateCreateRouteImport } from './routes/(core)/dashboard/certificate/create'
 import { Route as coreDashboardTechStackTechStackIdEditRouteImport } from './routes/(core)/dashboard/tech-stack/$techStackId.edit'
+import { Route as coreDashboardSocialLinksSocialLinkIdEditRouteImport } from './routes/(core)/dashboard/social-links/$socialLinkId.edit'
 import { Route as coreDashboardProjectsProjectIdEditRouteImport } from './routes/(core)/dashboard/projects/$projectId.edit'
 import { Route as coreDashboardExperienceExperienceIdEditRouteImport } from './routes/(core)/dashboard/experience/$experienceId.edit'
 import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
@@ -118,6 +120,12 @@ const coreDashboardTechStackCreateRoute =
     path: '/tech-stack/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
+const coreDashboardSocialLinksCreateRoute =
+  coreDashboardSocialLinksCreateRouteImport.update({
+    id: '/social-links/create',
+    path: '/social-links/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
 const coreDashboardProjectsCreateRoute =
   coreDashboardProjectsCreateRouteImport.update({
     id: '/projects/create',
@@ -140,6 +148,12 @@ const coreDashboardTechStackTechStackIdEditRoute =
   coreDashboardTechStackTechStackIdEditRouteImport.update({
     id: '/tech-stack/$techStackId/edit',
     path: '/tech-stack/$techStackId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardSocialLinksSocialLinkIdEditRoute =
+  coreDashboardSocialLinksSocialLinkIdEditRouteImport.update({
+    id: '/social-links/$socialLinkId/edit',
+    path: '/social-links/$socialLinkId/edit',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 const coreDashboardProjectsProjectIdEditRoute =
@@ -173,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
   '/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
+  '/dashboard/social-links/create': typeof coreDashboardSocialLinksCreateRoute
   '/dashboard/tech-stack/create': typeof coreDashboardTechStackCreateRoute
   '/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
   '/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
@@ -183,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
   '/dashboard/experience/$experienceId/edit': typeof coreDashboardExperienceExperienceIdEditRoute
   '/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
+  '/dashboard/social-links/$socialLinkId/edit': typeof coreDashboardSocialLinksSocialLinkIdEditRoute
   '/dashboard/tech-stack/$techStackId/edit': typeof coreDashboardTechStackTechStackIdEditRoute
 }
 export interface FileRoutesByTo {
@@ -196,6 +212,7 @@ export interface FileRoutesByTo {
   '/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
   '/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
+  '/dashboard/social-links/create': typeof coreDashboardSocialLinksCreateRoute
   '/dashboard/tech-stack/create': typeof coreDashboardTechStackCreateRoute
   '/dashboard/certificate': typeof coreDashboardCertificateIndexRoute
   '/dashboard/experience': typeof coreDashboardExperienceIndexRoute
@@ -206,6 +223,7 @@ export interface FileRoutesByTo {
   '/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
   '/dashboard/experience/$experienceId/edit': typeof coreDashboardExperienceExperienceIdEditRoute
   '/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
+  '/dashboard/social-links/$socialLinkId/edit': typeof coreDashboardSocialLinksSocialLinkIdEditRoute
   '/dashboard/tech-stack/$techStackId/edit': typeof coreDashboardTechStackTechStackIdEditRoute
 }
 export interface FileRoutesById {
@@ -222,6 +240,7 @@ export interface FileRoutesById {
   '/(core)/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
   '/(core)/dashboard/experience/create': typeof coreDashboardExperienceCreateRoute
   '/(core)/dashboard/projects/create': typeof coreDashboardProjectsCreateRoute
+  '/(core)/dashboard/social-links/create': typeof coreDashboardSocialLinksCreateRoute
   '/(core)/dashboard/tech-stack/create': typeof coreDashboardTechStackCreateRoute
   '/(core)/dashboard/certificate/': typeof coreDashboardCertificateIndexRoute
   '/(core)/dashboard/experience/': typeof coreDashboardExperienceIndexRoute
@@ -232,6 +251,7 @@ export interface FileRoutesById {
   '/(core)/dashboard/certificate/$certificateId/edit': typeof coreDashboardCertificateCertificateIdEditRoute
   '/(core)/dashboard/experience/$experienceId/edit': typeof coreDashboardExperienceExperienceIdEditRoute
   '/(core)/dashboard/projects/$projectId/edit': typeof coreDashboardProjectsProjectIdEditRoute
+  '/(core)/dashboard/social-links/$socialLinkId/edit': typeof coreDashboardSocialLinksSocialLinkIdEditRoute
   '/(core)/dashboard/tech-stack/$techStackId/edit': typeof coreDashboardTechStackTechStackIdEditRoute
 }
 export interface FileRouteTypes {
@@ -248,6 +268,7 @@ export interface FileRouteTypes {
     | '/dashboard/certificate/create'
     | '/dashboard/experience/create'
     | '/dashboard/projects/create'
+    | '/dashboard/social-links/create'
     | '/dashboard/tech-stack/create'
     | '/dashboard/certificate/'
     | '/dashboard/experience/'
@@ -258,6 +279,7 @@ export interface FileRouteTypes {
     | '/dashboard/certificate/$certificateId/edit'
     | '/dashboard/experience/$experienceId/edit'
     | '/dashboard/projects/$projectId/edit'
+    | '/dashboard/social-links/$socialLinkId/edit'
     | '/dashboard/tech-stack/$techStackId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -271,6 +293,7 @@ export interface FileRouteTypes {
     | '/dashboard/certificate/create'
     | '/dashboard/experience/create'
     | '/dashboard/projects/create'
+    | '/dashboard/social-links/create'
     | '/dashboard/tech-stack/create'
     | '/dashboard/certificate'
     | '/dashboard/experience'
@@ -281,6 +304,7 @@ export interface FileRouteTypes {
     | '/dashboard/certificate/$certificateId/edit'
     | '/dashboard/experience/$experienceId/edit'
     | '/dashboard/projects/$projectId/edit'
+    | '/dashboard/social-links/$socialLinkId/edit'
     | '/dashboard/tech-stack/$techStackId/edit'
   id:
     | '__root__'
@@ -296,6 +320,7 @@ export interface FileRouteTypes {
     | '/(core)/dashboard/certificate/create'
     | '/(core)/dashboard/experience/create'
     | '/(core)/dashboard/projects/create'
+    | '/(core)/dashboard/social-links/create'
     | '/(core)/dashboard/tech-stack/create'
     | '/(core)/dashboard/certificate/'
     | '/(core)/dashboard/experience/'
@@ -306,6 +331,7 @@ export interface FileRouteTypes {
     | '/(core)/dashboard/certificate/$certificateId/edit'
     | '/(core)/dashboard/experience/$experienceId/edit'
     | '/(core)/dashboard/projects/$projectId/edit'
+    | '/(core)/dashboard/social-links/$socialLinkId/edit'
     | '/(core)/dashboard/tech-stack/$techStackId/edit'
   fileRoutesById: FileRoutesById
 }
@@ -433,6 +459,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardTechStackCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/(core)/dashboard/social-links/create': {
+      id: '/(core)/dashboard/social-links/create'
+      path: '/social-links/create'
+      fullPath: '/dashboard/social-links/create'
+      preLoaderRoute: typeof coreDashboardSocialLinksCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
     '/(core)/dashboard/projects/create': {
       id: '/(core)/dashboard/projects/create'
       path: '/projects/create'
@@ -459,6 +492,13 @@ declare module '@tanstack/react-router' {
       path: '/tech-stack/$techStackId/edit'
       fullPath: '/dashboard/tech-stack/$techStackId/edit'
       preLoaderRoute: typeof coreDashboardTechStackTechStackIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/social-links/$socialLinkId/edit': {
+      id: '/(core)/dashboard/social-links/$socialLinkId/edit'
+      path: '/social-links/$socialLinkId/edit'
+      fullPath: '/dashboard/social-links/$socialLinkId/edit'
+      preLoaderRoute: typeof coreDashboardSocialLinksSocialLinkIdEditRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
     '/(core)/dashboard/projects/$projectId/edit': {
@@ -502,6 +542,7 @@ interface coreDashboardRouteRouteChildren {
   coreDashboardCertificateCreateRoute: typeof coreDashboardCertificateCreateRoute
   coreDashboardExperienceCreateRoute: typeof coreDashboardExperienceCreateRoute
   coreDashboardProjectsCreateRoute: typeof coreDashboardProjectsCreateRoute
+  coreDashboardSocialLinksCreateRoute: typeof coreDashboardSocialLinksCreateRoute
   coreDashboardTechStackCreateRoute: typeof coreDashboardTechStackCreateRoute
   coreDashboardCertificateIndexRoute: typeof coreDashboardCertificateIndexRoute
   coreDashboardExperienceIndexRoute: typeof coreDashboardExperienceIndexRoute
@@ -512,6 +553,7 @@ interface coreDashboardRouteRouteChildren {
   coreDashboardCertificateCertificateIdEditRoute: typeof coreDashboardCertificateCertificateIdEditRoute
   coreDashboardExperienceExperienceIdEditRoute: typeof coreDashboardExperienceExperienceIdEditRoute
   coreDashboardProjectsProjectIdEditRoute: typeof coreDashboardProjectsProjectIdEditRoute
+  coreDashboardSocialLinksSocialLinkIdEditRoute: typeof coreDashboardSocialLinksSocialLinkIdEditRoute
   coreDashboardTechStackTechStackIdEditRoute: typeof coreDashboardTechStackTechStackIdEditRoute
 }
 
@@ -520,6 +562,7 @@ const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
   coreDashboardCertificateCreateRoute: coreDashboardCertificateCreateRoute,
   coreDashboardExperienceCreateRoute: coreDashboardExperienceCreateRoute,
   coreDashboardProjectsCreateRoute: coreDashboardProjectsCreateRoute,
+  coreDashboardSocialLinksCreateRoute: coreDashboardSocialLinksCreateRoute,
   coreDashboardTechStackCreateRoute: coreDashboardTechStackCreateRoute,
   coreDashboardCertificateIndexRoute: coreDashboardCertificateIndexRoute,
   coreDashboardExperienceIndexRoute: coreDashboardExperienceIndexRoute,
@@ -533,6 +576,8 @@ const coreDashboardRouteRouteChildren: coreDashboardRouteRouteChildren = {
     coreDashboardExperienceExperienceIdEditRoute,
   coreDashboardProjectsProjectIdEditRoute:
     coreDashboardProjectsProjectIdEditRoute,
+  coreDashboardSocialLinksSocialLinkIdEditRoute:
+    coreDashboardSocialLinksSocialLinkIdEditRoute,
   coreDashboardTechStackTechStackIdEditRoute:
     coreDashboardTechStackTechStackIdEditRoute,
 }

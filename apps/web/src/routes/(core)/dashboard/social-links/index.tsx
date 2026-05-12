@@ -159,7 +159,7 @@ function RouteComponent() {
             {
               icon: IconPlus,
               label: "Add Social Link",
-              onClick: () => {},
+              onClick: () => navigate({ to: "/dashboard/social-links/create" }),
             },
           ]}
         />
@@ -211,7 +211,9 @@ function RouteComponent() {
             {data.length} results
           </InputGroupAddon>
         </InputGroup>
-        <Button>
+        <Button
+          onClick={() => navigate({ to: "/dashboard/social-links/create" })}
+        >
           <IconPlus />
           Add Social Link
         </Button>

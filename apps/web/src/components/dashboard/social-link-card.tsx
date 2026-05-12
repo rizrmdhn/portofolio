@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SOCIAL_ICON_MAP, type SocialIconName } from "@portofolio/constants";
 import { SocialLink } from "@portofolio/types/social-links.types";
 import { IconGripVertical, IconPencil } from "@tabler/icons-react";
+import { useNavigate } from "@tanstack/react-router";
 
 interface SocialLinkCardProps {
   socialLink: SocialLink;
@@ -13,6 +14,7 @@ export function SocialLinkCard({
   socialLink,
   dragHandleProps,
 }: SocialLinkCardProps) {
+  const navigate = useNavigate();
   const Icon = SOCIAL_ICON_MAP[socialLink.icon as SocialIconName]?.icon;
 
   return (
@@ -53,7 +55,17 @@ export function SocialLinkCard({
         </div>
 
         {/* Edit action */}
-        <Button variant="ghost" size="icon" className="size-7 shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7 shrink-0"
+          onClick={() =>
+            navigate({
+              to: "/dashboard/social-links/$socialLinkId/edit",
+              params: { socialLinkId: socialLink.id },
+            })
+          }
+        >
           <IconPencil className="size-3.5" />
         </Button>
       </CardContent>
