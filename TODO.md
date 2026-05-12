@@ -28,10 +28,10 @@
 - [ ] Section order — drag-to-reorder landing page sections
 - [ ] Custom sections — freeform blocks with title + markdown body (e.g. Writing, Speaking)
 
-## Resume / CV Generator
+## Resume / CV Generator (Done)
 
-- [x] ATS template — single-column, plain text, 1-page compact layout
-- [ ] Creative template — two-column, accent colors, sidebar layout
+- [x] ATS template — single-column, plain text, 1-page compact layout, no word hyphenation
+- [x] Creative template — two-column, accent colors, sidebar layout
 - [x] Font picker — Liberation Sans / Inter / Arimo, applied per render
 - [x] Accent color picker — hex color stored in resume settings
 - [x] Server-side PDF generation via tRPC `resume.generate` → uploads to Uploadthing
@@ -41,6 +41,10 @@
 - [x] Featured certifications on resume — per-certification `featuredAtResume` toggle in dashboard
 - [x] Education section — separate `education` table (institution, degree enum, major, GPA)
 - [x] Achievements section — separate `achievements` table (title, issuer, description, date)
+- [x] Profile location field — shown in resume header as `location · email`
+
+## Resume / CV Generator (Remaining)
+
 - [ ] Education CRUD — dashboard page with create / edit / delete / reorder
 - [ ] Achievements CRUD — dashboard page with create / edit / delete / reorder
 
