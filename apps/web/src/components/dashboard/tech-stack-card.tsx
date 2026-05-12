@@ -13,8 +13,8 @@ export function TechStackCard({
   dragHandleProps,
 }: TechStackCardProps) {
   return (
-    <Card className="py-0">
-      <CardContent className="flex items-center gap-3 py-3 px-4">
+    <Card className="py-0 h-full">
+      <CardContent className="flex items-center gap-3 py-3 px-4 h-full">
         {/* Main content */}
         <div className="flex flex-1 flex-col gap-2 min-w-0">
           <div className="flex items-center gap-2 flex-row">
