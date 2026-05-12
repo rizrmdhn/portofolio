@@ -1,0 +1,2 @@
+CREATE TYPE "availability_status_enum" AS ENUM('unavailable', 'available', 'freelance', 'limited');--> statement-breakpoint
+ALTER TABLE "profile" ADD COLUMN "availability_status" "availability_status_enum" DEFAULT 'unavailable'::"availability_status_enum" NOT NULL;

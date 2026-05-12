@@ -26,6 +26,22 @@ export const STATUS_LABELS: Record<StatusType, string> = {
   archived: "Archived",
 };
 
+export const AVAILABILITY_STATUS_TYPES = [
+  "unavailable",
+  "available",
+  "freelance",
+  "limited",
+] as const;
+
+export type AvailabilityStatus = (typeof AVAILABILITY_STATUS_TYPES)[number];
+
+export const AVAILABILITY_STATUS_LABELS: Record<AvailabilityStatus, string> = {
+  unavailable: "Not available",
+  available: "Open to work",
+  freelance: "Open to freelance",
+  limited: "Limited availability",
+};
+
 export const EXPERIENCE_STATUS_TYPES = ["draft", "published"] as const;
 
 export type ExperienceStatusType = (typeof EXPERIENCE_STATUS_TYPES)[number];

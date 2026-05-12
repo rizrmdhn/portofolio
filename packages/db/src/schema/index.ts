@@ -2,6 +2,7 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import {
+  AVAILABILITY_STATUS_TYPES,
   COLOR_VALUES,
   EXPERIENCE_STATUS_TYPES,
   EXPERIENCE_TYPES,
@@ -90,6 +91,11 @@ export const verification = createTable("verification", {
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
+
+export const availabilityStatusEnum = pgEnum(
+  "availability_status_enum",
+  AVAILABILITY_STATUS_TYPES,
+);
 
 export const experienceEnum = pgEnum("experience_type", EXPERIENCE_TYPES);
 
@@ -246,6 +252,9 @@ export const profile = createTable(
     title: varchar("title", { length: 256 }).notNull(),
     bio: text("bio").notNull(),
     email: text("email").notNull(),
+    availabilityStatus: availabilityStatusEnum("availability_status")
+      .notNull()
+      .default("unavailable"),
     createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "string",

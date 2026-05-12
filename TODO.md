@@ -14,7 +14,7 @@
 
 ### High value, low effort
 
-- [ ] Availability status — "open to work" toggle with custom label, shown as badge on hero
+- [x] Availability status — "open to work" toggle with custom label, shown as badge on hero
 - [ ] Resume upload — upload/replace CV file, track download count
 - [ ] Section visibility — toggle which sections appear on the landing page
 

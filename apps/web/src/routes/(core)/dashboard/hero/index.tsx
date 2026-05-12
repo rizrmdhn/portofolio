@@ -8,25 +8,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { globalErrorToast, globalSuccessToast } from "@/lib/toasts";
 import { trpc } from "@/utils/trpc";
+import {
+  AVAILABILITY_STATUS_LABELS,
+  AVAILABILITY_STATUS_TYPES,
+  AvailabilityStatus,
+} from "@portofolio/constants";
+import { updateProfileSchema } from "@portofolio/schema/profile.schema";
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import z from "zod";
 
-const optionalUrl = z.union([z.literal(""), z.url()]);
-
-const heroFormSchema = z.object({
-  id: z.string(),
-  name: z.string().min(2).max(256),
-  title: z.string().min(2).max(256),
-  bio: z.string().min(2).max(256),
-  email: z.email(),
-  githubUrl: optionalUrl,
-  linkedinUrl: optionalUrl,
-  twitterUrl: optionalUrl,
-});
 
 export const Route = createFileRoute("/(core)/dashboard/hero/")({
   beforeLoad: async ({ context }) => {
@@ -38,12 +36,24 @@ export const Route = createFileRoute("/(core)/dashboard/hero/")({
 });
 
 function RouteComponent() {
+  const queryClient = useQueryClient();
+
   const { data } = useSuspenseQuery(trpc.profile.get.queryOptions());
-  const updateProfile = useMutation(trpc.profile.update.mutationOptions());
+  const updateProfile = useMutation(
+    trpc.profile.update.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.profile.get.queryOptions());
+        globalSuccessToast("Profile updated successfully");
+      },
+      onError: (error) => {
+        globalErrorToast(error.message || "Failed to update profile");
+      },
+    }),
+  );
 
   const form = useForm({
     validators: {
-      onSubmit: heroFormSchema,
+      onSubmit: updateProfileSchema,
     },
     defaultValues: {
       id: data?.id ?? "",
@@ -51,26 +61,24 @@ function RouteComponent() {
       title: data?.title ?? "",
       bio: data?.bio ?? "",
       email: data?.email ?? "",
+      availabilityStatus: (data?.availabilityStatus ??
+        "unavailable") as AvailabilityStatus,
     },
     onSubmit: async ({ value }) => {
-      await updateProfile.mutateAsync(
-        {
-          ...value,
-        },
-        {
-          onSuccess: () => {
-            globalSuccessToast("Profile updated successfully");
-          },
-          onError: (error) => {
-            globalErrorToast(error.message || "Failed to update profile");
-          },
-        },
-      );
+      await updateProfile.mutateAsync({
+        ...value,
+      });
     },
   });
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-base font-bold text-foreground">Profile</h2>
+        <p className="text-xs text-muted-foreground">
+          Update your public profile information.
+        </p>
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -193,15 +201,44 @@ function RouteComponent() {
             }}
           />
 
-          <form.Subscribe
-            selector={(state) => state.isSubmitting}
-            children={(isSubmitting) => (
-              <Button type="submit" disabled={isSubmitting} className="w-fit">
-                {isSubmitting ? <Spinner /> : null}
-                Save Changes
-              </Button>
+          <form.Field
+            name="availabilityStatus"
+            children={(field) => (
+              <Field className="flex flex-col gap-1.5">
+                <FieldLabel>Availability Status</FieldLabel>
+                <ToggleGroup
+                  variant="outline"
+                  value={[field.state.value]}
+                  onValueChange={(values) => {
+                    const next = values.find((v) => v !== field.state.value);
+                    if (next) field.handleChange(next as AvailabilityStatus);
+                  }}
+                >
+                  {AVAILABILITY_STATUS_TYPES.map((status) => (
+                    <ToggleGroupItem
+                      key={status}
+                      value={status}
+                      aria-label={status}
+                    >
+                      {AVAILABILITY_STATUS_LABELS[status]}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </Field>
             )}
           />
+
+          <div className="flex justify-end">
+            <form.Subscribe
+              selector={(state) => state.isSubmitting}
+              children={(isSubmitting) => (
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
+                  Save Changes
+                </Button>
+              )}
+            />
+          </div>
         </FieldGroup>
       </form>
     </div>

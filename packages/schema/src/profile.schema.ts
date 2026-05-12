@@ -1,3 +1,4 @@
+import { AVAILABILITY_STATUS_TYPES } from "@portofolio/constants";
 import z from "zod";
 
 export const updateProfileSchema = z.object({
@@ -6,9 +7,7 @@ export const updateProfileSchema = z.object({
   title: z.string().min(2).max(256),
   bio: z.string().min(2).max(256),
   email: z.email(),
-  githubUrl: z.url().optional(),
-  linkedinUrl: z.url().optional(),
-  twitterUrl: z.url().optional(),
+  availabilityStatus: z.enum(AVAILABILITY_STATUS_TYPES),
 });
 
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

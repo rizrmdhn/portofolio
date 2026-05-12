@@ -8,7 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { trpc } from "@/utils/trpc";
-import { SOCIAL_ICON_MAP, SocialIconName } from "@portofolio/constants";
+import {
+  AVAILABILITY_STATUS_LABELS,
+  SOCIAL_ICON_MAP,
+  SocialIconName,
+} from "@portofolio/constants";
 import {
   IconArrowRight,
   IconBriefcase,
@@ -95,13 +99,15 @@ function HomeComponent() {
         className="flex flex-col items-center justify-center gap-6 w-full pt-24 dot-grid scroll-mt-14"
       >
         <FadeIn className="w-full md:max-w-175 flex flex-col gap-6 border-b border-border self-stretch pb-24 mx-auto px-4 md:px-0">
-          <Badge
-            variant="outline"
-            className="w-fit py-3 px-3.5 bg-available text-available-foreground border border-available-foreground/20 text-xs font-medium"
-          >
-            <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
-            Available for opportunities
-          </Badge>
+          {profile.availabilityStatus !== "unavailable" && (
+            <Badge
+              variant="outline"
+              className="w-fit py-3 px-3.5 bg-available text-available-foreground border border-available-foreground/20 text-xs font-medium"
+            >
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
+              {AVAILABILITY_STATUS_LABELS[profile.availabilityStatus]}
+            </Badge>
+          )}
           <h1 className="text-[32px] sm:text-[44px] md:text-[54px] font-extrabold leading-[1.05] text-foreground">
             {profile.name}
           </h1>
