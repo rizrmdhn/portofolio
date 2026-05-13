@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import { z } from 'zod'
 
 /**
  * Prefix used to mark strings that should not be coerced to numbers
@@ -118,15 +118,27 @@ function setNestedValue(obj: Record<string, FormValue>, path: string, value: For
   }
 }
 
+function fillMissingKeys(parsed: Record<string, FormValue>, schema: z.ZodTypeAny): void {
+  if (schema instanceof z.ZodObject) {
+    for (const key of Object.keys(schema.shape)) {
+      if (!(key in parsed)) {
+        ;(parsed as Record<string, unknown>)[key] = undefined
+      }
+    }
+  }
+}
+
 export function parseAndValidate<T extends z.ZodTypeAny>(
   formData: FormData,
   schema: T,
 ): z.infer<T> {
   const parsed = parseFormData(formData)
+  fillMissingKeys(parsed, schema)
   return schema.parse(parsed)
 }
 
 export function parseAndValidateSafe<T extends z.ZodTypeAny>(formData: FormData, schema: T) {
   const parsed = parseFormData(formData)
+  fillMissingKeys(parsed, schema)
   return schema.safeParse(parsed)
 }

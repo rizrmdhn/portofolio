@@ -15,7 +15,6 @@ import { globalErrorToast, globalSuccessToast } from '@/lib/toasts'
 import { cn } from '@/lib/utils'
 import { toFormData } from '@/utils/form-data-mapper'
 import { trpc } from '@/utils/trpc'
-import type { ExperienceStatusType } from '@portofolio/constants'
 import { COLOR_VALUES } from '@portofolio/constants'
 import { createProjectSchema } from '@portofolio/schema/project.schema'
 import type { TablerIcon } from '@tabler/icons-react'
@@ -73,7 +72,7 @@ function RouteComponent() {
       playstoreUrl: undefined as string | undefined,
       appstoreUrl: undefined as string | undefined,
       coverColor: '#ffffff',
-      status: 'draft' as ExperienceStatusType,
+      status: 'draft',
       isVisible: false,
       order: 0,
       featured: false,
@@ -378,7 +377,7 @@ function RouteComponent() {
                               value={[field.state.value]}
                               onValueChange={(values) => {
                                 const next = values.find((v) => v !== field.state.value)
-                                if (next) field.handleChange(next as ExperienceStatusType)
+                                if (next) field.handleChange(next)
                               }}
                             >
                               <ToggleGroupItem value="draft">Draft</ToggleGroupItem>
