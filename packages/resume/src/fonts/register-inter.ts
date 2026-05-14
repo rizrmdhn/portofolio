@@ -1,3 +1,4 @@
+/// <reference path="./ttf.d.ts" />
 import { Font } from '@react-pdf/renderer'
 import Light from '../assets/fonts/inter/Inter-Light.ttf'
 import LightItalic from '../assets/fonts/inter/Inter-LightItalic.ttf'

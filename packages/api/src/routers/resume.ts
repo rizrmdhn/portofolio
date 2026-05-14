@@ -35,7 +35,13 @@ export const resumeRouter = createTRPCRouter({
   }),
 
   saveSettings: protectedProcedure.input(resumeSettingsSchema).mutation(async ({ input }) => {
-    const [result, err] = await tryCatchAsync(() => setResumeSettings(input))
+    const data = {
+      template: input.template,
+      accentColor: input.accentColor,
+      font: input.font,
+      ...(input.summary !== undefined ? { summary: input.summary } : {}),
+    }
+    const [result, err] = await tryCatchAsync(() => setResumeSettings(data))
 
     if (err) throw toTRPCError(err)
 

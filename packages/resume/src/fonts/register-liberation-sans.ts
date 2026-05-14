@@ -1,3 +1,4 @@
+/// <reference path="./ttf.d.ts" />
 import { Font } from '@react-pdf/renderer'
 import Regular from '../assets/fonts/liberation-sans/LiberationSans-Regular.ttf'
 import Italic from '../assets/fonts/liberation-sans/LiberationSans-Italic.ttf'
