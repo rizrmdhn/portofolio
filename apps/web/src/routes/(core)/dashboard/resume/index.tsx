@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
@@ -10,6 +9,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { Textarea } from '@/components/ui/textarea'
+import { useOptimisticMutation } from '@/lib/optimistic-update'
 import { globalErrorToast, globalSuccessToast } from '@/lib/toasts'
 import { trpc } from '@/utils/trpc'
 import { resumeSettingsSchema } from '@portofolio/schema/resume.schema'
@@ -69,22 +70,34 @@ function ResumeSettingsPage() {
     }),
   )
 
-  const toggleFeatured = useMutation(
-    trpc.resume.toggleProjectFeatured.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.project.getAll.queryOptions())
+  const toggleFeatured = useOptimisticMutation(
+    trpc.resume.toggleProjectFeatured.mutationOptions(),
+    {
+      queryOptions: trpc.project.getAll.queryOptions(),
+      operation: {
+        type: 'update',
+        getId: (input) => input.id,
+        getUpdatedFields: (input) => ({ featuredAtResume: input.value }),
       },
-      onError: (err) => globalErrorToast(err.message),
-    }),
+      onError: (err) => {
+        globalErrorToast(err.message)
+      },
+    },
   )
 
-  const toggleCertFeatured = useMutation(
-    trpc.resume.toggleCertificationFeatured.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.certification.getAll.queryOptions())
+  const toggleCertFeatured = useOptimisticMutation(
+    trpc.resume.toggleCertificationFeatured.mutationOptions(),
+    {
+      queryOptions: trpc.certification.getAll.queryOptions(),
+      operation: {
+        type: 'update',
+        getId: (input) => input.id,
+        getUpdatedFields: (input) => ({ featuredAtResume: input.value }),
       },
-      onError: (err) => globalErrorToast(err.message),
-    }),
+      onError: (err) => {
+        globalErrorToast(err.message)
+      },
+    },
   )
 
   const preview = useMutation(
