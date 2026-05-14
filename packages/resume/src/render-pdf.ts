@@ -19,7 +19,7 @@ export async function renderResumePdf(
     data,
     accentColor,
     font,
-    summary,
+    ...(summary !== undefined ? { summary } : {}),
   }) as unknown as ReactElement<DocumentProps>
   const stream = await renderToStream(element)
 
