@@ -20,6 +20,20 @@ function SkeletonBlock({ className }: { className?: string }) {
   return <div className={`bg-muted animate-pulse rounded ${className ?? ''}`} />
 }
 
+function SkeletonHeader() {
+  return (
+    <div className="bg-nav border-border sticky top-0 z-50 flex h-14 items-center justify-between border-b px-6 backdrop-blur-sm">
+      <SkeletonBlock className="h-3.5 w-28" />
+      <div className="hidden gap-6 md:flex">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <SkeletonBlock key={i} className="h-3 w-12" />
+        ))}
+      </div>
+      <SkeletonBlock className="h-8 w-20" />
+    </div>
+  )
+}
+
 function SectionSkeleton({ label, children }: { label?: boolean; children: React.ReactNode }) {
   return (
     <div className="mx-auto flex w-full flex-col gap-8 px-4 md:max-w-175 md:px-0">
@@ -32,16 +46,7 @@ function SectionSkeleton({ label, children }: { label?: boolean; children: React
 export function ResumeSkeleton() {
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      {/* Header */}
-      <div className="bg-nav border-border sticky top-0 z-50 flex h-14 items-center justify-between border-b px-6 backdrop-blur-sm">
-        <SkeletonBlock className="h-3.5 w-28" />
-        <div className="hidden gap-6 md:flex">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonBlock key={i} className="h-3 w-12" />
-          ))}
-        </div>
-        <SkeletonBlock className="h-8 w-20" />
-      </div>
+      <SkeletonHeader />
 
       <main className="mx-auto flex w-full flex-col gap-6 px-4 py-12 md:max-w-175 md:px-0">
         <div className="flex items-start justify-between">
@@ -60,16 +65,7 @@ export function ResumeSkeleton() {
 export function HomeSkeleton() {
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      {/* Header */}
-      <div className="bg-nav border-border sticky top-0 z-50 flex h-14 items-center justify-between border-b px-6 backdrop-blur-sm">
-        <SkeletonBlock className="h-3.5 w-28" />
-        <div className="hidden gap-6 md:flex">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonBlock key={i} className="h-3 w-12" />
-          ))}
-        </div>
-        <SkeletonBlock className="h-8 w-20" />
-      </div>
+      <SkeletonHeader />
 
       {/* Hero */}
       <section className="dot-grid flex w-full flex-col items-center justify-center pt-24">
