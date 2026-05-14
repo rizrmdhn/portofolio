@@ -12,12 +12,14 @@ export async function renderResumePdf(
   template: ResumeTemplate,
   accentColor: string,
   font: ResumeFont = 'Liberation Sans',
+  summary?: string,
 ): Promise<Buffer> {
   const Component = template === 'ats' ? ATSTemplate : CreativeTemplate
   const element = createElement(Component, {
     data,
     accentColor,
     font,
+    summary,
   }) as unknown as ReactElement<DocumentProps>
   const stream = await renderToStream(element)
 

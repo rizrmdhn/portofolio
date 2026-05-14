@@ -7,6 +7,7 @@ export const resumeSettingsSchema = z.object({
     .string()
     .regex(/^#[0-9a-fA-F]{6}$/, "Must be a valid hex color (e.g. #3b82f6)"),
   font: z.enum(RESUME_FONTS),
+  summary: z.string().or(z.undefined()),
 });
 
 export type ResumeSettingsInput = z.infer<typeof resumeSettingsSchema>;

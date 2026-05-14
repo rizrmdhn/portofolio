@@ -72,7 +72,7 @@ export const resumeRouter = createTRPCRouter({
     if (dataErr) throw toTRPCError(dataErr)
 
     const [buffer, renderErr] = await tryCatchAsync(() =>
-      renderResumePdf(resumeData, input.template, input.accentColor, input.font),
+      renderResumePdf(resumeData, input.template, input.accentColor, input.font, input.summary),
     )
 
     if (renderErr) throw toTRPCError(renderErr)
@@ -90,7 +90,7 @@ export const resumeRouter = createTRPCRouter({
     if (dataErr) throw toTRPCError(dataErr)
 
     const [buffer, renderErr] = await tryCatchAsync(() =>
-      renderResumePdf(resumeData, settings.template, settings.accentColor, settings.font),
+      renderResumePdf(resumeData, settings.template, settings.accentColor, settings.font, settings.summary),
     )
 
     if (renderErr) throw toTRPCError(renderErr)

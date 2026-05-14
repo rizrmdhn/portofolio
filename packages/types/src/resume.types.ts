@@ -16,6 +16,7 @@ export type ResumeSettingsJSONB = {
   template: ResumeTemplate;
   accentColor: string; // hex e.g. "#3b82f6"
   font: ResumeFont;
+  summary?: string;
 };
 
 export type ResumeSettingType = Omit<ApplicationSettings, "data"> & {

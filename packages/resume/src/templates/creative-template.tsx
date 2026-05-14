@@ -7,9 +7,10 @@ interface CreativeTemplateProps {
   data: ResumeData;
   accentColor: string;
   font: ResumeFont;
+  summary?: string;
 }
 
-export function CreativeTemplate({ data, accentColor, font }: CreativeTemplateProps) {
+export function CreativeTemplate({ data, accentColor, font, summary }: CreativeTemplateProps) {
   const {
     profile,
     experiences,
@@ -131,8 +132,8 @@ export function CreativeTemplate({ data, accentColor, font }: CreativeTemplatePr
 
         {/* ── Main Content ──────────────────────────────────── */}
         <View style={tw("flex-1 px-6 py-8 flex flex-col gap-4")}>
-          {/* Bio */}
-          {profile.bio && (
+          {/* Summary */}
+          {(summary ?? profile.bio) && (
             <View>
               <Text
                 style={{
@@ -146,7 +147,7 @@ export function CreativeTemplate({ data, accentColor, font }: CreativeTemplatePr
                 style={{ height: 1, backgroundColor: accentColor, opacity: 0.3, marginBottom: 6 }}
               />
               <Text style={tw("text-[9px] text-gray-700 leading-relaxed")}>
-                {profile.bio}
+                {summary ?? profile.bio}
               </Text>
             </View>
           )}

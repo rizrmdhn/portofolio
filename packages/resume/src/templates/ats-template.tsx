@@ -10,6 +10,7 @@ interface ATSTemplateProps {
   data: ResumeData
   accentColor: string
   font: ResumeFont
+  summary?: string
 }
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
@@ -48,7 +49,7 @@ function BulletItem({ children }: { children: string }) {
 
 // ─── Template ─────────────────────────────────────────────────────────────────
 
-export function ATSTemplate({ data, accentColor: _accentColor, font }: ATSTemplateProps) {
+export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: ATSTemplateProps) {
   const {
     profile,
     experiences,
@@ -94,11 +95,11 @@ export function ATSTemplate({ data, accentColor: _accentColor, font }: ATSTempla
           )}
         </View>
 
-        {/* ── Profile / Bio ─────────────────────────────────── */}
-        {profile.bio && (
+        {/* ── Profile / Summary ────────────────────────────────── */}
+        {(summary ?? profile.bio) && (
           <View>
             <SectionHeader>Profile</SectionHeader>
-            <Text style={tw('text-[8.5px] leading-normal text-gray-800')}>{profile.bio}</Text>
+            <Text style={tw('text-[8.5px] leading-normal text-gray-800')}>{summary ?? profile.bio}</Text>
           </View>
         )}
 

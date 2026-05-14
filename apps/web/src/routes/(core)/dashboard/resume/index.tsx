@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
@@ -101,6 +102,7 @@ function ResumeSettingsPage() {
       template: settings.template,
       accentColor: settings.accentColor,
       font: settings.font,
+      summary: settings.summary,
     },
     onSubmit: async ({ value }) => {
       await saveSettings.mutateAsync(value)
@@ -244,6 +246,26 @@ function ResumeSettingsPage() {
           }}
         </form.Field>
 
+        <form.Field name="summary">
+          {(field) => {
+            const isInvalid = field.state.meta.errors.length > 0
+            return (
+              <Field className="flex flex-col gap-1.5">
+                <FieldLabel htmlFor="summary">Resume Summary</FieldLabel>
+                <Textarea
+                  id="summary"
+                  value={field.state.value ?? ''}
+                  onChange={(e) => field.handleChange(e.target.value || undefined)}
+                  placeholder="A professional summary shown in the resume PDF. Falls back to your profile bio if left empty."
+                  className="min-h-24"
+                  aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
+        </form.Field>
+
         <div className="flex justify-end">
           <form.Subscribe selector={(s) => s.isSubmitting}>
             {(isSubmitting) => (
@@ -335,15 +357,16 @@ function ResumeSettingsPage() {
               template: s.values.template,
               accentColor: s.values.accentColor,
               font: s.values.font,
+              summary: s.values.summary,
             })}
           >
-            {({ template, accentColor, font }) => (
+            {({ template, accentColor, font, summary }) => (
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 disabled={preview.isPending}
-                onClick={() => preview.mutate({ template, accentColor, font })}
+                onClick={() => preview.mutate({ template, accentColor, font, summary })}
               >
                 {preview.isPending ? (
                   <Spinner data-icon="inline-start" />
