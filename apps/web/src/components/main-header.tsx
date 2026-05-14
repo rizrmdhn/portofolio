@@ -89,7 +89,7 @@ export function MainHeader() {
               variant="outline"
               size="lg"
               className="w-full"
-              onClick={() => window.open('/resume.pdf', '_blank')}
+              onClick={() => navigate({ to: '/resume' })}
             >
               <p className="text-subtle font-mono text-sm">Resume ↗</p>
             </Button>
