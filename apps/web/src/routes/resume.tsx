@@ -1,11 +1,13 @@
 import { buildSeoMeta } from "@/lib/seo";
 import { MainHeader } from "@/components/main-header";
+import { ResumeSkeleton } from "@/components/loader";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { IconDownload } from "@tabler/icons-react";
 import { trpc } from "@/utils/trpc";
 
 export const Route = createFileRoute("/resume")({
+  pendingComponent: ResumeSkeleton,
   loader: async ({ context }) => {
     const [cv, seo] = await Promise.all([
       context.queryClient.ensureQueryData(context.trpc.resume.get.queryOptions()),
@@ -36,7 +38,7 @@ function ResumePage() {
   return (
     <div className="flex flex-col bg-background text-foreground min-h-screen">
       <MainHeader />
-      <main className="w-full md:max-w-4xl mx-auto px-4 md:px-0 py-12 flex flex-col gap-6">
+      <main className="mx-auto flex w-full flex-col gap-6 px-4 py-12 md:max-w-175 md:px-0">
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-sm text-subtle tracking-[0.15em] font-mono">

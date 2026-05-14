@@ -29,6 +29,34 @@ function SectionSkeleton({ label, children }: { label?: boolean; children: React
   )
 }
 
+export function ResumeSkeleton() {
+  return (
+    <div className="bg-background flex min-h-screen flex-col">
+      {/* Header */}
+      <div className="bg-nav border-border sticky top-0 z-50 flex h-14 items-center justify-between border-b px-6 backdrop-blur-sm">
+        <SkeletonBlock className="h-3.5 w-28" />
+        <div className="hidden gap-6 md:flex">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonBlock key={i} className="h-3 w-12" />
+          ))}
+        </div>
+        <SkeletonBlock className="h-8 w-20" />
+      </div>
+
+      <main className="mx-auto flex w-full flex-col gap-6 px-4 py-12 md:max-w-175 md:px-0">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-col gap-2">
+            <SkeletonBlock className="h-2.5 w-16" />
+            <SkeletonBlock className="h-3 w-32" />
+          </div>
+          <SkeletonBlock className="h-9 w-32 rounded-md" />
+        </div>
+        <SkeletonBlock className="h-[80vh] w-full rounded-lg" />
+      </main>
+    </div>
+  )
+}
+
 export function HomeSkeleton() {
   return (
     <div className="bg-background flex min-h-screen flex-col">
