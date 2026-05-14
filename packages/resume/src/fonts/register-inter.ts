@@ -1,26 +1,29 @@
 import { Font } from '@react-pdf/renderer'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import Light from '../assets/fonts/inter/Inter-Light.ttf'
+import LightItalic from '../assets/fonts/inter/Inter-LightItalic.ttf'
+import Regular from '../assets/fonts/inter/Inter-Regular.ttf'
+import Italic from '../assets/fonts/inter/Inter-Italic.ttf'
+import Medium from '../assets/fonts/inter/Inter-Medium.ttf'
+import MediumItalic from '../assets/fonts/inter/Inter-MediumItalic.ttf'
+import SemiBold from '../assets/fonts/inter/Inter-SemiBold.ttf'
+import SemiBoldItalic from '../assets/fonts/inter/Inter-SemiBoldItalic.ttf'
+import Bold from '../assets/fonts/inter/Inter-Bold.ttf'
+import BoldItalic from '../assets/fonts/inter/Inter-BoldItalic.ttf'
 
 export const registerFontInter = () => {
-  const dir = path.join(__dirname, '../assets/fonts/inter')
-
   Font.register({
     family: 'Inter',
     fonts: [
-      { src: path.join(dir, 'Inter-Light.ttf'), fontWeight: 300 },
-      { src: path.join(dir, 'Inter-LightItalic.ttf'), fontStyle: 'italic', fontWeight: 300 },
-      { src: path.join(dir, 'Inter-Regular.ttf'), fontWeight: 400 },
-      { src: path.join(dir, 'Inter-Italic.ttf'), fontStyle: 'italic', fontWeight: 400 },
-      { src: path.join(dir, 'Inter-Medium.ttf'), fontWeight: 500 },
-      { src: path.join(dir, 'Inter-MediumItalic.ttf'), fontStyle: 'italic', fontWeight: 500 },
-      { src: path.join(dir, 'Inter-SemiBold.ttf'), fontWeight: 600 },
-      { src: path.join(dir, 'Inter-SemiBoldItalic.ttf'), fontStyle: 'italic', fontWeight: 600 },
-      { src: path.join(dir, 'Inter-Bold.ttf'), fontWeight: 700 },
-      { src: path.join(dir, 'Inter-BoldItalic.ttf'), fontStyle: 'italic', fontWeight: 700 },
+      { src: Light, fontWeight: 300 },
+      { src: LightItalic, fontStyle: 'italic', fontWeight: 300 },
+      { src: Regular, fontWeight: 400 },
+      { src: Italic, fontStyle: 'italic', fontWeight: 400 },
+      { src: Medium, fontWeight: 500 },
+      { src: MediumItalic, fontStyle: 'italic', fontWeight: 500 },
+      { src: SemiBold, fontWeight: 600 },
+      { src: SemiBoldItalic, fontStyle: 'italic', fontWeight: 600 },
+      { src: Bold, fontWeight: 700 },
+      { src: BoldItalic, fontStyle: 'italic', fontWeight: 700 },
     ],
   })
 }
