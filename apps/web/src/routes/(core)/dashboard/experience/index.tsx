@@ -73,9 +73,9 @@ function SortableExperienceCard({ experience }: { experience: Experience }) {
 function ExperienceListSkeleton() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-9 w-72" /> {/* search bar */}
-        <Skeleton className="h-9 w-32" /> {/* add button */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <Skeleton className="h-9 w-full sm:w-72" /> {/* search bar */}
+        <Skeleton className="h-9 w-full sm:w-32" /> {/* add button */}
       </div>
       <div className="flex flex-col gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -171,8 +171,8 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <InputGroup className="max-w-xs">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <InputGroup className="w-full sm:max-w-xs">
           <InputGroupAddon>
             <IconSearch />
           </InputGroupAddon>

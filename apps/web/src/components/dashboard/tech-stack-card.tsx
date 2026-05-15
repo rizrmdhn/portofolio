@@ -18,9 +18,8 @@ export function TechStackCard({
   return (
     <Card className="py-0 h-full">
       <CardContent className="flex items-center gap-3 py-3 px-4 h-full">
-        {/* Main content */}
         <div className="flex flex-1 flex-col gap-2 min-w-0">
-          <div className="flex items-center gap-2 flex-row">
+          <div className="flex items-center gap-2">
             {/* Drag handle */}
             <button
               className="flex items-center text-muted-foreground/40 cursor-grab active:cursor-grabbing hover:text-muted-foreground"
@@ -50,7 +49,6 @@ export function TechStackCard({
           </div>
         </div>
 
-        {/* Action buttons */}
         <Button
           variant="ghost"
           size="icon"

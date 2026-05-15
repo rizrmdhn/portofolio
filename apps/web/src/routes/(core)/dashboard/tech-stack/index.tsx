@@ -74,11 +74,11 @@ function SortableTechStackCard({ techStack }: { techStack: TechStackCategoryWith
 function TechStackListSkeleton() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-9 w-72" /> {/* search bar */}
-        <Skeleton className="h-9 w-32" /> {/* add button */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <Skeleton className="h-9 w-full sm:w-72" /> {/* search bar */}
+        <Skeleton className="h-9 w-full sm:w-32" /> {/* add button */}
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <Skeleton key={i} className="h-18 w-full rounded-lg" />
         ))}
@@ -158,7 +158,7 @@ function RouteComponent() {
     }
 
     return (
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <DndContext
           id="tech-stack-dnd"
           sensors={sensors}
@@ -177,8 +177,8 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <InputGroup className="max-w-xs">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <InputGroup className="w-full sm:max-w-xs">
           <InputGroupAddon>
             <IconSearch />
           </InputGroupAddon>

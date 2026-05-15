@@ -74,11 +74,11 @@ function SortableAchievementCard({ achievement }: { achievement: Achievement }) 
 function AchievementListSkeleton() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2">
-        <Skeleton className="h-9 w-72" />
-        <Skeleton className="h-9 w-32" />
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <Skeleton className="h-9 w-full sm:w-72" />
+        <Skeleton className="h-9 w-full sm:w-32" />
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {Array.from({ length: 4 }).map((_, i) => (
           <Skeleton key={i} className="h-24 w-full rounded-lg" />
         ))}
@@ -132,8 +132,8 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <InputGroup className="max-w-xs">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <InputGroup className="w-full sm:max-w-xs">
           <InputGroupAddon>
             <IconSearch />
           </InputGroupAddon>
@@ -170,7 +170,7 @@ function RouteComponent() {
           actions={[{ icon: IconPlus, label: 'Add Achievement', onClick: () => navigate({ to: '/dashboard/achievement/create' }) }]}
         />
       ) : (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <DndContext
             id="achievement-dnd"
             sensors={sensors}

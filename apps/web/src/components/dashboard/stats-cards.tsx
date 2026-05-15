@@ -17,7 +17,7 @@ interface StatCardProps {
 
 function StatCard({ label, value, icon: Icon }: StatCardProps) {
   return (
-    <Card className="min-w-0 flex-1">
+    <Card>
       <CardHeader>
         <CardTitle>{label}</CardTitle>
         <CardAction>
@@ -46,7 +46,7 @@ interface StatsCardsProps {
 
 export function StatsCards({ totalProjectViews, counts }: StatsCardsProps) {
   return (
-    <div className="flex flex-row gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
       <StatCard label="Total Project Views" value={totalProjectViews} icon={IconEye} />
       <StatCard label="Projects" value={counts.projects} icon={IconFolder} />
       <StatCard label="Experiences" value={counts.experiences} icon={IconBriefcase} />
