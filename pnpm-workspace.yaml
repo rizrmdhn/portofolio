@@ -1,18 +1,17 @@
 packages:
   - apps/*
   - packages/*
-
 catalog:
-  '@node-rs/argon2': ^2.0.2
-  '@trpc/client': ^11.17.0
-  '@trpc/server': ^11.17.0
-  '@types/node': ^22.19.19
-  '@types/react-dom': ^19.2.3
-  better-auth: 1.6.9
-  date-fns: ^4.1.0
-  dotenv: ^17.4.2
+  dotenv: ^17.2.2
+  zod: ^4.1.13
+  typescript: ^6
+  "@types/node": ^22.13.14
   next-themes: ^0.4.6
-  superjson: ^2.2.6
-  typescript: ^6.0.3
-  uuid: ^14.0.0
-  zod: ^4.4.3
+  "@trpc/server": ^11.16.0
+  "@trpc/client": ^11.16.0
+  "@types/react-dom": ^19.2.3
+  "uuid": ^14.0.0
+  "date-fns": ^4.1.0
+  "superjson": ^2.2.6
+  "@node-rs/argon2": ^2.0.2
+  better-auth: 1.6.9
