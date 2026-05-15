@@ -23,10 +23,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <Card
-      className="flex flex-col rounded-lg p-5 max-w-md cursor-pointer border border-transparent transition-all hover:bg-project-hover hover:border-card-hover-border hover:shadow-sm"
+      className="flex flex-col h-full rounded-lg p-5 max-w-md cursor-pointer border border-transparent transition-all hover:bg-project-hover hover:border-card-hover-border hover:shadow-sm"
       onClick={() => navigate({ to: '/projects/$slug', params: { slug: project.slug } })}
     >
-      <CardContent className="flex flex-col gap-4 p-0">
+      <CardContent className="flex flex-col gap-4 p-0 flex-1">
         <h3 className="text-sm font-semibold">{project.title}</h3>
         <p className="text-xs text-muted-foreground">{project.description}</p>
         <div className="flex flex-wrap gap-2">
