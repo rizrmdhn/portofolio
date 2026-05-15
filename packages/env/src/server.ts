@@ -10,7 +10,7 @@ export const env = createEnv({
   server: {
     APP_URL: z.url().default('http://localhost:3001'),
     DATABASE_URL: z.string().min(1),
-    CORS_ORIGIN: z.string().min(1),
+    CORS_ORIGIN: z.string().min(1).default('http://localhost:3001').transform((val) => val.split(',')),
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.url(),
