@@ -6,6 +6,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Link } from "@tanstack/react-router";
 
@@ -22,6 +23,8 @@ interface NavGroup {
 }
 
 export function NavMain({ groups }: { groups: Array<NavGroup> }) {
+  const { isMobile, setOpenMobile } = useSidebar()
+
   return (
     <>
       {groups.map((group) => (
@@ -39,6 +42,7 @@ export function NavMain({ groups }: { groups: Array<NavGroup> }) {
                       to={item.url}
                       activeProps={{ "data-active": true }}
                       activeOptions={{ exact: item.exact ?? false }}
+                      onClick={() => isMobile && setOpenMobile(false)}
                     />
                   }
                 >
