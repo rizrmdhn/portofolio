@@ -19,6 +19,7 @@ type ModeToggleType = "default" | "dropdown" | "segmented" | "color";
 
 interface ModeToggleProps {
   type?: ModeToggleType;
+  id?: string;
 }
 
 const themes = [
@@ -72,7 +73,7 @@ function SegmentedToggle() {
   );
 }
 
-function DropdownToggle() {
+function DropdownToggle({ id }: { id?: string }) {
   const { theme, setTheme } = useTheme();
   const CurrentIcon =
     theme === "dark" ? IconMoon : theme === "warm" ? IconSunset : IconSun;
@@ -82,7 +83,7 @@ function DropdownToggle() {
         <CurrentIcon className="h-[1.2rem] w-[1.2rem]" />
         <span className="sr-only">Toggle theme</span>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent id={id} align="end">
         {themes.map(({ value, label, icon: Icon }) => (
           <DropdownMenuItem key={value} onClick={() => setTheme(value)}>
             <Icon className="mr-2 h-4 w-4" />
@@ -116,9 +117,9 @@ function ColorToggle() {
   );
 }
 
-export function ModeToggle({ type = "default" }: ModeToggleProps) {
+export function ModeToggle({ type = "default", id }: ModeToggleProps) {
   if (type === "segmented") return <SegmentedToggle />;
-  if (type === "dropdown") return <DropdownToggle />;
+  if (type === "dropdown") return <DropdownToggle id={id} />;
   if (type === "color") return <ColorToggle />;
 
   return (
@@ -127,7 +128,7 @@ export function ModeToggle({ type = "default" }: ModeToggleProps) {
         <SegmentedToggle />
       </div>
       <div className="md:hidden">
-        <DropdownToggle />
+        <DropdownToggle id={id} />
       </div>
     </>
   );

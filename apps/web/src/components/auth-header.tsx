@@ -14,7 +14,7 @@ export function AuthHeader() {
       >
         rizrmdhn.com
       </Button>
-      <ModeToggle />
+      <ModeToggle id="auth-theme-menu" />
     </div>
   );
 }

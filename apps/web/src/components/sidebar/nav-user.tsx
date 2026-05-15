@@ -54,6 +54,7 @@ export function NavUser({ user }: { user: User }) {
             <IconSelector className="ml-auto size-5! shrink-0" />
           </SidebarMenuButton>
           <DropdownMenuContent
+            id="nav-user-menu"
             className="w-(--anchor-width) min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
             align="end"

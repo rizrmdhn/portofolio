@@ -9,6 +9,7 @@ import {
   IconEye,
 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Separator } from "./ui/separator";
 
@@ -17,10 +18,14 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const navigate = useNavigate();
   const incrementViews = useMutation(trpc.project.updateView.mutationOptions());
 
   return (
-    <Card className="flex flex-col rounded-lg p-5 max-w-md cursor-pointer border border-transparent transition-all hover:bg-project-hover hover:border-card-hover-border hover:shadow-sm">
+    <Card
+      className="flex flex-col rounded-lg p-5 max-w-md cursor-pointer border border-transparent transition-all hover:bg-project-hover hover:border-card-hover-border hover:shadow-sm"
+      onClick={() => navigate({ to: '/projects/$slug', params: { slug: project.slug } })}
+    >
       <CardContent className="flex flex-col gap-4 p-0">
         <h3 className="text-sm font-semibold">{project.title}</h3>
         <p className="text-xs text-muted-foreground">{project.description}</p>
@@ -43,7 +48,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => incrementViews.mutate({ projectId: project.id })}
+              onClick={(e) => { e.stopPropagation(); incrementViews.mutate({ projectId: project.id }); }}
               className="group text-subtle text-[11px] font-mono inline-flex items-center gap-1.25 transition-all hover:brightness-80"
             >
               <IconBrandGithub className="size-3.25" />
@@ -55,7 +60,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => incrementViews.mutate({ projectId: project.id })}
+              onClick={(e) => { e.stopPropagation(); incrementViews.mutate({ projectId: project.id }); }}
               className="group text-subtle text-[11px] font-mono inline-flex items-center gap-1.25 transition-all hover:brightness-80"
             >
               <IconExternalLink className="size-3.25" />
@@ -67,7 +72,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               href={project.playstoreUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => incrementViews.mutate({ projectId: project.id })}
+              onClick={(e) => { e.stopPropagation(); incrementViews.mutate({ projectId: project.id }); }}
               className="group text-subtle text-[11px] font-mono inline-flex items-center gap-1.25 transition-all hover:brightness-80"
             >
               <IconBrandGooglePlay className="size-3.25" />
@@ -79,7 +84,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               href={project.appstoreUrl}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => incrementViews.mutate({ projectId: project.id })}
+              onClick={(e) => { e.stopPropagation(); incrementViews.mutate({ projectId: project.id }); }}
               className="group text-subtle text-[11px] font-mono inline-flex items-center gap-1.25 transition-all hover:brightness-80"
             >
               <IconBrandAppstore className="size-3.25" />

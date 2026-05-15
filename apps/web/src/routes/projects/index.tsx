@@ -3,7 +3,7 @@ import { MainHeader } from "@/components/main-header";
 import { ProjectCard } from "@/components/project-card";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/projects")({
+export const Route = createFileRoute("/projects/")({
   loader: async ({ context }) => {
     const [projects, seo] = await Promise.all([
       context.queryClient.ensureQueryData(context.trpc.project.getAll.queryOptions()),

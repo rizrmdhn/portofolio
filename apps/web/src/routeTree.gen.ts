@@ -9,11 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestPageRouteImport } from './routes/test-page'
 import { Route as ResumeRouteImport } from './routes/resume'
-import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as CertificatesRouteImport } from './routes/certificates'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
+import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as coreDashboardRouteRouteImport } from './routes/(core)/dashboard/route'
 import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboard/index'
@@ -44,14 +46,14 @@ import { Route as coreDashboardEducationEducationIdEditRouteImport } from './rou
 import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
 import { Route as coreDashboardAchievementAchievementIdEditRouteImport } from './routes/(core)/dashboard/achievement/$achievementId.edit'
 
+const TestPageRoute = TestPageRouteImport.update({
+  id: '/test-page',
+  path: '/test-page',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
   path: '/resume',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CertificatesRoute = CertificatesRouteImport.update({
@@ -66,6 +68,16 @@ const authRouteRoute = authRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
+  id: '/projects/$slug',
+  path: '/projects/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authLoginRoute = authLoginRouteImport.update({
@@ -239,10 +251,12 @@ const coreDashboardAchievementAchievementIdEditRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
-  '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
+  '/test-page': typeof TestPageRoute
   '/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/login': typeof authLoginRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/': typeof ProjectsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard/': typeof coreDashboardIndexRoute
@@ -274,9 +288,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
-  '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
+  '/test-page': typeof TestPageRoute
   '/login': typeof authLoginRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects': typeof ProjectsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/dashboard': typeof coreDashboardIndexRoute
@@ -310,10 +326,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
   '/certificates': typeof CertificatesRoute
-  '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
+  '/test-page': typeof TestPageRoute
   '/(core)/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/projects/': typeof ProjectsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
@@ -347,10 +365,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/certificates'
-    | '/projects'
     | '/resume'
+    | '/test-page'
     | '/dashboard'
     | '/login'
+    | '/projects/$slug'
+    | '/projects/'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard/'
@@ -382,9 +402,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/certificates'
-    | '/projects'
     | '/resume'
+    | '/test-page'
     | '/login'
+    | '/projects/$slug'
+    | '/projects'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/dashboard'
@@ -417,10 +439,12 @@ export interface FileRouteTypes {
     | '/'
     | '/(auth)'
     | '/certificates'
-    | '/projects'
     | '/resume'
+    | '/test-page'
     | '/(core)/dashboard'
     | '/(auth)/login'
+    | '/projects/$slug'
+    | '/projects/'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/(core)/dashboard/'
@@ -454,27 +478,29 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
   CertificatesRoute: typeof CertificatesRoute
-  ProjectsRoute: typeof ProjectsRoute
   ResumeRoute: typeof ResumeRoute
+  TestPageRoute: typeof TestPageRoute
   coreDashboardRouteRoute: typeof coreDashboardRouteRouteWithChildren
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test-page': {
+      id: '/test-page'
+      path: '/test-page'
+      fullPath: '/test-page'
+      preLoaderRoute: typeof TestPageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resume': {
       id: '/resume'
       path: '/resume'
       fullPath: '/resume'
       preLoaderRoute: typeof ResumeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certificates': {
@@ -496,6 +522,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/': {
+      id: '/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/$slug': {
+      id: '/projects/$slug'
+      path: '/projects/$slug'
+      fullPath: '/projects/$slug'
+      preLoaderRoute: typeof ProjectsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/login': {
@@ -786,9 +826,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
   CertificatesRoute: CertificatesRoute,
-  ProjectsRoute: ProjectsRoute,
   ResumeRoute: ResumeRoute,
+  TestPageRoute: TestPageRoute,
   coreDashboardRouteRoute: coreDashboardRouteRouteWithChildren,
+  ProjectsSlugRoute: ProjectsSlugRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }

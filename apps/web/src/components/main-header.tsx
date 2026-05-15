@@ -59,7 +59,7 @@ export function MainHeader() {
           <IconMenu2 className="text-subtle size-5" />
           <span className="sr-only">Open menu</span>
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent id="main-nav-mobile" side="right">
           <SheetHeader className="border-border border-b pb-4">
             <SheetTitle className="text-subtle font-mono text-base">Menu</SheetTitle>
           </SheetHeader>

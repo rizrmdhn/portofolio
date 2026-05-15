@@ -7,6 +7,7 @@ import {
   getAllTimeViewsProjects,
   getPaginatedProjects,
   getProjectById,
+  getProjectBySlug,
   getProjectsForLandingPage,
   reorderProjects,
   updateProject,
@@ -71,6 +72,16 @@ export const projectRouter = createTRPCRouter({
 
     return project
   }),
+
+  getBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input: { slug } }) => {
+      const [project, err] = await tryCatchAsync(() => getProjectBySlug(slug))
+
+      if (err) throw toTRPCError(err)
+
+      return project
+    }),
 
   create: protectedProcedure
     .input(formDataInput)

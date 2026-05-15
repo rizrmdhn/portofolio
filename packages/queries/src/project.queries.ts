@@ -89,6 +89,21 @@ export async function getProjectById(id: string) {
   return project
 }
 
+export async function getProjectBySlug(slug: string) {
+  const [result] = await db
+    .select({
+      ...getColumns(projects),
+      viewCount: sql<number>`(select count(*) from view_events where project_id = ${projects.id})`,
+    })
+    .from(projects)
+    .where(and(eq(projects.slug, slug), eq(projects.status, 'published'), eq(projects.isVisible, true)))
+    .limit(1)
+
+  if (!result) throw new NotFoundError(`Project`, slug)
+
+  return result
+}
+
 async function countFeaturedProjects() {
   const [result] = await db
     .select({ count: count() })

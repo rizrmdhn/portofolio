@@ -71,7 +71,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       <SidebarHeader className="h-(--header-height) border-border border-b justify-center">
         <div className="flex items-center justify-between">
           <h1 className="text-lg font-bold">Acme</h1>
-          <ModeToggle type="dropdown" />
+          <ModeToggle type="dropdown" id="sidebar-theme-menu" />
         </div>
       </SidebarHeader>
       <SidebarContent>
