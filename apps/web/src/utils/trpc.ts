@@ -23,9 +23,9 @@ const getSsrCookie = createIsomorphicFn()
     return getRequestHeader('cookie')
   })
 
-async function withSsrCookieHeaders(headers: RequestInit['headers']) {
+function withSsrCookieHeaders(headers: RequestInit['headers']) {
   const nextHeaders = new Headers(headers)
-  const cookie = await getSsrCookie()
+  const cookie = getSsrCookie()
 
   if (cookie) nextHeaders.set('cookie', cookie)
 
@@ -84,7 +84,7 @@ function createAppTrpcClient() {
             return fetch(url, {
               ...options,
               credentials: 'include',
-              headers: await withSsrCookieHeaders(options?.headers),
+              headers: withSsrCookieHeaders(options?.headers),
             })
           },
         }),
@@ -95,7 +95,7 @@ function createAppTrpcClient() {
             return fetch(url, {
               ...options,
               credentials: 'include',
-              headers: await withSsrCookieHeaders(options?.headers),
+              headers: withSsrCookieHeaders(options?.headers),
             })
           },
         }),
