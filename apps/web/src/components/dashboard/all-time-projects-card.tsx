@@ -14,6 +14,10 @@ interface AllTimeProjectsCardProps {
 
 export function AllTimeProjectsCard({ projects, className }: AllTimeProjectsCardProps) {
   const navigate = useNavigate()
+  const viewCounts = projects.map((project) =>
+    Number.isFinite(project.views) && project.views > 0 ? project.views : 0,
+  )
+  const maxViews = Math.max(...viewCounts, 1)
 
   return (
     <Card className={cn(className)}>
@@ -37,12 +41,16 @@ export function AllTimeProjectsCard({ projects, className }: AllTimeProjectsCard
       </CardHeader>
       <CardContent className="flex flex-col">
         {projects.map((project, idx) => {
-          const maxViews = Math.max(...projects.map((p) => p.views), 1)
-          const percentage = Math.round((project.views / maxViews) * 100)
+          const views = viewCounts[idx] ?? 0
+          const percentage = Math.round((views / maxViews) * 100)
           const neighbor = projects[idx + 1] ?? projects[idx - 1]
-          const growth = neighbor
-            ? Math.round(((project.views - neighbor.views) / neighbor.views) * 100)
+          const neighborViews = neighbor
+            ? (viewCounts[idx + 1] ?? viewCounts[idx - 1] ?? 0)
             : null
+          const growth =
+            neighborViews && neighborViews > 0
+              ? Math.round(((views - neighborViews) / neighborViews) * 100)
+              : 0
           return (
             <div
               key={project.id}
@@ -54,18 +62,18 @@ export function AllTimeProjectsCard({ projects, className }: AllTimeProjectsCard
               <span className="text-foreground flex-1 text-sm font-semibold">{project.title}</span>
               <Progress value={percentage} className="h-1.5 max-w-64 flex-1 align-middle" />
               <span className="text-foreground w-14 shrink-0 text-right font-mono text-sm font-semibold">
-                {project.views.toLocaleString()}
+                {views.toLocaleString()}
               </span>
-              {growth !== null && (
-                <span
-                  className={cn(
-                    'w-10 shrink-0 text-right font-mono text-[11px]',
-                    growth >= 0 ? 'text-green-500' : 'text-red-500',
-                  )}
-                >
-                  {`${growth > 0 ? '+' : ''}${growth}%`}
-                </span>
-              )}
+              <span
+                className={cn(
+                  'w-10 shrink-0 whitespace-nowrap text-right font-mono text-[11px]',
+                  growth > 0 && 'text-green-500',
+                  growth < 0 && 'text-red-500',
+                  growth === 0 && 'text-muted-foreground',
+                )}
+              >
+                {`${growth > 0 ? '+' : ''}${growth}%`}
+              </span>
             </div>
           )
         })}
