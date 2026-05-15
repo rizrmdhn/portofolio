@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestPageRouteImport } from './routes/test-page'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as CertificatesRouteImport } from './routes/certificates'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
@@ -46,11 +45,6 @@ import { Route as coreDashboardEducationEducationIdEditRouteImport } from './rou
 import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
 import { Route as coreDashboardAchievementAchievementIdEditRouteImport } from './routes/(core)/dashboard/achievement/$achievementId.edit'
 
-const TestPageRoute = TestPageRouteImport.update({
-  id: '/test-page',
-  path: '/test-page',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
   path: '/resume',
@@ -252,7 +246,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
   '/resume': typeof ResumeRoute
-  '/test-page': typeof TestPageRoute
   '/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -289,7 +282,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificates': typeof CertificatesRoute
   '/resume': typeof ResumeRoute
-  '/test-page': typeof TestPageRoute
   '/login': typeof authLoginRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/projects': typeof ProjectsIndexRoute
@@ -327,7 +319,6 @@ export interface FileRoutesById {
   '/(auth)': typeof authRouteRouteWithChildren
   '/certificates': typeof CertificatesRoute
   '/resume': typeof ResumeRoute
-  '/test-page': typeof TestPageRoute
   '/(core)/dashboard': typeof coreDashboardRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/projects/$slug': typeof ProjectsSlugRoute
@@ -366,7 +357,6 @@ export interface FileRouteTypes {
     | '/'
     | '/certificates'
     | '/resume'
-    | '/test-page'
     | '/dashboard'
     | '/login'
     | '/projects/$slug'
@@ -403,7 +393,6 @@ export interface FileRouteTypes {
     | '/'
     | '/certificates'
     | '/resume'
-    | '/test-page'
     | '/login'
     | '/projects/$slug'
     | '/projects'
@@ -440,7 +429,6 @@ export interface FileRouteTypes {
     | '/(auth)'
     | '/certificates'
     | '/resume'
-    | '/test-page'
     | '/(core)/dashboard'
     | '/(auth)/login'
     | '/projects/$slug'
@@ -479,7 +467,6 @@ export interface RootRouteChildren {
   authRouteRoute: typeof authRouteRouteWithChildren
   CertificatesRoute: typeof CertificatesRoute
   ResumeRoute: typeof ResumeRoute
-  TestPageRoute: typeof TestPageRoute
   coreDashboardRouteRoute: typeof coreDashboardRouteRouteWithChildren
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
@@ -489,13 +476,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test-page': {
-      id: '/test-page'
-      path: '/test-page'
-      fullPath: '/test-page'
-      preLoaderRoute: typeof TestPageRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/resume': {
       id: '/resume'
       path: '/resume'
@@ -827,7 +807,6 @@ const rootRouteChildren: RootRouteChildren = {
   authRouteRoute: authRouteRouteWithChildren,
   CertificatesRoute: CertificatesRoute,
   ResumeRoute: ResumeRoute,
-  TestPageRoute: TestPageRoute,
   coreDashboardRouteRoute: coreDashboardRouteRouteWithChildren,
   ProjectsSlugRoute: ProjectsSlugRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
