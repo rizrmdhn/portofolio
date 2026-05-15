@@ -41,14 +41,16 @@ export const Route = createFileRoute('/projects/$slug')({
 function ProjectDetailPage() {
   const queryClient = useQueryClient()
   const { slug } = Route.useParams()
-  const { data: project } = useSuspenseQuery(trpc.project.getBySlug.queryOptions({ slug }))
   const navigate = useNavigate()
+
+  const { data: project } = useSuspenseQuery(trpc.project.getBySlug.queryOptions({ slug }))
+
   const incrementViews = useMutation({
     ...trpc.project.updateView.mutationOptions(),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: trpc.project.getBySlug.queryOptions({ slug }).queryKey,
-      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(trpc.project.getBySlug.queryOptions({ slug }))
+      queryClient.invalidateQueries(trpc.project.getAll.queryOptions())
+    },
   })
 
   useEffect(() => {
