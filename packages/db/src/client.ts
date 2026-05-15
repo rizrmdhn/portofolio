@@ -1,15 +1,15 @@
-import { sql } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import path from "node:path";
-import postgres from "postgres";
+import { sql } from 'drizzle-orm'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import { migrate } from 'drizzle-orm/postgres-js/migrator'
+import path from 'node:path'
+import postgres from 'postgres'
 
-import { env } from "@portofolio/env/server";
-import { relations } from "./relations";
+import { env } from '@portofolio/env/server'
+import { relations } from './relations'
 
-export { sql };
+export { sql }
 
-const globalForDb = globalThis as unknown as { client: postgres.Sql | undefined };
+const globalForDb = globalThis as unknown as { client: postgres.Sql | undefined }
 
 const client =
   globalForDb.client ??
@@ -18,22 +18,23 @@ const client =
     idle_timeout: 20,
     connect_timeout: 10,
     max_lifetime: 1800,
-  });
+  })
 
-if (env.NODE_ENV !== 'production') globalForDb.client = client;
+if (env.NODE_ENV !== 'production') globalForDb.client = client
 
-export const db = drizzle({ client, relations });
+export const db = drizzle({
+  client,
+  relations,
+  logger: env.NODE_ENV === 'development' ? true : false,
+})
 
 export async function runMigrations(): Promise<void> {
-  const migrationsFolder = path.join(
-    process.cwd(),
-    "packages/db/src/migrations",
-  );
-  await migrate(db, { migrationsFolder });
+  const migrationsFolder = path.join(process.cwd(), 'packages/db/src/migrations')
+  await migrate(db, { migrationsFolder })
 }
 
-export type DB = typeof db;
+export type DB = typeof db
 
-export type DBType = Parameters<Parameters<typeof db.transaction>[0]>[0];
+export type DBType = Parameters<Parameters<typeof db.transaction>[0]>[0]
 
-export type DBorTx = DB | DBType;
+export type DBorTx = DB | DBType

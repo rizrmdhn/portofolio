@@ -14,7 +14,7 @@ import {
   IconExternalLink,
   IconEye,
 } from '@tabler/icons-react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
@@ -39,9 +39,17 @@ export const Route = createFileRoute('/projects/$slug')({
 })
 
 function ProjectDetailPage() {
-  const { project } = Route.useLoaderData()
+  const queryClient = useQueryClient()
+  const { slug } = Route.useParams()
+  const { data: project } = useSuspenseQuery(trpc.project.getBySlug.queryOptions({ slug }))
   const navigate = useNavigate()
-  const incrementViews = useMutation(trpc.project.updateView.mutationOptions())
+  const incrementViews = useMutation({
+    ...trpc.project.updateView.mutationOptions(),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: trpc.project.getBySlug.queryOptions({ slug }).queryKey,
+      }),
+  })
 
   useEffect(() => {
     incrementViews.mutate({ projectId: project.id })
