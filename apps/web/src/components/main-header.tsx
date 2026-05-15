@@ -84,7 +84,6 @@ export function MainHeader() {
               <span className="text-subtle font-mono text-xs">Theme</span>
               <ModeToggle type="color" />
             </div>
-            <LoginButton />
             <Button
               variant="outline"
               size="lg"
@@ -93,6 +92,7 @@ export function MainHeader() {
             >
               <p className="text-subtle font-mono text-sm">Resume ↗</p>
             </Button>
+            <LoginButton />
           </SheetFooter>
         </SheetContent>
       </Sheet>

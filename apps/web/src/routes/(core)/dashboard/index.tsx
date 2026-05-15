@@ -66,7 +66,7 @@ function RouteComponent() {
       />
 
       {/* Section 3 — Top projects + social links */}
-      <div className="flex flex-row gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <AllTimeProjectsCard projects={allTimeViewsProjects} />
         <SocialLinkClickThroughCard socialLinks={socialLinks} />
       </div>

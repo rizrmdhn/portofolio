@@ -16,7 +16,7 @@ export function AllTimeProjectsCard({ projects, className }: AllTimeProjectsCard
   const navigate = useNavigate()
 
   return (
-    <Card className={cn('w-1/2', className)}>
+    <Card className={cn(className)}>
       <CardHeader className="border-b">
         <CardTitle>Top Projects</CardTitle>
         <CardDescription>By views, last 30 days</CardDescription>

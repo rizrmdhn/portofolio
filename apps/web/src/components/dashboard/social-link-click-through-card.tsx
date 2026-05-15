@@ -15,13 +15,13 @@ export function SocialLinkClickThroughCard({
   socialLinks,
 }: SocialLinkClickThroughCardProps) {
   return (
-    <Card className={cn('w-1/2', className)}>
+    <Card className={cn(className)}>
       <CardHeader className="border-b">
         <CardTitle>Social Link Click-Through</CardTitle>
         <CardDescription>Last 30 days</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {socialLinks.map((link, idx) => {
             const compareLink = socialLinks[idx + 1] ?? socialLinks[idx - 1]
             const compareCount = compareLink?.clickCount ?? 0
