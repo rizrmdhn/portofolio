@@ -18,7 +18,7 @@ export async function getPaginatedProjects(input: GetProjectsInput) {
     input,
     select: {
       ...getColumns(projects),
-      views: sql<number>`(select count(*) from view_events where project_id = ${projects.id})`,
+      views: sql<number>`(select count(*) from "view_events" where "project_id" = "projects"."id")`,
     },
     searchConditions: [input.search ? ilike(projects.title, `%${input.search}%`) : undefined],
   })
@@ -28,10 +28,12 @@ export async function getAllProjects() {
   const result = await db
     .select({
       ...getColumns(projects),
-      viewCount: sql<number>`(select count(*) from view_events where project_id = ${projects.id})`,
+      viewCount: count(viewEvents.id),
     })
     .from(projects)
+    .leftJoin(viewEvents, eq(viewEvents.projectId, projects.id))
     .where(and(eq(projects.isVisible, true), eq(projects.status, 'published')))
+    .groupBy(projects.id)
     .orderBy(projects.order)
 
   return result
@@ -41,10 +43,12 @@ export async function getProjectsForLandingPage() {
   const result = await db
     .select({
       ...getColumns(projects),
-      viewCount: sql<number>`(select count(*) from view_events where project_id = ${projects.id})`,
+      viewCount: count(viewEvents.id),
     })
     .from(projects)
+    .leftJoin(viewEvents, eq(viewEvents.projectId, projects.id))
     .where(and(eq(projects.isVisible, true), eq(projects.status, 'published')))
+    .groupBy(projects.id)
     .orderBy(projects.featureAt, projects.order)
     .limit(7)
 
@@ -87,6 +91,23 @@ export async function getProjectById(id: string) {
   if (!project) throw new NotFoundError(`Project`, id)
 
   return project
+}
+
+export async function getProjectBySlug(slug: string) {
+  const [result] = await db
+    .select({
+      ...getColumns(projects),
+      viewCount: count(viewEvents.id),
+    })
+    .from(projects)
+    .leftJoin(viewEvents, eq(viewEvents.projectId, projects.id))
+    .where(and(eq(projects.slug, slug), eq(projects.status, 'published'), eq(projects.isVisible, true)))
+    .groupBy(projects.id)
+    .limit(1)
+
+  if (!result) throw new NotFoundError(`Project`, slug)
+
+  return result
 }
 
 async function countFeaturedProjects() {

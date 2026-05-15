@@ -95,7 +95,7 @@ function RootDocument() {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider defaultTheme="system" storageKey="theme">
           <div className="grid h-svh grid-rows-[auto_1fr]">
             <Outlet />
