@@ -2,6 +2,7 @@ import { globalErrorToast } from '@/lib/toasts'
 import type { AppRouter } from '@portofolio/api/root'
 import { QueryCache, QueryClient, defaultShouldDehydrateQuery } from '@tanstack/react-query'
 import { createIsomorphicFn } from '@tanstack/react-start'
+import { getRequestHeader } from '@tanstack/react-start/server'
 import {
   createTRPCClient,
   httpBatchLink,
@@ -18,8 +19,7 @@ const trpcUrl = `${getBaseUrl()}/api/trpc`
 
 const getSsrCookie = createIsomorphicFn()
   .client(() => undefined)
-  .server(async () => {
-    const { getRequestHeader } = await import('@tanstack/react-start/server')
+  .server(() => {
     return getRequestHeader('cookie')
   })
 
