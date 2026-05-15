@@ -314,7 +314,11 @@ function HomeComponent() {
                 <Button
                   size="lg"
                   className="w-fit"
-                  onClick={() => window.location.assign(`mailto:${profile.email}`)}
+                  onClick={() =>
+                    window.location.assign(
+                      `mailto:${profile.email}?subject=Contacting%20You%20from%20Your%20Portfolio&body=Hi%20${encodeURIComponent(profile.name)},%0D%0A%0D%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20get%20in%20touch%20with%20you.%0D%0A%0D%0A[Write your message here]%0D%0A%0D%0ABest,%0D%0A[Your Name]`,
+                    )
+                  }
                 >
                   <IconMail className="size-4" />
                   Send me an email
