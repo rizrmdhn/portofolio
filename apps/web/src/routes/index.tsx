@@ -130,7 +130,7 @@ function HomeComponent() {
           </p>
           {/* Social */}
           <div className="flex flex-wrap items-center gap-4">
-            {socialLinks.map((link) => {
+            {socialLinks.filter((l) => l.icon !== 'portfolio').map((link) => {
               const Icon = SOCIAL_ICON_MAP[link.icon].icon
               return (
                 <Button
@@ -325,7 +325,7 @@ function HomeComponent() {
                 </Button>
               </div>
               <div className="flex flex-col gap-3">
-                {socialLinks.map((link) => {
+                {socialLinks.filter((l) => l.icon !== 'portfolio').map((link) => {
                   const Icon = SOCIAL_ICON_MAP[link.icon].icon
                   return (
                     <Button
