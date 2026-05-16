@@ -1,8 +1,9 @@
+/// <reference path="./ttf.d.ts" />
 import { Font } from '@react-pdf/renderer'
-import Regular from '../assets/fonts/arimo/Arimo-Regular.ttf'
-import Italic from '../assets/fonts/arimo/Arimo-Italic.ttf'
 import Bold from '../assets/fonts/arimo/Arimo-Bold.ttf'
 import BoldItalic from '../assets/fonts/arimo/Arimo-BoldItalic.ttf'
+import Italic from '../assets/fonts/arimo/Arimo-Italic.ttf'
+import Regular from '../assets/fonts/arimo/Arimo-Regular.ttf'
 
 export const registerFontArimo = () => {
   Font.register({

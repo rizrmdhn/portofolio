@@ -1,3 +1,4 @@
+/// <reference path="./ttf.d.ts" />
 import { Font } from '@react-pdf/renderer'
 import Bold from '../assets/fonts/liberation-sans/LiberationSans-Bold.ttf'
 import BoldItalic from '../assets/fonts/liberation-sans/LiberationSans-BoldItalic.ttf'
