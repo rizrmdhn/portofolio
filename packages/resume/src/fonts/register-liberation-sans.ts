@@ -1,9 +1,8 @@
-/// <reference path="./ttf.d.ts" />
 import { Font } from '@react-pdf/renderer'
-import Regular from '../assets/fonts/liberation-sans/LiberationSans-Regular.ttf'
-import Italic from '../assets/fonts/liberation-sans/LiberationSans-Italic.ttf'
 import Bold from '../assets/fonts/liberation-sans/LiberationSans-Bold.ttf'
 import BoldItalic from '../assets/fonts/liberation-sans/LiberationSans-BoldItalic.ttf'
+import Italic from '../assets/fonts/liberation-sans/LiberationSans-Italic.ttf'
+import Regular from '../assets/fonts/liberation-sans/LiberationSans-Regular.ttf'
 
 export const registerLiberationSans = () => {
   Font.register({

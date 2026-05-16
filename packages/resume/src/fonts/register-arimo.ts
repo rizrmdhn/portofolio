@@ -1,4 +1,3 @@
-/// <reference path="./ttf.d.ts" />
 import { Font } from '@react-pdf/renderer'
 import Regular from '../assets/fonts/arimo/Arimo-Regular.ttf'
 import Italic from '../assets/fonts/arimo/Arimo-Italic.ttf'
