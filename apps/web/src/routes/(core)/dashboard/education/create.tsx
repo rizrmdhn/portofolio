@@ -3,6 +3,13 @@ import { DatePicker } from '@/components/ui/date-picker'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -12,8 +19,8 @@ import { globalErrorToast, globalSuccessToast } from '@/lib/toasts'
 import { trpc } from '@/utils/trpc'
 import type { ExperienceStatusType } from '@portofolio/constants'
 import {
-  DEGREE_TYPE_LABELS,
   DEGREE_TYPES,
+  DEGREE_TYPE_LABELS,
   EXPERIENCE_STATUS_LABELS,
   EXPERIENCE_STATUS_TYPES,
 } from '@portofolio/constants'
@@ -23,7 +30,6 @@ import { IconSchool, IconSettings } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export const Route = createFileRoute('/(core)/dashboard/education/create')({
   component: RouteComponent,
@@ -151,7 +157,9 @@ function RouteComponent() {
                               }
                             >
                               <SelectTrigger aria-invalid={isInvalid}>
-                                <SelectValue placeholder="Select degree level" />
+                                <SelectValue placeholder="Select degree level">
+                                  {DEGREE_TYPE_LABELS[field.state.value]}
+                                </SelectValue>
                               </SelectTrigger>
                               <SelectContent>
                                 {DEGREE_TYPES.map((d) => (
