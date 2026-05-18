@@ -145,10 +145,7 @@ export const projectRouter = createTRPCRouter({
     .mutation(async ({ ctx, input: { projectId, slug } }) => {
       const [views, err] = await tryCatchAsync(() => incrementViews(projectId))
       if (err) throw toTRPCError(err)
-      void Promise.all([
-        ctx.cache.delete(`${CACHE_PREFIX}${projectId}`),
-        ctx.cache.delete(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`),
-      ])
+      void ctx.cache.delete(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`)
       return views
     }),
 
