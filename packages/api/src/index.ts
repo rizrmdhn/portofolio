@@ -7,6 +7,7 @@
  * need to use are documented accordingly near the end.
  */
 import { auth } from '@portofolio/auth'
+import { cacheService } from '@portofolio/cache'
 import { TRPCError, initTRPC } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError, z } from 'zod'
@@ -32,6 +33,8 @@ export const createTRPCContext = async (context: Request) => {
   return {
     user: session?.user,
     session: session?.session,
+    cache: cacheService,
+    headers: context.headers,
   }
 }
 
