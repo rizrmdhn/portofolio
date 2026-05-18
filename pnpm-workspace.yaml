@@ -2,10 +2,10 @@ packages:
   - apps/*
   - packages/*
 allowBuilds:
-  esbuild: set this to true or false
-  msgpackr-extract: set this to true or false
-  msw: set this to true or false
-  unrs-resolver: set this to true or false
+  esbuild: true
+  msgpackr-extract: true
+  msw: true
+  unrs-resolver: true
 catalog:
   dotenv: ^17.2.2
   zod: ^4.1.13
