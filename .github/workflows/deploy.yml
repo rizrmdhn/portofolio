@@ -1,0 +1,54 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [deploy/hostinger]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.1.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm turbo build --filter="@portofolio/web..."
+        env:
+          NODE_ENV: production
+
+      - name: Add start script for Hostinger
+        run: |
+          cat > apps/web/.output/package.json << 'EOF'
+          {
+            "name": "portofolio-web",
+            "scripts": {
+              "start": "node server/index.mjs"
+            }
+          }
+          EOF
+
+      - name: Push built output to hostinger-deploy branch
+        run: |
+          cd apps/web/.output
+          git init
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git add -A
+          git commit -m "deploy: $(date -u '+%Y-%m-%d %H:%M:%S UTC') @ ${{ github.sha }}"
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push --force origin HEAD:hostinger-deploy
