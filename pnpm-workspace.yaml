@@ -2,6 +2,7 @@ packages:
   - apps/*
   - packages/*
 allowBuilds:
+  esbuild: false
   msgpackr-extract: true
   msw: true
   unrs-resolver: true
