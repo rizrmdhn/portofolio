@@ -1,3 +1,4 @@
+import { CACHE_KEYS, CACHE_TTL } from '@portofolio/constants'
 import { createActivityLog } from '@portofolio/queries/activity-log.queries'
 import { incrementViews } from '@portofolio/queries/project-views.queries'
 import {
@@ -30,7 +31,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from '..'
-import { CACHE_KEYS, CACHE_TTL } from '@portofolio/constants'
 import { toTRPCError } from '../utils/to-trpc-error'
 
 const CACHE_PREFIX = CACHE_KEYS.PROJECT_PREFIX
@@ -38,7 +38,12 @@ const CACHE_PREFIX = CACHE_KEYS.PROJECT_PREFIX
 export const projectRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const [projects, err] = await tryCatchAsync(() =>
-      ctx.cache.withCache(CACHE_KEYS.PROJECT_ALL, CACHE_TTL.SHORT, () => getAllProjects(), () => ctx.headers.set('X-Data-Source', 'cache')),
+      ctx.cache.withCache(
+        CACHE_KEYS.PROJECT_ALL,
+        CACHE_TTL.SHORT,
+        () => getAllProjects(),
+        () => ctx.headers.set('X-Data-Source', 'cache'),
+      ),
     )
     if (err) throw toTRPCError(err)
     return projects
@@ -52,7 +57,12 @@ export const projectRouter = createTRPCRouter({
 
   getForLandingPage: publicProcedure.query(async ({ ctx }) => {
     const [projects, err] = await tryCatchAsync(() =>
-      ctx.cache.withCache(CACHE_KEYS.PROJECT_LANDING, CACHE_TTL.SHORT, () => getProjectsForLandingPage(), () => ctx.headers.set('X-Data-Source', 'cache')),
+      ctx.cache.withCache(
+        CACHE_KEYS.PROJECT_LANDING,
+        CACHE_TTL.SHORT,
+        () => getProjectsForLandingPage(),
+        () => ctx.headers.set('X-Data-Source', 'cache'),
+      ),
     )
     if (err) throw toTRPCError(err)
     return projects
@@ -64,19 +74,31 @@ export const projectRouter = createTRPCRouter({
     return projects
   }),
 
-  getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input: { id } }) => {
-    const [project, err] = await tryCatchAsync(() =>
-      ctx.cache.withCache(`${CACHE_PREFIX}${id}`, CACHE_TTL.SHORT, () => getProjectById(id), () => ctx.headers.set('X-Data-Source', 'cache')),
-    )
-    if (err) throw toTRPCError(err)
-    return project
-  }),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input: { id } }) => {
+      const [project, err] = await tryCatchAsync(() =>
+        ctx.cache.withCache(
+          `${CACHE_PREFIX}${id}`,
+          CACHE_TTL.SHORT,
+          () => getProjectById(id),
+          () => ctx.headers.set('X-Data-Source', 'cache'),
+        ),
+      )
+      if (err) throw toTRPCError(err)
+      return project
+    }),
 
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ ctx, input: { slug } }) => {
       const [project, err] = await tryCatchAsync(() =>
-        ctx.cache.withCache(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`, CACHE_TTL.SHORT, () => getProjectBySlug(slug), () => ctx.headers.set('X-Data-Source', 'cache')),
+        ctx.cache.withCache(
+          `${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`,
+          CACHE_TTL.SHORT,
+          () => getProjectBySlug(slug),
+          () => ctx.headers.set('X-Data-Source', 'cache'),
+        ),
       )
       if (err) throw toTRPCError(err)
       return project
@@ -119,11 +141,14 @@ export const projectRouter = createTRPCRouter({
     }),
 
   updateView: publicProcedure
-    .input(z.object({ projectId: z.string() }))
-    .mutation(async ({ ctx, input: { projectId } }) => {
+    .input(z.object({ projectId: z.string(), slug: z.string() }))
+    .mutation(async ({ ctx, input: { projectId, slug } }) => {
       const [views, err] = await tryCatchAsync(() => incrementViews(projectId))
       if (err) throw toTRPCError(err)
-      void ctx.cache.delete(`${CACHE_PREFIX}${projectId}`)
+      void Promise.all([
+        ctx.cache.delete(`${CACHE_PREFIX}${projectId}`),
+        ctx.cache.delete(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`),
+      ])
       return views
     }),
 
