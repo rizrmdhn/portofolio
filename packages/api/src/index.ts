@@ -25,7 +25,7 @@ import { parseAndValidateSafe } from './utils/form-data-parser'
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (context: Request) => {
+export const createTRPCContext = async (context: Request, resHeaders = new Headers()) => {
   const session = await auth.api.getSession({
     headers: context.headers,
   })
@@ -34,7 +34,7 @@ export const createTRPCContext = async (context: Request) => {
     user: session?.user,
     session: session?.session,
     cache: cacheService,
-    headers: context.headers,
+    headers: resHeaders,
   }
 }
 
