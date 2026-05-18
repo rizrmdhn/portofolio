@@ -1,0 +1,1 @@
+import{En as e,ft as t,jn as n}from"./index-8yYnRp_6.js";var r=n(e()),i=r.createContext({formRef:{current:{fields:new Map}},errors:{},clearErrors:t,validationMode:`onSubmit`,submitAttemptedRef:{current:!1}});function a(){return r.useContext(i)}export{a as t};

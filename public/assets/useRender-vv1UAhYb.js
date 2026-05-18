@@ -1,0 +1,1 @@
+import{lt as e}from"./index-8yYnRp_6.js";function t(t){return e(t.defaultTagName??`div`,t,t)}export{t};

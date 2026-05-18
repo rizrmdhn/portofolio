@@ -1,0 +1,1 @@
+import{En as e,jn as t}from"./index-8yYnRp_6.js";var n=t(e()),r=[];function i(e){n.useEffect(e,r)}export{i as t};

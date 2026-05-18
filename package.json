@@ -1,0 +1,6 @@
+{
+  "name": "portofolio-web",
+  "scripts": {
+    "start": "node server/index.mjs"
+  }
+}

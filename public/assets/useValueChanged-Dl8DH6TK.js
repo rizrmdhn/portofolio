@@ -1,0 +1,1 @@
+import{En as e,St as t,bt as n,jn as r}from"./index-8yYnRp_6.js";function i(e,t,n,r){return e.addEventListener(t,n,r),()=>{e.removeEventListener(t,n,r)}}var a=r(e());function o(e,r){let i=a.useRef(e),o=t(r);n(()=>{i.current!==e&&o(i.current)},[e,o]),n(()=>{i.current=e},[e])}export{i as n,o as t};

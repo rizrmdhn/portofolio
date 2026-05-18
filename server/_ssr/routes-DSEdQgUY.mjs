@@ -1,0 +1,338 @@
+import { ft as require_jsx_runtime } from "../_libs/@base-ui/react+[...].mjs";
+import { P as IconFolder, Q as IconBriefcase, X as IconCertificate, d as IconStack2, ht as IconArrowRight, w as IconMail } from "../_libs/tabler__icons-react.mjs";
+import { b as SOCIAL_ICON_MAP, n as AVAILABILITY_STATUS_LABELS } from "./auth-BOIJqjd1.mjs";
+import { r as cn, t as Button$1 } from "./button-DXBrv0gs.mjs";
+import { t as useMutation } from "../_libs/tanstack__react-query.mjs";
+import { r as trpc } from "./trpc-DhZOnnjr.mjs";
+import { t as Separator$1 } from "./separator-BJ-xJ2or.mjs";
+import { l as format } from "../_libs/date-fns.mjs";
+import { t as Badge } from "./badge-zKr0p2xx.mjs";
+import { t as MainHeader } from "./main-header-DbejrcLK.mjs";
+import { t as FadeIn } from "./fade-in-C02eXbaH.mjs";
+import { t as EmptyState } from "./empty-state-CvqlupIY.mjs";
+import { t as CertificateCard } from "./certificate-card-DfU_zIZ_.mjs";
+import { t as ProjectCard } from "./project-card-DX0b9ztk.mjs";
+import { t as Route } from "./routes-DEsj7y4L.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-DSEdQgUY.js
+var import_jsx_runtime = require_jsx_runtime();
+function ExperienceCard({ experience, className, ...props }) {
+	const isCurrent = experience.currentlyWorking ? "Present" : format(experience.endDate ?? /* @__PURE__ */ new Date(), "MMM yyyy");
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: cn("flex flex-col gap-6  rounded-lg py-10", className),
+		...props,
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			className: "flex items-center gap-4",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "flex flex-col items-start gap-2 w-36 shrink-0 self-start",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					className: "text-xs text-subtle font-mono font-semibold whitespace-nowrap",
+					children: [
+						format(experience.startDate, "MMM yyyy"),
+						" - ",
+						isCurrent
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					className: "text-[13px] text-muted-foreground wrap-break-word",
+					children: experience.company
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "flex flex-col items-start gap-2 max-w-lg",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						className: "text-[15px] font-semibold text-foreground",
+						children: experience.title
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "text-[13px] text-muted-foreground",
+						children: experience.description
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						className: "flex flex-wrap gap-2",
+						children: experience.skills.map((skill, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							className: "text-[10px] bg-tag text-tag-foreground border border-tag-border px-2 py-1 rounded font-mono font-semibold",
+							children: skill
+						}, index))
+					})
+				]
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$1, {})]
+	});
+}
+function TechStackList({ stack }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "flex flex-col gap-6",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+			className: "text-[11px] font-mono font-semibold text-subtle uppercase tracking-[0.08em]",
+			children: stack.name
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			className: "flex flex-col gap-2",
+			children: stack.items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				className: "text-[13px] text-muted-foreground",
+				children: item.name
+			}, item.id))
+		})]
+	});
+}
+function SectionHeading({ children }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+		className: "text-subtle font-mono text-sm tracking-[0.15em]",
+		children
+	});
+}
+function HomeComponent() {
+	const navigate = Route.useNavigate();
+	const { profile, projects: { data: featured, isMore }, experiences, stack, certifications: { data: certificates, isMore: isMoreCerts }, socialLinks } = Route.useLoaderData();
+	const socialByIcon = Object.fromEntries(socialLinks.map((l) => [l.icon, l]));
+	const incrementSocialLinkClickCount = useMutation(trpc.socialLink.incrementClickCount.mutationOptions());
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "bg-background text-foreground flex flex-col",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MainHeader, {}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				id: "about",
+				className: "dot-grid flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 pt-24",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FadeIn, {
+					className: "border-border mx-auto flex w-full flex-col gap-6 self-stretch border-b px-4 pb-24 md:max-w-175 md:px-0",
+					children: [
+						profile.availabilityStatus !== "unavailable" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
+							variant: "outline",
+							className: "bg-available text-available-foreground border-available-foreground/20 w-fit border px-3.5 py-3 text-xs font-medium",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "mr-2 h-2 w-2 rounded-full bg-green-500" }), AVAILABILITY_STATUS_LABELS[profile.availabilityStatus]]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+							className: "text-foreground text-[32px] leading-[1.05] font-extrabold sm:text-[44px] md:text-[54px]",
+							children: profile.name
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "text-muted-foreground max-w-2xl text-start text-[18px]",
+							children: profile.title
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "text-muted-foreground max-w-2xl text-start text-[15px] leading-[1.75]",
+							children: profile.bio
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "flex flex-wrap items-center gap-4",
+							children: [socialLinks.filter((l) => l.icon !== "portfolio").map((link) => {
+								const Icon = SOCIAL_ICON_MAP[link.icon].icon;
+								return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$1, {
+									variant: "outline",
+									size: "lg",
+									onClick: () => {
+										incrementSocialLinkClickCount.mutate({ id: link.id });
+										window.open(link.url, "_blank");
+									},
+									title: link.title,
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+										className: "text-subtle flex items-center gap-1 text-sm font-medium",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, { className: "size-4" }), link.title]
+									})
+								}, link.id);
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$1, {
+								variant: "outline",
+								size: "lg",
+								onClick: () => window.location.assign(`mailto:${profile.email}`),
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+									className: "text-subtle flex items-center gap-1 text-sm font-medium",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(IconMail, { className: "size-4" }), "Email"]
+								})
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							className: "flex gap-3",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$1, {
+								size: "lg",
+								onClick: () => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }),
+								className: "group",
+								children: ["View Projects", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(IconArrowRight, { className: "size-4 transition-transform group-hover:translate-x-1" })]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button$1, {
+								size: "lg",
+								variant: "outline",
+								onClick: () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }),
+								className: "text-subtle",
+								children: "Contact"
+							})]
+						})
+					]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				id: "experience",
+				className: "flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 py-24",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FadeIn, {
+					className: "mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHeading, { children: "WORK EXPERIENCE" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "flex flex-col gap-6",
+							children: experiences.map((exp, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ExperienceCard, { experience: exp }, i))
+						}),
+						experiences.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyState, {
+							icon: IconBriefcase,
+							title: "No experience yet",
+							description: "It seems there are no experiences to show at the moment."
+						})
+					]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				id: "projects",
+				className: "bg-section-alt flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 border-y py-24",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FadeIn, {
+					className: "mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHeading, { children: "PROJECTS" }),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr]",
+							children: featured.map((project) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProjectCard, { project }, project.id))
+						}),
+						featured.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyState, {
+							icon: IconFolder,
+							title: "No projects yet",
+							description: "It seems there are no projects to show at the moment."
+						}),
+						isMore && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$1, {
+							onClick: () => navigate({ to: "/projects" }),
+							variant: "link",
+							size: "lg",
+							className: "text-subtle group",
+							children: ["View all projects", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(IconArrowRight, { className: "size-4 transition-transform group-hover:translate-x-1" })]
+						})
+					]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				className: "flex flex-col items-center justify-center gap-24 py-12",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+						id: "stack",
+						className: "mx-auto flex w-full scroll-mt-26 flex-col gap-8 px-4 md:max-w-175 md:px-0",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FadeIn, {
+							className: "flex flex-col gap-8",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHeading, { children: "TECH STACK" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-5",
+									children: stack.map((group) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TechStackList, { stack: group }, group.id))
+								}),
+								stack.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyState, {
+									icon: IconStack2,
+									title: "No tech stack yet",
+									description: "It seems there are no tech stacks to show at the moment."
+								})
+							]
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+						id: "certs",
+						className: "bg-section-alt flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 border-y py-24",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FadeIn, {
+							className: "mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHeading, { children: "CERTIFICATES" }),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr]",
+									children: certificates.map((cert) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CertificateCard, { certificate: cert }, cert.id))
+								}),
+								certificates.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyState, {
+									icon: IconCertificate,
+									title: "No certificates yet",
+									description: "It seems there are no certificates to show at the moment."
+								}),
+								isMoreCerts && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$1, {
+									onClick: () => navigate({ to: "/certificates" }),
+									variant: "link",
+									size: "lg",
+									className: "text-subtle group",
+									children: ["View all certificates", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(IconArrowRight, { className: "size-4 transition-transform group-hover:translate-x-1" })]
+								})
+							]
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+						id: "contact",
+						className: "mx-auto flex w-full scroll-mt-14 flex-col gap-8 px-4 md:max-w-175 md:px-0",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FadeIn, {
+							className: "flex flex-col gap-8",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SectionHeading, { children: "CONTACT" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								className: "border-border flex flex-col gap-8 rounded-lg border p-8 sm:flex-row sm:items-start sm:justify-between",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									className: "flex flex-col gap-4",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-foreground text-lg font-semibold",
+											children: "Let's work together."
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-subtle max-w-sm leading-relaxed",
+											children: "I'm open to freelance work, full-time roles, and interesting side projects. If you have something in mind, reach out."
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$1, {
+											size: "lg",
+											className: "w-fit",
+											onClick: () => window.location.assign(`mailto:${profile.email}?subject=Contacting%20You%20from%20Your%20Portfolio&body=Hi%20${encodeURIComponent(profile.name)},%0D%0A%0D%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20get%20in%20touch%20with%20you.%0D%0A%0D%0A[Write your message here]%0D%0A%0D%0ABest,%0D%0A[Your Name]`),
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(IconMail, { className: "size-4" }), "Send me an email"]
+										})
+									]
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									className: "flex flex-col gap-3",
+									children: socialLinks.filter((l) => l.icon !== "portfolio").map((link) => {
+										const Icon = SOCIAL_ICON_MAP[link.icon].icon;
+										return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button$1, {
+											variant: "outline",
+											size: "sm",
+											className: "justify-start",
+											onClick: () => {
+												incrementSocialLinkClickCount.mutate({ id: link.id });
+												window.open(link.url, "_blank");
+											},
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, { className: "size-4" }), link.title]
+										}, link.id);
+									})
+								})]
+							})]
+						})
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("footer", {
+				className: "border-border mx-auto flex w-full flex-col justify-between gap-2 border-t px-4 py-6 sm:flex-row md:max-w-175 md:px-0",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					className: "text-subtle text-center font-mono text-xs",
+					children: [
+						"© ",
+						(/* @__PURE__ */ new Date()).getFullYear(),
+						" Noor Rizki Ramadhan"
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "mb-2 flex items-center justify-center gap-2",
+					children: [
+						socialByIcon.github && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							href: socialByIcon.github.url,
+							target: "_blank",
+							rel: "noopener noreferrer",
+							className: "text-subtle hover:text-foreground cursor-pointer text-center text-xs transition-colors",
+							children: "Github"
+						}),
+						socialByIcon.linkedin && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							href: socialByIcon.linkedin.url,
+							target: "_blank",
+							rel: "noopener noreferrer",
+							className: "text-subtle hover:text-foreground cursor-pointer text-center text-xs transition-colors",
+							children: "LinkedIn"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+							href: `mailto:${profile.email}`,
+							target: "_blank",
+							rel: "noopener noreferrer",
+							className: "text-subtle hover:text-foreground cursor-pointer text-center text-xs transition-colors",
+							children: "Email"
+						})
+					]
+				})]
+			})
+		]
+	});
+}
+//#endregion
+export { HomeComponent as component };

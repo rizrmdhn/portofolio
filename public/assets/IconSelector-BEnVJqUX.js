@@ -1,0 +1,1 @@
+import{Jt as e}from"./index-8yYnRp_6.js";var t=e(`outline`,`selector`,`Selector`,[[`path`,{d:`M8 9l4 -4l4 4`,key:`svg-0`}],[`path`,{d:`M16 15l-4 4l-4 -4`,key:`svg-1`}]]);export{t};

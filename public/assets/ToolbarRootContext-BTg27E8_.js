@@ -1,0 +1,1 @@
+import{En as e,jn as t,vt as n}from"./index-8yYnRp_6.js";var r=t(e()),i=r.createContext(void 0);function a(e){let t=r.useContext(i);if(t===void 0&&!e)throw Error(n(69));return t}export{a as t};
