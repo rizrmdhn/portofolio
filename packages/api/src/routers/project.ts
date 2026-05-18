@@ -1,3 +1,4 @@
+import { CACHE_KEYS, CACHE_TTL } from '@portofolio/constants'
 import { createActivityLog } from '@portofolio/queries/activity-log.queries'
 import { incrementViews } from '@portofolio/queries/project-views.queries'
 import {
@@ -32,54 +33,74 @@ import {
 } from '..'
 import { toTRPCError } from '../utils/to-trpc-error'
 
+const CACHE_PREFIX = CACHE_KEYS.PROJECT_PREFIX
+
 export const projectRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async () => {
-    const [projects, err] = await tryCatchAsync(() => getAllProjects())
-
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    const [projects, err] = await tryCatchAsync(() =>
+      ctx.cache.withCache(
+        CACHE_KEYS.PROJECT_ALL,
+        CACHE_TTL.SHORT,
+        () => getAllProjects(),
+        () => ctx.headers.set('X-Data-Source', 'cache'),
+      ),
+    )
     if (err) throw toTRPCError(err)
-
     return projects
   }),
 
   getAllTimeViewsProjects: protectedProcedure.query(async () => {
     const [projects, err] = await tryCatchAsync(() => getAllTimeViewsProjects())
-
     if (err) throw toTRPCError(err)
-
     return projects
   }),
 
-  getForLandingPage: publicProcedure.query(async () => {
-    const [projects, err] = await tryCatchAsync(() => getProjectsForLandingPage())
-
+  getForLandingPage: publicProcedure.query(async ({ ctx }) => {
+    const [projects, err] = await tryCatchAsync(() =>
+      ctx.cache.withCache(
+        CACHE_KEYS.PROJECT_LANDING,
+        CACHE_TTL.SHORT,
+        () => getProjectsForLandingPage(),
+        () => ctx.headers.set('X-Data-Source', 'cache'),
+      ),
+    )
     if (err) throw toTRPCError(err)
-
     return projects
   }),
 
   getPaginatedProjects: protectedProcedure.input(getProjectsSchema).query(async ({ input }) => {
     const [projects, err] = await tryCatchAsync(() => getPaginatedProjects(input))
-
     if (err) throw toTRPCError(err)
-
     return projects
   }),
 
-  getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input: { id } }) => {
-    const [project, err] = await tryCatchAsync(() => getProjectById(id))
-
-    if (err) throw toTRPCError(err)
-
-    return project
-  }),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input: { id } }) => {
+      const [project, err] = await tryCatchAsync(() =>
+        ctx.cache.withCache(
+          `${CACHE_PREFIX}${id}`,
+          CACHE_TTL.SHORT,
+          () => getProjectById(id),
+          () => ctx.headers.set('X-Data-Source', 'cache'),
+        ),
+      )
+      if (err) throw toTRPCError(err)
+      return project
+    }),
 
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
-    .query(async ({ input: { slug } }) => {
-      const [project, err] = await tryCatchAsync(() => getProjectBySlug(slug))
-
+    .query(async ({ ctx, input: { slug } }) => {
+      const [project, err] = await tryCatchAsync(() =>
+        ctx.cache.withCache(
+          `${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`,
+          CACHE_TTL.SHORT,
+          () => getProjectBySlug(slug),
+          () => ctx.headers.set('X-Data-Source', 'cache'),
+        ),
+      )
       if (err) throw toTRPCError(err)
-
       return project
     }),
 
@@ -90,12 +111,10 @@ export const projectRouter = createTRPCRouter({
       const { picture, ...projectData } = ctx.input
 
       const [project, createErr] = await tryCatchAsync(() => createProject(projectData))
-
       if (createErr) throw toTRPCError(createErr)
 
       if (picture) {
         const [upload, uploadErr] = await tryCatchAsync(() => utapi.uploadFiles(picture))
-
         if (uploadErr) throw toTRPCError(uploadErr)
 
         if (!upload.data)
@@ -107,7 +126,6 @@ export const projectRouter = createTRPCRouter({
         const [_, imageErr] = await tryCatchAsync(() =>
           updateProjectImageUrl(project.id, upload.data.ufsUrl),
         )
-
         if (imageErr) throw toTRPCError(imageErr)
       }
 
@@ -117,17 +135,17 @@ export const projectRouter = createTRPCRouter({
         entityId: project.id,
         entityTitle: project.title,
       })
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
 
       return project
     }),
 
   updateView: publicProcedure
-    .input(z.object({ projectId: z.string() }))
-    .mutation(async ({ input: { projectId } }) => {
+    .input(z.object({ projectId: z.string(), slug: z.string() }))
+    .mutation(async ({ ctx, input: { projectId, slug } }) => {
       const [views, err] = await tryCatchAsync(() => incrementViews(projectId))
-
       if (err) throw toTRPCError(err)
-
+      void ctx.cache.delete(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`)
       return views
     }),
 
@@ -138,7 +156,6 @@ export const projectRouter = createTRPCRouter({
       const { picture, ...projectData } = ctx.input
 
       const [project, err] = await tryCatchAsync(() => updateProject(projectData))
-
       if (err) throw toTRPCError(err)
 
       if (picture) {
@@ -148,7 +165,6 @@ export const projectRouter = createTRPCRouter({
         }
 
         const [upload, uploadErr] = await tryCatchAsync(() => utapi.uploadFiles(picture))
-
         if (uploadErr) throw toTRPCError(uploadErr)
 
         if (!upload.data)
@@ -160,7 +176,6 @@ export const projectRouter = createTRPCRouter({
         const [_, imageErr] = await tryCatchAsync(() =>
           updateProjectImageUrl(project.id, upload.data.ufsUrl),
         )
-
         if (imageErr) throw toTRPCError(imageErr)
       }
 
@@ -170,23 +185,22 @@ export const projectRouter = createTRPCRouter({
         entityId: project.id,
         entityTitle: project.title,
       })
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
 
       return project
     }),
 
-  reorder: protectedProcedure.input(reorderProjectsSchema).mutation(async ({ input }) => {
+  reorder: protectedProcedure.input(reorderProjectsSchema).mutation(async ({ ctx, input }) => {
     const [, err] = await tryCatchAsync(() => reorderProjects(input))
-
     if (err) throw toTRPCError(err)
-
+    void ctx.cache.deleteByPrefix(CACHE_PREFIX)
     return true
   }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input: { id } }) => {
+    .mutation(async ({ ctx, input: { id } }) => {
       const [result, err] = await tryCatchAsync(() => deleteProject(id))
-
       if (err) throw toTRPCError(err)
 
       if (result.imageUrl) {
@@ -207,13 +221,14 @@ export const projectRouter = createTRPCRouter({
         entityId: result.id,
         entityTitle: result.title,
       })
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
 
       return result
     }),
 
   deleteImage: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input: { id } }) => {
+    .mutation(async ({ ctx, input: { id } }) => {
       const [project, err] = await tryCatchAsync(() => getProjectById(id))
 
       if (!project) throw toTRPCError(err)
@@ -235,8 +250,9 @@ export const projectRouter = createTRPCRouter({
       await utapi.deleteFiles(imageFiles)
 
       const [_, updateErr] = await tryCatchAsync(() => updateProjectImageUrl(id, null))
-
       if (updateErr) throw toTRPCError(updateErr)
+
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
 
       return true
     }),

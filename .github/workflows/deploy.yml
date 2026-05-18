@@ -2,7 +2,7 @@ name: Deploy to Hostinger
 
 on:
   push:
-    branches: [deploy/hostinger]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
