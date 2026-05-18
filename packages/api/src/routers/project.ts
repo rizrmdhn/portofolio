@@ -118,12 +118,12 @@ export const projectRouter = createTRPCRouter({
       return project
     }),
 
-  // High-frequency counter — skip cache invalidation
   updateView: publicProcedure
     .input(z.object({ projectId: z.string() }))
-    .mutation(async ({ input: { projectId } }) => {
+    .mutation(async ({ ctx, input: { projectId } }) => {
       const [views, err] = await tryCatchAsync(() => incrementViews(projectId))
       if (err) throw toTRPCError(err)
+      void ctx.cache.delete(`${CACHE_PREFIX}${projectId}`)
       return views
     }),
 
