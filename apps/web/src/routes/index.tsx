@@ -35,7 +35,9 @@ export const Route = createFileRoute('/')({
           context.trpc.certification.getForLandingPage.queryOptions(),
         ),
         context.queryClient.ensureQueryData(context.trpc.socialLink.getAll.queryOptions()),
-        context.queryClient.ensureQueryData(context.trpc.seo.getPage.queryOptions({ page: 'home' })),
+        context.queryClient.ensureQueryData(
+          context.trpc.seo.getPage.queryOptions({ page: 'home' }),
+        ),
       ])
 
     return {
@@ -96,7 +98,7 @@ function HomeComponent() {
         id="about"
         className="dot-grid flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 pt-24"
       >
-        <div className="border-border mx-auto flex w-full flex-col gap-6 self-stretch border-b px-4 pb-24 md:max-w-175 md:px-0">
+        <FadeIn className="border-border mx-auto flex w-full flex-col gap-6 self-stretch border-b px-4 pb-24 md:max-w-175 md:px-0">
           {profile.availabilityStatus !== 'unavailable' && (
             <Badge
               variant="outline"
@@ -115,26 +117,28 @@ function HomeComponent() {
           </p>
           {/* Social */}
           <div className="flex flex-wrap items-center gap-4">
-            {socialLinks.filter((l) => l.icon !== 'portfolio').map((link) => {
-              const Icon = SOCIAL_ICON_MAP[link.icon].icon
-              return (
-                <Button
-                  key={link.id}
-                  variant="outline"
-                  size="lg"
-                  onClick={() => {
-                    incrementSocialLinkClickCount.mutate({ id: link.id })
-                    window.open(link.url, '_blank')
-                  }}
-                  title={link.title}
-                >
-                  <span className="text-subtle flex items-center gap-1 text-sm font-medium">
-                    {<Icon className="size-4" />}
-                    {link.title}
-                  </span>
-                </Button>
-              )
-            })}
+            {socialLinks
+              .filter((l) => l.icon !== 'portfolio')
+              .map((link) => {
+                const Icon = SOCIAL_ICON_MAP[link.icon].icon
+                return (
+                  <Button
+                    key={link.id}
+                    variant="outline"
+                    size="lg"
+                    onClick={() => {
+                      incrementSocialLinkClickCount.mutate({ id: link.id })
+                      window.open(link.url, '_blank')
+                    }}
+                    title={link.title}
+                  >
+                    <span className="text-subtle flex items-center gap-1 text-sm font-medium">
+                      {<Icon className="size-4" />}
+                      {link.title}
+                    </span>
+                  </Button>
+                )
+              })}
             <Button
               variant="outline"
               size="lg"
@@ -168,7 +172,7 @@ function HomeComponent() {
               Contact
             </Button>
           </div>
-        </div>
+        </FadeIn>
       </section>
 
       {/* Experience */}
@@ -310,24 +314,26 @@ function HomeComponent() {
                 </Button>
               </div>
               <div className="flex flex-col gap-3">
-                {socialLinks.filter((l) => l.icon !== 'portfolio').map((link) => {
-                  const Icon = SOCIAL_ICON_MAP[link.icon].icon
-                  return (
-                    <Button
-                      key={link.id}
-                      variant="outline"
-                      size="sm"
-                      className="justify-start"
-                      onClick={() => {
-                        incrementSocialLinkClickCount.mutate({ id: link.id })
-                        window.open(link.url, '_blank')
-                      }}
-                    >
-                      <Icon className="size-4" />
-                      {link.title}
-                    </Button>
-                  )
-                })}
+                {socialLinks
+                  .filter((l) => l.icon !== 'portfolio')
+                  .map((link) => {
+                    const Icon = SOCIAL_ICON_MAP[link.icon].icon
+                    return (
+                      <Button
+                        key={link.id}
+                        variant="outline"
+                        size="sm"
+                        className="justify-start"
+                        onClick={() => {
+                          incrementSocialLinkClickCount.mutate({ id: link.id })
+                          window.open(link.url, '_blank')
+                        }}
+                      >
+                        <Icon className="size-4" />
+                        {link.title}
+                      </Button>
+                    )
+                  })}
               </div>
             </div>
           </FadeIn>
