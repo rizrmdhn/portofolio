@@ -1,21 +1,37 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef } from 'react'
 
 interface FadeInProps {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
+  children: React.ReactNode
+  className?: string
+  delay?: number
 }
 
 export function FadeIn({ children, className, delay = 0 }: FadeInProps) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          el.classList.add('fade-in-up--visible')
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '-80px' },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
+    <div
+      ref={ref}
+      className={`fade-in-up ${className ?? ''}`}
+      style={delay ? { '--fade-delay': `${delay}s` } as React.CSSProperties : undefined}
     >
       {children}
-    </motion.div>
-  );
+    </div>
+  )
 }
