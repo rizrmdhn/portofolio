@@ -44,7 +44,6 @@
     "date-fns": "^4.1.0",
     "dotenv": "catalog:",
     "embla-carousel-react": "^8.6.0",
-    "framer-motion": "^12.38.0",
     "input-otp": "^1.4.2",
     "mime-types": "^3.0.2",
     "next-themes": "catalog:",
