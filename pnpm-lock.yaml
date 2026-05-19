@@ -431,8 +431,8 @@ importers:
         specifier: 'catalog:'
         version: 17.4.2
       drizzle-orm:
-        specifier: 1.0.0-rc.1
-        version: 1.0.0-rc.1(postgres@3.4.9)(zod@4.4.3)
+        specifier: 1.0.0-rc.3
+        version: 1.0.0-rc.3(postgres@3.4.9)(zod@4.4.3)
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
@@ -453,8 +453,8 @@ importers:
         specifier: 'catalog:'
         version: 22.19.19
       drizzle-kit:
-        specifier: 1.0.0-rc.1
-        version: 1.0.0-rc.1
+        specifier: 1.0.0-rc.3
+        version: 1.0.0-rc.3
       tsx:
         specifier: ^4.0.0
         version: 4.21.0
@@ -3595,12 +3595,12 @@ packages:
     resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
     engines: {node: '>=12'}
 
-  drizzle-kit@1.0.0-rc.1:
-    resolution: {integrity: sha512-eDvXzRhke7OwvmN7AciGOU1E2y17MKNhghGciyw1RbmmkuD/2KDXLn3rFRZcDBmfj6CQSEnyvbU+7Fqrn2JQyA==}
+  drizzle-kit@1.0.0-rc.3:
+    resolution: {integrity: sha512-lwGIi6GTlEYzrtac1Szecns+zrAxjaOoNysfBCKRQOXQE7nMJ8IU2I2S6ek3FHEm1N30dQb5YrTdqV7zNH6n7A==}
     hasBin: true
 
-  drizzle-orm@1.0.0-rc.1:
-    resolution: {integrity: sha512-jGCqAgxpz+OSHP2jQGooUHBxnFMTYl0TTRSfULBl52VNf7CtyNRnazUi+VdbSxvJrDP2lnIsmUh5O+HhKeSJCg==}
+  drizzle-orm@1.0.0-rc.3:
+    resolution: {integrity: sha512-akZOa5UxapFbdBG8IDkfBRpSZJpMHaOJtGgp7oi1oHaiU8S3KN92waHo2l5aRuv1D9tMGYpv3BQFOsiGcNjLTQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -4597,10 +4597,6 @@ packages:
 
   jay-peg@1.1.1:
     resolution: {integrity: sha512-D62KEuBxz/ip2gQKOEhk/mx14o7eiFRaU+VNNSP4MOiIkwb/D6B3G1Mfas7C/Fit8EsSV2/IWjZElx/Gs6A4ww==}
-
-  jiti@2.6.1:
-    resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
-    hasBin: true
 
   jiti@2.7.0:
     resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
@@ -9108,15 +9104,15 @@ snapshots:
 
   dotenv@17.4.2: {}
 
-  drizzle-kit@1.0.0-rc.1:
+  drizzle-kit@1.0.0-rc.3:
     dependencies:
       '@drizzle-team/brocli': 0.11.0
       '@js-temporal/polyfill': 0.5.1
       esbuild: 0.25.12
       get-tsconfig: 4.14.0
-      jiti: 2.6.1
+      jiti: 2.7.0
 
-  drizzle-orm@1.0.0-rc.1(postgres@3.4.9)(zod@4.4.3):
+  drizzle-orm@1.0.0-rc.3(postgres@3.4.9)(zod@4.4.3):
     optionalDependencies:
       postgres: 3.4.9
       zod: 4.4.3
@@ -10160,8 +10156,6 @@ snapshots:
   jay-peg@1.1.1:
     dependencies:
       restructure: 3.0.2
-
-  jiti@2.6.1: {}
 
   jiti@2.7.0: {}
 
