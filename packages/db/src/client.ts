@@ -29,6 +29,11 @@ export const db = drizzle({
   logger: env.NODE_ENV === 'development' ? true : false,
 })
 
+// Fire-and-forget: establish the connection pool before the first real request
+if (env.NODE_ENV === 'production') {
+  db.execute(sql`SELECT 1`).catch(() => { /* non-fatal */ })
+}
+
 export async function runMigrations(): Promise<void> {
   const migrationsFolder = path.join(process.cwd(), 'packages/db/src/migrations')
   await migrate(db, { migrationsFolder })
