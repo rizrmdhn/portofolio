@@ -20,6 +20,10 @@ const errorMap: Array<[new (...args: Array<any>) => Error, TRPC_ERROR_CODE_KEY]>
   [QueryError, 'INTERNAL_SERVER_ERROR'],
 ]
 
+function isDrizzleQueryError(err: Error): boolean {
+  return err.constructor.name === 'DrizzleQueryError' || err.name === 'DrizzleQueryError'
+}
+
 function parseGeminiStatus(err: Error): number | null {
   try {
     const parsed = JSON.parse(err.message)
@@ -32,6 +36,10 @@ function parseGeminiStatus(err: Error): number | null {
 export function toTRPCError(err: Error): TRPCError {
   for (const [ErrorClass, code] of errorMap) {
     if (err instanceof ErrorClass) return new TRPCError({ code, message: err.message })
+  }
+
+  if (isDrizzleQueryError(err)) {
+    return new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database query failed' })
   }
 
   const geminiStatus = parseGeminiStatus(err)
