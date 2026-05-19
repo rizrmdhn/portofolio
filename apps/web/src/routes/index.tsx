@@ -25,33 +25,18 @@ import { createFileRoute } from '@tanstack/react-router'
 export const Route = createFileRoute('/')({
   pendingComponent: HomeSkeleton,
   loader: async ({ context }) => {
-    const profile = await context.queryClient.ensureQueryData(
-      context.trpc.profile.get.queryOptions(),
-    )
-
-    const projects = await context.queryClient.ensureQueryData(
-      context.trpc.project.getForLandingPage.queryOptions(),
-    )
-
-    const experiences = await context.queryClient.ensureQueryData(
-      context.trpc.experience.getAll.queryOptions(),
-    )
-
-    const stack = await context.queryClient.ensureQueryData(
-      context.trpc.techStack.getAll.queryOptions(),
-    )
-
-    const certifications = await context.queryClient.ensureQueryData(
-      context.trpc.certification.getForLandingPage.queryOptions(),
-    )
-
-    const socialLinks = await context.queryClient.ensureQueryData(
-      context.trpc.socialLink.getAll.queryOptions(),
-    )
-
-    const seo = await context.queryClient.ensureQueryData(
-      context.trpc.seo.getPage.queryOptions({ page: 'home' }),
-    )
+    const [profile, projects, experiences, stack, certifications, socialLinks, seo] =
+      await Promise.all([
+        context.queryClient.ensureQueryData(context.trpc.profile.get.queryOptions()),
+        context.queryClient.ensureQueryData(context.trpc.project.getForLandingPage.queryOptions()),
+        context.queryClient.ensureQueryData(context.trpc.experience.getAll.queryOptions()),
+        context.queryClient.ensureQueryData(context.trpc.techStack.getAll.queryOptions()),
+        context.queryClient.ensureQueryData(
+          context.trpc.certification.getForLandingPage.queryOptions(),
+        ),
+        context.queryClient.ensureQueryData(context.trpc.socialLink.getAll.queryOptions()),
+        context.queryClient.ensureQueryData(context.trpc.seo.getPage.queryOptions({ page: 'home' })),
+      ])
 
     return {
       profile,
