@@ -7,7 +7,7 @@
   ],
   "type": "module",
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "turbo dev --parallel",
     "build": "turbo build",
     "clean": "turbo clean",
     "lint": "turbo lint",

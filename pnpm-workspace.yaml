@@ -1,6 +1,11 @@
 packages:
   - apps/*
   - packages/*
+allowBuilds:
+  esbuild: false
+  msgpackr-extract: true
+  msw: true
+  unrs-resolver: true
 catalog:
   dotenv: ^17.2.2
   zod: ^4.1.13

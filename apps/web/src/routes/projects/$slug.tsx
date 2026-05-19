@@ -54,10 +54,10 @@ function ProjectDetailPage() {
   })
 
   useEffect(() => {
-    incrementViews.mutate({ projectId: project.id })
+    incrementViews.mutate({ projectId: project.id, slug: project.slug })
     // only on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project.id])
+  }, [project.id, project.slug])
 
   const links = [
     { url: project.githubUrl, icon: IconBrandGithub, label: 'GitHub' },
