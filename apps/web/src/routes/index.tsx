@@ -96,7 +96,7 @@ function HomeComponent() {
         id="about"
         className="dot-grid flex w-full scroll-mt-14 flex-col items-center justify-center gap-6 pt-24"
       >
-        <FadeIn className="border-border mx-auto flex w-full flex-col gap-6 self-stretch border-b px-4 pb-24 md:max-w-175 md:px-0">
+        <div className="border-border mx-auto flex w-full flex-col gap-6 self-stretch border-b px-4 pb-24 md:max-w-175 md:px-0">
           {profile.availabilityStatus !== 'unavailable' && (
             <Badge
               variant="outline"
@@ -168,7 +168,7 @@ function HomeComponent() {
               Contact
             </Button>
           </div>
-        </FadeIn>
+        </div>
       </section>
 
       {/* Experience */}
