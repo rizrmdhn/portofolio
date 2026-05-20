@@ -31,6 +31,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from '..'
+import { processAndUploadImage } from '../utils/image-upload'
 import { toTRPCError } from '../utils/to-trpc-error'
 
 const CACHE_PREFIX = CACHE_KEYS.PROJECT_PREFIX
@@ -114,21 +115,14 @@ export const projectRouter = createTRPCRouter({
       if (createErr) throw toTRPCError(createErr)
 
       if (picture) {
-        const [upload, uploadErr] = await tryCatchAsync(() => utapi.uploadFiles(picture))
+        const [upload, uploadErr] = await tryCatchAsync(() => processAndUploadImage(picture))
         if (uploadErr) throw toTRPCError(uploadErr)
 
-        if (!upload.data)
-          throw new TRPCError({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: upload.error.message,
-          })
-
         const [_, imageErr] = await tryCatchAsync(() =>
-          updateProjectImageUrl(project.id, upload.data.ufsUrl),
+          updateProjectImageUrl(project.id, upload.url),
         )
         if (imageErr) throw toTRPCError(imageErr)
       }
-
       void createActivityLog({
         action: 'created',
         entity: 'project',
@@ -164,17 +158,11 @@ export const projectRouter = createTRPCRouter({
           if (fileKey) await utapi.deleteFiles(fileKey)
         }
 
-        const [upload, uploadErr] = await tryCatchAsync(() => utapi.uploadFiles(picture))
+        const [upload, uploadErr] = await tryCatchAsync(() => processAndUploadImage(picture))
         if (uploadErr) throw toTRPCError(uploadErr)
 
-        if (!upload.data)
-          throw new TRPCError({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: upload.error.message,
-          })
-
         const [_, imageErr] = await tryCatchAsync(() =>
-          updateProjectImageUrl(project.id, upload.data.ufsUrl),
+          updateProjectImageUrl(project.id, upload.url),
         )
         if (imageErr) throw toTRPCError(imageErr)
       }

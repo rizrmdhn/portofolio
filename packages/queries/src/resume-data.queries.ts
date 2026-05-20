@@ -1,7 +1,7 @@
 import { and, eq } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { certifications, projects } from "@portofolio/db/schema/index";
-import { NotFoundError } from "./errors";
+import { NotFoundError } from '@portofolio/errors';
 
 export async function getResumeData() {
   const [

@@ -2,7 +2,7 @@ import { eq } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { profile } from "@portofolio/db/schema/index";
 import type { UpdateProfileInput } from "@portofolio/schema/profile.schema";
-import { NotFoundError, QueryError } from "./errors";
+import { NotFoundError, QueryError } from '@portofolio/errors';
 
 export async function getProfile() {
   const result = await db.query.profile.findFirst();

@@ -6,7 +6,7 @@ import type {
   ReorderAchievementsInput,
   UpdateAchievementInput,
 } from '@portofolio/schema/achievement.schema'
-import { NotFoundError, QueryError } from './errors'
+import { NotFoundError, QueryError } from '@portofolio/errors'
 
 export async function getAllAchievements() {
   return db.query.achievements.findMany({

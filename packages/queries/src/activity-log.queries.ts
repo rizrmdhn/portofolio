@@ -4,7 +4,7 @@ import type {
 } from "@portofolio/constants";
 import { db } from "@portofolio/db/client";
 import { activityLog } from "@portofolio/db/schema/index";
-import { QueryError } from "./errors";
+import { QueryError } from '@portofolio/errors';
 
 interface CreateActivityLogParams {
   action: ActivityLogAction;

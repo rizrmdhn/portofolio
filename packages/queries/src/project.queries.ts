@@ -9,7 +9,7 @@ import type {
 } from '@portofolio/schema/project.schema'
 import type { PaginatedProjects } from '@portofolio/types/project.types'
 import { toUniqueSlug } from '@portofolio/utils/slug'
-import { NotFoundError, QueryError } from './errors'
+import { NotFoundError, QueryError } from '@portofolio/errors'
 import { getOffsetPaginated } from './utils/get-offset-paginated'
 
 export async function getPaginatedProjects(input: GetProjectsInput) {

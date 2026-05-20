@@ -6,7 +6,7 @@ import type {
   ReorderExperiencesInput,
   UpdateExperienceInput,
 } from '@portofolio/schema/experience.schema'
-import { NotFoundError, QueryError } from './errors'
+import { NotFoundError, QueryError } from '@portofolio/errors'
 
 export async function getAllExperiences() {
   const results = await db.query.experiences.findMany({
