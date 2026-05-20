@@ -316,6 +316,9 @@ importers:
       '@portofolio/errors':
         specifier: workspace:*
         version: link:../errors
+      '@portofolio/image':
+        specifier: workspace:*
+        version: link:../image
       '@portofolio/queries':
         specifier: workspace:*
         version: link:../queries
