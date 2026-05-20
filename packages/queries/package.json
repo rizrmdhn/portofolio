@@ -23,6 +23,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@portofolio/errors": "workspace:*",
     "@portofolio/constants": "workspace:*",
     "@portofolio/db": "workspace:*",
     "@portofolio/schema": "workspace:*",

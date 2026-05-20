@@ -6,7 +6,7 @@ import type {
   ReorderSocialLinksInput,
   UpdateSocialLinkInput,
 } from '@portofolio/schema/social-link.schema'
-import { NotFoundError, QueryError } from './errors'
+import { NotFoundError, QueryError } from '@portofolio/errors'
 
 export async function getAllSocialLinks() {
   const socialLinkItems = await db.query.socialLinks.findMany({

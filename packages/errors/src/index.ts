@@ -52,3 +52,45 @@ export class ValidationError extends Error {
     this.name = "ValidationError";
   }
 }
+
+export class RateLimitError extends Error {
+  constructor(message = "Too many requests, please try again later") {
+    super(message);
+    this.name = "RateLimitError";
+  }
+}
+
+export class ExternalServiceError extends Error {
+  constructor(
+    service: string,
+    message: string,
+    override readonly cause?: unknown,
+  ) {
+    super(`${service}: ${message}`, { cause });
+    this.name = "ExternalServiceError";
+  }
+}
+
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "BadRequestError";
+  }
+}
+
+export class TimeoutError extends Error {
+  constructor(message = "Operation timed out") {
+    super(message);
+    this.name = "TimeoutError";
+  }
+}
+
+export class ParseError extends Error {
+  constructor(
+    message: string,
+    override readonly cause?: unknown,
+  ) {
+    super(message, { cause });
+    this.name = "ParseError";
+  }
+}

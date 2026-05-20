@@ -3,7 +3,7 @@ import { and, asc, count, desc, gte, lte } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
 import type { FilterSchema } from '@portofolio/schema/filter.schema'
 import type { JoinOperator } from '@portofolio/types/data-table.types'
-import { QueryError } from '../errors'
+import { QueryError } from '@portofolio/errors'
 import { filterColumns } from './filter-columns'
 
 interface JoinConfig {

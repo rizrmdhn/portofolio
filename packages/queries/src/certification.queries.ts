@@ -6,7 +6,7 @@ import type {
   ReorderCertificationsInput,
   UpdateCertificationInput,
 } from '@portofolio/schema/certifcation.schema'
-import { NotFoundError, QueryError } from './errors'
+import { NotFoundError, QueryError } from '@portofolio/errors'
 
 export async function getAllCertifications() {
   const certificationsList = await db.query.certifications.findMany({

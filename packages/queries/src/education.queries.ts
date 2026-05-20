@@ -6,7 +6,7 @@ import type {
   ReorderEducationInput,
   UpdateEducationInput,
 } from '@portofolio/schema/education.schema'
-import { NotFoundError, QueryError } from './errors'
+import { NotFoundError, QueryError } from '@portofolio/errors'
 
 export async function getAllEducation() {
   return db.query.education.findMany({

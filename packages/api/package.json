@@ -18,6 +18,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@portofolio/errors": "workspace:*",
     "@portofolio/auth": "workspace:*",
     "@portofolio/db": "workspace:*",
     "@portofolio/schema": "workspace:*",
