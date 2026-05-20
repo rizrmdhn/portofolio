@@ -45,9 +45,9 @@ function SeoSettingsPage() {
         SEO_PAGES.map((page) => [
           page,
           {
-            title: settings.pages[page]?.title,
-            description: settings.pages[page]?.description,
-            ogImage: settings.pages[page]?.ogImage,
+            title: settings.pages[page].title,
+            description: settings.pages[page].description,
+            ogImage: settings.pages[page].ogImage,
           },
         ]),
       ) as Record<

@@ -1,0 +1,1 @@
+ALTER TYPE "social_icon_enum" ADD VALUE 'portfolio' BEFORE 'facebook';

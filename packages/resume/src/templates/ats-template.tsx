@@ -70,7 +70,11 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
     <Document>
       <Page
         size="A4"
-        style={[PAGE_MARGINS.atsCompact, tw('font-sans text-[9px] bg-white text-gray-900'), { fontFamily: font }]}
+        style={[
+          PAGE_MARGINS.atsCompact,
+          tw('font-sans text-[9px] bg-white text-gray-900'),
+          { fontFamily: font },
+        ]}
       >
         {/* ── Header ───────────────────────────────────────── */}
         <View style={tw('items-center mb-0.5')}>
@@ -85,7 +89,7 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
             <View style={tw('flex flex-row flex-wrap justify-center')}>
               {socialLinks.map((l, i) => (
                 <View key={l.id} style={tw('flex flex-row')}>
-                  {i > 0 && <Text style={tw('text-[8px] text-gray-600')}>{' · '}</Text>}
+                  {i > 0 && <Text style={tw('text-[8px] text-gray-600 mx-1')}>{'·'}</Text>}
                   <Link src={l.url} style={tw('text-[8px] text-gray-600')}>
                     {l.url.replace(/^https?:\/\//, '')}
                   </Link>
@@ -99,7 +103,9 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
         {(summary ?? profile.bio) && (
           <View>
             <SectionHeader>Profile</SectionHeader>
-            <Text style={tw('text-[8.5px] leading-normal text-gray-800')}>{summary ?? profile.bio}</Text>
+            <Text style={tw('text-[8.5px] leading-normal text-gray-800')}>
+              {summary ?? profile.bio}
+            </Text>
           </View>
         )}
 
@@ -124,7 +130,11 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
                   right={
                     <DateText>
                       {formatDate(exp.startDate)} —{' '}
-                      {exp.currentlyWorking ? 'Present' : exp.endDate ? formatDate(exp.endDate) : ''}
+                      {exp.currentlyWorking
+                        ? 'Present'
+                        : exp.endDate
+                          ? formatDate(exp.endDate)
+                          : ''}
                     </DateText>
                   }
                 />
@@ -153,7 +163,10 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
               <View key={proj.id} style={tw('mb-1')}>
                 <Text style={tw('text-[9px]')}>
                   <Text style={tw('font-bold')}>{proj.title}</Text>
-                  <Text style={tw('text-gray-500 italic')}>{' · '}{proj.tech.join(' · ')}</Text>
+                  <Text style={tw('text-gray-500 italic')}>
+                    {' · '}
+                    {proj.tech.join(' · ')}
+                  </Text>
                 </Text>
                 {proj.description
                   .split('\n')
@@ -202,7 +215,10 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
                   left={
                     <Text style={tw('text-[9px]')}>
                       <Text style={tw('font-bold')}>{ach.title}</Text>
-                      <Text style={tw('text-gray-600 font-normal')}>{' · '}{ach.issuer}</Text>
+                      <Text style={tw('text-gray-600 font-normal')}>
+                        {' · '}
+                        {ach.issuer}
+                      </Text>
                     </Text>
                   }
                   right={<DateText>{formatDate(ach.date)}</DateText>}

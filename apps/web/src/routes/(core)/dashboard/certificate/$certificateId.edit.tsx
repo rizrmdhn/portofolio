@@ -67,8 +67,10 @@ function RouteComponent() {
       issuer: certificate.issuer,
       certificateUrl: certificate.certificateUrl ?? undefined,
       certificateId: certificate.certificateId ?? undefined,
-      issueYear: certificate.issueYear,
-      expiryYear: certificate.expiryYear ?? undefined,
+      issueYear: new Date(certificate.issueYear).toISOString(),
+      expiryYear: certificate.expiryYear
+        ? new Date(certificate.expiryYear).toISOString()
+        : undefined,
       status: certificate.status,
       order: certificate.order,
     },

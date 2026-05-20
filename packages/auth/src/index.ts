@@ -1,19 +1,19 @@
-import { hash, verify } from "@node-rs/argon2";
-import { db } from "@portofolio/db/client";
-import * as schema from "@portofolio/db/schema/index";
-import { env } from "@portofolio/env/server";
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { v7 as uuidv7 } from "uuid";
+import { hash, verify } from '@node-rs/argon2'
+import { db } from '@portofolio/db/client'
+import * as schema from '@portofolio/db/schema/index'
+import { env } from '@portofolio/env/server'
+import { betterAuth } from 'better-auth'
+import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { tanstackStartCookies } from 'better-auth/tanstack-start'
+import { v7 as uuidv7 } from 'uuid'
 
 export function createAuth() {
   return betterAuth({
     database: drizzleAdapter(db, {
-      provider: "pg",
+      provider: 'pg',
       schema,
     }),
-    trustedOrigins: [env.CORS_ORIGIN],
+    trustedOrigins: env.CORS_ORIGIN,
     emailAndPassword: {
       enabled: true,
       disableSignUp: true,
@@ -32,7 +32,7 @@ export function createAuth() {
         generateId: () => uuidv7(),
       },
     },
-  });
+  })
 }
 
-export const auth = createAuth();
+export const auth = createAuth()

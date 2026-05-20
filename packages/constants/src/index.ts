@@ -1,111 +1,110 @@
 export const IMAGE_MIME_TYPES = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-} as const;
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+} as const
 
-export const MAXIMUM_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+export const MAXIMUM_FILE_SIZE = 2 * 1024 * 1024 // 2MB in bytes
 
-export const MAXIMUM_FILE_SIZE_HUMAN_READABLE = "2MB";
+export const MAXIMUM_FILE_SIZE_HUMAN_READABLE = '2MB'
 
-export const MAXIMUM_FILE_SIZE_REACH_MESSAGE = `Ukuran file tidak boleh lebih dari ${MAXIMUM_FILE_SIZE_HUMAN_READABLE}`;
+export const MAXIMUM_FILE_SIZE_REACH_MESSAGE = `Ukuran file tidak boleh lebih dari ${MAXIMUM_FILE_SIZE_HUMAN_READABLE}`
 
-export type SUPPORTED_FILE_EXTENSIONS =
-  (typeof IMAGE_MIME_TYPES)[keyof typeof IMAGE_MIME_TYPES];
+export type SUPPORTED_FILE_EXTENSIONS = (typeof IMAGE_MIME_TYPES)[keyof typeof IMAGE_MIME_TYPES]
 
-export const VIEW_AS_TYPES = ["guest", "owner"] as const;
+export const VIEW_AS_TYPES = ['guest', 'owner'] as const
 
-export type ViewAsType = (typeof VIEW_AS_TYPES)[number];
+export type ViewAsType = (typeof VIEW_AS_TYPES)[number]
 
-export const STATUS_TYPES = ["draft", "published", "archived"] as const;
+export const STATUS_TYPES = ['draft', 'published', 'archived'] as const
 
-export type StatusType = (typeof STATUS_TYPES)[number];
+export type StatusType = (typeof STATUS_TYPES)[number]
 
 export const STATUS_LABELS: Record<StatusType, string> = {
-  draft: "Draft",
-  published: "Published",
-  archived: "Archived",
-};
+  draft: 'Draft',
+  published: 'Published',
+  archived: 'Archived',
+}
 
 export const AVAILABILITY_STATUS_TYPES = [
-  "unavailable",
-  "available",
-  "freelance",
-  "limited",
-] as const;
+  'unavailable',
+  'available',
+  'freelance',
+  'limited',
+] as const
 
-export type AvailabilityStatus = (typeof AVAILABILITY_STATUS_TYPES)[number];
+export type AvailabilityStatus = (typeof AVAILABILITY_STATUS_TYPES)[number]
 
 export const AVAILABILITY_STATUS_LABELS: Record<AvailabilityStatus, string> = {
-  unavailable: "Not available",
-  available: "Open to work",
-  freelance: "Open to freelance",
-  limited: "Limited availability",
-};
+  unavailable: 'Not available',
+  available: 'Open to work',
+  freelance: 'Open to freelance',
+  limited: 'Limited availability',
+}
 
 export const DEGREE_TYPES = [
-  "bachelor",
-  "master",
-  "doctorate",
-  "diploma",
-  "associate",
-  "high-school",
-  "bootcamp",
-  "other",
-] as const;
+  'bachelor',
+  'master',
+  'doctorate',
+  'diploma',
+  'associate',
+  'high-school',
+  'bootcamp',
+  'other',
+] as const
 
-export type DegreeType = (typeof DEGREE_TYPES)[number];
+export type DegreeType = (typeof DEGREE_TYPES)[number]
 
 export const DEGREE_TYPE_LABELS: Record<DegreeType, string> = {
   bachelor: "Bachelor's Degree",
   master: "Master's Degree",
-  doctorate: "Doctorate (PhD)",
-  diploma: "Diploma",
+  doctorate: 'Doctorate (PhD)',
+  diploma: 'Diploma',
   associate: "Associate's Degree",
-  "high-school": "High School",
-  bootcamp: "Bootcamp",
-  other: "Other",
-};
+  'high-school': 'High School',
+  bootcamp: 'Bootcamp',
+  other: 'Other',
+}
 
-export const EXPERIENCE_STATUS_TYPES = ["draft", "published"] as const;
+export const EXPERIENCE_STATUS_TYPES = ['draft', 'published'] as const
 
-export type ExperienceStatusType = (typeof EXPERIENCE_STATUS_TYPES)[number];
+export type ExperienceStatusType = (typeof EXPERIENCE_STATUS_TYPES)[number]
 
 export const EXPERIENCE_STATUS_LABELS: Record<ExperienceStatusType, string> = {
-  draft: "Draft",
-  published: "Published",
-};
+  draft: 'Draft',
+  published: 'Published',
+}
 
-
-export const ACTIVITY_LOG_ACTIONS = ["created", "updated", "deleted"] as const;
-export type ActivityLogAction = (typeof ACTIVITY_LOG_ACTIONS)[number];
+export const ACTIVITY_LOG_ACTIONS = ['created', 'updated', 'deleted'] as const
+export type ActivityLogAction = (typeof ACTIVITY_LOG_ACTIONS)[number]
 
 export const ACTIVITY_LOG_ENTITIES = [
-  "project",
-  "experience",
-  "certification",
-  "techStackCategory",
-  "techStackItem",
-  "socialLink",
-  "profile",
-  "education",
-  "achievement",
-] as const;
-export type ActivityLogEntity = (typeof ACTIVITY_LOG_ENTITIES)[number];
+  'project',
+  'experience',
+  'certification',
+  'techStackCategory',
+  'techStackItem',
+  'socialLink',
+  'profile',
+  'education',
+  'achievement',
+] as const
+export type ActivityLogEntity = (typeof ACTIVITY_LOG_ENTITIES)[number]
 
 export const ACTIVITY_LOG_ENTITY_LABELS: Record<ActivityLogEntity, string> = {
-  project: "Project",
-  experience: "Experience",
-  certification: "Certification",
-  techStackCategory: "Tech Stack Category",
-  techStackItem: "Tech Stack Item",
-  socialLink: "Social Link",
-  profile: "Profile",
-  education: "Education",
-  achievement: "Achievement",
-};
+  project: 'Project',
+  experience: 'Experience',
+  certification: 'Certification',
+  techStackCategory: 'Tech Stack Category',
+  techStackItem: 'Tech Stack Item',
+  socialLink: 'Social Link',
+  profile: 'Profile',
+  education: 'Education',
+  achievement: 'Achievement',
+}
 
-export * from "./colors";
-export * from "./experience";
-export * from "./icons";
-export * from "./social-icons";
-export * from "./tech-stack";
+export * from './cache'
+export * from './colors'
+export * from './experience'
+export * from './icons'
+export * from './social-icons'
+export * from './tech-stack'

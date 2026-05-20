@@ -66,7 +66,7 @@ function RouteComponent() {
       title: record.title,
       issuer: record.issuer,
       description: record.description ?? undefined,
-      date: record.date,
+      date: new Date(record.date).toISOString(),
       status: record.status,
       order: record.order,
     },

@@ -9,11 +9,13 @@ import {
   IconBrandWhatsapp,
   IconBrandX,
   IconBrandYoutube,
+  IconWorld,
 } from '@tabler/icons-react'
 
 import type { SupportedIconMeta } from './icons'
 
 export const SOCIAL_ICON_NAMES = [
+  'portfolio',
   'facebook',
   'x',
   'instagram',
@@ -29,6 +31,7 @@ export const SOCIAL_ICON_NAMES = [
 export type SocialIconName = (typeof SOCIAL_ICON_NAMES)[number]
 
 export const SOCIAL_ICON_MAP: Record<SocialIconName, Omit<SupportedIconMeta, 'name'>> = {
+  portfolio: { label: 'Personal Website', icon: IconWorld },
   facebook: { label: 'Facebook', icon: IconBrandFacebook },
   x: { label: 'X (Twitter)', icon: IconBrandX },
   instagram: { label: 'Instagram', icon: IconBrandInstagram },

@@ -26,6 +26,8 @@
     "@portofolio/utils": "workspace:*",
     "@portofolio/resume": "workspace:*",
     "@portofolio/uploadthing": "workspace:*",
+    "@portofolio/cache": "workspace:*",
+    "@portofolio/constants": "workspace:*",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "dotenv": "catalog:",

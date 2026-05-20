@@ -25,33 +25,20 @@ import { createFileRoute } from '@tanstack/react-router'
 export const Route = createFileRoute('/')({
   pendingComponent: HomeSkeleton,
   loader: async ({ context }) => {
-    const profile = await context.queryClient.ensureQueryData(
-      context.trpc.profile.get.queryOptions(),
-    )
-
-    const projects = await context.queryClient.ensureQueryData(
-      context.trpc.project.getForLandingPage.queryOptions(),
-    )
-
-    const experiences = await context.queryClient.ensureQueryData(
-      context.trpc.experience.getAll.queryOptions(),
-    )
-
-    const stack = await context.queryClient.ensureQueryData(
-      context.trpc.techStack.getAll.queryOptions(),
-    )
-
-    const certifications = await context.queryClient.ensureQueryData(
-      context.trpc.certification.getForLandingPage.queryOptions(),
-    )
-
-    const socialLinks = await context.queryClient.ensureQueryData(
-      context.trpc.socialLink.getAll.queryOptions(),
-    )
-
-    const seo = await context.queryClient.ensureQueryData(
-      context.trpc.seo.getPage.queryOptions({ page: 'home' }),
-    )
+    const [profile, projects, experiences, stack, certifications, socialLinks, seo] =
+      await Promise.all([
+        context.queryClient.ensureQueryData(context.trpc.profile.get.queryOptions()),
+        context.queryClient.ensureQueryData(context.trpc.project.getForLandingPage.queryOptions()),
+        context.queryClient.ensureQueryData(context.trpc.experience.getAll.queryOptions()),
+        context.queryClient.ensureQueryData(context.trpc.techStack.getAll.queryOptions()),
+        context.queryClient.ensureQueryData(
+          context.trpc.certification.getForLandingPage.queryOptions(),
+        ),
+        context.queryClient.ensureQueryData(context.trpc.socialLink.getAll.queryOptions()),
+        context.queryClient.ensureQueryData(
+          context.trpc.seo.getPage.queryOptions({ page: 'home' }),
+        ),
+      ])
 
     return {
       profile,
@@ -130,26 +117,28 @@ function HomeComponent() {
           </p>
           {/* Social */}
           <div className="flex flex-wrap items-center gap-4">
-            {socialLinks.map((link) => {
-              const Icon = SOCIAL_ICON_MAP[link.icon].icon
-              return (
-                <Button
-                  key={link.id}
-                  variant="outline"
-                  size="lg"
-                  onClick={() => {
-                    incrementSocialLinkClickCount.mutate({ id: link.id })
-                    window.open(link.url, '_blank')
-                  }}
-                  title={link.title}
-                >
-                  <span className="text-subtle flex items-center gap-1 text-sm font-medium">
-                    {<Icon className="size-4" />}
-                    {link.title}
-                  </span>
-                </Button>
-              )
-            })}
+            {socialLinks
+              .filter((l) => l.icon !== 'portfolio')
+              .map((link) => {
+                const Icon = SOCIAL_ICON_MAP[link.icon].icon
+                return (
+                  <Button
+                    key={link.id}
+                    variant="outline"
+                    size="lg"
+                    onClick={() => {
+                      incrementSocialLinkClickCount.mutate({ id: link.id })
+                      window.open(link.url, '_blank')
+                    }}
+                    title={link.title}
+                  >
+                    <span className="text-subtle flex items-center gap-1 text-sm font-medium">
+                      {<Icon className="size-4" />}
+                      {link.title}
+                    </span>
+                  </Button>
+                )
+              })}
             <Button
               variant="outline"
               size="lg"
@@ -314,31 +303,37 @@ function HomeComponent() {
                 <Button
                   size="lg"
                   className="w-fit"
-                  onClick={() => window.location.assign(`mailto:${profile.email}`)}
+                  onClick={() =>
+                    window.location.assign(
+                      `mailto:${profile.email}?subject=Contacting%20You%20from%20Your%20Portfolio&body=Hi%20${encodeURIComponent(profile.name)},%0D%0A%0D%0AI%20came%20across%20your%20portfolio%20and%20would%20like%20to%20get%20in%20touch%20with%20you.%0D%0A%0D%0A[Write your message here]%0D%0A%0D%0ABest,%0D%0A[Your Name]`,
+                    )
+                  }
                 >
                   <IconMail className="size-4" />
                   Send me an email
                 </Button>
               </div>
               <div className="flex flex-col gap-3">
-                {socialLinks.map((link) => {
-                  const Icon = SOCIAL_ICON_MAP[link.icon].icon
-                  return (
-                    <Button
-                      key={link.id}
-                      variant="outline"
-                      size="sm"
-                      className="justify-start"
-                      onClick={() => {
-                        incrementSocialLinkClickCount.mutate({ id: link.id })
-                        window.open(link.url, '_blank')
-                      }}
-                    >
-                      <Icon className="size-4" />
-                      {link.title}
-                    </Button>
-                  )
-                })}
+                {socialLinks
+                  .filter((l) => l.icon !== 'portfolio')
+                  .map((link) => {
+                    const Icon = SOCIAL_ICON_MAP[link.icon].icon
+                    return (
+                      <Button
+                        key={link.id}
+                        variant="outline"
+                        size="sm"
+                        className="justify-start"
+                        onClick={() => {
+                          incrementSocialLinkClickCount.mutate({ id: link.id })
+                          window.open(link.url, '_blank')
+                        }}
+                      >
+                        <Icon className="size-4" />
+                        {link.title}
+                      </Button>
+                    )
+                  })}
               </div>
             </div>
           </FadeIn>

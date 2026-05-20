@@ -3,6 +3,11 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
 
+@font-face {
+  font-family: 'Inter Variable';
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 @custom-variant warm (&:is(.warm *));
 
@@ -227,6 +232,18 @@
   .dot-grid {
     background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
     background-size: 24px 24px;
+  }
+
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition-delay: var(--fade-delay, 0s);
+  }
+
+  .fade-in-up--visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

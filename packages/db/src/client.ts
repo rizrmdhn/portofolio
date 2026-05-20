@@ -16,8 +16,9 @@ const client =
   postgres(env.DATABASE_URL, {
     max: 10,
     idle_timeout: 20,
-    connect_timeout: 10,
+    connect_timeout: 30,
     max_lifetime: 1800,
+    prepare: false,
   })
 
 if (env.NODE_ENV !== 'production') globalForDb.client = client
@@ -27,6 +28,11 @@ export const db = drizzle({
   relations,
   logger: env.NODE_ENV === 'development' ? true : false,
 })
+
+// Fire-and-forget: establish the connection pool before the first real request
+if (env.NODE_ENV === 'production') {
+  db.execute(sql`SELECT 1`).catch(() => { /* non-fatal */ })
+}
 
 export async function runMigrations(): Promise<void> {
   const migrationsFolder = path.join(process.cwd(), 'packages/db/src/migrations')

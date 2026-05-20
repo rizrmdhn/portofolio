@@ -134,12 +134,20 @@ function ResumeSettingsPage() {
           <p className="text-muted-foreground text-xs">Configure and generate your PDF resume.</p>
         </div>
         {cv?.data.url && (
-          <Link to="/resume" target="_blank">
-            <Button variant="outline" size="sm">
-              <IconFileText className="size-4" />
-              View Public Page
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/resume" target="_blank">
+              <Button variant="outline" size="sm">
+                <IconFileText className="size-4" />
+                View Public Page
+              </Button>
+            </Link>
+            <Link to={cv.data.url} target="_blank">
+              <Button variant="outline" size="sm">
+                <IconFileText className="size-4" />
+                Download PDF
+              </Button>
+            </Link>
+          </div>
         )}
       </div>
 
