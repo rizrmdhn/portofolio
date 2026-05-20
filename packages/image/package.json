@@ -15,9 +15,11 @@
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
+    "@portofolio/errors": "workspace:*",
     "sharp": "^0.34.5"
   }
 }
