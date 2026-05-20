@@ -1,12 +1,17 @@
 import {
+  BadRequestError,
   ConflictError,
+  ExternalServiceError,
   ForbiddenError,
   NotFoundError,
+  ParseError,
   QueryError,
+  RateLimitError,
   RelationNotFoundError,
+  TimeoutError,
   UnauthorizedError,
   ValidationError,
-} from '@portofolio/queries/errors'
+} from '@portofolio/errors'
 import type { TRPC_ERROR_CODE_KEY } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 
@@ -17,6 +22,11 @@ const errorMap: Array<[new (...args: Array<any>) => Error, TRPC_ERROR_CODE_KEY]>
   [UnauthorizedError, 'UNAUTHORIZED'],
   [ForbiddenError, 'FORBIDDEN'],
   [ValidationError, 'BAD_REQUEST'],
+  [BadRequestError, 'BAD_REQUEST'],
+  [ParseError, 'BAD_REQUEST'],
+  [RateLimitError, 'TOO_MANY_REQUESTS'],
+  [TimeoutError, 'TIMEOUT'],
+  [ExternalServiceError, 'INTERNAL_SERVER_ERROR'],
   [QueryError, 'INTERNAL_SERVER_ERROR'],
 ]
 

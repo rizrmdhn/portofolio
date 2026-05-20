@@ -14,7 +14,7 @@ import type {
   UpdateTechStackCategoryWithItemsInput,
   UpdateTechStackItemInput,
 } from "@portofolio/schema/tech-stack.schema";
-import { NotFoundError, QueryError } from "./errors";
+import { NotFoundError, QueryError } from '@portofolio/errors';
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 

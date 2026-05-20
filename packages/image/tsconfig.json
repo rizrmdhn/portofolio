@@ -1,0 +1,7 @@
+{
+  "extends": "@portofolio/config/compiled-package.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "types": ["node"]
+  }
+}
