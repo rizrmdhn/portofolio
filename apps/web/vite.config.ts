@@ -2,8 +2,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import { nitro } from 'nitro/vite'
-import { cpSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { readFileSync } from 'node:fs'
 import { defineConfig, type Plugin } from 'vite'
 
 function inlineTtfPlugin(): Plugin {
@@ -15,30 +14,6 @@ function inlineTtfPlugin(): Plugin {
       const buffer = readFileSync(id)
       const base64 = buffer.toString('base64')
       return `export default "data:font/truetype;base64,${base64}"`
-    },
-  }
-}
-
-function copySharpNativePlugin(): Plugin {
-  return {
-    name: 'copy-sharp-native',
-    apply: 'build',
-    closeBundle() {
-      const serverDir = resolve('.output/server')
-      if (!existsSync(serverDir)) return
-
-      const destModules = join(serverDir, 'node_modules')
-      mkdirSync(destModules, { recursive: true })
-
-      const imgSrc = resolve('../../node_modules/@img')
-      if (existsSync(imgSrc)) {
-        cpSync(imgSrc, join(destModules, '@img'), { recursive: true, dereference: true })
-      }
-
-      const sharpSrc = resolve('../../node_modules/sharp')
-      if (existsSync(sharpSrc) && !existsSync(join(destModules, 'sharp'))) {
-        cpSync(sharpSrc, join(destModules, 'sharp'), { recursive: true, dereference: true })
-      }
     },
   }
 }
@@ -58,12 +33,11 @@ export default defineConfig({
   },
   plugins: [
     inlineTtfPlugin(),
-    copySharpNativePlugin(),
     tailwindcss(),
     tanstackStart(),
     nitro({
       preset: 'node-server',
-      traceDeps: ['@node-rs/argon2', '@react-pdf/renderer'],
+      traceDeps: ['@node-rs/argon2', '@react-pdf/renderer', 'sharp'],
     }),
     viteReact(),
   ],

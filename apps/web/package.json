@@ -19,6 +19,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@fontsource-variable/inter": "^5.2.8",
     "@node-rs/argon2": "catalog:",
+    "sharp": "^0.34.5",
     "@portofolio/api": "workspace:*",
     "@portofolio/auth": "workspace:*",
     "@portofolio/constants": "workspace:*",
