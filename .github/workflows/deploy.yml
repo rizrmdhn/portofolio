@@ -44,7 +44,7 @@ jobs:
           }
           EOF
 
-      - name: Push built output to hostinger-deploy branch
+      - name: Push built output to portofolio-artifacts repo
         run: |
           cd apps/web/.output
           git init
@@ -52,5 +52,7 @@ jobs:
           git config user.name "GitHub Actions"
           git add -A
           git commit -m "deploy: $(date -u '+%Y-%m-%d %H:%M:%S UTC') @ ${{ github.sha }}"
+          git remote add artifacts "https://x-access-token:${{ secrets.ARTIFACTS_DEPLOY_TOKEN }}@github.com/${{ github.repository_owner }}/portofolio-artifacts"
+          git push --force artifacts HEAD:main || true
           git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git push --force origin HEAD:hostinger-deploy
