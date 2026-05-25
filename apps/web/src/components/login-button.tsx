@@ -19,7 +19,7 @@ export function LoginButton() {
               onClick={() => navigate({ to: '/dashboard' })}
               variant="outline"
               size="lg"
-              className="text-subtle"
+              className="text-subtle w-full"
             >
               Dashboard
             </Button>
@@ -28,7 +28,7 @@ export function LoginButton() {
               onClick={() => navigate({ to: '/login' })}
               variant="outline"
               size="lg"
-              className="text-subtle"
+              className="text-subtle w-full"
             >
               Login
             </Button>
