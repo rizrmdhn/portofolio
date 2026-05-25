@@ -13,7 +13,7 @@ export function LoginButton() {
       <div>
         <div>
           {isPending ? (
-            <div className="h-8 w-full rounded" />
+            <div className="h-8 w-full rounded md:w-16" />
           ) : data ? (
             <Button
               onClick={() => navigate({ to: '/dashboard' })}
