@@ -18,6 +18,7 @@ export function AllTimeProjectsCard({ projects, className }: AllTimeProjectsCard
     Number.isFinite(project.views) && project.views > 0 ? project.views : 0,
   )
   const maxViews = Math.max(...viewCounts, 1)
+  const totalViews = viewCounts.reduce((sum, v) => sum + v, 0)
 
   return (
     <Card className={cn(className)}>
@@ -40,17 +41,21 @@ export function AllTimeProjectsCard({ projects, className }: AllTimeProjectsCard
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col">
+        <div className="border-border flex items-center gap-3 border-b pb-2">
+          <span className="text-muted-foreground w-4 shrink-0 text-right font-mono text-[10px] uppercase">#</span>
+          <span className="text-muted-foreground flex-1 font-mono text-[10px] uppercase">Project</span>
+          <span className="text-muted-foreground max-w-64 flex-1 font-mono text-[10px] uppercase">Views</span>
+          <span className="text-muted-foreground w-14 shrink-0 text-right font-mono text-[10px] uppercase">Count</span>
+          <span className="text-muted-foreground w-16 shrink-0 text-right font-mono text-[10px] uppercase">Share</span>
+        </div>
         {projects.map((project, idx) => {
           const views = viewCounts[idx] ?? 0
           const percentage = Math.round((views / maxViews) * 100)
-          const neighbor = projects[idx + 1] ?? projects[idx - 1]
-          const neighborViews = neighbor
-            ? (viewCounts[idx + 1] ?? viewCounts[idx - 1] ?? 0)
+          const share = totalViews > 0 ? Math.round((views / totalViews) * 100) : 0
+          const hasComparison = project.previousViews > 0
+          const growth = hasComparison
+            ? Math.round(((views - project.previousViews) / project.previousViews) * 100)
             : null
-          const growth =
-            neighborViews && neighborViews > 0
-              ? Math.round(((views - neighborViews) / neighborViews) * 100)
-              : 0
           return (
             <div
               key={project.id}
@@ -64,16 +69,30 @@ export function AllTimeProjectsCard({ projects, className }: AllTimeProjectsCard
               <span className="text-foreground w-14 shrink-0 text-right font-mono text-sm font-semibold">
                 {views.toLocaleString()}
               </span>
-              <span
-                className={cn(
-                  'w-10 shrink-0 whitespace-nowrap text-right font-mono text-[11px]',
-                  growth > 0 && 'text-green-500',
-                  growth < 0 && 'text-red-500',
-                  growth === 0 && 'text-muted-foreground',
+              <div className="flex w-16 shrink-0 flex-col items-end">
+                <span
+                  className={cn(
+                    'font-mono text-[11px] font-semibold',
+                    share > 100 / projects.length && 'text-green-500',
+                    share < 100 / projects.length && 'text-red-500',
+                    share === 0 && 'text-muted-foreground',
+                  )}
+                >
+                  {share}%
+                </span>
+                {growth !== null && (
+                  <span
+                    className={cn(
+                      'font-mono text-[10px]',
+                      growth > 0 && 'text-green-500',
+                      growth < 0 && 'text-red-500',
+                      growth === 0 && 'text-muted-foreground',
+                    )}
+                  >
+                    {`${growth > 0 ? '+' : ''}${growth}%`}
+                  </span>
                 )}
-              >
-                {`${growth > 0 ? '+' : ''}${growth}%`}
-              </span>
+              </div>
             </div>
           )
         })}
