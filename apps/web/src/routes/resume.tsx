@@ -68,16 +68,33 @@ function ResumePage() {
         </div>
 
         {cv?.data.url ? (
-          <div
-            className="border border-border rounded-lg overflow-hidden"
-            style={{ height: "80vh" }}
-          >
-            <iframe
-              src={`${cv.data.url}#toolbar=0`}
-              className="w-full h-full"
-              title="Resume PDF"
-            />
-          </div>
+          <>
+            {/* Mobile: iframe doesn't render PDFs on Chrome/Safari mobile */}
+            <div className="flex flex-col items-center gap-4 rounded-lg border border-border p-8 md:hidden">
+              <p className="text-sm text-muted-foreground">
+                PDF preview is not available on mobile browsers.
+              </p>
+              <button
+                onClick={handleDownload}
+                className="flex items-center gap-2 rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
+              >
+                <IconDownload className="size-4" />
+                Open PDF
+              </button>
+            </div>
+
+            {/* Desktop: inline iframe */}
+            <div
+              className="hidden overflow-hidden rounded-lg border border-border md:block"
+              style={{ height: "80vh" }}
+            >
+              <iframe
+                src={`${cv.data.url}#toolbar=0`}
+                className="h-full w-full"
+                title="Resume PDF"
+              />
+            </div>
+          </>
         ) : (
           <div className="flex items-center justify-center h-64 border border-border rounded-lg">
             <p className="text-muted-foreground text-sm">

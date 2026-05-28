@@ -58,7 +58,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col bg-background h-dvh">
       <AuthHeader />
-      <div className="flex flex-1 flex-col items-center justify-center gap-6 w-full">
+      <div className="flex flex-1 flex-col items-center justify-center gap-6 w-full px-4">
         <div className="flex flex-col items-center gap-1">
           <h1 className="text-xl font-bold">Welcome Back</h1>
         </div>
@@ -92,7 +92,7 @@ function RouteComponent() {
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
                           aria-invalid={isInvalid}
-                          placeholder="Login button not working on mobile"
+                          placeholder="Enter your email"
                           autoComplete="off"
                         />
                         {isInvalid && (
@@ -164,7 +164,7 @@ function RouteComponent() {
                 <form.Subscribe
                   selector={(state) => state.isSubmitting}
                   children={(isSubmitting) => (
-                    <Button type="submit" disabled={isSubmitting}>
+                    <Button type="submit" disabled={isSubmitting} className="w-full">
                       {isSubmitting ? <Spinner /> : null}
                       Sign In
                     </Button>

@@ -58,26 +58,35 @@ export async function getProjectsForLandingPage() {
 }
 
 export async function getAllTimeViewsProjects() {
-  const thirtyDaysAgo = new Date()
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+  const now = new Date()
+
+  const thirtyDaysAgo = new Date(now)
+  thirtyDaysAgo.setDate(now.getDate() - 30)
+
+  const sixtyDaysAgo = new Date(now)
+  sixtyDaysAgo.setDate(now.getDate() - 60)
+
+  const currentViews = sql<number>`count(CASE WHEN ${viewEvents.viewedAt} >= ${thirtyDaysAgo.toISOString()} THEN ${viewEvents.id} END)`.mapWith(Number)
+  const previousViews = sql<number>`count(CASE WHEN ${viewEvents.viewedAt} >= ${sixtyDaysAgo.toISOString()} AND ${viewEvents.viewedAt} < ${thirtyDaysAgo.toISOString()} THEN ${viewEvents.id} END)`.mapWith(Number)
 
   const result = await db
     .select({
       id: projects.id,
       title: projects.title,
-      views: count(viewEvents.id),
+      views: currentViews,
+      previousViews,
     })
     .from(projects)
     .leftJoin(
       viewEvents,
       and(
         eq(projects.id, viewEvents.projectId),
-        gte(viewEvents.viewedAt, thirtyDaysAgo.toISOString()),
+        gte(viewEvents.viewedAt, sixtyDaysAgo.toISOString()),
       ),
     )
     .where(and(eq(projects.isVisible, true), eq(projects.status, 'published')))
     .groupBy(projects.id, projects.title)
-    .orderBy(desc(count(viewEvents.id)))
+    .orderBy(desc(currentViews))
     .limit(5)
 
   return result

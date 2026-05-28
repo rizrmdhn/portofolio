@@ -1,8 +1,18 @@
 packages:
   - apps/*
   - packages/*
+supportedArchitectures:
+  os:
+    - current
+    - win32
+    - linux
+  cpu:
+    - current
+    - x64
+publicHoistPattern:
+  - "@img/*"
 allowBuilds:
-  esbuild: false
+  esbuild: true
   msgpackr-extract: true
   msw: true
   sharp: true

@@ -37,7 +37,7 @@ export default defineConfig({
     tanstackStart(),
     nitro({
       preset: 'node-server',
-      traceDeps: ['@node-rs/argon2', '@react-pdf/renderer'],
+      traceDeps: ['@node-rs/argon2', '@react-pdf/renderer', 'sharp'],
     }),
     viteReact(),
   ],

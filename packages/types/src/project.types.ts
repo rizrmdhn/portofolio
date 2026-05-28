@@ -9,6 +9,7 @@ export type AllTimeProject = {
   id: string;
   title: string;
   views: number;
+  previousViews: number;
 };
 
 export type PaginatedProjects = Project & {
