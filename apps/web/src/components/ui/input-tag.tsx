@@ -79,9 +79,17 @@ const InputTag = forwardRef<HTMLDivElement, InputTagProps>(
         const pasted = e.clipboardData.getData("text");
         if (!pasted.includes(",")) return;
         e.preventDefault();
-        pasted.split(",").forEach((part) => addTag(part));
+        const parts = pasted.split(",").map((p) => p.trim()).filter(Boolean);
+        const next = [...value];
+        for (const part of parts) {
+          if (next.includes(part)) continue;
+          if (maxTags !== undefined && next.length >= maxTags) break;
+          next.push(part);
+        }
+        onChange?.(next);
+        setInputValue("");
       },
-      [addTag],
+      [value, onChange, maxTags],
     );
 
     const isAtMax = maxTags !== undefined && value.length >= maxTags;
