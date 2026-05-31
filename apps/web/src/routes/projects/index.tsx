@@ -4,7 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { buildSeoMeta } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { z } from 'zod'
+
+const TECH_COLLAPSED_LIMIT = 12
 
 const searchSchema = z.object({
   tech: z.string().optional(),
@@ -35,12 +38,26 @@ function ProjectsPage() {
   const { projects } = Route.useLoaderData()
   const { tech } = Route.useSearch()
   const navigate = useNavigate({ from: '/projects/' })
+  const [showAllTech, setShowAllTech] = useState(false)
 
   const allTech = Array.from(
     new Map(
       projects.flatMap((p) => p.tech).map((t) => [t.toLocaleLowerCase(), t]),
     ).values(),
   ).sort()
+
+  const isCollapsible = allTech.length > TECH_COLLAPSED_LIMIT
+  const visibleTech =
+    !isCollapsible || showAllTech
+      ? allTech
+      : // Keep the active filter visible even when it sits past the limit.
+        Array.from(
+          new Set([
+            ...allTech.slice(0, TECH_COLLAPSED_LIMIT),
+            ...(tech && allTech.includes(tech) ? [tech] : []),
+          ]),
+        )
+  const hiddenCount = allTech.length - visibleTech.length
 
   const filtered = tech
     ? projects.filter((p) =>
@@ -61,7 +78,7 @@ function ProjectsPage() {
         <h1 className="text-subtle font-mono text-sm tracking-[0.15em]">ALL PROJECTS</h1>
         {allTech.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {allTech.map((t) => (
+            {visibleTech.map((t) => (
               <Badge
                 key={t}
                 render={<button onClick={() => toggleTech(t)} />}
@@ -71,6 +88,15 @@ function ProjectsPage() {
                 {t}
               </Badge>
             ))}
+            {isCollapsible && (
+              <Badge
+                render={<button onClick={() => setShowAllTech((prev) => !prev)} />}
+                variant="ghost"
+                className="text-subtle cursor-pointer"
+              >
+                {showAllTech ? 'Show less' : `+${hiddenCount} more`}
+              </Badge>
+            )}
           </div>
         )}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr]">

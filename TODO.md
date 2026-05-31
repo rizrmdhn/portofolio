@@ -72,18 +72,18 @@
 
 ## Projects — Multiple Images with Cover
 
-- [ ] **DB Schema** (`packages/db/src/schema/index.ts`) — add `projectImages` table: `id`, `projectId` (FK cascade), `imageUrl`, `isCover`, `order`, `createdAt`. Run `pnpm db:generate && pnpm db:migrate`.
-- [ ] **Relations** (`packages/db/src/relations/index.ts`) — add `projects → projectImages` one-to-many and `projectImages → projects` many-to-one.
-- [ ] **Queries** (`packages/queries/src/project-images.queries.ts`, new file):
+- [x] **DB Schema** (`packages/db/src/schema/index.ts`) — add `projectImages` table: `id`, `projectId` (FK cascade), `imageUrl`, `isCover`, `order`, `createdAt`. Run `pnpm db:generate && pnpm db:migrate`.
+- [x] **Relations** (`packages/db/src/relations/index.ts`) — add `projects → projectImages` one-to-many and `projectImages → projects` many-to-one.
+- [x] **Queries** (`packages/queries/src/project-images.queries.ts`, new file):
   - `getProjectImages(projectId)` — fetch all images ordered by `order`
   - `addProjectImage(projectId, imageUrl)` — insert; if first image, auto-set as cover and sync `projects.imageUrl`
-  - `removeProjectImage(id)` — delete; if it was cover, clear `projects.imageUrl`
+  - `removeProjectImage(id)` — delete; if it was cover, promote next image (or clear `projects.imageUrl` when none remain)
   - `setProjectCoverImage(id, projectId)` — set `isCover=true` for this, `false` for others, sync `projects.imageUrl`
   - `reorderProjectImages(items)` — bulk update orders in a transaction
-- [ ] **Create flow** (`packages/api/src/routers/project.ts`) — after uploading picture, also insert into `project_images` with `isCover: true`
-- [ ] **Delete flow** (`packages/api/src/routers/project.ts`) — delete all project images from UploadThing before deleting the project
-- [ ] **Validation** (`packages/schema/src/project.schema.ts`) — add `addProjectImageSchema` and `reorderProjectImagesSchema`
-- [ ] **API endpoints** (add to `projectRouter`): `getImages`, `addImage` (formData), `removeImage`, `setCover`, `reorderImages`
-- [ ] **UI Component** (`apps/web/src/components/ui/project-images-manager.tsx`, new) — image grid with cover badge, "Set as Cover" button, remove button, and add-image dropzone; all via direct mutations
-- [ ] **Edit form** (`apps/web/src/routes/(core)/dashboard/projects/$projectId.edit.tsx`) — replace `picture` field in media tab with `<ProjectImagesManager projectId={projectId} />`
-- [ ] **Detail page** (`apps/web/src/routes/projects/$slug.tsx`) — fetch images, show non-cover images in a gallery grid below the cover
+- [x] **Create flow** (`packages/api/src/routers/project.ts`) — after uploading picture, also insert into `project_images` with `isCover: true`
+- [x] **Delete flow** (`packages/api/src/routers/project.ts`) — delete all project images from UploadThing before deleting the project
+- [x] **Validation** (`packages/schema/src/project.schema.ts`) — add `addProjectImageSchema` and `reorderProjectImagesSchema`
+- [x] **API endpoints** (add to `projectRouter`): `getImages`, `addImage` (formData), `removeImage`, `setCover`, `reorderImages`
+- [x] **UI Component** (`apps/web/src/components/ui/project-images-manager.tsx`, new) — image grid with cover badge, "Set as Cover" button, remove button, and add-image dropzone; all via direct mutations
+- [x] **Edit form** (`apps/web/src/routes/(core)/dashboard/projects/$projectId.edit.tsx`) — replace `picture` field in media tab with `<ProjectImagesManager projectId={projectId} />`
+- [x] **Detail page** (`apps/web/src/routes/projects/$slug.tsx`) — fetch images, show non-cover images in a gallery grid below the cover

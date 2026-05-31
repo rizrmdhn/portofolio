@@ -128,7 +128,7 @@ async function countFeaturedProjects() {
   return result?.count ?? 0
 }
 
-export async function createProject(data: Omit<CreateProjectInput, 'picture'>) {
+export async function createProject(data: Omit<CreateProjectInput, 'pictures'>) {
   const { featured, ...rest } = data
   const slug = toUniqueSlug(rest.title)
 
@@ -166,7 +166,7 @@ export async function updateProjectImageUrl(id: string, imageUrl: string | null)
   return result
 }
 
-export async function updateProject(data: Omit<UpdateProjectInput, 'picture'>) {
+export async function updateProject(data: Omit<UpdateProjectInput, 'pictures'>) {
   const { featured, id, ...rest } = data
   const existing = await getProjectById(id)
 

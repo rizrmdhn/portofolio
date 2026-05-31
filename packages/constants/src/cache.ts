@@ -24,6 +24,7 @@ export const CACHE_KEYS = {
   PROJECT_ALL: 'project:all',
   PROJECT_LANDING: 'project:landing',
   PROJECT_SLUG_PREFIX: 'project:slug:',
+  PROJECT_IMAGES_PREFIX: 'project:images:',
   PROJECT_PREFIX: 'project:',
 
   // Resume

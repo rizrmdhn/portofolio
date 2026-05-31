@@ -14,7 +14,7 @@ import {
   IconExternalLink,
   IconEye,
 } from '@tabler/icons-react'
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
@@ -22,6 +22,9 @@ export const Route = createFileRoute('/projects/$slug')({
   loader: async ({ context, params }) => {
     const project = await context.queryClient.ensureQueryData(
       context.trpc.project.getBySlug.queryOptions({ slug: params.slug }),
+    )
+    void context.queryClient.prefetchQuery(
+      context.trpc.project.getImages.queryOptions({ projectId: project.id }),
     )
     return { project }
   },
@@ -44,6 +47,10 @@ function ProjectDetailPage() {
   const navigate = useNavigate()
 
   const { data: project } = useSuspenseQuery(trpc.project.getBySlug.queryOptions({ slug }))
+
+  const { data: images } = useQuery(trpc.project.getImages.queryOptions({ projectId: project.id }))
+
+  const galleryImages = (images ?? []).filter((img) => !img.isCover)
 
   const incrementViews = useMutation({
     ...trpc.project.updateView.mutationOptions(),
@@ -144,6 +151,30 @@ function ProjectDetailPage() {
               <p className="text-muted-foreground text-[15px] leading-[1.8] whitespace-pre-wrap">
                 {project.longDescription}
               </p>
+            </div>
+          )}
+
+          {/* Gallery */}
+          {galleryImages.length > 0 && (
+            <div className="border-border flex flex-col gap-4 border-t pt-8">
+              <h2 className="text-foreground text-sm font-semibold tracking-wide uppercase">
+                Gallery
+              </h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {galleryImages.map((image) => (
+                  <div
+                    key={image.id}
+                    className="border-border overflow-hidden rounded-lg border"
+                  >
+                    <img
+                      src={image.imageUrl}
+                      alt={`${project.title} screenshot`}
+                      loading="lazy"
+                      className="aspect-video w-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </FadeIn>

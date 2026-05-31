@@ -20,10 +20,9 @@ export const createProjectSchema = createInsertSchema(projects, {
 })
   .omit({ id: true, slug: true, createdAt: true, updatedAt: true, featureAt: true })
   .extend({
-    picture: z
-      .file()
-      .max(5 * 1024 * 1024)
-      .or(z.undefined()), // Max 5MB
+    pictures: z
+      .array(z.file().max(5 * 1024 * 1024)) // Max 5MB each
+      .or(z.undefined()),
     featured: z.boolean(),
   })
 
@@ -58,3 +57,18 @@ export const reorderProjectsSchema = z
   .min(1)
 
 export type ReorderProjectsInput = z.infer<typeof reorderProjectsSchema>
+
+export const addProjectImageSchema = z.object({
+  projectId: z.string(),
+  picture: z
+    .file()
+    .max(5 * 1024 * 1024), // Max 5MB
+})
+
+export type AddProjectImageInput = z.infer<typeof addProjectImageSchema>
+
+export const reorderProjectImagesSchema = z
+  .array(z.object({ id: z.string(), order: z.number().int().min(0) }))
+  .min(1)
+
+export type ReorderProjectImagesInput = z.infer<typeof reorderProjectImagesSchema>
