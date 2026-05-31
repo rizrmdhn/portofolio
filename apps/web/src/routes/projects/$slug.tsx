@@ -2,6 +2,7 @@ import { FadeIn } from '@/components/fade-in'
 import { MainHeader } from '@/components/main-header'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
+import { Markdown } from '@/components/ui/markdown'
 import { buildSeoMeta } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/utils/trpc'
@@ -148,9 +149,7 @@ function ProjectDetailPage() {
           {/* Long description */}
           {project.longDescription && (
             <div className="border-border border-t pt-8">
-              <p className="text-muted-foreground text-[15px] leading-[1.8] whitespace-pre-wrap">
-                {project.longDescription}
-              </p>
+              <Markdown>{project.longDescription}</Markdown>
             </div>
           )}
 
@@ -162,10 +161,7 @@ function ProjectDetailPage() {
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {galleryImages.map((image) => (
-                  <div
-                    key={image.id}
-                    className="border-border overflow-hidden rounded-lg border"
-                  >
+                  <div key={image.id} className="border-border overflow-hidden rounded-lg border">
                     <img
                       src={image.imageUrl}
                       alt={`${project.title} screenshot`}

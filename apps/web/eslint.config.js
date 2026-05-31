@@ -8,6 +8,8 @@ export default [
       '.cache/**',
       '.turbo/**',
       '.vercel/**',
+      '.output/**',
+      '.nitro/**',
       'vite.config.ts.*',
       'src/components/ui/**',
     ],
