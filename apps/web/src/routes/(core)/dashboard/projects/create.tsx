@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import InputTag from '@/components/ui/input-tag'
+import { MarkdownEditor } from '@/components/ui/markdown-editor'
 import ProjectImagesInput from '@/components/ui/project-images-input'
 import type { LocalProjectImage } from '@/components/ui/project-images-input'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -190,14 +191,20 @@ function RouteComponent() {
                         return (
                           <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
                             <FieldLabel htmlFor={field.name}>Long Description</FieldLabel>
-                            <Textarea
+                            <MarkdownEditor
                               id={field.name}
                               value={field.state.value ?? ''}
                               onBlur={field.handleBlur}
-                              onChange={(e) => field.handleChange(e.target.value)}
+                              onChange={(value) =>
+                                field.handleChange(value === '' ? undefined : value)
+                              }
                               placeholder="Detailed description of your project"
+                              aria-invalid={isInvalid}
                               rows={6}
                             />
+                            <FieldDescription>
+                              Supports Markdown — headings, **bold**, lists, links and code.
+                            </FieldDescription>
                             {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
                         )
