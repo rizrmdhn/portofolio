@@ -202,6 +202,26 @@ function RouteComponent() {
                     />
 
                     <form.Field
+                      name="tech"
+                      children={(field) => {
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+                        return (
+                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
+                            <FieldLabel>Technologies</FieldLabel>
+                            <InputTag
+                              value={field.state.value}
+                              onChange={field.handleChange}
+                              onBlur={field.handleBlur}
+                              placeholder="Add a technology..."
+                              error={isInvalid ? String(field.state.meta.errors[0]) : undefined}
+                            />
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                          </Field>
+                        )
+                      }}
+                    />
+
+                    <form.Field
                       name="longDescription"
                       children={(field) => {
                         const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -250,26 +270,6 @@ function RouteComponent() {
                             <FieldDescription>
                               Supports Markdown — headings, **bold**, lists, links and code.
                             </FieldDescription>
-                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                          </Field>
-                        )
-                      }}
-                    />
-
-                    <form.Field
-                      name="tech"
-                      children={(field) => {
-                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
-                            <FieldLabel>Technologies</FieldLabel>
-                            <InputTag
-                              value={field.state.value}
-                              onChange={field.handleChange}
-                              onBlur={field.handleBlur}
-                              placeholder="Add a technology..."
-                              error={isInvalid ? String(field.state.meta.errors[0]) : undefined}
-                            />
                             {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
                         )
