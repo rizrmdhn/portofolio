@@ -80,6 +80,9 @@ function RouteComponent() {
       liveUrl: project.liveUrl ?? undefined,
       playstoreUrl: project.playstoreUrl ?? undefined,
       appstoreUrl: project.appstoreUrl ?? undefined,
+      // Images are managed via the separate project-image endpoints, but the
+      // key must be present so Zod treats the optional field as satisfied.
+      pictures: undefined as Array<File> | undefined,
       coverColor: project.coverColor,
       status: project.status,
       isVisible: project.isVisible,
