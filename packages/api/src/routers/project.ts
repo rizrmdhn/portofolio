@@ -1,5 +1,12 @@
 import { CACHE_KEYS, CACHE_TTL } from '@portofolio/constants'
 import { createActivityLog } from '@portofolio/queries/activity-log.queries'
+import {
+  addProjectImage,
+  getProjectImages,
+  removeProjectImage,
+  reorderProjectImages,
+  setProjectCoverImage,
+} from '@portofolio/queries/project-images.queries'
 import { incrementViews } from '@portofolio/queries/project-views.queries'
 import {
   createProject,
@@ -15,8 +22,10 @@ import {
   updateProjectImageUrl,
 } from '@portofolio/queries/project.queries'
 import {
+  addProjectImageSchema,
   createProjectSchema,
   getProjectsSchema,
+  reorderProjectImagesSchema,
   reorderProjectsSchema,
   updateProjectSchema,
 } from '@portofolio/schema/project.schema'
@@ -109,18 +118,18 @@ export const projectRouter = createTRPCRouter({
     .input(formDataInput)
     .use(formDataProcedure(createProjectSchema))
     .mutation(async ({ ctx }) => {
-      const { picture, ...projectData } = ctx.input
+      const { pictures, ...projectData } = ctx.input
 
       const [project, createErr] = await tryCatchAsync(() => createProject(projectData))
       if (createErr) throw toTRPCError(createErr)
 
-      if (picture) {
+      // Upload buffered images in order; the first becomes the cover (handled
+      // by addProjectImage) and syncs projects.imageUrl.
+      for (const picture of pictures ?? []) {
         const [upload, uploadErr] = await tryCatchAsync(() => processAndUploadImage(picture))
         if (uploadErr) throw toTRPCError(uploadErr)
 
-        const [_, imageErr] = await tryCatchAsync(() =>
-          updateProjectImageUrl(project.id, upload.url),
-        )
+        const [, imageErr] = await tryCatchAsync(() => addProjectImage(project.id, upload.url))
         if (imageErr) throw toTRPCError(imageErr)
       }
       void createActivityLog({
@@ -147,25 +156,12 @@ export const projectRouter = createTRPCRouter({
     .input(formDataInput)
     .use(formDataProcedure(updateProjectSchema))
     .mutation(async ({ ctx }) => {
-      const { picture, ...projectData } = ctx.input
+      // Images are managed separately via the project-image endpoints; the
+      // update form only edits scalar project fields.
+      const { pictures: _pictures, ...projectData } = ctx.input
 
       const [project, err] = await tryCatchAsync(() => updateProject(projectData))
       if (err) throw toTRPCError(err)
-
-      if (picture) {
-        if (project.imageUrl) {
-          const fileKey = project.imageUrl.split('/').pop()
-          if (fileKey) await utapi.deleteFiles(fileKey)
-        }
-
-        const [upload, uploadErr] = await tryCatchAsync(() => processAndUploadImage(picture))
-        if (uploadErr) throw toTRPCError(uploadErr)
-
-        const [_, imageErr] = await tryCatchAsync(() =>
-          updateProjectImageUrl(project.id, upload.url),
-        )
-        if (imageErr) throw toTRPCError(imageErr)
-      }
 
       void createActivityLog({
         action: 'updated',
@@ -188,19 +184,24 @@ export const projectRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input: { id } }) => {
+      // Collect every stored image (cover + gallery) so their files can be
+      // removed from UploadThing before the rows are cascade-deleted.
+      const [images] = await tryCatchAsync(() => getProjectImages(id))
+
       const [result, err] = await tryCatchAsync(() => deleteProject(id))
       if (err) throw toTRPCError(err)
 
+      const fileKeys = new Set<string>()
+      for (const image of images ?? []) {
+        const key = image.imageUrl.split('/').pop()
+        if (key) fileKeys.add(key)
+      }
       if (result.imageUrl) {
-        const imageFiles = result.imageUrl.split('/').pop()
-
-        if (!imageFiles)
-          throw new TRPCError({
-            code: 'INTERNAL_SERVER_ERROR',
-            message: 'Failed to parse image file name',
-          })
-
-        await utapi.deleteFiles(imageFiles)
+        const key = result.imageUrl.split('/').pop()
+        if (key) fileKeys.add(key)
+      }
+      if (fileKeys.size > 0) {
+        await utapi.deleteFiles([...fileKeys])
       }
 
       void createActivityLog({
@@ -239,6 +240,76 @@ export const projectRouter = createTRPCRouter({
 
       const [_, updateErr] = await tryCatchAsync(() => updateProjectImageUrl(id, null))
       if (updateErr) throw toTRPCError(updateErr)
+
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
+
+      return true
+    }),
+
+  // ========== Project images (gallery + cover) ==========
+
+  getImages: publicProcedure
+    .input(z.object({ projectId: z.string() }))
+    .query(async ({ ctx, input: { projectId } }) => {
+      const [images, err] = await tryCatchAsync(() =>
+        ctx.cache.withCache(
+          `${CACHE_KEYS.PROJECT_IMAGES_PREFIX}${projectId}`,
+          CACHE_TTL.SHORT,
+          () => getProjectImages(projectId),
+          () => ctx.headers.set('X-Data-Source', 'cache'),
+        ),
+      )
+      if (err) throw toTRPCError(err)
+      return images
+    }),
+
+  addImage: protectedProcedure
+    .input(formDataInput)
+    .use(formDataProcedure(addProjectImageSchema))
+    .mutation(async ({ ctx }) => {
+      const { projectId, picture } = ctx.input
+
+      const [upload, uploadErr] = await tryCatchAsync(() => processAndUploadImage(picture))
+      if (uploadErr) throw toTRPCError(uploadErr)
+
+      const [image, err] = await tryCatchAsync(() => addProjectImage(projectId, upload.url))
+      if (err) throw toTRPCError(err)
+
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
+
+      return image
+    }),
+
+  removeImage: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input: { id } }) => {
+      const [image, err] = await tryCatchAsync(() => removeProjectImage(id))
+      if (err) throw toTRPCError(err)
+
+      const fileKey = image.imageUrl.split('/').pop()
+      if (fileKey) await utapi.deleteFiles(fileKey)
+
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
+
+      return image
+    }),
+
+  setCover: protectedProcedure
+    .input(z.object({ id: z.string(), projectId: z.string() }))
+    .mutation(async ({ ctx, input: { id, projectId } }) => {
+      const [cover, err] = await tryCatchAsync(() => setProjectCoverImage(id, projectId))
+      if (err) throw toTRPCError(err)
+
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
+
+      return cover
+    }),
+
+  reorderImages: protectedProcedure
+    .input(reorderProjectImagesSchema)
+    .mutation(async ({ ctx, input }) => {
+      const [, err] = await tryCatchAsync(() => reorderProjectImages(input))
+      if (err) throw toTRPCError(err)
 
       void ctx.cache.deleteByPrefix(CACHE_PREFIX)
 

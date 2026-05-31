@@ -159,6 +159,32 @@ export const projects = createTable(
   (table) => [index('projects_id_idx').using('btree', table.id)],
 )
 
+export const projectImages = createTable(
+  'project_images',
+  {
+    id: uuid('id')
+      .primaryKey()
+      .notNull()
+      .$default(() => uuidv7()),
+    projectId: uuid('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    imageUrl: text('image_url').notNull(),
+    isCover: boolean('is_cover').notNull().default(false),
+    order: integer('order').default(0).notNull(),
+    createdAt: timestamp('created_at', {
+      withTimezone: true,
+      mode: 'string',
+    })
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (table) => [
+    index('project_images_id_idx').using('btree', table.id),
+    index('project_images_project_id_idx').using('btree', table.projectId),
+  ],
+)
+
 export const experiences = createTable(
   'experiences',
   {

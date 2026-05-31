@@ -2,9 +2,10 @@ import { Button } from '@/components/ui/button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import InputTag from '@/components/ui/input-tag'
+import ProjectImagesInput from '@/components/ui/project-images-input'
+import type { LocalProjectImage } from '@/components/ui/project-images-input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import SingleImageUpload from '@/components/ui/single-image-upload'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -22,6 +23,7 @@ import { IconLink, IconPencil, IconSettings, IconUpload } from '@tabler/icons-re
 import { useForm } from '@tanstack/react-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/(core)/dashboard/projects/create')({
   component: RouteComponent,
@@ -37,7 +39,7 @@ const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = 
 const TAB_FIELDS: Record<string, Array<string>> = {
   content: ['title', 'description', 'longDescription', 'tech'],
   links: ['githubUrl', 'liveUrl', 'playstoreUrl', 'appstoreUrl'],
-  media: ['picture', 'coverColor'],
+  media: ['coverColor'],
   settings: ['status', 'isVisible', 'featured', 'order'],
 }
 
@@ -45,6 +47,9 @@ function RouteComponent() {
   const queryClient = useQueryClient()
   const navigate = Route.useNavigate()
   const router = useRouter()
+
+  // Buffered images — nothing is uploaded until the form is submitted.
+  const [images, setImages] = useState<Array<LocalProjectImage>>([])
 
   const createProjectMutation = useMutation(
     trpc.project.create.mutationOptions({
@@ -76,10 +81,17 @@ function RouteComponent() {
       isVisible: false,
       order: 0,
       featured: false,
-      picture: undefined as File | undefined,
     },
     onSubmit: async ({ value }) => {
-      const formData = toFormData(value)
+      // Server treats the first uploaded image as the cover, so send the
+      // cover-marked image first while preserving the order of the rest.
+      let pictures: Array<File> = []
+      const cover = images.find((img) => img.isCover) ?? images[0]
+      if (cover) {
+        pictures = [cover, ...images.filter((img) => img.id !== cover.id)].map((img) => img.file)
+      }
+
+      const formData = toFormData({ ...value, pictures })
 
       await createProjectMutation.mutateAsync(formData)
     },
@@ -309,25 +321,14 @@ function RouteComponent() {
                 {/* Media */}
                 <TabsContent value="media">
                   <FieldGroup className="gap-4">
-                    <form.Field
-                      name="picture"
-                      children={(field) => {
-                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                          <Field data-invalid={isInvalid} className="flex flex-col gap-2">
-                            <FieldLabel>Cover Image</FieldLabel>
-                            <FieldDescription>
-                              Recommended size: 1200x630px. Max 5MB.
-                            </FieldDescription>
-                            <SingleImageUpload
-                              {...field}
-                              error={field.state.meta.errors.join(', ')}
-                            />
-                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                          </Field>
-                        )
-                      }}
-                    />
+                    <Field className="flex flex-col gap-2">
+                      <FieldLabel>Images</FieldLabel>
+                      <FieldDescription>
+                        Add one or more images. The first image becomes the cover — drag to reorder
+                        or use “Set as Cover”. Recommended size: 1200x630px. Max 5MB each.
+                      </FieldDescription>
+                      <ProjectImagesInput value={images} onChange={setImages} />
+                    </Field>
 
                     <form.Field
                       name="coverColor"
