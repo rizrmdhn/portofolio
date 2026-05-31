@@ -78,6 +78,9 @@ function RouteComponent() {
       liveUrl: undefined as string | undefined,
       playstoreUrl: undefined as string | undefined,
       appstoreUrl: undefined as string | undefined,
+      // Real files are gathered from the images state in onSubmit; the key must
+      // still be present here so Zod treats the optional field as satisfied.
+      pictures: undefined as Array<File> | undefined,
       coverColor: '#ffffff',
       status: 'draft',
       isVisible: false,
