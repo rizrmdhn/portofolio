@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { CopyAiPromptButton } from '@/components/ui/copy-ai-prompt-button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import InputTag from '@/components/ui/input-tag'
@@ -169,7 +170,26 @@ function RouteComponent() {
                         const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
                           <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
-                            <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                            <div className="flex items-center justify-between gap-2">
+                              <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                              <form.Subscribe
+                                selector={(s) => ({
+                                  title: s.values.title,
+                                  tech: s.values.tech,
+                                  longDescription: s.values.longDescription,
+                                })}
+                                children={(v) => (
+                                  <CopyAiPromptButton
+                                    kind="short"
+                                    context={{
+                                      title: v.title,
+                                      tech: v.tech,
+                                      longDescription: v.longDescription,
+                                    }}
+                                  />
+                                )}
+                              />
+                            </div>
                             <Textarea
                               id={field.name}
                               value={field.state.value}
@@ -190,7 +210,35 @@ function RouteComponent() {
                         const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
                         return (
                           <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
-                            <FieldLabel htmlFor={field.name}>Long Description</FieldLabel>
+                            <div className="flex items-center justify-between gap-2">
+                              <FieldLabel htmlFor={field.name}>Long Description</FieldLabel>
+                              <form.Subscribe
+                                selector={(s) => ({
+                                  title: s.values.title,
+                                  description: s.values.description,
+                                  tech: s.values.tech,
+                                  githubUrl: s.values.githubUrl,
+                                  liveUrl: s.values.liveUrl,
+                                  playstoreUrl: s.values.playstoreUrl,
+                                  appstoreUrl: s.values.appstoreUrl,
+                                })}
+                                children={(v) => (
+                                  <CopyAiPromptButton
+                                    context={{
+                                      title: v.title,
+                                      description: v.description,
+                                      tech: v.tech,
+                                      links: [
+                                        { label: 'GitHub', url: v.githubUrl },
+                                        { label: 'Live', url: v.liveUrl },
+                                        { label: 'Play Store', url: v.playstoreUrl },
+                                        { label: 'App Store', url: v.appstoreUrl },
+                                      ],
+                                    }}
+                                  />
+                                )}
+                              />
+                            </div>
                             <MarkdownEditor
                               id={field.name}
                               value={field.state.value ?? ''}
