@@ -2,6 +2,7 @@ import { FadeIn } from '@/components/fade-in'
 import { MainHeader } from '@/components/main-header'
 import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Markdown } from '@/components/ui/markdown'
 import { buildSeoMeta } from '@/lib/seo'
 import { cn } from '@/lib/utils'
@@ -9,6 +10,7 @@ import { trpc } from '@/utils/trpc'
 import { toCompactNumber } from '@portofolio/utils/number'
 import {
   IconArrowLeft,
+  IconArrowUpRight,
   IconBrandAppstore,
   IconBrandGithub,
   IconBrandGooglePlay,
@@ -16,7 +18,7 @@ import {
   IconEye,
 } from '@tabler/icons-react'
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
 export const Route = createFileRoute('/projects/$slug')({
@@ -39,8 +41,71 @@ export const Route = createFileRoute('/projects/$slug')({
       }),
     }
   },
+  errorComponent: () => (
+    <div className="bg-background text-foreground flex min-h-svh flex-col">
+      <MainHeader />
+      <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-3 px-4 py-24 text-center">
+        <p className="text-subtle font-mono text-xs tracking-wide uppercase">404</p>
+        <h1 className="text-2xl font-bold">Project not found</h1>
+        <p className="text-muted-foreground max-w-md">
+          The project you&apos;re looking for doesn&apos;t exist or may have been removed.
+        </p>
+        <Link
+          to="/projects"
+          className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'mt-2')}
+        >
+          <IconArrowLeft className="size-4" />
+          All Projects
+        </Link>
+      </main>
+    </div>
+  ),
   component: ProjectDetailPage,
 })
+
+/**
+ * Click-to-zoom image. The thumbnail keeps its cropped framing; the dialog shows
+ * the full, uncropped image so screenshots stay legible. A `bg-muted` placeholder
+ * reserves space while the image loads to avoid layout shift / white flashes.
+ */
+function ImageLightbox({
+  src,
+  alt,
+  triggerClassName,
+  imgClassName,
+  eager = false,
+}: {
+  src: string
+  alt: string
+  triggerClassName?: string
+  imgClassName?: string
+  eager?: boolean
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger
+        className={cn(
+          'border-border bg-muted group block w-full cursor-zoom-in overflow-hidden rounded-lg border',
+          triggerClassName,
+        )}
+      >
+        <img
+          src={src}
+          alt={alt}
+          loading={eager ? 'eager' : 'lazy'}
+          className={cn(
+            'w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]',
+            imgClassName,
+          )}
+        />
+      </DialogTrigger>
+      <DialogContent className="w-fit max-w-[calc(100%-2rem)] border-0 bg-transparent p-0 ring-0 sm:max-w-4xl">
+        <DialogTitle className="sr-only">{alt}</DialogTitle>
+        <img src={src} alt={alt} className="max-h-[85vh] w-auto rounded-lg object-contain" />
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 function ProjectDetailPage() {
   const queryClient = useQueryClient()
@@ -62,6 +127,12 @@ function ProjectDetailPage() {
   })
 
   useEffect(() => {
+    // The server de-duplicates views per IP (see project.updateView); this
+    // session guard is just a client-side optimization to avoid firing a
+    // redundant request on every refresh within the same tab.
+    const key = `project-viewed:${project.slug}`
+    if (sessionStorage.getItem(key)) return
+    sessionStorage.setItem(key, '1')
     incrementViews.mutate({ projectId: project.id, slug: project.slug })
     // only on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,6 +144,8 @@ function ProjectDetailPage() {
     { url: project.playstoreUrl, icon: IconBrandGooglePlay, label: 'Play Store' },
     { url: project.appstoreUrl, icon: IconBrandAppstore, label: 'App Store' },
   ].filter((l) => !!l.url)
+
+  const viewCount = Number(project.viewCount)
 
   return (
     <div className="bg-background text-foreground flex flex-col">
@@ -92,25 +165,29 @@ function ProjectDetailPage() {
 
           {/* Cover image */}
           {project.imageUrl && (
-            <div className="border-border overflow-hidden rounded-lg border">
-              <img
-                src={project.imageUrl}
-                alt={project.title}
-                className="h-72 w-full object-cover"
-              />
-            </div>
+            <ImageLightbox
+              src={project.imageUrl}
+              alt={project.title}
+              imgClassName="h-72"
+              eager
+            />
           )}
 
           {/* Header */}
           <div className="flex flex-col gap-4">
             <div className="flex items-start justify-between gap-4">
               <h1 className="text-2xl leading-tight font-bold sm:text-3xl">{project.title}</h1>
-              <span className="text-subtle inline-flex shrink-0 items-center gap-1.5 pt-1 font-mono text-xs">
-                <IconEye className="size-3.5" />
-                {toCompactNumber(Number(project.viewCount))}
+              <span
+                className="text-subtle inline-flex shrink-0 items-center gap-1.5 pt-1 font-mono text-xs"
+                title={`${viewCount.toLocaleString()} views`}
+                aria-label={`${viewCount.toLocaleString()} views`}
+              >
+                <IconEye className="size-3.5" aria-hidden />
+                {toCompactNumber(viewCount)}
               </span>
             </div>
-            <p className="text-muted-foreground text-base leading-relaxed">{project.description}</p>
+            {/* Short description — reads as a summary lede, distinct from the body */}
+            <p className="text-foreground/80 text-lg leading-relaxed">{project.description}</p>
           </div>
 
           {/* Tech tags */}
@@ -137,10 +214,11 @@ function ProjectDetailPage() {
                   href={url ?? ''}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={cn(buttonVariants({ variant: 'outline', size: 'sm' }))}
+                  className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'group')}
                 >
                   <Icon className="size-4" />
                   {label}
+                  <IconArrowUpRight className="size-3.5 opacity-40 transition-opacity group-hover:opacity-70" />
                 </a>
               ))}
             </div>
@@ -148,7 +226,10 @@ function ProjectDetailPage() {
 
           {/* Long description */}
           {project.longDescription && (
-            <div className="border-border border-t pt-8">
+            <div className="border-border flex flex-col gap-4 border-t pt-8">
+              <h2 className="text-foreground text-sm font-semibold tracking-wide uppercase">
+                About
+              </h2>
               <Markdown>{project.longDescription}</Markdown>
             </div>
           )}
@@ -161,14 +242,12 @@ function ProjectDetailPage() {
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {galleryImages.map((image) => (
-                  <div key={image.id} className="border-border overflow-hidden rounded-lg border">
-                    <img
-                      src={image.imageUrl}
-                      alt={`${project.title} screenshot`}
-                      loading="lazy"
-                      className="aspect-video w-full object-cover"
-                    />
-                  </div>
+                  <ImageLightbox
+                    key={image.id}
+                    src={image.imageUrl}
+                    alt={`${project.title} screenshot`}
+                    imgClassName="aspect-video"
+                  />
                 ))}
               </div>
             </div>

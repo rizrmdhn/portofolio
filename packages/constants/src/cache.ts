@@ -25,6 +25,7 @@ export const CACHE_KEYS = {
   PROJECT_LANDING: 'project:landing',
   PROJECT_SLUG_PREFIX: 'project:slug:',
   PROJECT_IMAGES_PREFIX: 'project:images:',
+  PROJECT_VIEW_DEDUP_PREFIX: 'project:view-dedup:',
   PROJECT_PREFIX: 'project:',
 
   // Resume
@@ -50,6 +51,8 @@ export type CacheKey = (typeof CACHE_KEYS)[keyof typeof CACHE_KEYS]
 
 /** Cache TTL values in seconds */
 export const CACHE_TTL = {
+  /** 24 hours - for daily de-duplication windows and very stable data */
+  DAY: 86400,
   /** 1 hour - for rarely changing reference data */
   LONG: 3600,
   /** 30 minutes - for moderately changing data */

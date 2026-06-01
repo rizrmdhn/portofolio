@@ -25,6 +25,17 @@ import { parseAndValidateSafe } from './utils/form-data-parser'
  *
  * @see https://trpc.io/docs/server/context
  */
+/**
+ * Best-effort client IP from the proxy headers, used only for coarse view
+ * de-duplication. Falls back to `'unknown'` so dedup degrades to "one view per
+ * window across all anonymous clients" rather than throwing.
+ */
+function getClientIp(headers: Headers): string {
+  const forwardedFor = headers.get('x-forwarded-for')
+  if (forwardedFor) return forwardedFor.split(',')[0]?.trim() || 'unknown'
+  return headers.get('x-real-ip')?.trim() || 'unknown'
+}
+
 export const createTRPCContext = async (context: Request, resHeaders = new Headers()) => {
   const session = await auth.api.getSession({
     headers: context.headers,
@@ -35,6 +46,7 @@ export const createTRPCContext = async (context: Request, resHeaders = new Heade
     session: session?.session,
     cache: cacheService,
     headers: resHeaders,
+    clientIp: getClientIp(context.headers),
   }
 }
 

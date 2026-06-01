@@ -146,10 +146,18 @@ export const projectRouter = createTRPCRouter({
   updateView: publicProcedure
     .input(z.object({ projectId: z.string(), slug: z.string() }))
     .mutation(async ({ ctx, input: { projectId, slug } }) => {
-      const [views, err] = await tryCatchAsync(() => incrementViews(projectId))
+      // De-duplicate views server-side: count at most one view per project per
+      // client IP per day, so refreshes, remounts and repeat visits don't
+      // inflate the counter. The cache key acts as a TTL marker.
+      const dedupKey = `${CACHE_KEYS.PROJECT_VIEW_DEDUP_PREFIX}${projectId}:${ctx.clientIp}`
+      const alreadyViewed = await ctx.cache.get<true>(dedupKey)
+      if (alreadyViewed) return
+
+      const [, err] = await tryCatchAsync(() => incrementViews(projectId))
       if (err) throw toTRPCError(err)
+
+      void ctx.cache.set(dedupKey, true, CACHE_TTL.DAY)
       void ctx.cache.delete(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`)
-      return views
     }),
 
   update: protectedProcedure
