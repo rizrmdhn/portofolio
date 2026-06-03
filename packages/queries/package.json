@@ -18,6 +18,7 @@
   "devDependencies": {
     "@portofolio/config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/ua-parser-js": "^0.7.39",
     "typescript": "catalog:"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "@portofolio/db": "workspace:*",
     "@portofolio/schema": "workspace:*",
     "@portofolio/types": "workspace:*",
-    "@portofolio/utils": "workspace:*"
+    "@portofolio/utils": "workspace:*",
+    "ua-parser-js": "^1.0.40"
   }
 }

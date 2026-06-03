@@ -47,6 +47,7 @@ export const createTRPCContext = async (context: Request, resHeaders = new Heade
     cache: cacheService,
     headers: resHeaders,
     clientIp: getClientIp(context.headers),
+    userAgent: context.headers.get('user-agent') ?? null,
   }
 }
 

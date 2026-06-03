@@ -1,14 +1,15 @@
-import { AllTimeProjectsCard } from "@/components/dashboard/all-time-projects-card";
-import { PageViewsChart } from "@/components/dashboard/page-views-chart";
-import { RecentActivityCard } from "@/components/dashboard/recent-activity-card";
-import { SocialLinkClickThroughCard } from "@/components/dashboard/social-link-click-through-card";
-import { StatsCards } from "@/components/dashboard/stats-cards";
-import { trpc } from "@/utils/trpc";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { AllTimeProjectsCard } from '@/components/dashboard/all-time-projects-card'
+import { DeviceBreakdownCard } from '@/components/dashboard/device-breakdown-card'
+import { PageViewsChart } from '@/components/dashboard/page-views-chart'
+import { RecentActivityCard } from '@/components/dashboard/recent-activity-card'
+import { SocialLinkClickThroughCard } from '@/components/dashboard/social-link-click-through-card'
+import { StatsCards } from '@/components/dashboard/stats-cards'
+import { trpc } from '@/utils/trpc'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 
-export const Route = createFileRoute("/(core)/dashboard/")({
+export const Route = createFileRoute('/(core)/dashboard/')({
   beforeLoad: async ({ context }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(
@@ -17,53 +18,43 @@ export const Route = createFileRoute("/(core)/dashboard/")({
       context.queryClient.ensureQueryData(
         context.trpc.socialLink.getSocialLinkClickThroughForDashboard.queryOptions(),
       ),
+      context.queryClient.ensureQueryData(context.trpc.dashboard.getStats.queryOptions()),
       context.queryClient.ensureQueryData(
-        context.trpc.dashboard.getStats.queryOptions(),
+        context.trpc.dashboard.getViewEvents.queryOptions({ range: '30d' }),
       ),
-      context.queryClient.ensureQueryData(
-        context.trpc.dashboard.getViewEvents.queryOptions({ range: "30d" }),
-      ),
-      context.queryClient.ensureQueryData(
-        context.trpc.dashboard.getRecentActivity.queryOptions(),
-      ),
-    ]);
+      context.queryClient.ensureQueryData(context.trpc.dashboard.getRecentActivity.queryOptions()),
+      context.queryClient.ensureQueryData(context.trpc.dashboard.getDeviceBreakdown.queryOptions()),
+    ])
   },
   component: RouteComponent,
-});
+})
 
 function RouteComponent() {
-  const [range, setRange] = useState<"7d" | "30d" | "90d">("30d");
+  const [range, setRange] = useState<'7d' | '30d' | '90d'>('30d')
 
   const { data: allTimeViewsProjects } = useSuspenseQuery(
     trpc.project.getAllTimeViewsProjects.queryOptions(),
-  );
+  )
   const { data: socialLinks } = useSuspenseQuery(
     trpc.socialLink.getSocialLinkClickThroughForDashboard.queryOptions(),
-  );
-  const { data: stats } = useSuspenseQuery(
-    trpc.dashboard.getStats.queryOptions(),
-  );
-  const { data: viewEvents = [] } = useQuery(
-    trpc.dashboard.getViewEvents.queryOptions({ range }),
-  );
-  const { data: recentActivity } = useSuspenseQuery(
-    trpc.dashboard.getRecentActivity.queryOptions(),
-  );
+  )
+  const { data: stats } = useSuspenseQuery(trpc.dashboard.getStats.queryOptions())
+  const { data: viewEvents = [] } = useQuery(trpc.dashboard.getViewEvents.queryOptions({ range }))
+  const { data: recentActivity } = useSuspenseQuery(trpc.dashboard.getRecentActivity.queryOptions())
+  const { data: deviceBreakdown } = useSuspenseQuery(
+    trpc.dashboard.getDeviceBreakdown.queryOptions(),
+  )
 
   return (
     <div className="flex flex-col gap-6">
       {/* Section 1 — Stats overview */}
-      <StatsCards
-        totalProjectViews={stats.totalProjectViews}
-        counts={stats.counts}
-      />
+      <StatsCards totalProjectViews={stats.totalProjectViews} counts={stats.counts} />
 
-      {/* Section 2 — Page views chart */}
-      <PageViewsChart
-        data={viewEvents}
-        range={range}
-        onRangeChange={setRange}
-      />
+      {/* Section 2 — Page views chart and Device breakdown */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <PageViewsChart data={viewEvents} range={range} onRangeChange={setRange} />
+        <DeviceBreakdownCard data={deviceBreakdown} />
+      </div>
 
       {/* Section 3 — Top projects + social links */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -71,8 +62,8 @@ function RouteComponent() {
         <SocialLinkClickThroughCard socialLinks={socialLinks} />
       </div>
 
-      {/* Section 4 — Recent activity */}
+      {/* Section 5 — Recent activity */}
       <RecentActivityCard activity={recentActivity} />
     </div>
-  );
+  )
 }

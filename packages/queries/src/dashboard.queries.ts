@@ -1,4 +1,4 @@
-import { count, gte, sql } from '@portofolio/db'
+import { count, desc, gte, isNotNull, sql } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
 import {
   certifications,
@@ -38,6 +38,23 @@ export async function getViewEventsByRange(range: ViewRange) {
   }
 
   return filled
+}
+
+export async function getDeviceBreakdown() {
+  const rows = await db
+    .select({
+      deviceType: viewEvents.deviceType,
+      views: count(),
+    })
+    .from(viewEvents)
+    .where(isNotNull(viewEvents.deviceType))
+    .groupBy(viewEvents.deviceType)
+    .orderBy(desc(count()))
+
+  return rows.map((r) => ({
+    deviceType: r.deviceType as string,
+    views: Number(r.views),
+  }))
 }
 
 export { getRecentActivity }

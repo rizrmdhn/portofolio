@@ -153,7 +153,9 @@ export const projectRouter = createTRPCRouter({
       const alreadyViewed = await ctx.cache.get<true>(dedupKey)
       if (alreadyViewed) return
 
-      const [, err] = await tryCatchAsync(() => incrementViews(projectId))
+      const [, err] = await tryCatchAsync(() =>
+        incrementViews(projectId, ctx.userAgent),
+      )
       if (err) throw toTRPCError(err)
 
       void ctx.cache.set(dedupKey, true, CACHE_TTL.DAY)
