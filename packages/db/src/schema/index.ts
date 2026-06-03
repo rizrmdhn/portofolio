@@ -452,10 +452,16 @@ export const viewEvents = createTable(
     })
       .$default(() => new Date().toISOString())
       .notNull(),
+    // Parsed from the request User-Agent at write time (see project-views.queries).
+    // 'mobile' | 'tablet' | 'desktop', browser/os names, or null when UA is absent.
+    deviceType: text('device_type'),
+    browser: text('browser'),
+    os: text('os'),
   },
   (table) => [
     index('view_events_project_id_idx').using('btree', table.projectId),
     index('view_events_viewed_at_idx').using('btree', table.viewedAt),
+    index('view_events_device_type_idx').using('btree', table.deviceType),
   ],
 )
 

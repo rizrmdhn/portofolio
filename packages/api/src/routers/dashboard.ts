@@ -1,5 +1,6 @@
 import {
   getDashboardStats,
+  getDeviceBreakdown,
   getRecentActivity,
   getViewEventsByRange,
 } from '@portofolio/queries/dashboard.queries'
@@ -33,5 +34,13 @@ export const dashboardRouter = createTRPCRouter({
     if (err) throw toTRPCError(err)
 
     return activity
+  }),
+
+  getDeviceBreakdown: protectedProcedure.query(async () => {
+    const [breakdown, err] = await tryCatchAsync(() => getDeviceBreakdown())
+
+    if (err) throw toTRPCError(err)
+
+    return breakdown
   }),
 })
