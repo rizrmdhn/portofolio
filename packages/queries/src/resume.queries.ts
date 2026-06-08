@@ -1,7 +1,8 @@
-import { eq, sql } from '@portofolio/db'
+import { eq } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
 import { applicationSettings } from '@portofolio/db/schema/index'
 import type { ResumeSettingType, ResumeSettingsJSONB } from '@portofolio/types/resume.types'
+import { insertReturning, updateReturning } from './utils/returning'
 
 const RESUME_SETTINGS_KEY = 'resume-settings'
 const RESUME_DOWNLOAD_COUNT_KEY = 'resume-download-count'
@@ -30,19 +31,20 @@ export async function setResumeSettings(value: ResumeSettingsJSONB): Promise<Res
   })
 
   if (existing) {
-    const [updated] = await db
-      .update(applicationSettings)
-      .set({ data: value })
-      .where(eq(applicationSettings.id, existing.id))
-      .returning()
+    const updated = await updateReturning(
+      db,
+      applicationSettings,
+      { data: value },
+      eq(applicationSettings.id, existing.id),
+    )
 
     return updated as ResumeSettingType
   }
 
-  const [created] = await db
-    .insert(applicationSettings)
-    .values({ key: RESUME_SETTINGS_KEY, data: value })
-    .returning()
+  const created = await insertReturning(db, applicationSettings, {
+    key: RESUME_SETTINGS_KEY,
+    data: value,
+  })
 
   return created as ResumeSettingType
 }
@@ -65,22 +67,22 @@ export async function incrementResumeDownloadCount(): Promise<number> {
   })
 
   if (existing) {
-    const [updated] = await db
-      .update(applicationSettings)
-      .set({
-        data: sql`jsonb_set(${applicationSettings.data}, '{count}',
-          (COALESCE((${applicationSettings.data}->>'count')::int, 0) + 1)::text::jsonb)`,
-      })
-      .where(eq(applicationSettings.id, existing.id))
-      .returning()
+    const nextCount = (existing.data as { count: number }).count + 1
+
+    const updated = await updateReturning(
+      db,
+      applicationSettings,
+      { data: { count: nextCount } },
+      eq(applicationSettings.id, existing.id),
+    )
 
     return (updated?.data as { count: number }).count
   }
 
-  const [created] = await db
-    .insert(applicationSettings)
-    .values({ key: RESUME_DOWNLOAD_COUNT_KEY, data: { count: 1 } })
-    .returning()
+  const created = await insertReturning(db, applicationSettings, {
+    key: RESUME_DOWNLOAD_COUNT_KEY,
+    data: { count: 1 },
+  })
 
   return (created?.data as { count: number }).count
 }

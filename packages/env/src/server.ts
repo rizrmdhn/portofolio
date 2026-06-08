@@ -10,6 +10,7 @@ export const env = createEnv({
   server: {
     APP_URL: z.url().default('http://localhost:3001'),
     DATABASE_URL: z.string().min(1),
+    DATABASE_PROVIDER: z.enum(['postgresql', 'mysql']).default('postgresql'),
     CORS_ORIGIN: z
       .string()
       .min(1)

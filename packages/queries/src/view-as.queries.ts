@@ -3,6 +3,7 @@ import { db } from "@portofolio/db/client";
 import { applicationSettings } from "@portofolio/db/schema/index";
 import type { ViewAsType } from "@portofolio/types/view-as.types";
 import { NotFoundError } from '@portofolio/errors';
+import { insertReturning, updateReturning } from './utils/returning';
 
 export async function getViewAsSetting(): Promise<ViewAsType> {
   const setting = await db.query.applicationSettings.findFirst({
@@ -26,22 +27,20 @@ export async function setViewAsSetting(
   });
 
   if (existingSetting) {
-    const [updatedSetting] = await db
-      .update(applicationSettings)
-      .set({ data: value })
-      .where(eq(applicationSettings.id, existingSetting.id))
-      .returning();
+    const updatedSetting = await updateReturning(
+      db,
+      applicationSettings,
+      { data: value },
+      eq(applicationSettings.id, existingSetting.id),
+    );
 
     return updatedSetting as ViewAsType;
   }
 
-  const [newSetting] = await db
-    .insert(applicationSettings)
-    .values({
-      key: "viewAs",
-      data: value,
-    })
-    .returning();
+  const newSetting = await insertReturning(db, applicationSettings, {
+    key: "viewAs",
+    data: value,
+  });
 
   return newSetting as ViewAsType;
 }

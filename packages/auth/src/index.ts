@@ -1,4 +1,5 @@
 import { hash, verify } from '@node-rs/argon2'
+import { activeDialect } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
 import * as schema from '@portofolio/db/schema/index'
 import { env } from '@portofolio/env/server'
@@ -10,7 +11,8 @@ import { v7 as uuidv7 } from 'uuid'
 export function createAuth() {
   return betterAuth({
     database: drizzleAdapter(db, {
-      provider: 'pg',
+      // better-auth uses 'pg' | 'mysql' | 'sqlite'; map from DATABASE_PROVIDER.
+      provider: activeDialect === 'mysql' ? 'mysql' : 'pg',
       schema,
     }),
     trustedOrigins: env.CORS_ORIGIN,

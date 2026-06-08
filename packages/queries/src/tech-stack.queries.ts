@@ -15,6 +15,8 @@ import type {
   UpdateTechStackItemInput,
 } from "@portofolio/schema/tech-stack.schema";
 import { NotFoundError, QueryError } from '@portofolio/errors';
+import { insensitiveContains } from "./utils/dialect";
+import { deleteReturning, insertReturning, updateReturning } from "./utils/returning";
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 
@@ -27,7 +29,7 @@ export async function getAllTechStackCategories() {
 
 export async function getTechStackCategoriesForDashboard(search?: string) {
   return db.query.techStackCategories.findMany({
-    where: { name: { ilike: `%${search ?? ""}%` } },
+    where: { name: insensitiveContains(search) },
     orderBy: { order: "asc" },
     with: { items: { orderBy: { order: "asc" } } },
   });
@@ -47,10 +49,7 @@ export async function getTechStackCategoryById(id: string) {
 export async function createTechStackCategory(
   data: CreateTechStackCategoryInput,
 ) {
-  const [category] = await db
-    .insert(techStackCategories)
-    .values(data)
-    .returning();
+  const category = await insertReturning(db, techStackCategories, data);
 
   if (!category) throw new QueryError("Failed to create tech stack category");
 
@@ -61,10 +60,7 @@ export async function createTechStackCategoryWithItems(
   data: CreateTechStackCategoryWithItemsInput,
 ) {
   return db.transaction(async (tx) => {
-    const [category] = await tx
-      .insert(techStackCategories)
-      .values({ name: data.name })
-      .returning();
+    const category = await insertReturning(tx, techStackCategories, { name: data.name });
 
     if (!category) throw new QueryError("Failed to create tech stack category");
 
@@ -87,11 +83,12 @@ export async function updateTechStackCategory(
 ) {
   await getTechStackCategoryById(data.id);
 
-  const [result] = await db
-    .update(techStackCategories)
-    .set({ name: data.name })
-    .where(eq(techStackCategories.id, data.id))
-    .returning();
+  const result = await updateReturning(
+    db,
+    techStackCategories,
+    { name: data.name },
+    eq(techStackCategories.id, data.id),
+  );
 
   if (!result) throw new QueryError("Failed to update tech stack category");
 
@@ -102,11 +99,12 @@ export async function updateTechStackCategoryWithItems(
   data: UpdateTechStackCategoryWithItemsInput,
 ) {
   return db.transaction(async (tx) => {
-    const [category] = await tx
-      .update(techStackCategories)
-      .set({ name: data.name })
-      .where(eq(techStackCategories.id, data.id))
-      .returning();
+    const category = await updateReturning(
+      tx,
+      techStackCategories,
+      { name: data.name },
+      eq(techStackCategories.id, data.id),
+    );
 
     if (!category) throw new QueryError("Failed to update tech stack category");
 
@@ -169,10 +167,7 @@ export async function reorderTechStackCategories(
 export async function deleteTechStackCategory(id: string) {
   await getTechStackCategoryById(id);
 
-  const [result] = await db
-    .delete(techStackCategories)
-    .where(eq(techStackCategories.id, id))
-    .returning();
+  const result = await deleteReturning(db, techStackCategories, eq(techStackCategories.id, id));
 
   if (!result) throw new QueryError("Failed to delete tech stack category");
 
@@ -190,7 +185,7 @@ export async function getTechStackItemById(id: string) {
 }
 
 export async function createTechStackItem(data: CreateTechStackItemInput) {
-  const [item] = await db.insert(techStackItems).values(data).returning();
+  const item = await insertReturning(db, techStackItems, data);
 
   if (!item) throw new QueryError("Failed to create tech stack item");
 
@@ -200,11 +195,12 @@ export async function createTechStackItem(data: CreateTechStackItemInput) {
 export async function updateTechStackItem(data: UpdateTechStackItemInput) {
   await getTechStackItemById(data.id);
 
-  const [result] = await db
-    .update(techStackItems)
-    .set({ name: data.name, proficiency: data.proficiency })
-    .where(eq(techStackItems.id, data.id))
-    .returning();
+  const result = await updateReturning(
+    db,
+    techStackItems,
+    { name: data.name, proficiency: data.proficiency },
+    eq(techStackItems.id, data.id),
+  );
 
   if (!result) throw new QueryError("Failed to update tech stack item");
 
@@ -227,10 +223,7 @@ export async function reorderTechStackItems(
 export async function deleteTechStackItem(id: string) {
   await getTechStackItemById(id);
 
-  const [result] = await db
-    .delete(techStackItems)
-    .where(eq(techStackItems.id, id))
-    .returning();
+  const result = await deleteReturning(db, techStackItems, eq(techStackItems.id, id));
 
   if (!result) throw new QueryError("Failed to delete tech stack item");
 

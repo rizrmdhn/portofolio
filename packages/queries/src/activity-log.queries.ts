@@ -5,6 +5,7 @@ import type {
 import { db } from "@portofolio/db/client";
 import { activityLog } from "@portofolio/db/schema/index";
 import { QueryError } from '@portofolio/errors';
+import { insertReturning } from './utils/returning';
 
 interface CreateActivityLogParams {
   action: ActivityLogAction;
@@ -16,10 +17,7 @@ interface CreateActivityLogParams {
 export async function createActivityLog(
   params: CreateActivityLogParams,
 ): Promise<void> {
-  const [row] = await db
-    .insert(activityLog)
-    .values(params)
-    .returning({ id: activityLog.id });
+  const row = await insertReturning(db, activityLog, params);
 
   if (!row) throw new QueryError("Failed to create activity log entry");
 }

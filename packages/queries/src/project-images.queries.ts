@@ -3,6 +3,7 @@ import { db } from '@portofolio/db/client'
 import { projectImages, projects } from '@portofolio/db/schema/index'
 import type { ReorderProjectImagesInput } from '@portofolio/schema/project.schema'
 import { NotFoundError, QueryError } from '@portofolio/errors'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
 export async function getProjectImages(projectId: string) {
   return db.query.projectImages.findMany({
@@ -33,15 +34,12 @@ export async function addProjectImage(projectId: string, imageUrl: string) {
     const isFirst = existing.length === 0
     const nextOrder = existing.reduce((max, img) => Math.max(max, img.order + 1), 0)
 
-    const [image] = await tx
-      .insert(projectImages)
-      .values({
-        projectId,
-        imageUrl,
-        isCover: isFirst,
-        order: nextOrder,
-      })
-      .returning()
+    const image = await insertReturning(tx, projectImages, {
+      projectId,
+      imageUrl,
+      isCover: isFirst,
+      order: nextOrder,
+    })
 
     if (!image) throw new QueryError('Failed to add project image')
 
@@ -60,7 +58,7 @@ export async function addProjectImage(projectId: string, imageUrl: string) {
  */
 export async function removeProjectImage(id: string) {
   return db.transaction(async (tx) => {
-    const [deleted] = await tx.delete(projectImages).where(eq(projectImages.id, id)).returning()
+    const deleted = await deleteReturning(tx, projectImages, eq(projectImages.id, id))
 
     if (!deleted) throw new QueryError('Failed to remove project image')
 
@@ -104,11 +102,7 @@ export async function setProjectCoverImage(id: string, projectId: string) {
       .set({ isCover: false })
       .where(and(eq(projectImages.projectId, projectId), ne(projectImages.id, id)))
 
-    const [cover] = await tx
-      .update(projectImages)
-      .set({ isCover: true })
-      .where(eq(projectImages.id, id))
-      .returning()
+    const cover = await updateReturning(tx, projectImages, { isCover: true }, eq(projectImages.id, id))
 
     if (!cover) throw new QueryError('Failed to set project cover image')
 

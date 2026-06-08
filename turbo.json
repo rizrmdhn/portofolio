@@ -54,6 +54,9 @@
     },
     "db:dump": {
       "cache": false
+    },
+    "db:import": {
+      "cache": false
     }
   }
 }

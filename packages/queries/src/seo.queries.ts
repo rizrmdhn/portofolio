@@ -3,6 +3,7 @@ import { db } from '@portofolio/db/client'
 import { applicationSettings } from '@portofolio/db/schema/index'
 import type { SeoPageSettings, SeoSettingsJSONB } from '@portofolio/types/seo.types'
 import { SEO_PAGES } from '@portofolio/types/seo.types'
+import { insertReturning, updateReturning } from './utils/returning'
 
 const SEO_SETTINGS_KEY = 'seo-settings'
 
@@ -33,19 +34,20 @@ export async function setSeoSettings(value: SeoSettingsJSONB): Promise<SeoSettin
   })
 
   if (existing) {
-    const [updated] = await db
-      .update(applicationSettings)
-      .set({ data: value })
-      .where(eq(applicationSettings.id, existing.id))
-      .returning()
+    const updated = await updateReturning(
+      db,
+      applicationSettings,
+      { data: value },
+      eq(applicationSettings.id, existing.id),
+    )
 
     return updated!.data as SeoSettingsJSONB
   }
 
-  const [created] = await db
-    .insert(applicationSettings)
-    .values({ key: SEO_SETTINGS_KEY, data: value })
-    .returning()
+  const created = await insertReturning(db, applicationSettings, {
+    key: SEO_SETTINGS_KEY,
+    data: value,
+  })
 
   return created!.data as SeoSettingsJSONB
 }

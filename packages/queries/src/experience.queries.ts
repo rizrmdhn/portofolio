@@ -7,6 +7,8 @@ import type {
   UpdateExperienceInput,
 } from '@portofolio/schema/experience.schema'
 import { NotFoundError, QueryError } from '@portofolio/errors'
+import { insensitiveContains } from './utils/dialect'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
 export async function getAllExperiences() {
   const results = await db.query.experiences.findMany({
@@ -21,9 +23,7 @@ export async function getAllExperiences() {
 export async function getExperiencesForDashboard(search?: string) {
   const results = await db.query.experiences.findMany({
     where: {
-      title: {
-        ilike: `%${search ?? ''}%`,
-      },
+      title: insensitiveContains(search),
     },
     orderBy: {
       order: 'asc',
@@ -46,7 +46,7 @@ export async function getExperienceById(id: string) {
 }
 
 export async function createExperience(data: CreateExperienceInput) {
-  const [experience] = await db.insert(experiences).values(data).returning()
+  const experience = await insertReturning(db, experiences, data)
 
   if (!experience) throw new QueryError('Failed to create experience')
 
@@ -56,11 +56,7 @@ export async function createExperience(data: CreateExperienceInput) {
 export async function updateExperience(data: UpdateExperienceInput) {
   await getExperienceById(data.id)
 
-  const [experience] = await db
-    .update(experiences)
-    .set(data)
-    .where(eq(experiences.id, data.id))
-    .returning()
+  const experience = await updateReturning(db, experiences, data, eq(experiences.id, data.id))
 
   if (!experience) throw new QueryError('Failed to update experience')
 
@@ -78,7 +74,7 @@ export async function reorderExperiences(items: ReorderExperiencesInput) {
 export async function deleteExperience(id: string) {
   await getExperienceById(id)
 
-  const [experience] = await db.delete(experiences).where(eq(experiences.id, id)).returning()
+  const experience = await deleteReturning(db, experiences, eq(experiences.id, id))
 
   if (!experience) throw new QueryError('Failed to delete experience')
 

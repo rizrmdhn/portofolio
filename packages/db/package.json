@@ -21,13 +21,16 @@
     "db:pull": "drizzle-kit pull",
     "db:seed": "tsx src/seed.ts",
     "db:dump": "tsx src/dump.ts",
+    "db:import": "tsx src/import.ts",
     "db:bkp-seed": "tsx src/bkp-seed.ts"
   },
   "dependencies": {
     "@portofolio/constants": "workspace:*",
     "@portofolio/env": "workspace:*",
+    "date-fns": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "1.0.0-rc.3",
+    "mysql2": "^3.11.0",
     "postgres": "^3.4.9",
     "zod": "catalog:",
     "uuid": "catalog:"
