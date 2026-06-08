@@ -15,13 +15,15 @@
  *               and updated in place when their id already exists.
  *
  * Conversions handled at the boundary:
- *   - timestamps: ISO `...T...Z` (Postgres) → `YYYY-MM-DD HH:MM:SS.SSS` UTC for
- *     MySQL `datetime`. Postgres accepts either form, so only MySQL is rewritten.
+ *   - timestamps: ISO `...T...Z` or Postgres `... ...+00` →
+ *     `YYYY-MM-DD HH:MM:SS.SSS` UTC for MySQL `datetime`. Postgres accepts
+ *     either form, so only MySQL is rewritten.
  *   - arrays / json / booleans / uuid: handled by drizzle on insert.
  * Ids and timestamps are inserted explicitly so `$default`/`uuidv7` do not
  * regenerate them.
  */
 import dotenv from 'dotenv'
+import { isValid, parseISO } from 'date-fns'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -72,7 +74,8 @@ const IMPORT_ORDER = [
 ] as const
 
 const CHUNK = 500
-const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+const TIMESTAMP_WITH_OPTIONAL_TZ =
+  /^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})(?:\.(\d{1,6}))?(?:\s?(Z|[+-]\d{2}(?::?\d{2})?))?$/
 
 function resolveDumpDir(): string {
   const arg = process.argv.slice(2).find((a) => !a.startsWith('--'))
@@ -95,9 +98,30 @@ function resolveDumpDir(): string {
   return resolve(process.cwd(), dumps[0]!)
 }
 
-/** ISO timestamp → MySQL `datetime` literal (UTC, millisecond precision). */
-function toMysqlDateTime(iso: string): string {
-  return new Date(iso).toISOString().slice(0, 23).replace('T', ' ')
+/** Timestamp string → MySQL `datetime` literal (UTC, millisecond precision). */
+function toMysqlDateTime(value: string): string {
+  const match = TIMESTAMP_WITH_OPTIONAL_TZ.exec(value)
+  if (!match) return value
+
+  const [, date, time, fraction = '', timezone] = match
+  const millis = fraction.padEnd(3, '0').slice(0, 3)
+
+  if (!timezone) {
+    return `${date} ${time}.${millis}`
+  }
+
+  const normalizedTimezone =
+    timezone === 'Z'
+      ? 'Z'
+      : `${timezone.slice(0, 3)}:${timezone.slice(3).replace(':', '').padEnd(2, '0')}`
+  const iso = `${date}T${time}.${millis}${normalizedTimezone}`
+  const parsed = parseISO(iso)
+
+  if (!isValid(parsed)) {
+    throw new Error(`Invalid timestamp in dump: ${value}`)
+  }
+
+  return parsed.toISOString().slice(0, 23).replace('T', ' ')
 }
 
 function normalizeRow(row: Row): Row {
@@ -105,7 +129,9 @@ function normalizeRow(row: Row): Row {
   const out: Row = {}
   for (const [key, value] of Object.entries(row)) {
     out[key] =
-      typeof value === 'string' && ISO_DATETIME.test(value) ? toMysqlDateTime(value) : value
+      typeof value === 'string' && TIMESTAMP_WITH_OPTIONAL_TZ.test(value)
+        ? toMysqlDateTime(value)
+        : value
   }
   return out
 }
