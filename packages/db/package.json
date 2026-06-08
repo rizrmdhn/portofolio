@@ -21,6 +21,7 @@
     "db:pull": "drizzle-kit pull",
     "db:seed": "tsx src/seed.ts",
     "db:dump": "tsx src/dump.ts",
+    "db:import": "tsx src/import.ts",
     "db:bkp-seed": "tsx src/bkp-seed.ts"
   },
   "dependencies": {

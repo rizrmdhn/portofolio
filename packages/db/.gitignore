@@ -37,3 +37,6 @@ src/bkp.sql
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# DB Dump Folder
+dump_*
