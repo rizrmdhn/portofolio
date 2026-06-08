@@ -7,6 +7,8 @@ import type {
   UpdateAchievementInput,
 } from '@portofolio/schema/achievement.schema'
 import { NotFoundError, QueryError } from '@portofolio/errors'
+import { insensitiveContains } from './utils/dialect'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
 export async function getAllAchievements() {
   return db.query.achievements.findMany({
@@ -17,7 +19,7 @@ export async function getAllAchievements() {
 export async function getAchievementsForDashboard(search?: string) {
   return db.query.achievements.findMany({
     where: {
-      title: { ilike: `%${search ?? ''}%` },
+      title: insensitiveContains(search),
     },
     orderBy: { order: 'asc' },
   })
@@ -30,27 +32,25 @@ export async function getAchievementById(id: string) {
 }
 
 export async function createAchievement(data: CreateAchievementInput) {
-  const [record] = await db
-    .insert(achievements)
-    .values({
-      ...data,
-      description: data.description ?? null,
-    })
-    .returning()
+  const record = await insertReturning(db, achievements, {
+    ...data,
+    description: data.description ?? null,
+  })
   if (!record) throw new QueryError('Failed to create achievement')
   return record
 }
 
 export async function updateAchievement(data: UpdateAchievementInput) {
   await getAchievementById(data.id)
-  const [record] = await db
-    .update(achievements)
-    .set({
+  const record = await updateReturning(
+    db,
+    achievements,
+    {
       ...data,
       description: data.description ?? null,
-    })
-    .where(eq(achievements.id, data.id))
-    .returning()
+    },
+    eq(achievements.id, data.id),
+  )
   if (!record) throw new QueryError('Failed to update achievement')
   return record
 }
@@ -65,7 +65,7 @@ export async function reorderAchievements(orderedIds: ReorderAchievementsInput) 
 
 export async function deleteAchievement(id: string) {
   await getAchievementById(id)
-  const [record] = await db.delete(achievements).where(eq(achievements.id, id)).returning()
+  const record = await deleteReturning(db, achievements, eq(achievements.id, id))
   if (!record) throw new QueryError('Failed to delete achievement')
   return record
 }

@@ -1,4 +1,6 @@
-// Example model schema from the Drizzle docs
+// Dialect-neutral schema. Each table is declared once using the logical column
+// helpers in ../dialect/columns; the active dialect (Postgres by default, or
+// MySQL when DATABASE_PROVIDER=mysql) is resolved at module load.
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import {
@@ -13,79 +15,97 @@ import {
   STATUS_TYPES,
 } from '@portofolio/constants'
 import { sql } from 'drizzle-orm'
+import { pgEnum } from 'drizzle-orm/pg-core'
+
 import {
-  boolean,
-  date,
-  index,
-  integer,
-  jsonb,
-  pgEnum,
-  text,
-  timestamp,
-  uuid,
-  varchar,
-} from 'drizzle-orm/pg-core'
-import { v7 as uuidv7 } from 'uuid'
-import { createTable } from '../utils'
+  authTs,
+  boolCol,
+  createTable,
+  dateCol,
+  enumCol,
+  idx,
+  indexableText,
+  intCol,
+  jsonCol,
+  longText,
+  str,
+  stringArray,
+  tsTz,
+  uuidPk,
+  uuidRef,
+} from '../dialect/columns'
+
+// Enum types are declared as Postgres `pgEnum`s (the canonical source for
+// drizzle-kit and value-union inference). On MySQL these objects are unused and
+// `enumCol` inlines an equivalent `enum(...)` from the same values.
+export const availabilityStatusEnum = pgEnum('availability_status_enum', AVAILABILITY_STATUS_TYPES)
+export const experienceEnum = pgEnum('experience_type', EXPERIENCE_TYPES)
+export const colorEnum = pgEnum('color_enum', COLOR_VALUES)
+export const projectStatusEnum = pgEnum('project_status_enum', STATUS_TYPES)
+export const experienceStatusEnum = pgEnum('experience_status_enum', EXPERIENCE_STATUS_TYPES)
+export const socialIconEnum = pgEnum('social_icon_enum', SOCIAL_ICON_NAMES)
+export const degreeEnum = pgEnum('degree_enum', DEGREE_TYPES)
+export const activityLogActionEnum = pgEnum('activity_log_action_enum', ACTIVITY_LOG_ACTIONS)
+export const activityLogEntityEnum = pgEnum('activity_log_entity_enum', ACTIVITY_LOG_ENTITIES)
 
 // ========== Better Auth tables ==========
 
 export const user = createTable('user', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  emailVerified: boolean('email_verified').notNull(),
-  image: text('image'),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull(),
+  id: indexableText('id').primaryKey(),
+  name: longText('name').notNull(),
+  email: indexableText('email').notNull().unique(),
+  emailVerified: boolCol('email_verified').notNull(),
+  image: longText('image'),
+  createdAt: authTs('created_at').notNull(),
+  updatedAt: authTs('updated_at').notNull(),
 })
 
 export const session = createTable(
   'session',
   {
-    id: text('id').primaryKey(),
-    userId: text('user_id')
+    id: indexableText('id').primaryKey(),
+    userId: indexableText('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
-    token: text('token').notNull().unique(),
-    expiresAt: timestamp('expires_at').notNull(),
-    ipAddress: text('ip_address'),
-    userAgent: text('user_agent'),
-    createdAt: timestamp('created_at').notNull(),
-    updatedAt: timestamp('updated_at').notNull(),
+    token: indexableText('token').notNull().unique(),
+    expiresAt: authTs('expires_at').notNull(),
+    ipAddress: longText('ip_address'),
+    userAgent: longText('user_agent'),
+    createdAt: authTs('created_at').notNull(),
+    updatedAt: authTs('updated_at').notNull(),
   },
-  (table) => [index('session_user_id_idx').using('btree', table.userId)],
+  (table) => [idx('session_user_id_idx', table.userId)],
 )
 
 export const account = createTable(
   'account',
   {
-    id: text('id').primaryKey(),
-    userId: text('user_id')
+    id: indexableText('id').primaryKey(),
+    userId: indexableText('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
-    accountId: text('account_id').notNull(),
-    providerId: text('provider_id').notNull(),
-    accessToken: text('access_token'),
-    refreshToken: text('refresh_token'),
-    idToken: text('id_token'),
-    accessTokenExpiresAt: timestamp('access_token_expires_at'),
-    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
-    scope: text('scope'),
-    password: text('password'),
-    createdAt: timestamp('created_at').notNull(),
-    updatedAt: timestamp('updated_at').notNull(),
+    accountId: longText('account_id').notNull(),
+    providerId: longText('provider_id').notNull(),
+    accessToken: longText('access_token'),
+    refreshToken: longText('refresh_token'),
+    idToken: longText('id_token'),
+    accessTokenExpiresAt: authTs('access_token_expires_at'),
+    refreshTokenExpiresAt: authTs('refresh_token_expires_at'),
+    scope: longText('scope'),
+    password: longText('password'),
+    createdAt: authTs('created_at').notNull(),
+    updatedAt: authTs('updated_at').notNull(),
   },
-  (table) => [index('account_user_id_idx').using('btree', table.userId)],
+  (table) => [idx('account_user_id_idx', table.userId)],
 )
 
 export const verification = createTable('verification', {
-  id: text('id').primaryKey(),
-  identifier: text('identifier').notNull(),
-  value: text('value').notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
-  createdAt: timestamp('created_at'),
-  updatedAt: timestamp('updated_at'),
+  id: indexableText('id').primaryKey(),
+  identifier: longText('identifier').notNull(),
+  value: longText('value').notNull(),
+  expiresAt: authTs('expires_at').notNull(),
+  createdAt: authTs('created_at'),
+  updatedAt: authTs('updated_at'),
 })
 
 /**
@@ -95,422 +115,278 @@ export const verification = createTable('verification', {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 
-export const availabilityStatusEnum = pgEnum('availability_status_enum', AVAILABILITY_STATUS_TYPES)
-
-export const experienceEnum = pgEnum('experience_type', EXPERIENCE_TYPES)
-
-export const colorEnum = pgEnum('color_enum', COLOR_VALUES)
-
-export const projectStatusEnum = pgEnum('project_status_enum', STATUS_TYPES)
-
-export const experienceStatusEnum = pgEnum('experience_status_enum', EXPERIENCE_STATUS_TYPES)
-
-export const socialIconEnum = pgEnum('social_icon_enum', SOCIAL_ICON_NAMES)
-
-export const degreeEnum = pgEnum('degree_enum', DEGREE_TYPES)
-
 export const projects = createTable(
   'projects',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
+    id: uuidPk(),
 
     // ========== Content fields ==========
-    title: varchar('title', { length: 256 }).notNull(),
-    slug: varchar('slug', { length: 256 }).notNull().unique(),
-    description: text('description').notNull(),
-    longDescription: text('long_description'),
-    tech: text('tech').array().notNull(),
+    title: str('title', 256).notNull(),
+    slug: str('slug', 256).notNull().unique(),
+    description: longText('description').notNull(),
+    longDescription: longText('long_description'),
+    tech: stringArray('tech').notNull(),
 
     // ========== Links ==========
-    githubUrl: text('github_url'),
-    liveUrl: text('live_url'),
-    playstoreUrl: text('playstore_url'),
-    appstoreUrl: text('appstore_url'),
+    githubUrl: longText('github_url'),
+    liveUrl: longText('live_url'),
+    playstoreUrl: longText('playstore_url'),
+    appstoreUrl: longText('appstore_url'),
 
     // ========== Media ==========
-    imageUrl: text('image_url'),
-    coverColor: colorEnum('cover_color').notNull().default('#ef4444'),
+    imageUrl: longText('image_url'),
+    coverColor: enumCol(colorEnum, 'cover_color').notNull().default('#ef4444'),
 
     // ========== Settings ==========
-    status: projectStatusEnum('status').notNull().default('draft'),
-    isVisible: boolean('is_visible').notNull().default(false),
-    featuredAtResume: boolean('featured_at_resume').notNull().default(false),
-    order: integer('order').default(0).notNull(),
+    status: enumCol(projectStatusEnum, 'status').notNull().default('draft'),
+    isVisible: boolCol('is_visible').notNull().default(false),
+    featuredAtResume: boolCol('featured_at_resume').notNull().default(false),
+    order: intCol('order').default(0).notNull(),
 
     // ========== Metadata ==========
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
-    featureAt: timestamp('feature_at', {
-      withTimezone: true,
-      mode: 'string',
-    }),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
+    featureAt: tsTz('feature_at'),
   },
-  (table) => [index('projects_id_idx').using('btree', table.id)],
+  (table) => [idx('projects_id_idx', table.id)],
 )
 
 export const projectImages = createTable(
   'project_images',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    projectId: uuid('project_id')
+    id: uuidPk(),
+    projectId: uuidRef('project_id')
       .notNull()
       .references(() => projects.id, { onDelete: 'cascade' }),
-    imageUrl: text('image_url').notNull(),
-    isCover: boolean('is_cover').notNull().default(false),
-    order: integer('order').default(0).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    imageUrl: longText('image_url').notNull(),
+    isCover: boolCol('is_cover').notNull().default(false),
+    order: intCol('order').default(0).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
   },
   (table) => [
-    index('project_images_id_idx').using('btree', table.id),
-    index('project_images_project_id_idx').using('btree', table.projectId),
+    idx('project_images_id_idx', table.id),
+    idx('project_images_project_id_idx', table.projectId),
   ],
 )
 
 export const experiences = createTable(
   'experiences',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
+    id: uuidPk(),
 
     // ========== Details ==========
-    title: varchar('title', { length: 256 }).notNull(),
-    description: text('description').notNull(),
-    company: varchar('company', { length: 256 }).notNull(),
-    location: varchar('location', { length: 256 }).notNull(),
-    type: experienceEnum('type').notNull(),
-    startDate: date('start_date').notNull(),
-    endDate: date('end_date'),
-    currentlyWorking: boolean('currently_working').default(false).notNull(),
-    skills: text('skills').array().notNull(),
+    title: str('title', 256).notNull(),
+    description: longText('description').notNull(),
+    company: str('company', 256).notNull(),
+    location: str('location', 256).notNull(),
+    type: enumCol(experienceEnum, 'type').notNull(),
+    startDate: dateCol('start_date').notNull(),
+    endDate: dateCol('end_date'),
+    currentlyWorking: boolCol('currently_working').default(false).notNull(),
+    skills: stringArray('skills').notNull(),
 
     // ========== Settings ==========
-    status: experienceStatusEnum('status').notNull().default('draft'),
-    order: integer('order').default(0).notNull(),
+    status: enumCol(experienceStatusEnum, 'status').notNull().default('draft'),
+    order: intCol('order').default(0).notNull(),
 
     // ========== Metadata ==========
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index('experiences_id_idx').using('btree', table.id)],
+  (table) => [idx('experiences_id_idx', table.id)],
 )
 
 export const certifications = createTable(
   'certifications',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    title: varchar('title', { length: 256 }).notNull(),
-    issuer: varchar('issuer', { length: 256 }).notNull(),
-    featuredAtResume: boolean('featured_at_resume').notNull().default(false),
-    certificateUrl: text('certificate_url'),
-    certificateId: varchar('certificate_id', { length: 256 }),
-    issueYear: timestamp('issue_year', {
-      withTimezone: true,
-      mode: 'string',
-    }).notNull(),
-    expiryYear: timestamp('expiry_year', {
-      withTimezone: true,
-      mode: 'string',
-    }),
-    status: experienceStatusEnum('status').notNull().default('draft'),
-    order: integer('order').default(0).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    id: uuidPk(),
+    title: str('title', 256).notNull(),
+    issuer: str('issuer', 256).notNull(),
+    featuredAtResume: boolCol('featured_at_resume').notNull().default(false),
+    certificateUrl: longText('certificate_url'),
+    certificateId: str('certificate_id', 256),
+    issueYear: tsTz('issue_year').notNull(),
+    expiryYear: tsTz('expiry_year'),
+    status: enumCol(experienceStatusEnum, 'status').notNull().default('draft'),
+    order: intCol('order').default(0).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index('certifications_id_idx').using('btree', table.id)],
+  (table) => [idx('certifications_id_idx', table.id)],
 )
 
 export const education = createTable(
   'education',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    institution: varchar('institution', { length: 256 }).notNull(),
-    degreeLevel: degreeEnum('degree_level').notNull(),
-    major: varchar('major', { length: 256 }).notNull(),
-    gpa: varchar('gpa', { length: 64 }),
-    startYear: timestamp('start_year', {
-      withTimezone: true,
-      mode: 'string',
-    }).notNull(),
-    endYear: timestamp('end_year', {
-      withTimezone: true,
-      mode: 'string',
-    }),
-    status: experienceStatusEnum('status').notNull().default('draft'),
-    order: integer('order').default(0).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    id: uuidPk(),
+    institution: str('institution', 256).notNull(),
+    degreeLevel: enumCol(degreeEnum, 'degree_level').notNull(),
+    major: str('major', 256).notNull(),
+    gpa: str('gpa', 64),
+    startYear: tsTz('start_year').notNull(),
+    endYear: tsTz('end_year'),
+    status: enumCol(experienceStatusEnum, 'status').notNull().default('draft'),
+    order: intCol('order').default(0).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index('education_id_idx').using('btree', table.id)],
+  (table) => [idx('education_id_idx', table.id)],
 )
 
 export const achievements = createTable(
   'achievements',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    title: varchar('title', { length: 256 }).notNull(),
-    issuer: varchar('issuer', { length: 256 }).notNull(),
-    description: text('description'),
-    date: timestamp('date', {
-      withTimezone: true,
-      mode: 'string',
-    }).notNull(),
-    status: experienceStatusEnum('status').notNull().default('draft'),
-    order: integer('order').default(0).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    id: uuidPk(),
+    title: str('title', 256).notNull(),
+    issuer: str('issuer', 256).notNull(),
+    description: longText('description'),
+    date: tsTz('date').notNull(),
+    status: enumCol(experienceStatusEnum, 'status').notNull().default('draft'),
+    order: intCol('order').default(0).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index('achievements_id_idx').using('btree', table.id)],
+  (table) => [idx('achievements_id_idx', table.id)],
 )
 
 export const profile = createTable(
   'profile',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    name: varchar('name', { length: 256 }).notNull(),
-    title: varchar('title', { length: 256 }).notNull(),
-    bio: text('bio').notNull(),
-    email: text('email').notNull(),
-    location: varchar('location', { length: 256 }),
-    availabilityStatus: availabilityStatusEnum('availability_status')
+    id: uuidPk(),
+    name: str('name', 256).notNull(),
+    title: str('title', 256).notNull(),
+    bio: longText('bio').notNull(),
+    email: longText('email').notNull(),
+    location: str('location', 256),
+    availabilityStatus: enumCol(availabilityStatusEnum, 'availability_status')
       .notNull()
       .default('unavailable'),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index('profile_id_idx').using('btree', table.id)],
+  (table) => [idx('profile_id_idx', table.id)],
 )
 
 export const applicationSettings = createTable(
   'application_settings',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    key: varchar('key', { length: 256 }).notNull().unique(),
-    data: jsonb('data').notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    id: uuidPk(),
+    key: str('key', 256).notNull().unique(),
+    data: jsonCol('data').notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
   (table) => [
-    index('application_settings_id_idx').using('btree', table.id),
-    index('application_settings_key_idx').using('btree', table.key),
+    idx('application_settings_id_idx', table.id),
+    idx('application_settings_key_idx', table.key),
   ],
 )
 
 export const techStackCategories = createTable(
   'tech_stack_categories',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    name: varchar('name', { length: 256 }).notNull(),
-    order: integer('order').default(0).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    id: uuidPk(),
+    name: str('name', 256).notNull(),
+    order: intCol('order').default(0).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index('tech_stack_categories_id_idx').using('btree', table.id)],
+  (table) => [idx('tech_stack_categories_id_idx', table.id)],
 )
 
 export const techStackItems = createTable(
   'tech_stack_items',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    categoryId: uuid('category_id')
+    id: uuidPk(),
+    categoryId: uuidRef('category_id')
       .notNull()
       .references(() => techStackCategories.id, { onDelete: 'cascade' }),
-    name: varchar('name', { length: 256 }).notNull(),
-    proficiency: integer('proficiency').default(1).notNull(),
-    order: integer('order').default(0).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    name: str('name', 256).notNull(),
+    proficiency: intCol('proficiency').default(1).notNull(),
+    order: intCol('order').default(0).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
   (table) => [
-    index('tech_stack_items_id_idx').using('btree', table.id),
-    index('tech_stack_items_category_id_idx').using('btree', table.categoryId),
+    idx('tech_stack_items_id_idx', table.id),
+    idx('tech_stack_items_category_id_idx', table.categoryId),
   ],
 )
-
-export const activityLogActionEnum = pgEnum('activity_log_action_enum', ACTIVITY_LOG_ACTIONS)
-
-export const activityLogEntityEnum = pgEnum('activity_log_entity_enum', ACTIVITY_LOG_ENTITIES)
 
 export const viewEvents = createTable(
   'view_events',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    projectId: uuid('project_id')
+    id: uuidPk(),
+    projectId: uuidRef('project_id')
       .notNull()
       .references(() => projects.id, { onDelete: 'cascade' }),
-    viewedAt: timestamp('viewed_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    viewedAt: tsTz('viewed_at')
       .$default(() => new Date().toISOString())
       .notNull(),
     // Parsed from the request User-Agent at write time (see project-views.queries).
     // 'mobile' | 'tablet' | 'desktop', browser/os names, or null when UA is absent.
-    deviceType: text('device_type'),
-    browser: text('browser'),
-    os: text('os'),
+    deviceType: indexableText('device_type'),
+    browser: longText('browser'),
+    os: longText('os'),
   },
   (table) => [
-    index('view_events_project_id_idx').using('btree', table.projectId),
-    index('view_events_viewed_at_idx').using('btree', table.viewedAt),
-    index('view_events_device_type_idx').using('btree', table.deviceType),
+    idx('view_events_project_id_idx', table.projectId),
+    idx('view_events_viewed_at_idx', table.viewedAt),
+    idx('view_events_device_type_idx', table.deviceType),
   ],
 )
 
 export const activityLog = createTable(
   'activity_log',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    action: activityLogActionEnum('action').notNull(),
-    entity: activityLogEntityEnum('entity').notNull(),
-    entityId: uuid('entity_id').notNull(),
-    entityTitle: varchar('entity_title', { length: 256 }).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    id: uuidPk(),
+    action: enumCol(activityLogActionEnum, 'action').notNull(),
+    entity: enumCol(activityLogEntityEnum, 'entity').notNull(),
+    entityId: uuidRef('entity_id').notNull(),
+    entityTitle: str('entity_title', 256).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => new Date().toISOString())
       .notNull(),
   },
   (table) => [
-    index('activity_log_id_idx').using('btree', table.id),
-    index('activity_log_created_at_idx').using('btree', table.createdAt),
+    idx('activity_log_id_idx', table.id),
+    idx('activity_log_created_at_idx', table.createdAt),
   ],
 )
 
 export const socialLinks = createTable(
   'social_links',
   {
-    id: uuid('id')
-      .primaryKey()
-      .notNull()
-      .$default(() => uuidv7()),
-    title: varchar('title', { length: 256 }).notNull(),
-    url: text('url').notNull(),
-    icon: socialIconEnum('icon').notNull(),
-    order: integer('order').default(0).notNull(),
-    clickCount: integer('click_count').default(0).notNull(),
-    createdAt: timestamp('created_at', {
-      withTimezone: true,
-      mode: 'string',
-    })
+    id: uuidPk(),
+    title: str('title', 256).notNull(),
+    url: longText('url').notNull(),
+    icon: enumCol(socialIconEnum, 'icon').notNull(),
+    order: intCol('order').default(0).notNull(),
+    clickCount: intCol('click_count').default(0).notNull(),
+    createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp('updated_at', {
-      withTimezone: true,
-      mode: 'string',
-    }).$onUpdate(() => new Date().toISOString()),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [index('social_links_id_idx').using('btree', table.id)],
+  (table) => [idx('social_links_id_idx', table.id)],
 )

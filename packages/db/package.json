@@ -28,6 +28,7 @@
     "@portofolio/env": "workspace:*",
     "dotenv": "catalog:",
     "drizzle-orm": "1.0.0-rc.3",
+    "mysql2": "^3.11.0",
     "postgres": "^3.4.9",
     "zod": "catalog:",
     "uuid": "catalog:"

@@ -7,6 +7,8 @@ import type {
   UpdateCertificationInput,
 } from '@portofolio/schema/certifcation.schema'
 import { NotFoundError, QueryError } from '@portofolio/errors'
+import { insensitiveContains } from './utils/dialect'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
 export async function getAllCertifications() {
   const certificationsList = await db.query.certifications.findMany({
@@ -21,9 +23,7 @@ export async function getAllCertifications() {
 export async function getCertificationsForDashboard(search?: string) {
   const certificationsList = await db.query.certifications.findMany({
     where: {
-      title: {
-        ilike: `%${search ?? ''}%`,
-      },
+      title: insensitiveContains(search),
     },
     orderBy: {
       order: 'asc',
@@ -59,14 +59,11 @@ export async function getCertificationById(id: string) {
 }
 
 export async function createCertification(data: CreateCertificationInput) {
-  const [certification] = await db
-    .insert(certifications)
-    .values({
-      ...data,
-      issueYear: data.issueYear,
-      expiryYear: data.expiryYear ?? null,
-    })
-    .returning()
+  const certification = await insertReturning(db, certifications, {
+    ...data,
+    issueYear: data.issueYear,
+    expiryYear: data.expiryYear ?? null,
+  })
 
   if (!certification) throw new QueryError('Failed to create certification')
 
@@ -76,15 +73,16 @@ export async function createCertification(data: CreateCertificationInput) {
 export async function updateCertification(data: UpdateCertificationInput) {
   await getCertificationById(data.id)
 
-  const [certification] = await db
-    .update(certifications)
-    .set({
+  const certification = await updateReturning(
+    db,
+    certifications,
+    {
       ...data,
       issueYear: data.issueYear,
       expiryYear: data.expiryYear ?? null,
-    })
-    .where(eq(certifications.id, data.id))
-    .returning()
+    },
+    eq(certifications.id, data.id),
+  )
 
   if (!certification) throw new QueryError('Failed to update certification')
 
@@ -100,11 +98,12 @@ export async function reorderCertifications(orderedIds: ReorderCertificationsInp
 }
 
 export async function toggleCertificationFeaturedAtResume(id: string, value: boolean) {
-  const [result] = await db
-    .update(certifications)
-    .set({ featuredAtResume: value })
-    .where(eq(certifications.id, id))
-    .returning()
+  const result = await updateReturning(
+    db,
+    certifications,
+    { featuredAtResume: value },
+    eq(certifications.id, id),
+  )
 
   if (!result) throw new QueryError('Failed to update featuredAtResume')
 
@@ -114,10 +113,7 @@ export async function toggleCertificationFeaturedAtResume(id: string, value: boo
 export async function deleteCertification(id: string) {
   await getCertificationById(id)
 
-  const [certification] = await db
-    .delete(certifications)
-    .where(eq(certifications.id, id))
-    .returning()
+  const certification = await deleteReturning(db, certifications, eq(certifications.id, id))
 
   if (!certification) throw new QueryError('Failed to delete certification')
 

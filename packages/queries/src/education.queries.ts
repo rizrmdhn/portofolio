@@ -7,6 +7,8 @@ import type {
   UpdateEducationInput,
 } from '@portofolio/schema/education.schema'
 import { NotFoundError, QueryError } from '@portofolio/errors'
+import { insensitiveContains } from './utils/dialect'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
 export async function getAllEducation() {
   return db.query.education.findMany({
@@ -17,7 +19,7 @@ export async function getAllEducation() {
 export async function getEducationForDashboard(search?: string) {
   return db.query.education.findMany({
     where: {
-      institution: { ilike: `%${search ?? ''}%` },
+      institution: insensitiveContains(search),
     },
     orderBy: { order: 'asc' },
   })
@@ -30,29 +32,27 @@ export async function getEducationById(id: string) {
 }
 
 export async function createEducation(data: CreateEducationInput) {
-  const [record] = await db
-    .insert(education)
-    .values({
-      ...data,
-      endYear: data.endYear ?? null,
-      gpa: data.gpa ?? null,
-    })
-    .returning()
+  const record = await insertReturning(db, education, {
+    ...data,
+    endYear: data.endYear ?? null,
+    gpa: data.gpa ?? null,
+  })
   if (!record) throw new QueryError('Failed to create education')
   return record
 }
 
 export async function updateEducation(data: UpdateEducationInput) {
   await getEducationById(data.id)
-  const [record] = await db
-    .update(education)
-    .set({
+  const record = await updateReturning(
+    db,
+    education,
+    {
       ...data,
       endYear: data.endYear ?? null,
       gpa: data.gpa ?? null,
-    })
-    .where(eq(education.id, data.id))
-    .returning()
+    },
+    eq(education.id, data.id),
+  )
   if (!record) throw new QueryError('Failed to update education')
   return record
 }
@@ -67,7 +67,7 @@ export async function reorderEducation(orderedIds: ReorderEducationInput) {
 
 export async function deleteEducation(id: string) {
   await getEducationById(id)
-  const [record] = await db.delete(education).where(eq(education.id, id)).returning()
+  const record = await deleteReturning(db, education, eq(education.id, id))
   if (!record) throw new QueryError('Failed to delete education')
   return record
 }

@@ -7,6 +7,8 @@ import type {
   UpdateSocialLinkInput,
 } from '@portofolio/schema/social-link.schema'
 import { NotFoundError, QueryError } from '@portofolio/errors'
+import { insensitiveContains } from './utils/dialect'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
 export async function getAllSocialLinks() {
   const socialLinkItems = await db.query.socialLinks.findMany({
@@ -21,9 +23,7 @@ export async function getAllSocialLinks() {
 export async function getSocialLinksForDashboard(search?: string) {
   const socialLinkItems = await db.query.socialLinks.findMany({
     where: {
-      title: {
-        ilike: `%${search ?? ''}%`,
-      },
+      title: insensitiveContains(search),
     },
     orderBy: {
       order: 'asc',
@@ -64,10 +64,7 @@ export async function getSocialLinkById(id: string) {
 }
 
 export async function createSocialLink(data: CreateSocialLinkInput) {
-  const [socialLinkItem] = await db
-    .insert(socialLinks)
-    .values({ ...data })
-    .returning()
+  const socialLinkItem = await insertReturning(db, socialLinks, { ...data })
 
   if (!socialLinkItem) throw new QueryError('Failed to create social link item')
 
@@ -88,11 +85,12 @@ export async function incrementClickCount(id: string) {
 export async function updateSocialLink(data: UpdateSocialLinkInput) {
   await getSocialLinkById(data.id)
 
-  const [socialLinkItem] = await db
-    .update(socialLinks)
-    .set({ ...data })
-    .where(eq(socialLinks.id, data.id))
-    .returning()
+  const socialLinkItem = await updateReturning(
+    db,
+    socialLinks,
+    { ...data },
+    eq(socialLinks.id, data.id),
+  )
 
   if (!socialLinkItem) throw new QueryError('Failed to update social link item')
 
@@ -110,7 +108,7 @@ export async function reorderSocialLinks(data: ReorderSocialLinksInput) {
 export async function deleteSocialLink(id: string) {
   await getSocialLinkById(id)
 
-  const [result] = await db.delete(socialLinks).where(eq(socialLinks.id, id)).returning()
+  const result = await deleteReturning(db, socialLinks, eq(socialLinks.id, id))
 
   if (!result) throw new QueryError('Failed to delete social link item')
 

@@ -2,6 +2,7 @@ import { eq } from "@portofolio/db";
 import { db } from "@portofolio/db/client";
 import { applicationSettings } from "@portofolio/db/schema/index";
 import type { CVSettingType } from "@portofolio/types/cv.types";
+import { insertReturning, updateReturning } from "./utils/returning";
 
 const CV_SETTING_KEY = "cv";
 
@@ -29,22 +30,20 @@ export async function setCVSetting(
   });
 
   if (existingSetting) {
-    const [updatedSetting] = await db
-      .update(applicationSettings)
-      .set({ data: value })
-      .where(eq(applicationSettings.id, existingSetting.id))
-      .returning();
+    const updatedSetting = await updateReturning(
+      db,
+      applicationSettings,
+      { data: value },
+      eq(applicationSettings.id, existingSetting.id),
+    );
 
     return updatedSetting as CVSettingType;
   }
 
-  const [newSetting] = await db
-    .insert(applicationSettings)
-    .values({
-      key: CV_SETTING_KEY,
-      data: value,
-    })
-    .returning();
+  const newSetting = await insertReturning(db, applicationSettings, {
+    key: CV_SETTING_KEY,
+    data: value,
+  });
 
   return newSetting as CVSettingType;
 }

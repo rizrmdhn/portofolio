@@ -1,25 +1,22 @@
 import {
-  
-  
   and,
   between,
   eq,
   gt,
   gte,
-  ilike,
   inArray,
   isNotNull,
   isNull,
   lt,
   lte,
   ne,
-  notIlike,
   notInArray,
   or
 } from "@portofolio/db"
 import type {SQL, Table} from "@portofolio/db";
 import type { FilterSchema } from "@portofolio/schema/filter.schema"
 import type { JoinOperator } from "@portofolio/types/data-table.types"
+import { ciLike, ciNotLike } from "./dialect"
 
 interface FilterColumnsOptions<T extends Table> {
   table: T
@@ -52,9 +49,9 @@ export function filterColumns<T extends Table>({
         case "gte":
           return gte(column, filter.value)
         case "ilike":
-          return ilike(column, `%${filter.value}%`)
+          return ciLike(column, `%${filter.value}%`)
         case "notIlike":
-          return notIlike(column, `%${filter.value}%`)
+          return ciNotLike(column, `%${filter.value}%`)
         case "isEmpty":
           return isNull(column)
         case "isNotEmpty":

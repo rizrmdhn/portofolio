@@ -3,6 +3,7 @@ import { db } from "@portofolio/db/client";
 import { profile } from "@portofolio/db/schema/index";
 import type { UpdateProfileInput } from "@portofolio/schema/profile.schema";
 import { NotFoundError, QueryError } from '@portofolio/errors';
+import { updateReturning } from './utils/returning';
 
 export async function getProfile() {
   const result = await db.query.profile.findFirst();
@@ -13,11 +14,7 @@ export async function getProfile() {
 }
 
 export async function updateProfile(data: UpdateProfileInput) {
-  const [result] = await db
-    .update(profile)
-    .set(data)
-    .where(eq(profile.id, data.id))
-    .returning();
+  const result = await updateReturning(db, profile, data, eq(profile.id, data.id));
 
   if (!result) throw new QueryError("Failed to update profile");
 

@@ -1,0 +1,2804 @@
+{
+  "version": "6",
+  "dialect": "mysql",
+  "id": "b47f3eb1-8c15-4918-a2d0-700b4d140ebf",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "ddl": [
+    {
+      "name": "account",
+      "entityType": "tables"
+    },
+    {
+      "name": "achievements",
+      "entityType": "tables"
+    },
+    {
+      "name": "activity_log",
+      "entityType": "tables"
+    },
+    {
+      "name": "application_settings",
+      "entityType": "tables"
+    },
+    {
+      "name": "certifications",
+      "entityType": "tables"
+    },
+    {
+      "name": "education",
+      "entityType": "tables"
+    },
+    {
+      "name": "experiences",
+      "entityType": "tables"
+    },
+    {
+      "name": "profile",
+      "entityType": "tables"
+    },
+    {
+      "name": "project_images",
+      "entityType": "tables"
+    },
+    {
+      "name": "projects",
+      "entityType": "tables"
+    },
+    {
+      "name": "session",
+      "entityType": "tables"
+    },
+    {
+      "name": "social_links",
+      "entityType": "tables"
+    },
+    {
+      "name": "tech_stack_categories",
+      "entityType": "tables"
+    },
+    {
+      "name": "tech_stack_items",
+      "entityType": "tables"
+    },
+    {
+      "name": "user",
+      "entityType": "tables"
+    },
+    {
+      "name": "verification",
+      "entityType": "tables"
+    },
+    {
+      "name": "view_events",
+      "entityType": "tables"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "account_id",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "provider_id",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "access_token",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "refresh_token",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id_token",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "datetime",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "access_token_expires_at",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "datetime",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "refresh_token_expires_at",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "scope",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "password",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "account"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "issuer",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "date",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "enum('draft','published')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "'draft'",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "achievements"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "activity_log"
+    },
+    {
+      "type": "enum('created','updated','deleted')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "action",
+      "entityType": "columns",
+      "table": "activity_log"
+    },
+    {
+      "type": "enum('project','experience','certification','techStackCategory','techStackItem','socialLink','profile','education','achievement')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "entity",
+      "entityType": "columns",
+      "table": "activity_log"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "entity_id",
+      "entityType": "columns",
+      "table": "activity_log"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "entity_title",
+      "entityType": "columns",
+      "table": "activity_log"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "activity_log"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "application_settings"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "key",
+      "entityType": "columns",
+      "table": "application_settings"
+    },
+    {
+      "type": "json",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "data",
+      "entityType": "columns",
+      "table": "application_settings"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "application_settings"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "application_settings"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "issuer",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "boolean",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "false",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "featured_at_resume",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "certificate_url",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "certificate_id",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "issue_year",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "expiry_year",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "enum('draft','published')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "'draft'",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "certifications"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "institution",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "enum('bachelor','master','doctorate','diploma','associate','high-school','bootcamp','other')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "degree_level",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "major",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "varchar(64)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "gpa",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "start_year",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "end_year",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "enum('draft','published')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "'draft'",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "education"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "company",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "location",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "enum('internship','full-time','freelance','part-time','contract','temporary','volunteer')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "type",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "date",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "start_date",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "date",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "end_date",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "boolean",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "false",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "currently_working",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "json",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "skills",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "enum('draft','published')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "'draft'",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "experiences"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "bio",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "email",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "location",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "enum('unavailable','available','freelance','limited')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "'unavailable'",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "availability_status",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "profile"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "project_images"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "project_id",
+      "entityType": "columns",
+      "table": "project_images"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "image_url",
+      "entityType": "columns",
+      "table": "project_images"
+    },
+    {
+      "type": "boolean",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "false",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "is_cover",
+      "entityType": "columns",
+      "table": "project_images"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "project_images"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "project_images"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "long_description",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "json",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "tech",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "github_url",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "live_url",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "playstore_url",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "appstore_url",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "image_url",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "enum('#ef4444','#f97316','#f59e0b','#eab308','#84cc16','#22c55e','#10b981','#14b8a6','#06b6d4','#0ea5e9','#3b82f6','#6366f1','#8b5cf6','#a855f7','#d946ef','#ec4899','#f43f5e','#64748b','#6b7280','#78716c','#737373','#71717a','#ffffff')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "'#ef4444'",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "cover_color",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "enum('draft','published','archived')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "'draft'",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "boolean",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "false",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "is_visible",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "boolean",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "false",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "featured_at_resume",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "feature_at",
+      "entityType": "columns",
+      "table": "projects"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "token",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "expires_at",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "ip_address",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "user_agent",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "session"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "url",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "enum('portfolio','facebook','x','instagram','linkedin','github','youtube','tiktok','discord','telegram','whatsapp')",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "icon",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "click_count",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "social_links"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "tech_stack_categories"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "tech_stack_categories"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "tech_stack_categories"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "tech_stack_categories"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "tech_stack_categories"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "tech_stack_items"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "category_id",
+      "entityType": "columns",
+      "table": "tech_stack_items"
+    },
+    {
+      "type": "varchar(256)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "tech_stack_items"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "1",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "proficiency",
+      "entityType": "columns",
+      "table": "tech_stack_items"
+    },
+    {
+      "type": "int",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": "0",
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "order",
+      "entityType": "columns",
+      "table": "tech_stack_items"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "tech_stack_items"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "tech_stack_items"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "email",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "boolean",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "email_verified",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "image",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "user"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "verification"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "identifier",
+      "entityType": "columns",
+      "table": "verification"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "value",
+      "entityType": "columns",
+      "table": "verification"
+    },
+    {
+      "type": "datetime",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "expires_at",
+      "entityType": "columns",
+      "table": "verification"
+    },
+    {
+      "type": "datetime",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "verification"
+    },
+    {
+      "type": "datetime",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "verification"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "view_events"
+    },
+    {
+      "type": "varchar(36)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "project_id",
+      "entityType": "columns",
+      "table": "view_events"
+    },
+    {
+      "type": "datetime(3)",
+      "notNull": true,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "viewed_at",
+      "entityType": "columns",
+      "table": "view_events"
+    },
+    {
+      "type": "varchar(255)",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "device_type",
+      "entityType": "columns",
+      "table": "view_events"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "browser",
+      "entityType": "columns",
+      "table": "view_events"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoIncrement": false,
+      "default": null,
+      "onUpdateNow": false,
+      "onUpdateNowFsp": null,
+      "charSet": null,
+      "collation": null,
+      "generated": null,
+      "name": "os",
+      "entityType": "columns",
+      "table": "view_events"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "account",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "achievements",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "activity_log",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "application_settings",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "certifications",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "education",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "experiences",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "profile",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "project_images",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "projects",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "session",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "social_links",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "tech_stack_categories",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "tech_stack_items",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "user",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "verification",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "name": "PRIMARY",
+      "table": "view_events",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        {
+          "value": "key",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": false,
+      "name": "key_unique",
+      "table": "application_settings",
+      "entityType": "indexes"
+    },
+    {
+      "columns": [
+        {
+          "value": "slug",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": false,
+      "name": "slug_unique",
+      "table": "projects",
+      "entityType": "indexes"
+    },
+    {
+      "columns": [
+        {
+          "value": "token",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": false,
+      "name": "token_unique",
+      "table": "session",
+      "entityType": "indexes"
+    },
+    {
+      "columns": [
+        {
+          "value": "email",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": false,
+      "name": "email_unique",
+      "table": "user",
+      "entityType": "indexes"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "account_user_id_idx",
+      "entityType": "indexes",
+      "table": "account"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "achievements_id_idx",
+      "entityType": "indexes",
+      "table": "achievements"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "activity_log_id_idx",
+      "entityType": "indexes",
+      "table": "activity_log"
+    },
+    {
+      "columns": [
+        {
+          "value": "created_at",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "activity_log_created_at_idx",
+      "entityType": "indexes",
+      "table": "activity_log"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "application_settings_id_idx",
+      "entityType": "indexes",
+      "table": "application_settings"
+    },
+    {
+      "columns": [
+        {
+          "value": "key",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "application_settings_key_idx",
+      "entityType": "indexes",
+      "table": "application_settings"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "certifications_id_idx",
+      "entityType": "indexes",
+      "table": "certifications"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "education_id_idx",
+      "entityType": "indexes",
+      "table": "education"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "experiences_id_idx",
+      "entityType": "indexes",
+      "table": "experiences"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "profile_id_idx",
+      "entityType": "indexes",
+      "table": "profile"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "project_images_id_idx",
+      "entityType": "indexes",
+      "table": "project_images"
+    },
+    {
+      "columns": [
+        {
+          "value": "project_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "project_images_project_id_idx",
+      "entityType": "indexes",
+      "table": "project_images"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "projects_id_idx",
+      "entityType": "indexes",
+      "table": "projects"
+    },
+    {
+      "columns": [
+        {
+          "value": "user_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "session_user_id_idx",
+      "entityType": "indexes",
+      "table": "session"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "social_links_id_idx",
+      "entityType": "indexes",
+      "table": "social_links"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "tech_stack_categories_id_idx",
+      "entityType": "indexes",
+      "table": "tech_stack_categories"
+    },
+    {
+      "columns": [
+        {
+          "value": "id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "tech_stack_items_id_idx",
+      "entityType": "indexes",
+      "table": "tech_stack_items"
+    },
+    {
+      "columns": [
+        {
+          "value": "category_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "tech_stack_items_category_id_idx",
+      "entityType": "indexes",
+      "table": "tech_stack_items"
+    },
+    {
+      "columns": [
+        {
+          "value": "project_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "view_events_project_id_idx",
+      "entityType": "indexes",
+      "table": "view_events"
+    },
+    {
+      "columns": [
+        {
+          "value": "viewed_at",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "view_events_viewed_at_idx",
+      "entityType": "indexes",
+      "table": "view_events"
+    },
+    {
+      "columns": [
+        {
+          "value": "device_type",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "using": null,
+      "algorithm": null,
+      "lock": null,
+      "nameExplicit": true,
+      "name": "view_events_device_type_idx",
+      "entityType": "indexes",
+      "table": "view_events"
+    },
+    {
+      "columns": [
+        "user_id"
+      ],
+      "tableTo": "user",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "account_user_id_user_id_fkey",
+      "entityType": "fks",
+      "table": "account"
+    },
+    {
+      "columns": [
+        "project_id"
+      ],
+      "tableTo": "projects",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "project_images_project_id_projects_id_fkey",
+      "entityType": "fks",
+      "table": "project_images"
+    },
+    {
+      "columns": [
+        "user_id"
+      ],
+      "tableTo": "user",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "session_user_id_user_id_fkey",
+      "entityType": "fks",
+      "table": "session"
+    },
+    {
+      "columns": [
+        "category_id"
+      ],
+      "tableTo": "tech_stack_categories",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "tech_stack_items_category_id_tech_stack_categories_id_fkey",
+      "entityType": "fks",
+      "table": "tech_stack_items"
+    },
+    {
+      "columns": [
+        "project_id"
+      ],
+      "tableTo": "projects",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "view_events_project_id_projects_id_fkey",
+      "entityType": "fks",
+      "table": "view_events"
+    }
+  ],
+  "renames": []
+}

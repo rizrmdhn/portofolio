@@ -1,6 +1,8 @@
-import { and, count, desc, eq, getColumns, gte, ilike, isNotNull, sql } from '@portofolio/db'
+import { and, count, desc, eq, getColumns, gte, isNotNull, sql } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
 import { projects, viewEvents } from '@portofolio/db/schema/index'
+import { ciLike } from './utils/dialect'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 import type {
   CreateProjectInput,
   GetProjectsInput,
@@ -18,9 +20,9 @@ export async function getPaginatedProjects(input: GetProjectsInput) {
     input,
     select: {
       ...getColumns(projects),
-      views: sql<number>`(select count(*) from "view_events" where "project_id" = "projects"."id")`,
+      views: sql<number>`(select count(*) from ${viewEvents} where ${viewEvents.projectId} = ${projects.id})`,
     },
-    searchConditions: [input.search ? ilike(projects.title, `%${input.search}%`) : undefined],
+    searchConditions: [input.search ? ciLike(projects.title, `%${input.search}%`) : undefined],
   })
 }
 
@@ -140,14 +142,11 @@ export async function createProject(data: Omit<CreateProjectInput, 'pictures'>) 
     }
   }
 
-  const [project] = await db
-    .insert(projects)
-    .values({
-      ...rest,
-      slug,
-      featureAt: featured ? new Date().toISOString() : null,
-    })
-    .returning()
+  const project = await insertReturning(db, projects, {
+    ...rest,
+    slug,
+    featureAt: featured ? new Date().toISOString() : null,
+  })
 
   if (!project) throw new QueryError('Failed to create project')
 
@@ -155,11 +154,7 @@ export async function createProject(data: Omit<CreateProjectInput, 'pictures'>) 
 }
 
 export async function updateProjectImageUrl(id: string, imageUrl: string | null) {
-  const [result] = await db
-    .update(projects)
-    .set({ imageUrl })
-    .where(eq(projects.id, id))
-    .returning()
+  const result = await updateReturning(db, projects, { imageUrl }, eq(projects.id, id))
 
   if (!result) throw new QueryError('Failed to update project image')
 
@@ -180,11 +175,7 @@ export async function updateProject(data: Omit<UpdateProjectInput, 'pictures'>) 
 
   const featureAt = featured ? (existing.featureAt ?? new Date().toISOString()) : null
 
-  const [result] = await db
-    .update(projects)
-    .set({ ...rest, featureAt })
-    .where(eq(projects.id, id))
-    .returning()
+  const result = await updateReturning(db, projects, { ...rest, featureAt }, eq(projects.id, id))
 
   if (!result) throw new QueryError('Failed to update project')
 
@@ -202,7 +193,7 @@ export async function reorderProjects(items: ReorderProjectsInput) {
 export async function deleteProject(id: string) {
   await getProjectById(id)
 
-  const [result] = await db.delete(projects).where(eq(projects.id, id)).returning()
+  const result = await deleteReturning(db, projects, eq(projects.id, id))
 
   if (!result) throw new QueryError('Failed to delete project')
 
@@ -210,11 +201,12 @@ export async function deleteProject(id: string) {
 }
 
 export async function toggleProjectFeaturedAtResume(id: string, value: boolean) {
-  const [result] = await db
-    .update(projects)
-    .set({ featuredAtResume: value })
-    .where(eq(projects.id, id))
-    .returning()
+  const result = await updateReturning(
+    db,
+    projects,
+    { featuredAtResume: value },
+    eq(projects.id, id),
+  )
 
   if (!result) throw new QueryError('Failed to update project featuredAtResume')
 
