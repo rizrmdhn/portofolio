@@ -15,6 +15,7 @@ import type {
   UpdateTechStackItemInput,
 } from "@portofolio/schema/tech-stack.schema";
 import { NotFoundError, QueryError } from '@portofolio/errors';
+import { insensitiveContains } from "./utils/dialect";
 import { deleteReturning, insertReturning, updateReturning } from "./utils/returning";
 
 // ─── Categories ───────────────────────────────────────────────────────────────
@@ -28,7 +29,7 @@ export async function getAllTechStackCategories() {
 
 export async function getTechStackCategoriesForDashboard(search?: string) {
   return db.query.techStackCategories.findMany({
-    where: { name: { ilike: `%${search ?? ""}%` } },
+    where: { name: insensitiveContains(search) },
     orderBy: { order: "asc" },
     with: { items: { orderBy: { order: "asc" } } },
   });
