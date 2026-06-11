@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import InputTag from '@/components/ui/input-tag'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -62,7 +62,7 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'currentlyWorking',
     'skills',
   ],
-  settings: ['status', 'order'],
+  settings: ['status'],
 }
 
 function RouteComponent() {
@@ -390,27 +390,6 @@ function RouteComponent() {
                                 </ToggleGroupItem>
                               ))}
                             </ToggleGroup>
-                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                          </Field>
-                        )
-                      }}
-                    />
-
-                    <form.Field
-                      name="order"
-                      children={(field) => {
-                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                          <Field data-invalid={isInvalid} className="flex flex-col gap-1.5">
-                            <FieldLabel htmlFor={field.name}>Order</FieldLabel>
-                            <Input
-                              id={field.name}
-                              type="number"
-                              value={field.state.value}
-                              onBlur={field.handleBlur}
-                              onChange={(e) => field.handleChange(Number(e.target.value))}
-                            />
-                            <FieldDescription>Lower = earlier</FieldDescription>
                             {isInvalid && <FieldError errors={field.state.meta.errors} />}
                           </Field>
                         )

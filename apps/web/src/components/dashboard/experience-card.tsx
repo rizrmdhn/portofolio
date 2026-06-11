@@ -3,14 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import type {Experience} from "@portofolio/types/experience.types";
-import { IconGripVertical, IconPencil } from "@tabler/icons-react";
+import { IconPencil } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import type React from "react";
 
 interface ExperienceCardProps {
   experience: Experience;
-  dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
 }
 
 function getInitials(company: string) {
@@ -26,10 +24,7 @@ function getStatusVariant(status: Experience["status"]): "success" | "draft" {
   return "draft";
 }
 
-export function ExperienceCard({
-  experience,
-  dragHandleProps,
-}: ExperienceCardProps) {
+export function ExperienceCard({ experience }: ExperienceCardProps) {
   const navigate = useNavigate();
 
   const endLabel = experience.currentlyWorking
@@ -43,14 +38,6 @@ export function ExperienceCard({
   return (
     <Card className="py-0">
       <CardContent className="flex items-center gap-3 py-3 px-4">
-        {/* Drag handle */}
-        <button
-          className="flex items-center text-muted-foreground/40 cursor-grab active:cursor-grabbing hover:text-muted-foreground"
-          {...dragHandleProps}
-        >
-          <IconGripVertical className="size-4 shrink-0" />
-        </button>
-
         {/* Avatar */}
         <Avatar className="size-9 rounded-md shrink-0 after:rounded-md">
           <AvatarFallback className="rounded-md text-xs font-semibold">

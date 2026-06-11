@@ -21,10 +21,5 @@ export const updateExperienceSchema = createExperienceSchema.extend({
   id: z.string(),
 })
 
-export const reorderExperiencesSchema = z
-  .array(z.object({ id: z.string(), order: z.number().int().min(0) }))
-  .min(1)
-
 export type CreateExperienceInput = z.infer<typeof createExperienceSchema>
 export type UpdateExperienceInput = z.infer<typeof updateExperienceSchema>
-export type ReorderExperiencesInput = z.infer<typeof reorderExperiencesSchema>

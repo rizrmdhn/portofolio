@@ -17,7 +17,7 @@ export async function getResumeData() {
     db.query.profile.findFirst(),
     db.query.experiences.findMany({
       where: { status: "published" },
-      orderBy: { order: "asc" },
+      orderBy: { currentlyWorking: "desc", startDate: "desc" },
     }),
     db
       .select()

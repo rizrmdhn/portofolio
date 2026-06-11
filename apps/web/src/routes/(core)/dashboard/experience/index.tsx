@@ -9,27 +9,7 @@ import {
 } from '@/components/ui/input-group'
 import { Skeleton } from '@/components/ui/skeleton'
 import useDebounced from '@/hooks/use-debounced'
-import { useOptimisticMutation } from '@/lib/optimistic-update'
-import { globalErrorToast } from '@/lib/toasts'
 import { trpc } from '@/utils/trpc'
-import type { DragEndEvent } from '@dnd-kit/core'
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  arrayMove,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import type { Experience } from '@portofolio/types/experience.types'
 import { IconBriefcase, IconPlus, IconSearch, IconX } from '@tabler/icons-react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
@@ -48,27 +28,6 @@ export const Route = createFileRoute('/(core)/dashboard/experience/')({
   pendingComponent: ExperienceListSkeleton,
   component: RouteComponent,
 })
-
-function SortableExperienceCard({ experience }: { experience: Experience }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: experience.id,
-  })
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
-        zIndex: isDragging ? 1 : undefined,
-        position: isDragging ? 'relative' : undefined,
-      }}
-    >
-      <ExperienceCard experience={experience} dragHandleProps={{ ...attributes, ...listeners }} />
-    </div>
-  )
-}
 
 function ExperienceListSkeleton() {
   return (
@@ -101,36 +60,6 @@ function RouteComponent() {
 
   const { data } = useSuspenseQuery(trpc.experience.getForDashboard.queryOptions(params))
 
-  const reorder = useOptimisticMutation(trpc.experience.reorder.mutationOptions(), {
-    queryOptions: trpc.experience.getForDashboard.queryOptions(params),
-    operation: {
-      type: 'reorder',
-      getOrder: (input) => input,
-    },
-    onError: (err) => {
-      globalErrorToast(`Failed to reorder experience: ${err.message}`)
-    },
-  })
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event
-    if (!over || active.id === over.id) return
-
-    const oldIndex = data.findIndex((item) => item.id === active.id)
-    const newIndex = data.findIndex((item) => item.id === over.id)
-    if (oldIndex === -1 || newIndex === -1) return
-
-    const reordered = arrayMove(data, oldIndex, newIndex)
-    reorder.mutate(reordered.map((item, i) => ({ id: item.id, order: i })))
-  }
-
   const renderList = () => {
     if (data.length === 0) {
       return (
@@ -153,20 +82,7 @@ function RouteComponent() {
       )
     }
 
-    return (
-      <DndContext
-        id="experience-dnd"
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={data.map((item) => item.id)} strategy={verticalListSortingStrategy}>
-          {data.map((item) => (
-            <SortableExperienceCard key={item.id} experience={item} />
-          ))}
-        </SortableContext>
-      </DndContext>
-    )
+    return data.map((item) => <ExperienceCard key={item.id} experience={item} />)
   }
 
   return (
