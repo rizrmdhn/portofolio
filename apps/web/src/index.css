@@ -3,11 +3,6 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
 
-@font-face {
-  font-family: 'Inter Variable';
-  font-display: swap;
-}
-
 @custom-variant dark (&:is(.dark *));
 @custom-variant warm (&:is(.warm *));
 
@@ -108,17 +103,11 @@
     --tag-border: oklch(0.92 0.004 286.32);
     --available-bg: oklch(0.97 0.05 145);
     --available-fg: oklch(0.45 0.15 145);
-    --available-border: oklch(0.88 0.1 145);
-    --available-dot: oklch(0.65 0.2 145);
     --link: oklch(0.45 0.012 286);
-    --link-hover: oklch(0.141 0.005 285.823);
     --nav-bg: oklch(1 0 0 / 0.9);
     --project-hover-bg: oklch(0.985 0.001 286.375);
     --card-hover-border: oklch(0.88 0.004 286.32);
     --section-alt-bg: oklch(0.975 0.001 286.375);
-    --success-bg: oklch(0.97 0.05 145);
-    --success-fg: oklch(0.45 0.15 145);
-    --success-border: oklch(0.88 0.1 145);
 }
 
 .dark {
@@ -161,17 +150,11 @@
     --tag-border: oklch(1 0 0 / 12%);
     --available-bg: oklch(0.22 0.006 285.885);
     --available-fg: oklch(0.72 0.015 286.067);
-    --available-border: oklch(1 0 0 / 12%);
-    --available-dot: oklch(0.65 0.2 145);
     --link: oklch(0.65 0.01 286);
-    --link-hover: oklch(0.95 0 0);
     --nav-bg: oklch(0.141 0.005 285.823 / 0.88);
     --project-hover-bg: oklch(0.18 0.005 285.823);
     --card-hover-border: oklch(1 0 0 / 18%);
     --section-alt-bg: oklch(0.141 0.005 285.823);
-    --success-bg: oklch(0.22 0.006 285.885);
-    --success-fg: oklch(0.72 0.015 286.067);
-    --success-border: oklch(1 0 0 / 12%);
 }
 
 .warm {
@@ -187,8 +170,8 @@
     --secondary-foreground: oklch(0.18 0.02 60);
     --muted: oklch(0.94 0.025 75);
     --muted-foreground: oklch(0.52 0.045 65);
-    --accent: oklch(0.7 0.15 65);
-    --accent-foreground: oklch(0.975 0.012 75);
+    --accent: oklch(0.93 0.05 80);
+    --accent-foreground: oklch(0.18 0.02 60);
     --destructive: oklch(0.577 0.245 27.325);
     --border: oklch(0.88 0.035 75);
     --input: oklch(0.88 0.035 75);
@@ -215,17 +198,11 @@
     --tag-border: oklch(0.88 0.1 80);
     --available-bg: oklch(0.96 0.07 85);
     --available-fg: oklch(0.55 0.13 65);
-    --available-border: oklch(0.88 0.1 80);
-    --available-dot: oklch(0.65 0.2 145);
     --link: oklch(0.55 0.08 65);
-    --link-hover: oklch(0.55 0.13 65);
     --nav-bg: oklch(0.975 0.012 75 / 0.92);
     --project-hover-bg: oklch(1 0 0);
     --card-hover-border: oklch(0.88 0.006 75);
     --section-alt-bg: oklch(0.955 0.03 75);
-    --success-bg: oklch(0.96 0.07 85);
-    --success-fg: oklch(0.55 0.13 65);
-    --success-border: oklch(0.88 0.1 80);
 }
 
 @layer utilities {
