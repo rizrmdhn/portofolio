@@ -1,0 +1,1 @@
+import{Yt as e}from"./index-g4cJ9sBP.js";var t=e(`outline`,`trophy`,`Trophy`,[[`path`,{d:`M8 21l8 0`,key:`svg-0`}],[`path`,{d:`M12 17l0 4`,key:`svg-1`}],[`path`,{d:`M7 4l10 0`,key:`svg-2`}],[`path`,{d:`M17 4v8a5 5 0 0 1 -10 0v-8`,key:`svg-3`}],[`path`,{d:`M3 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0`,key:`svg-4`}],[`path`,{d:`M17 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0`,key:`svg-5`}]]);export{t};

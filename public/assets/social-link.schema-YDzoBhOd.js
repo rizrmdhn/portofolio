@@ -1,0 +1,1 @@
+import{$ as e,A as t,M as n,U as r}from"./index-g4cJ9sBP.js";var i=n(t,{title:e.string().min(2).max(256),url:e.url(),icon:e.enum(r),order:e.number()}).omit({createdAt:!0,updatedAt:!0}),a=i.extend({id:e.string()});e.array(e.object({id:e.string(),order:e.number().int().min(0)})).min(1);export{a as n,i as t};

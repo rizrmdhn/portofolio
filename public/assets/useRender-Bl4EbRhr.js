@@ -1,0 +1,1 @@
+import{ut as e}from"./index-g4cJ9sBP.js";function t(t){return e(t.defaultTagName??`div`,t,t)}export{t};

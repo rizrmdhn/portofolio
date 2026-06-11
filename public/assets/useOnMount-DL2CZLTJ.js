@@ -1,0 +1,1 @@
+import{An as e,Dn as t}from"./index-g4cJ9sBP.js";var n=e(t()),r=[];function i(e){n.useEffect(e,r)}export{i as t};

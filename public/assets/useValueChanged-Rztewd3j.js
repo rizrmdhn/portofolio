@@ -1,0 +1,1 @@
+import{An as e,Ct as t,Dn as n,xt as r}from"./index-g4cJ9sBP.js";function i(e,t,n,r){return e.addEventListener(t,n,r),()=>{e.removeEventListener(t,n,r)}}var a=e(n());function o(e,n){let i=a.useRef(e),o=t(n);r(()=>{i.current!==e&&o(i.current)},[e,o]),r(()=>{i.current=e},[e])}export{i as n,o as t};

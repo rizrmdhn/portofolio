@@ -1,0 +1,1 @@
+import{An as e,Dn as t,yt as n}from"./index-g4cJ9sBP.js";var r=e(t()),i=r.createContext(void 0);function a(e){let t=r.useContext(i);if(t===void 0&&!e)throw Error(n(69));return t}export{a as t};

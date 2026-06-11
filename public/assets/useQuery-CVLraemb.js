@@ -1,0 +1,1 @@
+import{n as e,r as t}from"./useSuspenseQuery-ENV8iBM5.js";function n(n,r){return e(n,t,r)}export{n as t};
