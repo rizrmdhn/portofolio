@@ -5,6 +5,7 @@ import type {
 import {
   TranslationDraftEditor,
   completeDraftLocales,
+  resolveDraftLocale,
 } from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
 import { CopyAiPromptButton } from '@/components/ui/copy-ai-prompt-button'
@@ -139,9 +140,15 @@ function RouteComponent() {
 
       const project = await createProjectMutation.mutateAsync(formData)
 
-      // Persist any fully-filled translations against the new project id.
-      for (const locale of completeDraftLocales(translations, PROJECT_TRANSLATION_FIELDS)) {
-        const tr = translations[locale] ?? {}
+      // Persist any fully-filled translations against the new project id. The
+      // base values seed `noTranslate` fields (e.g. the title) so they carry over.
+      const source = {
+        title: value.title,
+        description: value.description,
+        longDescription: value.longDescription ?? '',
+      }
+      for (const locale of completeDraftLocales(translations, PROJECT_TRANSLATION_FIELDS, source)) {
+        const tr = resolveDraftLocale(translations, locale, PROJECT_TRANSLATION_FIELDS, source)
         await upsertTranslation.mutateAsync({
           projectId: project.id,
           locale,

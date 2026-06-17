@@ -56,12 +56,16 @@ function FieldInput({
       <MarkdownEditor id={id} value={value} onChange={onChange} placeholder={field.placeholder} rows={6} />
     )
   }
+  // Non-translatable fields (e.g. the title) mirror the base value and aren't
+  // edited per-locale, so they're shown read-only.
   return (
     <Input
       id={id}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={field.placeholder}
+      readOnly={field.noTranslate}
+      className={field.noTranslate ? 'text-muted-foreground' : undefined}
     />
   )
 }
@@ -135,7 +139,18 @@ function LocaleSection({
 
   const set = (name: string, value: string) => setValues((prev) => ({ ...prev, [name]: value }))
 
-  const requiredMissing = fields.some((f) => !f.optional && !values[f.name]?.trim())
+  // `noTranslate` fields (e.g. the title) aren't edited per-locale: they read live
+  // from the base source and are merged back in on save.
+  const fieldValue = (field: TranslationFieldDef) =>
+    field.noTranslate ? (sourceValues?.[field.name] ?? '') : (values[field.name] ?? '')
+
+  const requiredMissing = fields.some((f) => !f.optional && !fieldValue(f).trim())
+
+  const handleSave = () => {
+    const payload = { ...values }
+    for (const f of fields) if (f.noTranslate) payload[f.name] = sourceValues?.[f.name] ?? ''
+    onSave(payload)
+  }
 
   return (
     <div className="border-border flex flex-col gap-4 rounded-lg border p-4">
@@ -168,14 +183,14 @@ function LocaleSection({
           <FieldInput
             id={`${locale}-${field.name}`}
             field={field}
-            value={values[field.name] ?? ''}
+            value={fieldValue(field)}
             onChange={(value) => set(field.name, value)}
           />
         </Field>
       ))}
 
       <div className="flex justify-end">
-        <Button type="button" onClick={() => onSave(values)} disabled={isSaving || requiredMissing}>
+        <Button type="button" onClick={handleSave} disabled={isSaving || requiredMissing}>
           {isSaving ? <Spinner data-icon="inline-start" /> : null}
           {hasExisting ? 'Update translation' : 'Save translation'}
         </Button>
@@ -233,6 +248,11 @@ export function TranslationEditor({
           const existing = translations.find((t) => t.locale === locale)
           const initial: Record<string, string> = {}
           for (const field of fields) {
+            // Non-translatable fields (e.g. the title) mirror the live base value
+            // and are rendered/saved from `sourceValues` directly — keep them out
+            // of the seed/remount key so editing the base title never resets
+            // in-progress translation edits.
+            if (field.noTranslate) continue
             const raw = existing?.[field.name]
             initial[field.name] = typeof raw === 'string' ? raw : ''
           }
@@ -298,7 +318,10 @@ export function TranslationDraftEditor({
               <FieldInput
                 id={`draft-${locale}-${field.name}`}
                 field={field}
-                value={value[locale]?.[field.name] ?? ''}
+                value={
+                  value[locale]?.[field.name] ??
+                  (field.noTranslate ? (sourceValues?.[field.name] ?? '') : '')
+                }
                 onChange={(fieldValue) => onChange(locale, field.name, fieldValue)}
               />
             </Field>
@@ -310,16 +333,43 @@ export function TranslationDraftEditor({
 }
 
 /**
- * Helper for create forms: returns the locales in `draft` whose required fields
- * are all filled, ready to upsert after the entity is created.
+ * Effective values to persist for one draft locale: the user's typed values,
+ * with `noTranslate` fields (e.g. the title) defaulted to the base source so they
+ * stay identical across locales without manual entry.
+ */
+export function resolveDraftLocale(
+  draft: TranslationDraft,
+  locale: Locale,
+  fields: ReadonlyArray<TranslationFieldDef>,
+  sourceValues?: Record<string, string>,
+): Record<string, string> {
+  const typed = draft[locale] ?? {}
+  const out: Record<string, string> = {}
+  for (const field of fields) {
+    const value = typed[field.name]
+    out[field.name] =
+      value?.trim() || (field.noTranslate ? (sourceValues?.[field.name] ?? '') : (value ?? ''))
+  }
+  return out
+}
+
+/**
+ * Helper for create forms: returns the locales the author actually started
+ * translating (at least one translatable field filled) whose required fields all
+ * resolve to a value, ready to upsert after the entity is created.
  */
 export function completeDraftLocales(
   draft: TranslationDraft,
   fields: ReadonlyArray<TranslationFieldDef>,
+  sourceValues?: Record<string, string>,
 ): Array<Locale> {
   return NON_DEFAULT_LOCALES.filter((locale) => {
-    const values = draft[locale]
-    if (!values) return false
+    const typed = draft[locale]
+    // A locale counts as "started" only when a translatable field is filled —
+    // an auto-defaulted title alone isn't a translation.
+    const started = fields.some((f) => !f.noTranslate && typed?.[f.name]?.trim())
+    if (!started) return false
+    const values = resolveDraftLocale(draft, locale, fields, sourceValues)
     return fields.every((f) => f.optional || Boolean(values[f.name]?.trim()))
   })
 }

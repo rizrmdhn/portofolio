@@ -5,6 +5,7 @@ import type {
 import {
   TranslationDraftEditor,
   completeDraftLocales,
+  resolveDraftLocale,
 } from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
@@ -128,9 +129,15 @@ function RouteComponent() {
     onSubmit: async ({ value }) => {
       const experience = await createExperienceMutation.mutateAsync(value)
 
-      // Persist any fully-filled translations against the new experience id.
-      for (const locale of completeDraftLocales(translations, EXPERIENCE_TRANSLATION_FIELDS)) {
-        const tr = translations[locale] ?? {}
+      // Persist any fully-filled translations against the new experience id. The
+      // base values seed `noTranslate` fields (e.g. the title) so they carry over.
+      const source = { title: value.title, description: value.description }
+      for (const locale of completeDraftLocales(
+        translations,
+        EXPERIENCE_TRANSLATION_FIELDS,
+        source,
+      )) {
+        const tr = resolveDraftLocale(translations, locale, EXPERIENCE_TRANSLATION_FIELDS, source)
         await upsertTranslation.mutateAsync({
           experienceId: experience.id,
           locale,
