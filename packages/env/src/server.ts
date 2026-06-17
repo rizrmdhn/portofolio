@@ -22,6 +22,9 @@ export const env = createEnv({
     ALLOWED_EMAIL_LOGIN: z.email(),
     ALLOWED_EMAIL_PASSWORD: z.string().min(8).optional(),
     UPLOADTHING_TOKEN: z.string().min(8).optional(),
+    // Optional: when set, the dashboard auto-translates content fields via Groq;
+    // otherwise the UI falls back to copy-a-prompt mode.
+    GROQ_API_KEY: z.string().min(1).optional(),
     VERCEL_URL: z.string().optional(),
     MEMURAI_HOST: z.string().optional().default('localhost'),
     MEMURAI_PORT: z.string().optional().default('6379'),

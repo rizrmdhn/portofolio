@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@portofolio/errors": "workspace:*",
+    "@portofolio/ai": "workspace:*",
     "@portofolio/auth": "workspace:*",
     "@portofolio/db": "workspace:*",
     "@portofolio/i18n": "workspace:*",
