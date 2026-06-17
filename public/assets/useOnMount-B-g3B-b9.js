@@ -1,0 +1,1 @@
+import{In as e,zn as t}from"./index-qu_dj5dy.js";var n=t(e()),r=[];function i(e){n.useEffect(e,r)}export{i as t};

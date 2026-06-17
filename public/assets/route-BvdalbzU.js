@@ -1,0 +1,1 @@
+import{Cn as e,Nn as t}from"./index-qu_dj5dy.js";var n=t();function r(){return(0,n.jsx)(e,{})}export{r as component};

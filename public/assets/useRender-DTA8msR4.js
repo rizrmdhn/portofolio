@@ -1,0 +1,1 @@
+import{yt as e}from"./index-qu_dj5dy.js";function t(t){return e(t.defaultTagName??`div`,t,t)}export{t};

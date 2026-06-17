@@ -1,0 +1,1 @@
+import{In as e,yt as t,zn as n}from"./index-qu_dj5dy.js";var r=n(e()).forwardRef(function(e,n){let{className:r,render:i,orientation:a=`horizontal`,style:o,...s}=e;return t(`div`,e,{state:{orientation:a},ref:n,props:[{role:`separator`,"aria-orientation":a},s]})});export{r as t};

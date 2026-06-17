@@ -1,0 +1,1 @@
+import{In as e,Ot as t,zn as n}from"./index-qu_dj5dy.js";var r=n(e()),i=r.createContext(void 0);function a(e){let n=r.useContext(i);if(n===void 0&&!e)throw Error(t(69));return n}export{a as t};

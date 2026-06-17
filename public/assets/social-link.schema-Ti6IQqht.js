@@ -1,0 +1,1 @@
+import{A as e,M as t,Q as n,U as r}from"./index-qu_dj5dy.js";var i=t(e,{title:n.string().min(2).max(256),url:n.url(),icon:n.enum(r),order:n.number()}).omit({createdAt:!0,updatedAt:!0}),a=i.extend({id:n.string()});n.array(n.object({id:n.string(),order:n.number().int().min(0)})).min(1);export{a as n,i as t};

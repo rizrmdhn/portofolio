@@ -1,0 +1,1 @@
+import{At as e,In as t,Mt as n,zn as r}from"./index-qu_dj5dy.js";function i(e,t,n,r){return e.addEventListener(t,n,r),()=>{e.removeEventListener(t,n,r)}}var a=r(t());function o(t,r){let i=a.useRef(t),o=n(r);e(()=>{i.current!==t&&o(i.current)},[t,o]),e(()=>{i.current=t},[t])}export{i as n,o as t};

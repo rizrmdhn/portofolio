@@ -1,0 +1,1 @@
+import{In as e,St as t,zn as n}from"./index-qu_dj5dy.js";var r=n(e()),i=r.createContext({formRef:{current:{fields:new Map}},errors:{},clearErrors:t,validationMode:`onSubmit`,submitAttemptedRef:{current:!1}});function a(){return r.useContext(i)}export{a as t};
