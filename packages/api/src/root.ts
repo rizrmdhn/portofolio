@@ -1,5 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from ".";
 import { achievementRouter } from "./routers/achievement";
+import { aiRouter } from "./routers/ai";
 import { certificationRouter } from "./routers/certification";
 import { dashboardRouter } from "./routers/dashboard";
 import { educationRouter } from "./routers/education";
@@ -23,6 +24,7 @@ export const appRouter = createTRPCRouter({
   dashboard: dashboardRouter,
   resume: resumeRouter,
   seo: seoRouter,
+  ai: aiRouter,
 });
 
 // export type definition of API

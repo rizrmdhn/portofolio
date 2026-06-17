@@ -64,20 +64,23 @@ function FieldInput({
 }
 
 /**
- * Label row with an optional "Translate with AI" button that copies a prompt to
- * translate the field's English source into the target locale. Hidden when there
- * is no source text to translate.
+ * Label row with an optional "Translate with AI" button. When the server has a
+ * Groq key configured it auto-translates the field's English source and fills the
+ * field via `onTranslated`; otherwise it copies a prompt for an external
+ * assistant. Hidden when there is no source text to translate.
  */
 function FieldLabelRow({
   htmlFor,
   locale,
   field,
   sourceText,
+  onTranslated,
 }: {
   htmlFor: string
   locale: Locale
   field: TranslationFieldDef
   sourceText: string | undefined
+  onTranslated: (text: string) => void
 }) {
   return (
     <div className="flex items-center justify-between gap-2">
@@ -85,6 +88,7 @@ function FieldLabelRow({
       {sourceText?.trim() && (
         <CopyAiPromptButton
           label="Translate with AI"
+          onResult={onTranslated}
           translate={{
             targetLanguage: LOCALE_LABELS[locale],
             fieldLabel: field.label,
@@ -156,6 +160,7 @@ function LocaleSection({
             locale={locale}
             field={field}
             sourceText={sourceValues?.[field.name]}
+            onTranslated={(text) => set(field.name, text)}
           />
           <FieldInput
             id={`${locale}-${field.name}`}
@@ -285,6 +290,7 @@ export function TranslationDraftEditor({
                 locale={locale}
                 field={field}
                 sourceText={sourceValues?.[field.name]}
+                onTranslated={(text) => onChange(locale, field.name, text)}
               />
               <FieldInput
                 id={`draft-${locale}-${field.name}`}
