@@ -1,0 +1,4 @@
+{
+  "extends": "@portofolio/config/compiled-package.json",
+  "include": ["src"]
+}

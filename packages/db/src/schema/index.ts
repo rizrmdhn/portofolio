@@ -31,6 +31,7 @@ import {
   str,
   stringArray,
   tsTz,
+  uniqIdx,
   uuidPk,
   uuidRef,
 } from '../dialect/columns'
@@ -389,4 +390,99 @@ export const socialLinks = createTable(
     updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
   (table) => [idx('social_links_id_idx', table.id)],
+)
+
+// ========== Content translations ==========
+//
+// Sidecar tables holding non-default-locale text for the genuinely free-form
+// fields of each entity. The base tables remain the canonical English copy;
+// reads COALESCE a translation row onto the base (see queries `withLocale`).
+// `locale` is a short BCP-47-ish code (e.g. 'id') validated at the app layer
+// (`@portofolio/i18n`); the unique (<entity>Id, locale) index keeps one row per
+// language. Only fields worth translating are mirrored — proper nouns (company,
+// issuer, institution, tech names) intentionally stay on the base table.
+
+export const projectTranslations = createTable(
+  'project_translations',
+  {
+    id: uuidPk(),
+    projectId: uuidRef('project_id')
+      .notNull()
+      .references(() => projects.id, { onDelete: 'cascade' }),
+    locale: str('locale', 5).notNull(),
+    title: str('title', 256).notNull(),
+    description: longText('description').notNull(),
+    longDescription: longText('long_description'),
+    createdAt: tsTz('created_at')
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    idx('project_translations_project_id_idx', table.projectId),
+    uniqIdx('project_translations_project_locale_uq', table.projectId, table.locale),
+  ],
+)
+
+export const experienceTranslations = createTable(
+  'experience_translations',
+  {
+    id: uuidPk(),
+    experienceId: uuidRef('experience_id')
+      .notNull()
+      .references(() => experiences.id, { onDelete: 'cascade' }),
+    locale: str('locale', 5).notNull(),
+    title: str('title', 256).notNull(),
+    description: longText('description').notNull(),
+    createdAt: tsTz('created_at')
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    idx('experience_translations_experience_id_idx', table.experienceId),
+    uniqIdx('experience_translations_experience_locale_uq', table.experienceId, table.locale),
+  ],
+)
+
+export const profileTranslations = createTable(
+  'profile_translations',
+  {
+    id: uuidPk(),
+    profileId: uuidRef('profile_id')
+      .notNull()
+      .references(() => profile.id, { onDelete: 'cascade' }),
+    locale: str('locale', 5).notNull(),
+    title: str('title', 256).notNull(),
+    bio: longText('bio').notNull(),
+    createdAt: tsTz('created_at')
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    idx('profile_translations_profile_id_idx', table.profileId),
+    uniqIdx('profile_translations_profile_locale_uq', table.profileId, table.locale),
+  ],
+)
+
+export const achievementTranslations = createTable(
+  'achievement_translations',
+  {
+    id: uuidPk(),
+    achievementId: uuidRef('achievement_id')
+      .notNull()
+      .references(() => achievements.id, { onDelete: 'cascade' }),
+    locale: str('locale', 5).notNull(),
+    title: str('title', 256).notNull(),
+    description: longText('description'),
+    createdAt: tsTz('created_at')
+      .$default(() => sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
+  },
+  (table) => [
+    idx('achievement_translations_achievement_id_idx', table.achievementId),
+    uniqIdx('achievement_translations_achievement_locale_uq', table.achievementId, table.locale),
+  ],
 )

@@ -25,6 +25,7 @@
     "@portofolio/errors": "workspace:*",
     "@portofolio/constants": "workspace:*",
     "@portofolio/db": "workspace:*",
+    "@portofolio/i18n": "workspace:*",
     "@portofolio/schema": "workspace:*",
     "@portofolio/types": "workspace:*",
     "@portofolio/utils": "workspace:*",

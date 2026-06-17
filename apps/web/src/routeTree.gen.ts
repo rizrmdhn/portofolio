@@ -9,17 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ResumeRouteImport } from './routes/resume'
-import { Route as CertificatesRouteImport } from './routes/certificates'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
-import { Route as ProjectsSlugRouteImport } from './routes/projects/$slug'
+import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as LocaleResumeRouteImport } from './routes/$locale/resume'
+import { Route as LocaleCertificatesRouteImport } from './routes/$locale/certificates'
 import { Route as coreDashboardRouteRouteImport } from './routes/(core)/dashboard/route'
 import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboard/index'
+import { Route as LocaleProjectsIndexRouteImport } from './routes/$locale/projects/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as LocaleProjectsSlugRouteImport } from './routes/$locale/projects/$slug'
 import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
 import { Route as coreDashboardSocialLinksIndexRouteImport } from './routes/(core)/dashboard/social-links/index'
 import { Route as coreDashboardSeoIndexRouteImport } from './routes/(core)/dashboard/seo/index'
@@ -45,18 +47,13 @@ import { Route as coreDashboardEducationEducationIdEditRouteImport } from './rou
 import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
 import { Route as coreDashboardAchievementAchievementIdEditRouteImport } from './routes/(core)/dashboard/achievement/$achievementId.edit'
 
-const ResumeRoute = ResumeRouteImport.update({
-  id: '/resume',
-  path: '/resume',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CertificatesRoute = CertificatesRouteImport.update({
-  id: '/certificates',
-  path: '/certificates',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleRouteRoute = LocaleRouteRouteImport.update({
+  id: '/$locale',
+  path: '/$locale',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -64,20 +61,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
-  id: '/projects/',
-  path: '/projects/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/projects/$slug',
-  path: '/projects/$slug',
-  getParentRoute: () => rootRouteImport,
+const LocaleIndexRoute = LocaleIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LocaleRouteRoute,
 } as any)
 const authLoginRoute = authLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => authRouteRoute,
+} as any)
+const LocaleResumeRoute = LocaleResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleCertificatesRoute = LocaleCertificatesRouteImport.update({
+  id: '/certificates',
+  path: '/certificates',
+  getParentRoute: () => LocaleRouteRoute,
 } as any)
 const coreDashboardRouteRoute = coreDashboardRouteRouteImport.update({
   id: '/(core)/dashboard',
@@ -89,6 +91,11 @@ const coreDashboardIndexRoute = coreDashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => coreDashboardRouteRoute,
 } as any)
+const LocaleProjectsIndexRoute = LocaleProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   id: '/api/trpc/$',
   path: '/api/trpc/$',
@@ -98,6 +105,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LocaleProjectsSlugRoute = LocaleProjectsSlugRouteImport.update({
+  id: '/projects/$slug',
+  path: '/projects/$slug',
+  getParentRoute: () => LocaleRouteRoute,
 } as any)
 const coreDashboardTechStackIndexRoute =
   coreDashboardTechStackIndexRouteImport.update({
@@ -244,14 +256,16 @@ const coreDashboardAchievementAchievementIdEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/certificates': typeof CertificatesRoute
-  '/resume': typeof ResumeRoute
+  '/$locale': typeof LocaleRouteRouteWithChildren
   '/dashboard': typeof coreDashboardRouteRouteWithChildren
+  '/$locale/certificates': typeof LocaleCertificatesRoute
+  '/$locale/resume': typeof LocaleResumeRoute
   '/login': typeof authLoginRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
-  '/projects/': typeof ProjectsIndexRoute
+  '/$locale/': typeof LocaleIndexRoute
+  '/$locale/projects/$slug': typeof LocaleProjectsSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/$locale/projects/': typeof LocaleProjectsIndexRoute
   '/dashboard/': typeof coreDashboardIndexRoute
   '/dashboard/achievement/create': typeof coreDashboardAchievementCreateRoute
   '/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
@@ -280,13 +294,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/certificates': typeof CertificatesRoute
-  '/resume': typeof ResumeRoute
+  '/$locale/certificates': typeof LocaleCertificatesRoute
+  '/$locale/resume': typeof LocaleResumeRoute
   '/login': typeof authLoginRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
-  '/projects': typeof ProjectsIndexRoute
+  '/$locale': typeof LocaleIndexRoute
+  '/$locale/projects/$slug': typeof LocaleProjectsSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/$locale/projects': typeof LocaleProjectsIndexRoute
   '/dashboard': typeof coreDashboardIndexRoute
   '/dashboard/achievement/create': typeof coreDashboardAchievementCreateRoute
   '/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
@@ -316,15 +331,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$locale': typeof LocaleRouteRouteWithChildren
   '/(auth)': typeof authRouteRouteWithChildren
-  '/certificates': typeof CertificatesRoute
-  '/resume': typeof ResumeRoute
   '/(core)/dashboard': typeof coreDashboardRouteRouteWithChildren
+  '/$locale/certificates': typeof LocaleCertificatesRoute
+  '/$locale/resume': typeof LocaleResumeRoute
   '/(auth)/login': typeof authLoginRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
-  '/projects/': typeof ProjectsIndexRoute
+  '/$locale/': typeof LocaleIndexRoute
+  '/$locale/projects/$slug': typeof LocaleProjectsSlugRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/$locale/projects/': typeof LocaleProjectsIndexRoute
   '/(core)/dashboard/': typeof coreDashboardIndexRoute
   '/(core)/dashboard/achievement/create': typeof coreDashboardAchievementCreateRoute
   '/(core)/dashboard/certificate/create': typeof coreDashboardCertificateCreateRoute
@@ -355,14 +372,16 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/certificates'
-    | '/resume'
+    | '/$locale'
     | '/dashboard'
+    | '/$locale/certificates'
+    | '/$locale/resume'
     | '/login'
-    | '/projects/$slug'
-    | '/projects/'
+    | '/$locale/'
+    | '/$locale/projects/$slug'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/$locale/projects/'
     | '/dashboard/'
     | '/dashboard/achievement/create'
     | '/dashboard/certificate/create'
@@ -391,13 +410,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/certificates'
-    | '/resume'
+    | '/$locale/certificates'
+    | '/$locale/resume'
     | '/login'
-    | '/projects/$slug'
-    | '/projects'
+    | '/$locale'
+    | '/$locale/projects/$slug'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/$locale/projects'
     | '/dashboard'
     | '/dashboard/achievement/create'
     | '/dashboard/certificate/create'
@@ -426,15 +446,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$locale'
     | '/(auth)'
-    | '/certificates'
-    | '/resume'
     | '/(core)/dashboard'
+    | '/$locale/certificates'
+    | '/$locale/resume'
     | '/(auth)/login'
-    | '/projects/$slug'
-    | '/projects/'
+    | '/$locale/'
+    | '/$locale/projects/$slug'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/$locale/projects/'
     | '/(core)/dashboard/'
     | '/(core)/dashboard/achievement/create'
     | '/(core)/dashboard/certificate/create'
@@ -464,37 +486,27 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
   authRouteRoute: typeof authRouteRouteWithChildren
-  CertificatesRoute: typeof CertificatesRoute
-  ResumeRoute: typeof ResumeRoute
   coreDashboardRouteRoute: typeof coreDashboardRouteRouteWithChildren
-  ProjectsSlugRoute: typeof ProjectsSlugRoute
-  ProjectsIndexRoute: typeof ProjectsIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/resume': {
-      id: '/resume'
-      path: '/resume'
-      fullPath: '/resume'
-      preLoaderRoute: typeof ResumeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/certificates': {
-      id: '/certificates'
-      path: '/certificates'
-      fullPath: '/certificates'
-      preLoaderRoute: typeof CertificatesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
       fullPath: ''
       preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$locale': {
+      id: '/$locale'
+      path: '/$locale'
+      fullPath: '/$locale'
+      preLoaderRoute: typeof LocaleRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -504,19 +516,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects/': {
-      id: '/projects/'
-      path: '/projects'
-      fullPath: '/projects/'
-      preLoaderRoute: typeof ProjectsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects/$slug': {
-      id: '/projects/$slug'
-      path: '/projects/$slug'
-      fullPath: '/projects/$slug'
-      preLoaderRoute: typeof ProjectsSlugRouteImport
-      parentRoute: typeof rootRouteImport
+    '/$locale/': {
+      id: '/$locale/'
+      path: '/'
+      fullPath: '/$locale/'
+      preLoaderRoute: typeof LocaleIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
     }
     '/(auth)/login': {
       id: '/(auth)/login'
@@ -524,6 +529,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof authRouteRoute
+    }
+    '/$locale/resume': {
+      id: '/$locale/resume'
+      path: '/resume'
+      fullPath: '/$locale/resume'
+      preLoaderRoute: typeof LocaleResumeRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/certificates': {
+      id: '/$locale/certificates'
+      path: '/certificates'
+      fullPath: '/$locale/certificates'
+      preLoaderRoute: typeof LocaleCertificatesRouteImport
+      parentRoute: typeof LocaleRouteRoute
     }
     '/(core)/dashboard': {
       id: '/(core)/dashboard'
@@ -539,6 +558,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
+    '/$locale/projects/': {
+      id: '/$locale/projects/'
+      path: '/projects'
+      fullPath: '/$locale/projects/'
+      preLoaderRoute: typeof LocaleProjectsIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
     '/api/trpc/$': {
       id: '/api/trpc/$'
       path: '/api/trpc/$'
@@ -552,6 +578,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$locale/projects/$slug': {
+      id: '/$locale/projects/$slug'
+      path: '/projects/$slug'
+      fullPath: '/$locale/projects/$slug'
+      preLoaderRoute: typeof LocaleProjectsSlugRouteImport
+      parentRoute: typeof LocaleRouteRoute
     }
     '/(core)/dashboard/tech-stack/': {
       id: '/(core)/dashboard/tech-stack/'
@@ -724,6 +757,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface LocaleRouteRouteChildren {
+  LocaleCertificatesRoute: typeof LocaleCertificatesRoute
+  LocaleResumeRoute: typeof LocaleResumeRoute
+  LocaleIndexRoute: typeof LocaleIndexRoute
+  LocaleProjectsSlugRoute: typeof LocaleProjectsSlugRoute
+  LocaleProjectsIndexRoute: typeof LocaleProjectsIndexRoute
+}
+
+const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
+  LocaleCertificatesRoute: LocaleCertificatesRoute,
+  LocaleResumeRoute: LocaleResumeRoute,
+  LocaleIndexRoute: LocaleIndexRoute,
+  LocaleProjectsSlugRoute: LocaleProjectsSlugRoute,
+  LocaleProjectsIndexRoute: LocaleProjectsIndexRoute,
+}
+
+const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
+  LocaleRouteRouteChildren,
+)
+
 interface authRouteRouteChildren {
   authLoginRoute: typeof authLoginRoute
 }
@@ -804,12 +857,9 @@ const coreDashboardRouteRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LocaleRouteRoute: LocaleRouteRouteWithChildren,
   authRouteRoute: authRouteRouteWithChildren,
-  CertificatesRoute: CertificatesRoute,
-  ResumeRoute: ResumeRoute,
   coreDashboardRouteRoute: coreDashboardRouteRouteWithChildren,
-  ProjectsSlugRoute: ProjectsSlugRoute,
-  ProjectsIndexRoute: ProjectsIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }

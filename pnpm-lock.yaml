@@ -135,6 +135,9 @@ importers:
       '@portofolio/env':
         specifier: workspace:*
         version: link:../../packages/env
+      '@portofolio/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@portofolio/schema':
         specifier: workspace:*
         version: link:../../packages/schema
@@ -358,6 +361,9 @@ importers:
       '@portofolio/errors':
         specifier: workspace:*
         version: link:../errors
+      '@portofolio/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@portofolio/image':
         specifier: workspace:*
         version: link:../image
@@ -544,6 +550,15 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
+  packages/i18n:
+    devDependencies:
+      '@portofolio/config':
+        specifier: workspace:*
+        version: link:../config
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
   packages/image:
     dependencies:
       '@portofolio/errors':
@@ -574,6 +589,9 @@ importers:
       '@portofolio/errors':
         specifier: workspace:*
         version: link:../errors
+      '@portofolio/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@portofolio/schema':
         specifier: workspace:*
         version: link:../schema
@@ -645,6 +663,9 @@ importers:
       '@portofolio/db':
         specifier: workspace:*
         version: link:../db
+      '@portofolio/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@portofolio/types':
         specifier: workspace:*
         version: link:../types

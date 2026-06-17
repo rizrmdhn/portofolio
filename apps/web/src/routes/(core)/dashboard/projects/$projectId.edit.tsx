@@ -1,3 +1,5 @@
+import { TranslationEditor } from '@/components/dashboard/translation-editor'
+import type { TranslationFieldDef } from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
 import { CopyAiPromptButton } from '@/components/ui/copy-ai-prompt-button'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -18,12 +20,85 @@ import { cn } from '@/lib/utils'
 import { toFormData } from '@/utils/form-data-mapper'
 import { trpc } from '@/utils/trpc'
 import { COLOR_VALUES } from '@portofolio/constants'
+import type { Locale } from '@portofolio/i18n'
 import { updateProjectSchema } from '@portofolio/schema/project.schema'
 import type { TablerIcon } from '@tabler/icons-react'
-import { IconLink, IconPencil, IconSettings, IconUpload } from '@tabler/icons-react'
+import { IconLanguage, IconLink, IconPencil, IconSettings, IconUpload } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
+
+const PROJECT_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
+  { name: 'title', label: 'Title', type: 'input', placeholder: 'My awesome project' },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    placeholder: 'Short description of your project',
+  },
+  {
+    name: 'longDescription',
+    label: 'Long Description',
+    type: 'markdown',
+    placeholder: 'Detailed description of your project',
+    optional: true,
+  },
+]
+
+function ProjectTranslationsTab({
+  projectId,
+  sourceValues,
+}: {
+  projectId: string
+  sourceValues: Record<string, string>
+}) {
+  const queryClient = useQueryClient()
+  const translationsQuery = useQuery(trpc.project.getTranslations.queryOptions({ projectId }))
+
+  const invalidate = () =>
+    queryClient.invalidateQueries(trpc.project.getTranslations.queryFilter({ projectId }))
+
+  const upsert = useMutation(
+    trpc.project.upsertTranslation.mutationOptions({
+      onSuccess: async () => {
+        await invalidate()
+        globalSuccessToast('Translation saved')
+      },
+      onError: (error) => globalErrorToast(error.message || 'Failed to save translation'),
+    }),
+  )
+
+  const remove = useMutation(
+    trpc.project.deleteTranslation.mutationOptions({
+      onSuccess: async () => {
+        await invalidate()
+        globalSuccessToast('Translation removed')
+      },
+      onError: (error) => globalErrorToast(error.message || 'Failed to remove translation'),
+    }),
+  )
+
+  return (
+    <TranslationEditor
+      fields={PROJECT_TRANSLATION_FIELDS}
+      translations={translationsQuery.data ?? []}
+      sourceValues={sourceValues}
+      isLoading={translationsQuery.isLoading}
+      savingLocale={upsert.isPending ? upsert.variables.locale : null}
+      removingLocale={remove.isPending ? remove.variables.locale : null}
+      onSave={(locale: Locale, values) =>
+        upsert.mutate({
+          projectId,
+          locale,
+          title: values.title ?? '',
+          description: values.description ?? '',
+          longDescription: values.longDescription?.trim() ? values.longDescription : null,
+        })
+      }
+      onRemove={(locale: Locale) => remove.mutate({ projectId, locale })}
+    />
+  )
+}
 
 export const Route = createFileRoute('/(core)/dashboard/projects/$projectId/edit')({
   beforeLoad: async ({ params, context }) => {
@@ -39,6 +114,7 @@ const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = 
   { icon: IconLink, title: 'Links', value: 'links' },
   { icon: IconUpload, title: 'Media', value: 'media' },
   { icon: IconSettings, title: 'Settings', value: 'settings' },
+  { icon: IconLanguage, title: 'Translations', value: 'translations' },
 ]
 
 const TAB_FIELDS: Record<string, Array<string>> = {
@@ -46,6 +122,9 @@ const TAB_FIELDS: Record<string, Array<string>> = {
   links: ['githubUrl', 'liveUrl', 'playstoreUrl', 'appstoreUrl'],
   media: ['coverColor'],
   settings: ['status', 'isVisible', 'featured', 'order'],
+  // Translations save independently via their own mutations, so no main-form
+  // fields map here.
+  translations: [],
 }
 
 function RouteComponent() {
@@ -515,6 +594,30 @@ function RouteComponent() {
                       }}
                     />
                   </FieldGroup>
+                </TabsContent>
+
+                {/* Translations */}
+                <TabsContent value="translations">
+                  {/* Source for the AI translate prompts tracks the live form, so
+                      the long-description button appears as soon as you write one
+                      (no save required). */}
+                  <form.Subscribe
+                    selector={(s) => ({
+                      title: s.values.title,
+                      description: s.values.description,
+                      longDescription: s.values.longDescription,
+                    })}
+                    children={(v) => (
+                      <ProjectTranslationsTab
+                        projectId={projectId}
+                        sourceValues={{
+                          title: v.title,
+                          description: v.description,
+                          longDescription: v.longDescription ?? '',
+                        }}
+                      />
+                    )}
+                  />
                 </TabsContent>
               </div>
             </ScrollArea>

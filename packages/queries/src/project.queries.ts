@@ -1,8 +1,9 @@
 import { and, count, desc, eq, getColumns, gte, isNotNull, sql } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
-import { projects, viewEvents } from '@portofolio/db/schema/index'
-import { ciLike } from './utils/dialect'
-import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
+import { projectTranslations, projects, viewEvents } from '@portofolio/db/schema/index'
+import { NotFoundError, QueryError } from '@portofolio/errors'
+import type { Locale } from '@portofolio/i18n'
+import { DEFAULT_LOCALE } from '@portofolio/i18n'
 import type {
   CreateProjectInput,
   GetProjectsInput,
@@ -11,8 +12,9 @@ import type {
 } from '@portofolio/schema/project.schema'
 import type { PaginatedProjects } from '@portofolio/types/project.types'
 import { toUniqueSlug } from '@portofolio/utils/slug'
-import { NotFoundError, QueryError } from '@portofolio/errors'
+import { ciLike } from './utils/dialect'
 import { getOffsetPaginated } from './utils/get-offset-paginated'
+import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
 export async function getPaginatedProjects(input: GetProjectsInput) {
   return getOffsetPaginated<typeof projects, PaginatedProjects>({
@@ -26,31 +28,59 @@ export async function getPaginatedProjects(input: GetProjectsInput) {
   })
 }
 
-export async function getAllProjects() {
+// Coalesced text columns: a matching `<locale>` translation overrides the base
+// (English) copy; missing translations fall back to base. `projects` columns are
+// spread first, then these keys overwrite title/description/longDescription so
+// the row shape stays identical regardless of locale. The translation join is
+// added for every locale (it simply matches nothing for the default), keeping a
+// single code path. Grouped queries must also group by the joined columns.
+const localizedProjectText = {
+  title: sql<string>`coalesce(${projectTranslations.title}, ${projects.title})`,
+  description: sql<string>`coalesce(${projectTranslations.description}, ${projects.description})`,
+  longDescription: sql<
+    string | null
+  >`coalesce(${projectTranslations.longDescription}, ${projects.longDescription})`,
+}
+
+const projectTranslationGroupBy = [
+  projectTranslations.title,
+  projectTranslations.description,
+  projectTranslations.longDescription,
+] as const
+
+function projectTranslationJoin(locale: Locale) {
+  return and(eq(projectTranslations.projectId, projects.id), eq(projectTranslations.locale, locale))
+}
+
+export async function getAllProjects(locale: Locale = DEFAULT_LOCALE) {
   const result = await db
     .select({
       ...getColumns(projects),
+      ...localizedProjectText,
       viewCount: count(viewEvents.id),
     })
     .from(projects)
     .leftJoin(viewEvents, eq(viewEvents.projectId, projects.id))
+    .leftJoin(projectTranslations, projectTranslationJoin(locale))
     .where(and(eq(projects.isVisible, true), eq(projects.status, 'published')))
-    .groupBy(projects.id)
+    .groupBy(projects.id, ...projectTranslationGroupBy)
     .orderBy(projects.order)
 
   return result
 }
 
-export async function getProjectsForLandingPage() {
+export async function getProjectsForLandingPage(locale: Locale = DEFAULT_LOCALE) {
   const result = await db
     .select({
       ...getColumns(projects),
+      ...localizedProjectText,
       viewCount: count(viewEvents.id),
     })
     .from(projects)
     .leftJoin(viewEvents, eq(viewEvents.projectId, projects.id))
+    .leftJoin(projectTranslations, projectTranslationJoin(locale))
     .where(and(eq(projects.isVisible, true), eq(projects.status, 'published')))
-    .groupBy(projects.id)
+    .groupBy(projects.id, ...projectTranslationGroupBy)
     .orderBy(projects.featureAt, projects.order)
     .limit(7)
 
@@ -68,8 +98,14 @@ export async function getAllTimeViewsProjects() {
   const sixtyDaysAgo = new Date(now)
   sixtyDaysAgo.setDate(now.getDate() - 60)
 
-  const currentViews = sql<number>`count(CASE WHEN ${viewEvents.viewedAt} >= ${thirtyDaysAgo.toISOString()} THEN ${viewEvents.id} END)`.mapWith(Number)
-  const previousViews = sql<number>`count(CASE WHEN ${viewEvents.viewedAt} >= ${sixtyDaysAgo.toISOString()} AND ${viewEvents.viewedAt} < ${thirtyDaysAgo.toISOString()} THEN ${viewEvents.id} END)`.mapWith(Number)
+  const currentViews =
+    sql<number>`count(CASE WHEN ${viewEvents.viewedAt} >= ${thirtyDaysAgo.toISOString()} THEN ${viewEvents.id} END)`.mapWith(
+      Number,
+    )
+  const previousViews =
+    sql<number>`count(CASE WHEN ${viewEvents.viewedAt} >= ${sixtyDaysAgo.toISOString()} AND ${viewEvents.viewedAt} < ${thirtyDaysAgo.toISOString()} THEN ${viewEvents.id} END)`.mapWith(
+      Number,
+    )
 
   const result = await db
     .select({
@@ -104,16 +140,20 @@ export async function getProjectById(id: string) {
   return project
 }
 
-export async function getProjectBySlug(slug: string) {
+export async function getProjectBySlug(slug: string, locale: Locale = DEFAULT_LOCALE) {
   const [result] = await db
     .select({
       ...getColumns(projects),
+      ...localizedProjectText,
       viewCount: count(viewEvents.id),
     })
     .from(projects)
     .leftJoin(viewEvents, eq(viewEvents.projectId, projects.id))
-    .where(and(eq(projects.slug, slug), eq(projects.status, 'published'), eq(projects.isVisible, true)))
-    .groupBy(projects.id)
+    .leftJoin(projectTranslations, projectTranslationJoin(locale))
+    .where(
+      and(eq(projects.slug, slug), eq(projects.status, 'published'), eq(projects.isVisible, true)),
+    )
+    .groupBy(projects.id, ...projectTranslationGroupBy)
     .limit(1)
 
   if (!result) throw new NotFoundError(`Project`, slug)

@@ -19,6 +19,7 @@ import {
   int as myInt,
   json as myJson,
   text as myText,
+  uniqueIndex as myUniqueIndex,
   varchar as myVarchar,
   mysqlEnum,
   mysqlTableCreator,
@@ -33,6 +34,7 @@ import {
   pgTableCreator,
   text as pgText,
   timestamp as pgTimestamp,
+  uniqueIndex as pgUniqueIndex,
   uuid as pgUuid,
   varchar as pgVarchar,
 } from 'drizzle-orm/pg-core'
@@ -64,6 +66,14 @@ export function idx(name: string, ...columns: Array<unknown>) {
   const cols = columns as Parameters<ReturnType<typeof pgIndex>['on']>
   return pick(pgIndex(name).using('btree', ...cols), () =>
     myIndex(name).on(...(cols as Parameters<ReturnType<typeof myIndex>['on']>)),
+  )
+}
+
+/** Unique (optionally composite) index — enforces uniqueness across `columns`. */
+export function uniqIdx(name: string, ...columns: Array<unknown>) {
+  const cols = columns as Parameters<ReturnType<typeof pgUniqueIndex>['on']>
+  return pick(pgUniqueIndex(name).on(...cols), () =>
+    myUniqueIndex(name).on(...(cols as Parameters<ReturnType<typeof myUniqueIndex>['on']>)),
   )
 }
 
