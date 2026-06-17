@@ -23,6 +23,9 @@ export interface TranslationFieldDef {
   placeholder?: string
   /** Optional fields may be left blank. */
   optional?: boolean
+  /** Hide the "Translate with AI" helper for this field (e.g. titles/names that
+   * should stay identical across locales). */
+  noTranslate?: boolean
 }
 
 /** Renders the right control for a translation field. Controlled by the caller. */
@@ -85,7 +88,7 @@ function FieldLabelRow({
   return (
     <div className="flex items-center justify-between gap-2">
       <FieldLabel htmlFor={htmlFor}>{field.label}</FieldLabel>
-      {sourceText?.trim() && (
+      {!field.noTranslate && sourceText?.trim() && (
         <CopyAiPromptButton
           label="Translate with AI"
           onResult={onTranslated}

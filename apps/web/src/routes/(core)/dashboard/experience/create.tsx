@@ -71,7 +71,13 @@ const TAB_FIELDS: Record<string, Array<string>> = {
 }
 
 const EXPERIENCE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
-  { name: 'title', label: 'Role / Title', type: 'input', placeholder: 'Senior Engineer' },
+  {
+    name: 'title',
+    label: 'Role / Title',
+    type: 'input',
+    placeholder: 'Senior Engineer',
+    noTranslate: true,
+  },
   {
     name: 'description',
     label: 'Description',

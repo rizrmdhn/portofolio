@@ -57,7 +57,13 @@ const TAB_FIELDS: Record<string, Array<string>> = {
 }
 
 const PROJECT_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
-  { name: 'title', label: 'Title', type: 'input', placeholder: 'My awesome project' },
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'input',
+    placeholder: 'My awesome project',
+    noTranslate: true,
+  },
   {
     name: 'description',
     label: 'Description',

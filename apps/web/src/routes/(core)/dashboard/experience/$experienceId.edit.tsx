@@ -38,7 +38,13 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 
 const EXPERIENCE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
-  { name: 'title', label: 'Role / Title', type: 'input', placeholder: 'Senior Engineer' },
+  {
+    name: 'title',
+    label: 'Role / Title',
+    type: 'input',
+    placeholder: 'Senior Engineer',
+    noTranslate: true,
+  },
   {
     name: 'description',
     label: 'Description',

@@ -18,7 +18,13 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { createFileRoute } from '@tanstack/react-router'
 
 const PROFILE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
-  { name: 'title', label: 'Title', type: 'input', placeholder: 'e.g. Full Stack Developer' },
+  {
+    name: 'title',
+    label: 'Title',
+    type: 'input',
+    placeholder: 'e.g. Full Stack Developer',
+    noTranslate: true,
+  },
   { name: 'bio', label: 'Bio', type: 'textarea', placeholder: 'A short bio about yourself' },
 ]
 
