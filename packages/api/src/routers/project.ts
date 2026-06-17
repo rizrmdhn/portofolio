@@ -22,6 +22,12 @@ import {
   updateProjectImageUrl,
 } from '@portofolio/queries/project.queries'
 import {
+  deleteProjectTranslation,
+  getProjectTranslations,
+  upsertProjectTranslation,
+} from '@portofolio/queries/translation.queries'
+import { localeInputSchema, translationLocaleSchema } from '@portofolio/schema/locale.schema'
+import {
   addProjectImageSchema,
   createProjectSchema,
   getProjectsSchema,
@@ -46,12 +52,13 @@ import { toTRPCError } from '../utils/to-trpc-error'
 const CACHE_PREFIX = CACHE_KEYS.PROJECT_PREFIX
 
 export const projectRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: publicProcedure.input(localeInputSchema.optional()).query(async ({ ctx, input }) => {
+    const locale = input?.locale ?? ctx.locale
     const [projects, err] = await tryCatchAsync(() =>
       ctx.cache.withCache(
-        CACHE_KEYS.PROJECT_ALL,
+        `${CACHE_KEYS.PROJECT_ALL}:${locale}`,
         CACHE_TTL.SHORT,
-        () => getAllProjects(),
+        () => getAllProjects(locale),
         () => ctx.headers.set('X-Data-Source', 'cache'),
       ),
     )
@@ -65,18 +72,21 @@ export const projectRouter = createTRPCRouter({
     return projects
   }),
 
-  getForLandingPage: publicProcedure.query(async ({ ctx }) => {
-    const [projects, err] = await tryCatchAsync(() =>
-      ctx.cache.withCache(
-        CACHE_KEYS.PROJECT_LANDING,
-        CACHE_TTL.SHORT,
-        () => getProjectsForLandingPage(),
-        () => ctx.headers.set('X-Data-Source', 'cache'),
-      ),
-    )
-    if (err) throw toTRPCError(err)
-    return projects
-  }),
+  getForLandingPage: publicProcedure
+    .input(localeInputSchema.optional())
+    .query(async ({ ctx, input }) => {
+      const locale = input?.locale ?? ctx.locale
+      const [projects, err] = await tryCatchAsync(() =>
+        ctx.cache.withCache(
+          `${CACHE_KEYS.PROJECT_LANDING}:${locale}`,
+          CACHE_TTL.SHORT,
+          () => getProjectsForLandingPage(locale),
+          () => ctx.headers.set('X-Data-Source', 'cache'),
+        ),
+      )
+      if (err) throw toTRPCError(err)
+      return projects
+    }),
 
   getPaginatedProjects: protectedProcedure.input(getProjectsSchema).query(async ({ input }) => {
     const [projects, err] = await tryCatchAsync(() => getPaginatedProjects(input))
@@ -100,13 +110,14 @@ export const projectRouter = createTRPCRouter({
     }),
 
   getBySlug: publicProcedure
-    .input(z.object({ slug: z.string() }))
-    .query(async ({ ctx, input: { slug } }) => {
+    .input(z.object({ slug: z.string(), locale: translationLocaleSchema.optional() }))
+    .query(async ({ ctx, input: { slug, locale: inputLocale } }) => {
+      const locale = inputLocale ?? ctx.locale
       const [project, err] = await tryCatchAsync(() =>
         ctx.cache.withCache(
-          `${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`,
+          `${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}:${locale}`,
           CACHE_TTL.SHORT,
-          () => getProjectBySlug(slug),
+          () => getProjectBySlug(slug, locale),
           () => ctx.headers.set('X-Data-Source', 'cache'),
         ),
       )
@@ -159,7 +170,8 @@ export const projectRouter = createTRPCRouter({
       if (err) throw toTRPCError(err)
 
       void ctx.cache.set(dedupKey, true, CACHE_TTL.DAY)
-      void ctx.cache.delete(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`)
+      // Clear every per-locale cache entry for this slug.
+      void ctx.cache.deleteByPrefix(`${CACHE_KEYS.PROJECT_SLUG_PREFIX}${slug}`)
     }),
 
   update: protectedProcedure
@@ -323,6 +335,42 @@ export const projectRouter = createTRPCRouter({
 
       void ctx.cache.deleteByPrefix(CACHE_PREFIX)
 
+      return true
+    }),
+
+  // ========== Content translations (dashboard authoring) ==========
+
+  getTranslations: protectedProcedure
+    .input(z.object({ projectId: z.string() }))
+    .query(async ({ input: { projectId } }) => {
+      const [rows, err] = await tryCatchAsync(() => getProjectTranslations(projectId))
+      if (err) throw toTRPCError(err)
+      return rows
+    }),
+
+  upsertTranslation: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        locale: translationLocaleSchema,
+        title: z.string().min(1),
+        description: z.string().min(1),
+        longDescription: z.string().nullish(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const [row, err] = await tryCatchAsync(() => upsertProjectTranslation(input))
+      if (err) throw toTRPCError(err)
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
+      return row
+    }),
+
+  deleteTranslation: protectedProcedure
+    .input(z.object({ projectId: z.string(), locale: translationLocaleSchema }))
+    .mutation(async ({ ctx, input: { projectId, locale } }) => {
+      const [, err] = await tryCatchAsync(() => deleteProjectTranslation(projectId, locale))
+      if (err) throw toTRPCError(err)
+      void ctx.cache.deleteByPrefix(CACHE_PREFIX)
       return true
     }),
 })

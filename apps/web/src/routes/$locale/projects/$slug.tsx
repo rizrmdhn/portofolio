@@ -4,9 +4,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Markdown } from '@/components/ui/markdown'
+import { useLocale, useTranslations } from '@/i18n/locale-context'
 import { buildSeoMeta } from '@/lib/seo'
 import { cn } from '@/lib/utils'
 import { trpc } from '@/utils/trpc'
+import { DEFAULT_LOCALE, getMessages, isLocale, ogLocale } from '@portofolio/i18n'
 import { toCompactNumber } from '@portofolio/utils/number'
 import {
   IconArrowLeft,
@@ -21,47 +23,58 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
-export const Route = createFileRoute('/projects/$slug')({
+export const Route = createFileRoute('/$locale/projects/$slug')({
   loader: async ({ context, params }) => {
+    const locale = isLocale(params.locale) ? params.locale : DEFAULT_LOCALE
     const project = await context.queryClient.ensureQueryData(
-      context.trpc.project.getBySlug.queryOptions({ slug: params.slug }),
+      context.trpc.project.getBySlug.queryOptions({ slug: params.slug, locale }),
     )
     void context.queryClient.prefetchQuery(
       context.trpc.project.getImages.queryOptions({ projectId: project.id }),
     )
     return { project }
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
+    const locale = isLocale(params.locale) ? params.locale : DEFAULT_LOCALE
+    const t = getMessages(locale)
     const project = loaderData?.project
     return {
-      meta: buildSeoMeta(undefined, {
-        title: project?.title ?? 'Project',
-        description: project?.description ?? '',
-        ogImage: project?.imageUrl ?? undefined,
-      }),
+      meta: [
+        ...buildSeoMeta(undefined, {
+          title: project?.title ?? t.projectDetail.seoTitleFallback,
+          description: project?.description ?? '',
+          ogImage: project?.imageUrl ?? undefined,
+        }),
+        { property: 'og:locale', content: ogLocale(locale) },
+      ],
     }
   },
-  errorComponent: () => (
+  errorComponent: ProjectNotFound,
+  component: ProjectDetailPage,
+})
+
+function ProjectNotFound() {
+  const locale = useLocale()
+  const { t } = useTranslations()
+  return (
     <div className="bg-background text-foreground flex min-h-svh flex-col">
       <MainHeader />
       <main className="mx-auto flex w-full flex-1 flex-col items-center justify-center gap-3 px-4 py-24 text-center">
         <p className="text-subtle font-mono text-xs tracking-wide uppercase">404</p>
-        <h1 className="text-2xl font-bold">Project not found</h1>
-        <p className="text-muted-foreground max-w-md">
-          The project you&apos;re looking for doesn&apos;t exist or may have been removed.
-        </p>
+        <h1 className="text-2xl font-bold">{t.projectDetail.notFoundTitle}</h1>
+        <p className="text-muted-foreground max-w-md">{t.projectDetail.notFoundBody}</p>
         <Link
-          to="/projects"
+          to="/$locale/projects"
+          params={{ locale }}
           className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'mt-2')}
         >
           <IconArrowLeft className="size-4" />
-          All Projects
+          {t.projectDetail.allProjects}
         </Link>
       </main>
     </div>
-  ),
-  component: ProjectDetailPage,
-})
+  )
+}
 
 /**
  * Click-to-zoom image. The thumbnail keeps its cropped framing; the dialog shows
@@ -110,9 +123,13 @@ function ImageLightbox({
 function ProjectDetailPage() {
   const queryClient = useQueryClient()
   const { slug } = Route.useParams()
+  const locale = useLocale()
+  const { t, format } = useTranslations()
   const navigate = useNavigate()
 
-  const { data: project } = useSuspenseQuery(trpc.project.getBySlug.queryOptions({ slug }))
+  const { data: project } = useSuspenseQuery(
+    trpc.project.getBySlug.queryOptions({ slug, locale }),
+  )
 
   const { data: images } = useQuery(trpc.project.getImages.queryOptions({ projectId: project.id }))
 
@@ -121,8 +138,8 @@ function ProjectDetailPage() {
   const incrementViews = useMutation({
     ...trpc.project.updateView.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries(trpc.project.getBySlug.queryOptions({ slug }))
-      queryClient.invalidateQueries(trpc.project.getAll.queryOptions())
+      queryClient.invalidateQueries(trpc.project.getBySlug.queryOptions({ slug, locale }))
+      queryClient.invalidateQueries(trpc.project.getAll.queryOptions({ locale }))
     },
   })
 
@@ -139,13 +156,14 @@ function ProjectDetailPage() {
   }, [project.id, project.slug])
 
   const links = [
-    { url: project.githubUrl, icon: IconBrandGithub, label: 'GitHub' },
-    { url: project.liveUrl, icon: IconExternalLink, label: 'Live' },
-    { url: project.playstoreUrl, icon: IconBrandGooglePlay, label: 'Play Store' },
-    { url: project.appstoreUrl, icon: IconBrandAppstore, label: 'App Store' },
+    { url: project.githubUrl, icon: IconBrandGithub, label: t.projectDetail.linkGithub },
+    { url: project.liveUrl, icon: IconExternalLink, label: t.projectDetail.linkLive },
+    { url: project.playstoreUrl, icon: IconBrandGooglePlay, label: t.projectDetail.linkPlayStore },
+    { url: project.appstoreUrl, icon: IconBrandAppstore, label: t.projectDetail.linkAppStore },
   ].filter((l) => !!l.url)
 
   const viewCount = Number(project.viewCount)
+  const viewsLabel = format(t.projectDetail.viewsLabel, { count: viewCount.toLocaleString() })
 
   return (
     <div className="bg-background text-foreground flex flex-col">
@@ -157,20 +175,15 @@ function ProjectDetailPage() {
             variant="ghost"
             size="sm"
             className="text-subtle -ml-2 w-fit"
-            onClick={() => navigate({ to: '/projects' })}
+            onClick={() => navigate({ to: '/$locale/projects', params: { locale } })}
           >
             <IconArrowLeft className="size-4" />
-            All Projects
+            {t.projectDetail.allProjects}
           </Button>
 
           {/* Cover image */}
           {project.imageUrl && (
-            <ImageLightbox
-              src={project.imageUrl}
-              alt={project.title}
-              imgClassName="h-72"
-              eager
-            />
+            <ImageLightbox src={project.imageUrl} alt={project.title} imgClassName="h-72" eager />
           )}
 
           {/* Header */}
@@ -179,8 +192,8 @@ function ProjectDetailPage() {
               <h1 className="text-2xl leading-tight font-bold sm:text-3xl">{project.title}</h1>
               <span
                 className="text-subtle inline-flex shrink-0 items-center gap-1.5 pt-1 font-mono text-xs"
-                title={`${viewCount.toLocaleString()} views`}
-                aria-label={`${viewCount.toLocaleString()} views`}
+                title={viewsLabel}
+                aria-label={viewsLabel}
               >
                 <IconEye className="size-3.5" aria-hidden />
                 {toCompactNumber(viewCount)}
@@ -228,7 +241,7 @@ function ProjectDetailPage() {
           {project.longDescription && (
             <div className="border-border flex flex-col gap-4 border-t pt-8">
               <h2 className="text-foreground text-sm font-semibold tracking-wide uppercase">
-                About
+                {t.projectDetail.about}
               </h2>
               <Markdown>{project.longDescription}</Markdown>
             </div>
@@ -238,7 +251,7 @@ function ProjectDetailPage() {
           {galleryImages.length > 0 && (
             <div className="border-border flex flex-col gap-4 border-t pt-8">
               <h2 className="text-foreground text-sm font-semibold tracking-wide uppercase">
-                Gallery
+                {t.projectDetail.gallery}
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {galleryImages.map((image) => (

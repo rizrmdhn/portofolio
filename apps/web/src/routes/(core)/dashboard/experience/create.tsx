@@ -1,3 +1,11 @@
+import type {
+  TranslationDraft,
+  TranslationFieldDef,
+} from '@/components/dashboard/translation-editor'
+import {
+  TranslationDraftEditor,
+  completeDraftLocales,
+} from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -27,12 +35,14 @@ import {
   EXPERIENCE_TYPES,
   EXPERIENCE_TYPE_LABELS,
 } from '@portofolio/constants'
+import type { Locale } from '@portofolio/i18n'
 import { createExperienceSchema } from '@portofolio/schema/experience.schema'
 import type { TablerIcon } from '@tabler/icons-react'
-import { IconBriefcase, IconSettings } from '@tabler/icons-react'
+import { IconBriefcase, IconLanguage, IconSettings } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/(core)/dashboard/experience/create')({
   component: RouteComponent,
@@ -41,6 +51,7 @@ export const Route = createFileRoute('/(core)/dashboard/experience/create')({
 const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
   { icon: IconBriefcase, title: 'Role Details', value: 'role-details' },
   { icon: IconSettings, title: 'Settings', value: 'settings' },
+  { icon: IconLanguage, title: 'Translations', value: 'translations' },
 ]
 
 const TAB_FIELDS: Record<string, Array<string>> = {
@@ -56,28 +67,42 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'skills',
   ],
   settings: ['status'],
+  translations: [],
 }
+
+const EXPERIENCE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
+  { name: 'title', label: 'Role / Title', type: 'input', placeholder: 'Senior Engineer' },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    placeholder: 'What you did in this role',
+  },
+]
 
 function RouteComponent() {
   const queryClient = useQueryClient()
   const navigate = Route.useNavigate()
   const router = useRouter()
 
+  // Buffered translations — persisted after the base experience is created.
+  const [translations, setTranslations] = useState<TranslationDraft>({})
+
   const createExperienceMutation = useMutation(
     trpc.experience.create.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.experience.getForDashboard.queryFilter())
-
-        globalSuccessToast('Experience created successfully!')
-        navigate({
-          to: '/dashboard/experience',
-        })
       },
       onError: (data) => {
         globalErrorToast(data.message)
       },
     }),
   )
+
+  const upsertTranslation = useMutation(trpc.experience.upsertTranslation.mutationOptions())
+
+  const setTranslationField = (locale: Locale, name: string, value: string) =>
+    setTranslations((prev) => ({ ...prev, [locale]: { ...prev[locale], [name]: value } }))
 
   const form = useForm({
     validators: { onSubmit: createExperienceSchema },
@@ -95,7 +120,21 @@ function RouteComponent() {
       order: 0,
     },
     onSubmit: async ({ value }) => {
-      await createExperienceMutation.mutateAsync(value)
+      const experience = await createExperienceMutation.mutateAsync(value)
+
+      // Persist any fully-filled translations against the new experience id.
+      for (const locale of completeDraftLocales(translations, EXPERIENCE_TRANSLATION_FIELDS)) {
+        const tr = translations[locale] ?? {}
+        await upsertTranslation.mutateAsync({
+          experienceId: experience.id,
+          locale,
+          title: tr.title ?? '',
+          description: tr.description ?? '',
+        })
+      }
+
+      globalSuccessToast('Experience created successfully!')
+      navigate({ to: '/dashboard/experience' })
     },
   })
 
@@ -386,6 +425,24 @@ function RouteComponent() {
                       }}
                     />
                   </FieldGroup>
+                </TabsContent>
+
+                {/* Translations */}
+                <TabsContent value="translations">
+                  <form.Subscribe
+                    selector={(s) => ({
+                      title: s.values.title,
+                      description: s.values.description,
+                    })}
+                    children={(v) => (
+                      <TranslationDraftEditor
+                        fields={EXPERIENCE_TRANSLATION_FIELDS}
+                        value={translations}
+                        sourceValues={{ title: v.title, description: v.description }}
+                        onChange={setTranslationField}
+                      />
+                    )}
+                  />
                 </TabsContent>
               </div>
             </ScrollArea>

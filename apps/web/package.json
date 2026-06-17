@@ -23,6 +23,7 @@
     "@portofolio/auth": "workspace:*",
     "@portofolio/constants": "workspace:*",
     "@portofolio/env": "workspace:*",
+    "@portofolio/i18n": "workspace:*",
     "@portofolio/schema": "workspace:*",
     "@portofolio/types": "workspace:*",
     "@portofolio/utils": "workspace:*",

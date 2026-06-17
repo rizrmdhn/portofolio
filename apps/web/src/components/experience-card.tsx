@@ -1,5 +1,6 @@
+import { useTranslations } from '@/i18n/locale-context'
 import { cn } from '@/lib/utils'
-import { EXPERIENCE_TYPE_LABELS } from '@portofolio/constants'
+import type { Messages } from '@portofolio/i18n'
 import type { Experience } from '@portofolio/types/experience.types'
 import { format, intervalToDuration } from 'date-fns'
 import { Badge } from './ui/badge'
@@ -9,22 +10,28 @@ interface ExperienceCardProps extends React.HTMLAttributes<HTMLDivElement> {
   experience: Experience
 }
 
-function formatDuration(start: Date | string, end: Date | string) {
+function formatDuration(
+  start: Date | string,
+  end: Date | string,
+  labels: Messages['experienceCard'],
+) {
   const { years = 0, months = 0 } = intervalToDuration({
     start: new Date(start),
     end: new Date(end),
   })
   const parts: Array<string> = []
-  if (years) parts.push(`${years} yr${years > 1 ? 's' : ''}`)
-  if (months) parts.push(`${months} mo${months > 1 ? 's' : ''}`)
-  return parts.length ? parts.join(' ') : '< 1 mo'
+  if (years) parts.push(`${years} ${years > 1 ? labels.yearShortPlural : labels.yearShort}`)
+  if (months) parts.push(`${months} ${months > 1 ? labels.monthShortPlural : labels.monthShort}`)
+  return parts.length ? parts.join(' ') : labels.lessThanMonth
 }
 
 export function ExperienceCard({ experience, className, ...props }: ExperienceCardProps) {
+  const { t } = useTranslations()
   const endDate = experience.endDate ?? new Date()
   const duration = formatDuration(
     experience.startDate,
     experience.currentlyWorking ? new Date() : endDate,
+    t.experienceCard,
   )
 
   return (
@@ -35,7 +42,7 @@ export function ExperienceCard({ experience, className, ...props }: ExperienceCa
           <span className="text-subtle flex items-center gap-1.5 font-mono text-xs font-semibold whitespace-nowrap">
             {format(experience.startDate, 'MMM yyyy')} –{' '}
             {experience.currentlyWorking ? (
-              <Badge variant="outline">Present</Badge>
+              <Badge variant="outline">{t.experienceCard.present}</Badge>
             ) : (
               format(endDate, 'MMM yyyy')
             )}
@@ -50,7 +57,7 @@ export function ExperienceCard({ experience, className, ...props }: ExperienceCa
         <div className="flex max-w-lg flex-col items-start gap-2">
           <span className="text-foreground text-[15px] font-semibold">{experience.title}</span>
           <div className="text-subtle flex items-center gap-2 font-mono text-[11px]">
-            <span>{EXPERIENCE_TYPE_LABELS[experience.type]}</span>
+            <span>{t.experienceType[experience.type]}</span>
             <span aria-hidden>·</span>
             <span>{experience.location}</span>
           </div>

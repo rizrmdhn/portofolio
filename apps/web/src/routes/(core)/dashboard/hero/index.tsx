@@ -1,6 +1,9 @@
+import { TranslationEditor } from '@/components/dashboard/translation-editor'
+import type { TranslationFieldDef } from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 import { Spinner } from '@/components/ui/spinner'
 import { Textarea } from '@/components/ui/textarea'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -8,10 +11,65 @@ import { globalErrorToast, globalSuccessToast } from '@/lib/toasts'
 import { trpc } from '@/utils/trpc'
 import type { AvailabilityStatus } from '@portofolio/constants'
 import { AVAILABILITY_STATUS_LABELS, AVAILABILITY_STATUS_TYPES } from '@portofolio/constants'
+import type { Locale } from '@portofolio/i18n'
 import { updateProfileSchema } from '@portofolio/schema/profile.schema'
 import { useForm } from '@tanstack/react-form'
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+
+const PROFILE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
+  { name: 'title', label: 'Title', type: 'input', placeholder: 'e.g. Full Stack Developer' },
+  { name: 'bio', label: 'Bio', type: 'textarea', placeholder: 'A short bio about yourself' },
+]
+
+function ProfileTranslationsSection({
+  profileId,
+  sourceValues,
+}: {
+  profileId: string
+  sourceValues: Record<string, string>
+}) {
+  const queryClient = useQueryClient()
+  const translationsQuery = useQuery(trpc.profile.getTranslations.queryOptions({ profileId }))
+
+  const invalidate = () =>
+    queryClient.invalidateQueries(trpc.profile.getTranslations.queryFilter({ profileId }))
+
+  const upsert = useMutation(
+    trpc.profile.upsertTranslation.mutationOptions({
+      onSuccess: async () => {
+        await invalidate()
+        globalSuccessToast('Translation saved')
+      },
+      onError: (error) => globalErrorToast(error.message || 'Failed to save translation'),
+    }),
+  )
+
+  const remove = useMutation(
+    trpc.profile.deleteTranslation.mutationOptions({
+      onSuccess: async () => {
+        await invalidate()
+        globalSuccessToast('Translation removed')
+      },
+      onError: (error) => globalErrorToast(error.message || 'Failed to remove translation'),
+    }),
+  )
+
+  return (
+    <TranslationEditor
+      fields={PROFILE_TRANSLATION_FIELDS}
+      translations={translationsQuery.data ?? []}
+      sourceValues={sourceValues}
+      isLoading={translationsQuery.isLoading}
+      savingLocale={upsert.isPending ? upsert.variables.locale : null}
+      removingLocale={remove.isPending ? remove.variables.locale : null}
+      onSave={(locale: Locale, values) =>
+        upsert.mutate({ profileId, locale, title: values.title ?? '', bio: values.bio ?? '' })
+      }
+      onRemove={(locale: Locale) => remove.mutate({ profileId, locale })}
+    />
+  )
+}
 
 export const Route = createFileRoute('/(core)/dashboard/hero/')({
   beforeLoad: async ({ context }) => {
@@ -225,6 +283,19 @@ function RouteComponent() {
           </div>
         </FieldGroup>
       </form>
+
+      <Separator />
+
+      <div className="flex flex-col gap-1">
+        <h2 className="text-foreground text-base font-bold">Translations</h2>
+        <p className="text-muted-foreground text-xs">
+          Translate your title and bio. Empty fields fall back to the default content.
+        </p>
+      </div>
+      <ProfileTranslationsSection
+        profileId={data.id}
+        sourceValues={{ title: data.title, bio: data.bio }}
+      />
     </div>
   )
 }

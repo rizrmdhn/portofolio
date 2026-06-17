@@ -8,9 +8,15 @@ import {
   updateExperience,
 } from "@portofolio/queries/experience.queries";
 import {
+  deleteExperienceTranslation,
+  getExperienceTranslations,
+  upsertExperienceTranslation,
+} from "@portofolio/queries/translation.queries";
+import {
   createExperienceSchema,
   updateExperienceSchema,
 } from "@portofolio/schema/experience.schema";
+import { localeInputSchema, translationLocaleSchema } from "@portofolio/schema/locale.schema";
 import { tryCatchAsync } from "@portofolio/utils/try-catch";
 import { z } from "zod";
 import { CACHE_KEYS, CACHE_TTL } from '@portofolio/constants'
@@ -20,9 +26,10 @@ import { toTRPCError } from "../utils/to-trpc-error";
 const CACHE_PREFIX = CACHE_KEYS.EXPERIENCE_PREFIX
 
 export const experienceRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: publicProcedure.input(localeInputSchema.optional()).query(async ({ ctx, input }) => {
+    const locale = input?.locale ?? ctx.locale
     const [experiences, err] = await tryCatchAsync(() =>
-      ctx.cache.withCache(CACHE_KEYS.EXPERIENCE_ALL, CACHE_TTL.SHORT, () => getAllExperiences(), () => ctx.headers.set('X-Data-Source', 'cache')),
+      ctx.cache.withCache(`${CACHE_KEYS.EXPERIENCE_ALL}:${locale}`, CACHE_TTL.SHORT, () => getAllExperiences(locale), () => ctx.headers.set('X-Data-Source', 'cache')),
     )
     if (err) throw toTRPCError(err);
     return experiences;
@@ -79,5 +86,44 @@ export const experienceRouter = createTRPCRouter({
       if (err) throw toTRPCError(err);
       void createActivityLog({ action: "deleted", entity: "experience", entityId: success.id, entityTitle: success.title });
       return success;
+    }),
+
+  // ========== Content translations (dashboard authoring) ==========
+
+  getTranslations: protectedProcedure
+    .input(z.object({ experienceId: z.string() }))
+    .query(async ({ input: { experienceId } }) => {
+      const [rows, err] = await tryCatchAsync(() => getExperienceTranslations(experienceId));
+      if (err) throw toTRPCError(err);
+      return rows;
+    }),
+
+  upsertTranslation: protectedProcedure
+    .input(
+      z.object({
+        experienceId: z.string(),
+        locale: translationLocaleSchema,
+        title: z.string().min(1),
+        description: z.string().min(1),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const [row, err] = await tryCatchAsync(() =>
+        ctx.cache.withCacheInvalidation(CACHE_PREFIX, () => upsertExperienceTranslation(input)),
+      );
+      if (err) throw toTRPCError(err);
+      return row;
+    }),
+
+  deleteTranslation: protectedProcedure
+    .input(z.object({ experienceId: z.string(), locale: translationLocaleSchema }))
+    .mutation(async ({ ctx, input: { experienceId, locale } }) => {
+      const [, err] = await tryCatchAsync(() =>
+        ctx.cache.withCacheInvalidation(CACHE_PREFIX, () =>
+          deleteExperienceTranslation(experienceId, locale),
+        ),
+      );
+      if (err) throw toTRPCError(err);
+      return true;
     }),
 });

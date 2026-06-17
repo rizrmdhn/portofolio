@@ -1,6 +1,8 @@
 import { eq } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
 import { experiences } from '@portofolio/db/schema/index'
+import { DEFAULT_LOCALE  } from '@portofolio/i18n'
+import type {Locale} from '@portofolio/i18n';
 import type {
   CreateExperienceInput,
   UpdateExperienceInput,
@@ -9,15 +11,23 @@ import { NotFoundError, QueryError } from '@portofolio/errors'
 import { insensitiveContains } from './utils/dialect'
 import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
-export async function getAllExperiences() {
+export async function getAllExperiences(locale: Locale = DEFAULT_LOCALE) {
   const results = await db.query.experiences.findMany({
+    with: { translations: { where: { locale } } },
     orderBy: {
       currentlyWorking: 'desc',
       startDate: 'desc',
     },
   })
 
-  return results
+  // Overlay the locale's translation onto the base (English) row, then drop the
+  // joined `translations` so the returned shape matches the base entity.
+  return results.map(({ translations, ...experience }) => {
+    const translation = translations[0]
+    return translation
+      ? { ...experience, title: translation.title, description: translation.description }
+      : experience
+  })
 }
 
 export async function getExperiencesForDashboard(search?: string) {

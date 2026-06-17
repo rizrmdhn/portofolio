@@ -1,3 +1,4 @@
+import { useLocale, useTranslations } from '@/i18n/locale-context'
 import { trpc } from '@/utils/trpc'
 import type { ProjectWithViewCount } from '@portofolio/types/project.types'
 import { toCompactNumber } from '@portofolio/utils/number'
@@ -19,12 +20,16 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const navigate = useNavigate()
+  const locale = useLocale()
+  const { t } = useTranslations()
   const incrementViews = useMutation(trpc.project.updateView.mutationOptions())
 
   return (
     <Card
       className="hover:bg-project-hover hover:border-card-hover-border flex h-full max-w-md cursor-pointer flex-col rounded-lg border border-transparent p-5 transition-all hover:shadow-sm"
-      onClick={() => navigate({ to: '/projects/$slug', params: { slug: project.slug } })}
+      onClick={() =>
+        navigate({ to: '/$locale/projects/$slug', params: { locale, slug: project.slug } })
+      }
     >
       <CardContent className="flex flex-1 flex-col gap-4 p-0">
         <h3 className="text-sm font-semibold">{project.title}</h3>
@@ -55,7 +60,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
             >
               <IconBrandGithub className="size-3.25" />
-              Github
+              {t.projectDetail.linkGithub}
             </a>
           )}
           {project.liveUrl && (
@@ -70,7 +75,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
             >
               <IconExternalLink className="size-3.25" />
-              Live
+              {t.projectDetail.linkLive}
             </a>
           )}
           {project.playstoreUrl && (
@@ -85,7 +90,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
             >
               <IconBrandGooglePlay className="size-3.25" />
-              Play Store
+              {t.projectDetail.linkPlayStore}
             </a>
           )}
           {project.appstoreUrl && (
@@ -100,7 +105,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
             >
               <IconBrandAppstore className="size-3.25" />
-              App Store
+              {t.projectDetail.linkAppStore}
             </a>
           )}
         </div>

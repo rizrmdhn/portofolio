@@ -2,9 +2,16 @@ import { ErrorBoundary } from '@/components/error-boundary'
 import { NotFound } from '@/components/not-found'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
+import { DEFAULT_LOCALE, isLocale } from '@portofolio/i18n'
 import type { AppRouter } from '@portofolio/api/root'
 import type { QueryClient } from '@tanstack/react-query'
-import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRouteWithContext,
+  useParams,
+} from '@tanstack/react-router'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import { Suspense, lazy } from 'react'
 
@@ -90,8 +97,13 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 })
 
 function RootDocument() {
+  // Read the locale from the `$locale` route param when present (public site);
+  // dashboard/auth/error routes have no locale param and fall back to default.
+  const params = useParams({ strict: false })
+  const lang = isLocale(params.locale) ? params.locale : DEFAULT_LOCALE
+
   return (
-    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
+    <html lang={lang} className="dark scroll-smooth" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>

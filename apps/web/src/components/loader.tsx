@@ -45,7 +45,7 @@ function SectionSkeleton({ label, children }: { label?: boolean; children: React
 
 export function ResumeSkeleton() {
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex flex-col">
       <SkeletonHeader />
 
       <main className="mx-auto flex w-full flex-col gap-6 px-4 py-12 md:max-w-175 md:px-0">
@@ -64,7 +64,7 @@ export function ResumeSkeleton() {
 
 export function HomeSkeleton() {
   return (
-    <div className="bg-background flex min-h-screen flex-col">
+    <div className="bg-background flex flex-col">
       <SkeletonHeader />
 
       {/* Hero */}

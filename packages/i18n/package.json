@@ -1,26 +1,17 @@
 {
-  "name": "@portofolio/schema",
+  "name": "@portofolio/i18n",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "exports": {
-    "./*": {
-      "types": "./src/*.ts",
-      "default": "./src/*.ts"
-    }
+    ".": "./src/index.ts",
+    "./messages/*": "./src/messages/*.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
-  },
-  "dependencies": {
-    "@portofolio/db": "workspace:*",
-    "@portofolio/constants": "workspace:*",
-    "@portofolio/i18n": "workspace:*",
-    "@portofolio/types": "workspace:*",
-    "zod": "catalog:"
   },
   "devDependencies": {
     "@portofolio/config": "workspace:*",

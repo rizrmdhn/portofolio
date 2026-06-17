@@ -1,3 +1,5 @@
+import { TranslationEditor } from '@/components/dashboard/translation-editor'
+import type { TranslationFieldDef } from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
@@ -27,12 +29,79 @@ import {
   EXPERIENCE_TYPES,
   EXPERIENCE_TYPE_LABELS,
 } from '@portofolio/constants'
+import type { Locale } from '@portofolio/i18n'
 import { updateExperienceSchema } from '@portofolio/schema/experience.schema'
 import type { TablerIcon } from '@tabler/icons-react'
-import { IconBriefcase, IconSettings } from '@tabler/icons-react'
+import { IconBriefcase, IconLanguage, IconSettings } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
+
+const EXPERIENCE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
+  { name: 'title', label: 'Role / Title', type: 'input', placeholder: 'Senior Engineer' },
+  {
+    name: 'description',
+    label: 'Description',
+    type: 'textarea',
+    placeholder: 'What you did in this role',
+  },
+]
+
+function ExperienceTranslationsTab({
+  experienceId,
+  sourceValues,
+}: {
+  experienceId: string
+  sourceValues: Record<string, string>
+}) {
+  const queryClient = useQueryClient()
+  const translationsQuery = useQuery(
+    trpc.experience.getTranslations.queryOptions({ experienceId }),
+  )
+
+  const invalidate = () =>
+    queryClient.invalidateQueries(trpc.experience.getTranslations.queryFilter({ experienceId }))
+
+  const upsert = useMutation(
+    trpc.experience.upsertTranslation.mutationOptions({
+      onSuccess: async () => {
+        await invalidate()
+        globalSuccessToast('Translation saved')
+      },
+      onError: (error) => globalErrorToast(error.message || 'Failed to save translation'),
+    }),
+  )
+
+  const remove = useMutation(
+    trpc.experience.deleteTranslation.mutationOptions({
+      onSuccess: async () => {
+        await invalidate()
+        globalSuccessToast('Translation removed')
+      },
+      onError: (error) => globalErrorToast(error.message || 'Failed to remove translation'),
+    }),
+  )
+
+  return (
+    <TranslationEditor
+      fields={EXPERIENCE_TRANSLATION_FIELDS}
+      translations={translationsQuery.data ?? []}
+      sourceValues={sourceValues}
+      isLoading={translationsQuery.isLoading}
+      savingLocale={upsert.isPending ? upsert.variables.locale : null}
+      removingLocale={remove.isPending ? remove.variables.locale : null}
+      onSave={(locale: Locale, values) =>
+        upsert.mutate({
+          experienceId,
+          locale,
+          title: values.title ?? '',
+          description: values.description ?? '',
+        })
+      }
+      onRemove={(locale: Locale) => remove.mutate({ experienceId, locale })}
+    />
+  )
+}
 
 export const Route = createFileRoute('/(core)/dashboard/experience/$experienceId/edit')({
   beforeLoad: async ({ context, params }) => {
@@ -48,6 +117,7 @@ export const Route = createFileRoute('/(core)/dashboard/experience/$experienceId
 const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
   { icon: IconBriefcase, title: 'Role Details', value: 'role-details' },
   { icon: IconSettings, title: 'Settings', value: 'settings' },
+  { icon: IconLanguage, title: 'Translations', value: 'translations' },
 ]
 
 const TAB_FIELDS: Record<string, Array<string>> = {
@@ -63,6 +133,7 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'skills',
   ],
   settings: ['status'],
+  translations: [],
 }
 
 function RouteComponent() {
@@ -396,6 +467,17 @@ function RouteComponent() {
                       }}
                     />
                   </FieldGroup>
+                </TabsContent>
+
+                {/* Translations */}
+                <TabsContent value="translations">
+                  <ExperienceTranslationsTab
+                    experienceId={experienceId}
+                    sourceValues={{
+                      title: experience.title,
+                      description: experience.description,
+                    }}
+                  />
                 </TabsContent>
               </div>
             </ScrollArea>

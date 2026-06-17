@@ -8,6 +8,7 @@
  */
 import { auth } from '@portofolio/auth'
 import { cacheService } from '@portofolio/cache'
+import { DEFAULT_LOCALE, parseLocaleCookie } from '@portofolio/i18n'
 import { TRPCError, initTRPC } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError, z } from 'zod'
@@ -48,6 +49,9 @@ export const createTRPCContext = async (context: Request, resHeaders = new Heade
     headers: resHeaders,
     clientIp: getClientIp(context.headers),
     userAgent: context.headers.get('user-agent') ?? null,
+    // Visitor's preferred locale, read from the cookie the client always sends.
+    // Used as the default for locale-aware procedures when the caller omits one.
+    locale: parseLocaleCookie(context.headers.get('cookie')) ?? DEFAULT_LOCALE,
   }
 }
 

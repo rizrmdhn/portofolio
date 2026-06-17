@@ -1,5 +1,45 @@
 type LinkInput = { label: string; url?: string }
 
+export type TranslationPromptInput = {
+  /** Human-readable target language, e.g. "Bahasa Indonesia". */
+  targetLanguage: string
+  /** Label of the field being translated, e.g. "Long Description". */
+  fieldLabel: string
+  /** The English source text to translate. */
+  sourceText: string
+  /** When true, instruct the assistant to preserve Markdown formatting. */
+  markdown?: boolean
+}
+
+/**
+ * Builds a ready-to-paste prompt that translates a single piece of portfolio
+ * content from English into the target language, preserving formatting and
+ * leaving code / brand / tech names untouched. Mirrors the description prompts
+ * so the result can be pasted straight back into the translation field.
+ */
+export function buildTranslationPrompt({
+  targetLanguage,
+  fieldLabel,
+  sourceText,
+  markdown,
+}: TranslationPromptInput): string {
+  return `Translate the following portfolio "${fieldLabel}" from English into ${targetLanguage}.
+
+English source:
+${sourceText.trim()}
+
+Guidelines:
+- Translate naturally and idiomatically; preserve the original meaning, tone and intent.
+- Do NOT translate code, URLs, brand/product names, or technology names (e.g. React, TypeScript, Next.js) — keep them exactly as-is.
+${
+  markdown
+    ? '- Preserve all Markdown formatting exactly (headings, **bold**, _italic_, lists, links, `inline code`). Translate only the human-readable text.'
+    : '- Return plain text only — no Markdown, headings, lists or formatting.'
+}
+- Do not add, remove or invent any information.
+- Return only the translated text — no preamble, commentary, quotes or code fences.`
+}
+
 export type ProjectPromptInput = {
   title?: string
   description?: string

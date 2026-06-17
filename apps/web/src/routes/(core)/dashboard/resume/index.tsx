@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useOptimisticMutation } from '@/lib/optimistic-update'
 import { globalErrorToast, globalSuccessToast } from '@/lib/toasts'
 import { trpc } from '@/utils/trpc'
+import { DEFAULT_LOCALE } from '@portofolio/i18n'
 import { resumeSettingsSchema } from '@portofolio/schema/resume.schema'
 import type { ResumeFont, ResumeTemplate } from '@portofolio/types/resume.types'
 import { RESUME_FONTS, RESUME_FONT_LABELS, RESUME_TEMPLATES } from '@portofolio/types/resume.types'
@@ -135,7 +136,7 @@ function ResumeSettingsPage() {
         </div>
         {cv?.data.url && (
           <div className="flex items-center gap-2">
-            <Link to="/resume" target="_blank">
+            <Link to="/$locale/resume" params={{ locale: DEFAULT_LOCALE }} target="_blank">
               <Button variant="outline" size="sm">
                 <IconFileText className="size-4" />
                 View Public Page
