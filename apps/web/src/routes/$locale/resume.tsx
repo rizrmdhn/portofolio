@@ -47,7 +47,7 @@ function ResumePage() {
   }
 
   return (
-    <div className="bg-background text-foreground flex min-h-screen flex-col">
+    <div className="bg-background text-foreground flex flex-col">
       <MainHeader />
       <main className="mx-auto flex w-full flex-col gap-6 px-4 py-12 md:max-w-175 md:px-0">
         <div className="flex items-start justify-between">
