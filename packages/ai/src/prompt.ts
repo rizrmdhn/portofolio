@@ -26,7 +26,9 @@ English source:
 ${sourceText.trim()}
 
 Guidelines:
-- Translate naturally and idiomatically; preserve the original meaning, tone and intent.
+- Translate naturally and idiomatically — write what a native speaker would actually say, not a literal word-for-word rendering.
+- For short section headings and labels (e.g. "Overview", "Key Features", "Tech Highlights", "Challenges"), use the conventional native equivalent; if there is no natural one and a literal translation would sound awkward, keep the English heading as-is.
+- Preferred Indonesian (Bahasa Indonesia) terms — use these exact phrasings when the heading matches: "Tech Highlights" / "Tech Stack" / "Technologies Used" → "Teknologi Digunakan".
 - Do NOT translate code, URLs, brand/product names, or technology names (e.g. React, TypeScript, Next.js) — keep them exactly as-is.
 ${
   markdown
