@@ -42,7 +42,8 @@ jobs:
           {
             "name": "portofolio-web",
             "scripts": {
-              "start": "node server/index.mjs"
+              "start": "node server/index.mjs",
+              "build": "echo 'Prebuilt via GitHub Actions - skipping build'"
             }
           }
           EOF
