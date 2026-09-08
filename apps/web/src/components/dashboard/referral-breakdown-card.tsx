@@ -4,6 +4,7 @@ import { IconLink } from '@tabler/icons-react'
 import { useMemo } from 'react'
 import { Cell, Pie, PieChart } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import type { ChartConfig } from '../ui/chart'
 import {
   ChartContainer,
   ChartLegend,
@@ -11,7 +12,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart'
-import type { ChartConfig } from '../ui/chart'
 import { EmptyState } from '../ui/empty-state'
 
 interface ReferralBreakdownCardProps {
@@ -33,6 +33,7 @@ const REFERRAL_LABELS: Record<ReferralSource, string> = {
   linkedin: 'LinkedIn',
   github: 'GitHub',
   twitter: 'Twitter',
+  instagram: 'Instagram',
 }
 
 export function ReferralBreakdownCard({ className, data }: ReferralBreakdownCardProps) {
