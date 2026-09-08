@@ -1,0 +1,1 @@
+import{A as e,M as t,Q as n,V as r}from"./index-Bb_Br42J.js";var i=t(e,{title:r.string().min(2).max(256),url:r.url(),icon:r.enum(n),order:r.number()}).omit({createdAt:!0,updatedAt:!0}),a=i.extend({id:r.string()});r.array(r.object({id:r.string(),order:r.number().int().min(0)})).min(1);export{a as n,i as t};

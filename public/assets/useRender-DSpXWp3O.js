@@ -1,0 +1,1 @@
+import{yt as e}from"./index-Bb_Br42J.js";function t(t){return e(t.defaultTagName??`div`,t,t)}export{t};

@@ -1,0 +1,1 @@
+import{Cn as e,Nn as t,rt as n}from"./index-Bb_Br42J.js";import{t as r}from"./locale-context-DR5XBE0M.js";var i=t();function a(){let{locale:t}=n.useParams();return(0,i.jsx)(r,{locale:t,children:(0,i.jsx)(e,{})})}export{a as component};
