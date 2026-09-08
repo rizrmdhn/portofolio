@@ -47,6 +47,13 @@ function BulletItem({ children }: { children: string }) {
   )
 }
 
+// Strips protocol, query string and hash so tracking params (e.g. ?referral=cv)
+// never show up in the printed PDF text.
+function displayUrl(url: string): string {
+  const { hostname, pathname } = new URL(url)
+  return `${hostname}${pathname === '/' ? '' : pathname}`
+}
+
 // ─── Template ─────────────────────────────────────────────────────────────────
 
 export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: ATSTemplateProps) {
@@ -60,6 +67,8 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
     techStack,
     socialLinks,
   } = data
+
+  const portfolioLink = socialLinks.find((l) => l.url.includes('portofolio'))
 
   const formatDate = (dateStr: string) =>
     new Date(dateStr).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
@@ -91,7 +100,7 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
                 <View key={l.id} style={tw('flex flex-row')}>
                   {i > 0 && <Text style={tw('text-[8px] text-gray-600 mx-1')}>{'·'}</Text>}
                   <Link src={l.url} style={tw('text-[8px] text-gray-600')}>
-                    {l.url.replace(/^https?:\/\//, '')}
+                    {displayUrl(l.url)}
                   </Link>
                 </View>
               ))}
@@ -155,9 +164,7 @@ export function ATSTemplate({ data, accentColor: _accentColor, font, summary }: 
             <SectionHeader>Projects</SectionHeader>
             <Text style={tw('text-[8px] italic text-gray-500 mb-0.5')}>
               Live demos &amp; source code at{' '}
-              {socialLinks
-                .find((l) => l.url.includes('portofolio'))
-                ?.url.replace(/^https?:\/\//, '') ?? 'portfolio'}
+              {portfolioLink ? displayUrl(portfolioLink.url) : 'portfolio'}
             </Text>
             {featuredProjects.map((proj) => (
               <View key={proj.id} style={tw('mb-1')}>
