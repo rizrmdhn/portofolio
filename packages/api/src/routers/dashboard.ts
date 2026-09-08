@@ -2,6 +2,7 @@ import {
   getDashboardStats,
   getDeviceBreakdown,
   getRecentActivity,
+  getReferralBreakdown,
   getViewEventsByRange,
 } from '@portofolio/queries/dashboard.queries'
 import { tryCatchAsync } from '@portofolio/utils/try-catch'
@@ -38,6 +39,14 @@ export const dashboardRouter = createTRPCRouter({
 
   getDeviceBreakdown: protectedProcedure.query(async () => {
     const [breakdown, err] = await tryCatchAsync(() => getDeviceBreakdown())
+
+    if (err) throw toTRPCError(err)
+
+    return breakdown
+  }),
+
+  getReferralBreakdown: protectedProcedure.query(async () => {
+    const [breakdown, err] = await tryCatchAsync(() => getReferralBreakdown())
 
     if (err) throw toTRPCError(err)
 

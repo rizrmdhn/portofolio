@@ -4,6 +4,7 @@ import {
   certifications,
   experiences,
   projects,
+  referralVisits,
   techStackCategories,
   techStackItems,
   viewEvents,
@@ -54,6 +55,22 @@ export async function getDeviceBreakdown() {
   return rows.map((r) => ({
     deviceType: r.deviceType as string,
     views: Number(r.views),
+  }))
+}
+
+export async function getReferralBreakdown() {
+  const rows = await db
+    .select({
+      referral: referralVisits.referral,
+      visits: count(),
+    })
+    .from(referralVisits)
+    .groupBy(referralVisits.referral)
+    .orderBy(desc(count()))
+
+  return rows.map((r) => ({
+    referral: r.referral,
+    visits: Number(r.visits),
   }))
 }
 

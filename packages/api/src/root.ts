@@ -7,6 +7,7 @@ import { educationRouter } from "./routers/education";
 import { experienceRouter } from "./routers/experience";
 import { profileRouter } from "./routers/profile";
 import { projectRouter } from "./routers/project";
+import { referralRouter } from "./routers/referral";
 import { resumeRouter } from "./routers/resume";
 import { seoRouter } from "./routers/seo";
 import { socialLinkRouter } from "./routers/social-link";
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   profile: profileRouter,
   socialLink: socialLinkRouter,
   dashboard: dashboardRouter,
+  referral: referralRouter,
   resume: resumeRouter,
   seo: seoRouter,
   ai: aiRouter,

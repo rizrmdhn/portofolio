@@ -11,6 +11,7 @@ import {
   DEGREE_TYPES,
   EXPERIENCE_STATUS_TYPES,
   EXPERIENCE_TYPES,
+  REFERRAL_SOURCES,
   SOCIAL_ICON_NAMES,
   STATUS_TYPES,
 } from '@portofolio/constants'
@@ -48,6 +49,7 @@ export const socialIconEnum = pgEnum('social_icon_enum', SOCIAL_ICON_NAMES)
 export const degreeEnum = pgEnum('degree_enum', DEGREE_TYPES)
 export const activityLogActionEnum = pgEnum('activity_log_action_enum', ACTIVITY_LOG_ACTIONS)
 export const activityLogEntityEnum = pgEnum('activity_log_entity_enum', ACTIVITY_LOG_ENTITIES)
+export const referralSourceEnum = pgEnum('referral_source_enum', REFERRAL_SOURCES)
 
 // ========== Better Auth tables ==========
 
@@ -354,6 +356,21 @@ export const viewEvents = createTable(
     idx('view_events_project_id_idx', table.projectId),
     idx('view_events_viewed_at_idx', table.viewedAt),
     idx('view_events_device_type_idx', table.deviceType),
+  ],
+)
+
+export const referralVisits = createTable(
+  'referral_visits',
+  {
+    id: uuidPk(),
+    referral: enumCol(referralSourceEnum, 'referral').notNull(),
+    visitedAt: tsTz('visited_at')
+      .$default(() => new Date().toISOString())
+      .notNull(),
+  },
+  (table) => [
+    idx('referral_visits_referral_idx', table.referral),
+    idx('referral_visits_visited_at_idx', table.visitedAt),
   ],
 )
 
