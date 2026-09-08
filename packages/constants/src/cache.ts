@@ -28,6 +28,9 @@ export const CACHE_KEYS = {
   PROJECT_VIEW_DEDUP_PREFIX: 'project:view-dedup:',
   PROJECT_PREFIX: 'project:',
 
+  // Referral
+  REFERRAL_VISIT_DEDUP_PREFIX: 'referral:visit-dedup:',
+
   // Resume
   RESUME_CV: 'resume:cv',
   RESUME_SETTINGS: 'resume:settings',

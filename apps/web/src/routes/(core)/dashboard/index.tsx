@@ -2,6 +2,7 @@ import { AllTimeProjectsCard } from '@/components/dashboard/all-time-projects-ca
 import { DeviceBreakdownCard } from '@/components/dashboard/device-breakdown-card'
 import { PageViewsChart } from '@/components/dashboard/page-views-chart'
 import { RecentActivityCard } from '@/components/dashboard/recent-activity-card'
+import { ReferralBreakdownCard } from '@/components/dashboard/referral-breakdown-card'
 import { SocialLinkClickThroughCard } from '@/components/dashboard/social-link-click-through-card'
 import { StatsCards } from '@/components/dashboard/stats-cards'
 import { trpc } from '@/utils/trpc'
@@ -24,6 +25,9 @@ export const Route = createFileRoute('/(core)/dashboard/')({
       ),
       context.queryClient.ensureQueryData(context.trpc.dashboard.getRecentActivity.queryOptions()),
       context.queryClient.ensureQueryData(context.trpc.dashboard.getDeviceBreakdown.queryOptions()),
+      context.queryClient.ensureQueryData(
+        context.trpc.dashboard.getReferralBreakdown.queryOptions(),
+      ),
     ])
   },
   component: RouteComponent,
@@ -44,6 +48,9 @@ function RouteComponent() {
   const { data: deviceBreakdown } = useSuspenseQuery(
     trpc.dashboard.getDeviceBreakdown.queryOptions(),
   )
+  const { data: referralBreakdown } = useSuspenseQuery(
+    trpc.dashboard.getReferralBreakdown.queryOptions(),
+  )
 
   return (
     <div className="flex flex-col gap-6">
@@ -56,10 +63,11 @@ function RouteComponent() {
         <DeviceBreakdownCard data={deviceBreakdown} />
       </div>
 
-      {/* Section 3 — Top projects + social links */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {/* Section 3 — Top projects, social links, referral sources */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <AllTimeProjectsCard projects={allTimeViewsProjects} />
         <SocialLinkClickThroughCard socialLinks={socialLinks} />
+        <ReferralBreakdownCard data={referralBreakdown} />
       </div>
 
       {/* Section 5 — Recent activity */}

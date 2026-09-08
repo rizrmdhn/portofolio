@@ -11,7 +11,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { useLocale, useTranslations } from '@/i18n/locale-context'
 import { buildSeoMeta } from '@/lib/seo'
 import { trpc } from '@/utils/trpc'
-import { SOCIAL_ICON_MAP } from '@portofolio/constants'
+import { REFERRAL_SOURCES, SOCIAL_ICON_MAP } from '@portofolio/constants'
 import { DEFAULT_LOCALE, getMessages, isLocale, ogLocale } from '@portofolio/i18n'
 import {
   IconArrowRight,
@@ -23,9 +23,14 @@ import {
 } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+import { useEffect } from 'react'
+import { z } from 'zod'
 
 export const Route = createFileRoute('/$locale/')({
   pendingComponent: HomeSkeleton,
+  validateSearch: z.object({
+    referral: z.enum(REFERRAL_SOURCES).optional().catch(undefined),
+  }),
   loader: async ({ context, params }) => {
     const locale = isLocale(params.locale) ? params.locale : DEFAULT_LOCALE
     const [profile, projects, experiences, stack, certifications, socialLinks, seo] =
@@ -85,6 +90,7 @@ function HomeComponent() {
   const navigate = Route.useNavigate()
   const locale = useLocale()
   const { t } = useTranslations()
+  const { referral } = Route.useSearch()
 
   const {
     profile,
@@ -102,6 +108,16 @@ function HomeComponent() {
   const incrementSocialLinkClickCount = useMutation(
     trpc.socialLink.incrementClickCount.mutationOptions(),
   )
+
+  const trackReferralVisit = useMutation(trpc.referral.trackVisit.mutationOptions())
+
+  useEffect(() => {
+    // The server de-duplicates visits per referral per IP per day (see
+    // referral.trackVisit); only fire when the URL actually carries the param.
+    if (referral) trackReferralVisit.mutate({ referral })
+    // only re-fire if the referral param itself changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [referral])
 
   return (
     <div className="bg-background text-foreground flex flex-col">
