@@ -102,7 +102,7 @@ export const ACTIVITY_LOG_ENTITY_LABELS: Record<ActivityLogEntity, string> = {
   achievement: 'Achievement',
 }
 
-export const REFERRAL_SOURCES = ['cv', 'linkedin', 'github', 'twitter'] as const
+export const REFERRAL_SOURCES = ['cv', 'linkedin', 'github', 'twitter', 'instagram'] as const
 export type ReferralSource = (typeof REFERRAL_SOURCES)[number]
 
 export * from './cache'
