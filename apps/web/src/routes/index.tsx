@@ -9,6 +9,9 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 export const Route = createFileRoute('/')({
   beforeLoad: async () => {
     const locale = await getPreferredLocale()
-    throw redirect({ to: '/$locale', params: { locale } })
+    // search: true forwards the current query string (e.g. ?referral=cv) —
+    // without it, the redirect drops referral tracking params before they
+    // ever reach the $locale route.
+    throw redirect({ to: '/$locale', params: { locale }, search: true })
   },
 })
