@@ -50,10 +50,13 @@ import {
 } from '@/components/ui/select'
 
 export function ExperienceCareerHistory({
+  entryId,
   source,
   disabled,
   onSaved,
 }: {
+  /** Path experience of the edit page; other roles open via `?position=`. */
+  entryId: string
   source: Experience
   disabled: boolean
   onSaved: (groupId: string | null) => void
@@ -104,8 +107,15 @@ export function ExperienceCareerHistory({
             {roles.map((role) => (
               <li key={role.id} className="min-w-0">
                 <Link
-                  to="/dashboard/experience/$experienceId/edit"
-                  params={{ experienceId: role.id }}
+                  from="/dashboard/experience/$experienceId/edit"
+                  to="."
+                  // Stay on this entry and tab; the entry itself needs no position param.
+                  search={(prev) => ({
+                    ...prev,
+                    position: role.id === entryId ? undefined : role.id,
+                  })}
+                  // Without this, the entry link also matches while `?position=` is set.
+                  activeOptions={{ explicitUndefined: true }}
                   aria-current={role.id === source.id ? 'page' : undefined}
                   className={cn(
                     'hover:bg-muted focus-visible:ring-ring flex min-w-0 flex-col gap-1 rounded-md px-3 py-2.5 wrap-anywhere focus-visible:ring-2 focus-visible:outline-none sm:flex-row sm:items-center sm:justify-between sm:gap-4',
