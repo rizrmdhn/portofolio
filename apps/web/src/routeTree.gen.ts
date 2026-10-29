@@ -9,46 +9,47 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as authRouteRouteImport } from './routes/(auth)/route'
-import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
-import { Route as authLoginRouteImport } from './routes/(auth)/login'
-import { Route as LocaleResumeRouteImport } from './routes/$locale/resume'
 import { Route as LocaleCertificatesRouteImport } from './routes/$locale/certificates'
+import { Route as LocaleResumeRouteImport } from './routes/$locale/resume'
+import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as coreDashboardRouteRouteImport } from './routes/(core)/dashboard/route'
-import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboard/index'
 import { Route as LocaleProjectsIndexRouteImport } from './routes/$locale/projects/index'
-import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as LocaleProjectsSlugRouteImport } from './routes/$locale/projects/$slug'
-import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
-import { Route as coreDashboardSocialLinksIndexRouteImport } from './routes/(core)/dashboard/social-links/index'
-import { Route as coreDashboardSeoIndexRouteImport } from './routes/(core)/dashboard/seo/index'
-import { Route as coreDashboardResumeIndexRouteImport } from './routes/(core)/dashboard/resume/index'
-import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
-import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dashboard/hero/index'
-import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
-import { Route as coreDashboardEducationIndexRouteImport } from './routes/(core)/dashboard/education/index'
-import { Route as coreDashboardCertificateIndexRouteImport } from './routes/(core)/dashboard/certificate/index'
+import { Route as coreDashboardIndexRouteImport } from './routes/(core)/dashboard/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as coreDashboardAchievementIndexRouteImport } from './routes/(core)/dashboard/achievement/index'
-import { Route as coreDashboardTechStackCreateRouteImport } from './routes/(core)/dashboard/tech-stack/create'
-import { Route as coreDashboardSocialLinksCreateRouteImport } from './routes/(core)/dashboard/social-links/create'
-import { Route as coreDashboardProjectsCreateRouteImport } from './routes/(core)/dashboard/projects/create'
-import { Route as coreDashboardExperienceCreateRouteImport } from './routes/(core)/dashboard/experience/create'
-import { Route as coreDashboardEducationCreateRouteImport } from './routes/(core)/dashboard/education/create'
-import { Route as coreDashboardCertificateCreateRouteImport } from './routes/(core)/dashboard/certificate/create'
 import { Route as coreDashboardAchievementCreateRouteImport } from './routes/(core)/dashboard/achievement/create'
-import { Route as coreDashboardTechStackTechStackIdEditRouteImport } from './routes/(core)/dashboard/tech-stack/$techStackId.edit'
-import { Route as coreDashboardSocialLinksSocialLinkIdEditRouteImport } from './routes/(core)/dashboard/social-links/$socialLinkId.edit'
-import { Route as coreDashboardProjectsProjectIdEditRouteImport } from './routes/(core)/dashboard/projects/$projectId.edit'
-import { Route as coreDashboardExperienceExperienceIdEditRouteImport } from './routes/(core)/dashboard/experience/$experienceId.edit'
-import { Route as coreDashboardEducationEducationIdEditRouteImport } from './routes/(core)/dashboard/education/$educationId.edit'
-import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
+import { Route as coreDashboardCertificateIndexRouteImport } from './routes/(core)/dashboard/certificate/index'
+import { Route as coreDashboardCertificateCreateRouteImport } from './routes/(core)/dashboard/certificate/create'
+import { Route as coreDashboardEducationIndexRouteImport } from './routes/(core)/dashboard/education/index'
+import { Route as coreDashboardEducationCreateRouteImport } from './routes/(core)/dashboard/education/create'
+import { Route as coreDashboardExperienceIndexRouteImport } from './routes/(core)/dashboard/experience/index'
+import { Route as coreDashboardExperienceCreateRouteImport } from './routes/(core)/dashboard/experience/create'
+import { Route as coreDashboardHeroIndexRouteImport } from './routes/(core)/dashboard/hero/index'
+import { Route as coreDashboardProjectsIndexRouteImport } from './routes/(core)/dashboard/projects/index'
+import { Route as coreDashboardProjectsCreateRouteImport } from './routes/(core)/dashboard/projects/create'
+import { Route as coreDashboardResumeIndexRouteImport } from './routes/(core)/dashboard/resume/index'
+import { Route as coreDashboardSeoIndexRouteImport } from './routes/(core)/dashboard/seo/index'
+import { Route as coreDashboardSocialLinksIndexRouteImport } from './routes/(core)/dashboard/social-links/index'
+import { Route as coreDashboardSocialLinksCreateRouteImport } from './routes/(core)/dashboard/social-links/create'
+import { Route as coreDashboardTechStackIndexRouteImport } from './routes/(core)/dashboard/tech-stack/index'
+import { Route as coreDashboardTechStackCreateRouteImport } from './routes/(core)/dashboard/tech-stack/create'
 import { Route as coreDashboardAchievementAchievementIdEditRouteImport } from './routes/(core)/dashboard/achievement/$achievementId.edit'
+import { Route as coreDashboardCertificateCertificateIdEditRouteImport } from './routes/(core)/dashboard/certificate/$certificateId.edit'
+import { Route as coreDashboardEducationEducationIdEditRouteImport } from './routes/(core)/dashboard/education/$educationId.edit'
+import { Route as coreDashboardExperienceExperienceIdEditRouteImport } from './routes/(core)/dashboard/experience/$experienceId.edit'
+import { Route as coreDashboardProjectsProjectIdEditRouteImport } from './routes/(core)/dashboard/projects/$projectId.edit'
+import { Route as coreDashboardSocialLinksSocialLinkIdEditRouteImport } from './routes/(core)/dashboard/social-links/$socialLinkId.edit'
+import { Route as coreDashboardTechStackTechStackIdEditRouteImport } from './routes/(core)/dashboard/tech-stack/$techStackId.edit'
 
-const authRouteRoute = authRouteRouteImport.update({
-  id: '/(auth)',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LocaleRouteRoute = LocaleRouteRouteImport.update({
@@ -56,9 +57,8 @@ const LocaleRouteRoute = LocaleRouteRouteImport.update({
   path: '/$locale',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LocaleIndexRoute = LocaleIndexRouteImport.update({
@@ -66,143 +66,55 @@ const LocaleIndexRoute = LocaleIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
-const authLoginRoute = authLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => authRouteRoute,
+const LocaleCertificatesRoute = LocaleCertificatesRouteImport.update({
+  id: '/certificates',
+  path: '/certificates',
+  getParentRoute: () => LocaleRouteRoute,
 } as any)
 const LocaleResumeRoute = LocaleResumeRouteImport.update({
   id: '/resume',
   path: '/resume',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
-const LocaleCertificatesRoute = LocaleCertificatesRouteImport.update({
-  id: '/certificates',
-  path: '/certificates',
-  getParentRoute: () => LocaleRouteRoute,
+const authLoginRoute = authLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => authRouteRoute,
 } as any)
 const coreDashboardRouteRoute = coreDashboardRouteRouteImport.update({
   id: '/(core)/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const coreDashboardIndexRoute = coreDashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => coreDashboardRouteRoute,
-} as any)
 const LocaleProjectsIndexRoute = LocaleProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
   getParentRoute: () => LocaleRouteRoute,
-} as any)
-const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
-  id: '/api/trpc/$',
-  path: '/api/trpc/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const LocaleProjectsSlugRoute = LocaleProjectsSlugRouteImport.update({
   id: '/projects/$slug',
   path: '/projects/$slug',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
-const coreDashboardTechStackIndexRoute =
-  coreDashboardTechStackIndexRouteImport.update({
-    id: '/tech-stack/',
-    path: '/tech-stack/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardSocialLinksIndexRoute =
-  coreDashboardSocialLinksIndexRouteImport.update({
-    id: '/social-links/',
-    path: '/social-links/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardSeoIndexRoute = coreDashboardSeoIndexRouteImport.update({
-  id: '/seo/',
-  path: '/seo/',
+const coreDashboardIndexRoute = coreDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => coreDashboardRouteRoute,
 } as any)
-const coreDashboardResumeIndexRoute =
-  coreDashboardResumeIndexRouteImport.update({
-    id: '/resume/',
-    path: '/resume/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardProjectsIndexRoute =
-  coreDashboardProjectsIndexRouteImport.update({
-    id: '/projects/',
-    path: '/projects/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardHeroIndexRoute = coreDashboardHeroIndexRouteImport.update({
-  id: '/hero/',
-  path: '/hero/',
-  getParentRoute: () => coreDashboardRouteRoute,
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const coreDashboardExperienceIndexRoute =
-  coreDashboardExperienceIndexRouteImport.update({
-    id: '/experience/',
-    path: '/experience/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardEducationIndexRoute =
-  coreDashboardEducationIndexRouteImport.update({
-    id: '/education/',
-    path: '/education/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardCertificateIndexRoute =
-  coreDashboardCertificateIndexRouteImport.update({
-    id: '/certificate/',
-    path: '/certificate/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
+const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
+  id: '/api/trpc/$',
+  path: '/api/trpc/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const coreDashboardAchievementIndexRoute =
   coreDashboardAchievementIndexRouteImport.update({
     id: '/achievement/',
     path: '/achievement/',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardTechStackCreateRoute =
-  coreDashboardTechStackCreateRouteImport.update({
-    id: '/tech-stack/create',
-    path: '/tech-stack/create',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardSocialLinksCreateRoute =
-  coreDashboardSocialLinksCreateRouteImport.update({
-    id: '/social-links/create',
-    path: '/social-links/create',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardProjectsCreateRoute =
-  coreDashboardProjectsCreateRouteImport.update({
-    id: '/projects/create',
-    path: '/projects/create',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardExperienceCreateRoute =
-  coreDashboardExperienceCreateRouteImport.update({
-    id: '/experience/create',
-    path: '/experience/create',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardEducationCreateRoute =
-  coreDashboardEducationCreateRouteImport.update({
-    id: '/education/create',
-    path: '/education/create',
-    getParentRoute: () => coreDashboardRouteRoute,
-  } as any)
-const coreDashboardCertificateCreateRoute =
-  coreDashboardCertificateCreateRouteImport.update({
-    id: '/certificate/create',
-    path: '/certificate/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 const coreDashboardAchievementCreateRoute =
@@ -211,34 +123,98 @@ const coreDashboardAchievementCreateRoute =
     path: '/achievement/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
-const coreDashboardTechStackTechStackIdEditRoute =
-  coreDashboardTechStackTechStackIdEditRouteImport.update({
-    id: '/tech-stack/$techStackId/edit',
-    path: '/tech-stack/$techStackId/edit',
+const coreDashboardCertificateIndexRoute =
+  coreDashboardCertificateIndexRouteImport.update({
+    id: '/certificate/',
+    path: '/certificate/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
-const coreDashboardSocialLinksSocialLinkIdEditRoute =
-  coreDashboardSocialLinksSocialLinkIdEditRouteImport.update({
-    id: '/social-links/$socialLinkId/edit',
-    path: '/social-links/$socialLinkId/edit',
+const coreDashboardCertificateCreateRoute =
+  coreDashboardCertificateCreateRouteImport.update({
+    id: '/certificate/create',
+    path: '/certificate/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
-const coreDashboardProjectsProjectIdEditRoute =
-  coreDashboardProjectsProjectIdEditRouteImport.update({
-    id: '/projects/$projectId/edit',
-    path: '/projects/$projectId/edit',
+const coreDashboardEducationIndexRoute =
+  coreDashboardEducationIndexRouteImport.update({
+    id: '/education/',
+    path: '/education/',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
-const coreDashboardExperienceExperienceIdEditRoute =
-  coreDashboardExperienceExperienceIdEditRouteImport.update({
-    id: '/experience/$experienceId/edit',
-    path: '/experience/$experienceId/edit',
+const coreDashboardEducationCreateRoute =
+  coreDashboardEducationCreateRouteImport.update({
+    id: '/education/create',
+    path: '/education/create',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
-const coreDashboardEducationEducationIdEditRoute =
-  coreDashboardEducationEducationIdEditRouteImport.update({
-    id: '/education/$educationId/edit',
-    path: '/education/$educationId/edit',
+const coreDashboardExperienceIndexRoute =
+  coreDashboardExperienceIndexRouteImport.update({
+    id: '/experience/',
+    path: '/experience/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardExperienceCreateRoute =
+  coreDashboardExperienceCreateRouteImport.update({
+    id: '/experience/create',
+    path: '/experience/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardHeroIndexRoute = coreDashboardHeroIndexRouteImport.update({
+  id: '/hero/',
+  path: '/hero/',
+  getParentRoute: () => coreDashboardRouteRoute,
+} as any)
+const coreDashboardProjectsIndexRoute =
+  coreDashboardProjectsIndexRouteImport.update({
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardProjectsCreateRoute =
+  coreDashboardProjectsCreateRouteImport.update({
+    id: '/projects/create',
+    path: '/projects/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardResumeIndexRoute =
+  coreDashboardResumeIndexRouteImport.update({
+    id: '/resume/',
+    path: '/resume/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardSeoIndexRoute = coreDashboardSeoIndexRouteImport.update({
+  id: '/seo/',
+  path: '/seo/',
+  getParentRoute: () => coreDashboardRouteRoute,
+} as any)
+const coreDashboardSocialLinksIndexRoute =
+  coreDashboardSocialLinksIndexRouteImport.update({
+    id: '/social-links/',
+    path: '/social-links/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardSocialLinksCreateRoute =
+  coreDashboardSocialLinksCreateRouteImport.update({
+    id: '/social-links/create',
+    path: '/social-links/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardTechStackIndexRoute =
+  coreDashboardTechStackIndexRouteImport.update({
+    id: '/tech-stack/',
+    path: '/tech-stack/',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardTechStackCreateRoute =
+  coreDashboardTechStackCreateRouteImport.update({
+    id: '/tech-stack/create',
+    path: '/tech-stack/create',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardAchievementAchievementIdEditRoute =
+  coreDashboardAchievementAchievementIdEditRouteImport.update({
+    id: '/achievement/$achievementId/edit',
+    path: '/achievement/$achievementId/edit',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 const coreDashboardCertificateCertificateIdEditRoute =
@@ -247,10 +223,34 @@ const coreDashboardCertificateCertificateIdEditRoute =
     path: '/certificate/$certificateId/edit',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
-const coreDashboardAchievementAchievementIdEditRoute =
-  coreDashboardAchievementAchievementIdEditRouteImport.update({
-    id: '/achievement/$achievementId/edit',
-    path: '/achievement/$achievementId/edit',
+const coreDashboardEducationEducationIdEditRoute =
+  coreDashboardEducationEducationIdEditRouteImport.update({
+    id: '/education/$educationId/edit',
+    path: '/education/$educationId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardExperienceExperienceIdEditRoute =
+  coreDashboardExperienceExperienceIdEditRouteImport.update({
+    id: '/experience/$experienceId/edit',
+    path: '/experience/$experienceId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardProjectsProjectIdEditRoute =
+  coreDashboardProjectsProjectIdEditRouteImport.update({
+    id: '/projects/$projectId/edit',
+    path: '/projects/$projectId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardSocialLinksSocialLinkIdEditRoute =
+  coreDashboardSocialLinksSocialLinkIdEditRouteImport.update({
+    id: '/social-links/$socialLinkId/edit',
+    path: '/social-links/$socialLinkId/edit',
+    getParentRoute: () => coreDashboardRouteRoute,
+  } as any)
+const coreDashboardTechStackTechStackIdEditRoute =
+  coreDashboardTechStackTechStackIdEditRouteImport.update({
+    id: '/tech-stack/$techStackId/edit',
+    path: '/tech-stack/$techStackId/edit',
     getParentRoute: () => coreDashboardRouteRoute,
   } as any)
 
@@ -495,11 +495,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(auth)': {
-      id: '/(auth)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof authRouteRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$locale': {
@@ -509,11 +509,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$locale/': {
@@ -523,12 +523,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleIndexRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
-    '/(auth)/login': {
-      id: '/(auth)/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginRouteImport
-      parentRoute: typeof authRouteRoute
+    '/$locale/certificates': {
+      id: '/$locale/certificates'
+      path: '/certificates'
+      fullPath: '/$locale/certificates'
+      preLoaderRoute: typeof LocaleCertificatesRouteImport
+      parentRoute: typeof LocaleRouteRoute
     }
     '/$locale/resume': {
       id: '/$locale/resume'
@@ -537,12 +537,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleResumeRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
-    '/$locale/certificates': {
-      id: '/$locale/certificates'
-      path: '/certificates'
-      fullPath: '/$locale/certificates'
-      preLoaderRoute: typeof LocaleCertificatesRouteImport
-      parentRoute: typeof LocaleRouteRoute
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof authRouteRoute
     }
     '/(core)/dashboard': {
       id: '/(core)/dashboard'
@@ -551,33 +551,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(core)/dashboard/': {
-      id: '/(core)/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof coreDashboardIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
     '/$locale/projects/': {
       id: '/$locale/projects/'
       path: '/projects'
       fullPath: '/$locale/projects/'
       preLoaderRoute: typeof LocaleProjectsIndexRouteImport
       parentRoute: typeof LocaleRouteRoute
-    }
-    '/api/trpc/$': {
-      id: '/api/trpc/$'
-      path: '/api/trpc/$'
-      fullPath: '/api/trpc/$'
-      preLoaderRoute: typeof ApiTrpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/$locale/projects/$slug': {
       id: '/$locale/projects/$slug'
@@ -586,116 +565,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleProjectsSlugRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
-    '/(core)/dashboard/tech-stack/': {
-      id: '/(core)/dashboard/tech-stack/'
-      path: '/tech-stack'
-      fullPath: '/dashboard/tech-stack/'
-      preLoaderRoute: typeof coreDashboardTechStackIndexRouteImport
+    '/(core)/dashboard/': {
+      id: '/(core)/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof coreDashboardIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
-    '/(core)/dashboard/social-links/': {
-      id: '/(core)/dashboard/social-links/'
-      path: '/social-links'
-      fullPath: '/dashboard/social-links/'
-      preLoaderRoute: typeof coreDashboardSocialLinksIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/(core)/dashboard/seo/': {
-      id: '/(core)/dashboard/seo/'
-      path: '/seo'
-      fullPath: '/dashboard/seo/'
-      preLoaderRoute: typeof coreDashboardSeoIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/resume/': {
-      id: '/(core)/dashboard/resume/'
-      path: '/resume'
-      fullPath: '/dashboard/resume/'
-      preLoaderRoute: typeof coreDashboardResumeIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/projects/': {
-      id: '/(core)/dashboard/projects/'
-      path: '/projects'
-      fullPath: '/dashboard/projects/'
-      preLoaderRoute: typeof coreDashboardProjectsIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/hero/': {
-      id: '/(core)/dashboard/hero/'
-      path: '/hero'
-      fullPath: '/dashboard/hero/'
-      preLoaderRoute: typeof coreDashboardHeroIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/experience/': {
-      id: '/(core)/dashboard/experience/'
-      path: '/experience'
-      fullPath: '/dashboard/experience/'
-      preLoaderRoute: typeof coreDashboardExperienceIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/education/': {
-      id: '/(core)/dashboard/education/'
-      path: '/education'
-      fullPath: '/dashboard/education/'
-      preLoaderRoute: typeof coreDashboardEducationIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/certificate/': {
-      id: '/(core)/dashboard/certificate/'
-      path: '/certificate'
-      fullPath: '/dashboard/certificate/'
-      preLoaderRoute: typeof coreDashboardCertificateIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
+    '/api/trpc/$': {
+      id: '/api/trpc/$'
+      path: '/api/trpc/$'
+      fullPath: '/api/trpc/$'
+      preLoaderRoute: typeof ApiTrpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(core)/dashboard/achievement/': {
       id: '/(core)/dashboard/achievement/'
       path: '/achievement'
       fullPath: '/dashboard/achievement/'
       preLoaderRoute: typeof coreDashboardAchievementIndexRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/tech-stack/create': {
-      id: '/(core)/dashboard/tech-stack/create'
-      path: '/tech-stack/create'
-      fullPath: '/dashboard/tech-stack/create'
-      preLoaderRoute: typeof coreDashboardTechStackCreateRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/social-links/create': {
-      id: '/(core)/dashboard/social-links/create'
-      path: '/social-links/create'
-      fullPath: '/dashboard/social-links/create'
-      preLoaderRoute: typeof coreDashboardSocialLinksCreateRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/projects/create': {
-      id: '/(core)/dashboard/projects/create'
-      path: '/projects/create'
-      fullPath: '/dashboard/projects/create'
-      preLoaderRoute: typeof coreDashboardProjectsCreateRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/experience/create': {
-      id: '/(core)/dashboard/experience/create'
-      path: '/experience/create'
-      fullPath: '/dashboard/experience/create'
-      preLoaderRoute: typeof coreDashboardExperienceCreateRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/education/create': {
-      id: '/(core)/dashboard/education/create'
-      path: '/education/create'
-      fullPath: '/dashboard/education/create'
-      preLoaderRoute: typeof coreDashboardEducationCreateRouteImport
-      parentRoute: typeof coreDashboardRouteRoute
-    }
-    '/(core)/dashboard/certificate/create': {
-      id: '/(core)/dashboard/certificate/create'
-      path: '/certificate/create'
-      fullPath: '/dashboard/certificate/create'
-      preLoaderRoute: typeof coreDashboardCertificateCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
     '/(core)/dashboard/achievement/create': {
@@ -705,39 +600,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardAchievementCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
-    '/(core)/dashboard/tech-stack/$techStackId/edit': {
-      id: '/(core)/dashboard/tech-stack/$techStackId/edit'
-      path: '/tech-stack/$techStackId/edit'
-      fullPath: '/dashboard/tech-stack/$techStackId/edit'
-      preLoaderRoute: typeof coreDashboardTechStackTechStackIdEditRouteImport
+    '/(core)/dashboard/certificate/': {
+      id: '/(core)/dashboard/certificate/'
+      path: '/certificate'
+      fullPath: '/dashboard/certificate/'
+      preLoaderRoute: typeof coreDashboardCertificateIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
-    '/(core)/dashboard/social-links/$socialLinkId/edit': {
-      id: '/(core)/dashboard/social-links/$socialLinkId/edit'
-      path: '/social-links/$socialLinkId/edit'
-      fullPath: '/dashboard/social-links/$socialLinkId/edit'
-      preLoaderRoute: typeof coreDashboardSocialLinksSocialLinkIdEditRouteImport
+    '/(core)/dashboard/certificate/create': {
+      id: '/(core)/dashboard/certificate/create'
+      path: '/certificate/create'
+      fullPath: '/dashboard/certificate/create'
+      preLoaderRoute: typeof coreDashboardCertificateCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
-    '/(core)/dashboard/projects/$projectId/edit': {
-      id: '/(core)/dashboard/projects/$projectId/edit'
-      path: '/projects/$projectId/edit'
-      fullPath: '/dashboard/projects/$projectId/edit'
-      preLoaderRoute: typeof coreDashboardProjectsProjectIdEditRouteImport
+    '/(core)/dashboard/education/': {
+      id: '/(core)/dashboard/education/'
+      path: '/education'
+      fullPath: '/dashboard/education/'
+      preLoaderRoute: typeof coreDashboardEducationIndexRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
-    '/(core)/dashboard/experience/$experienceId/edit': {
-      id: '/(core)/dashboard/experience/$experienceId/edit'
-      path: '/experience/$experienceId/edit'
-      fullPath: '/dashboard/experience/$experienceId/edit'
-      preLoaderRoute: typeof coreDashboardExperienceExperienceIdEditRouteImport
+    '/(core)/dashboard/education/create': {
+      id: '/(core)/dashboard/education/create'
+      path: '/education/create'
+      fullPath: '/dashboard/education/create'
+      preLoaderRoute: typeof coreDashboardEducationCreateRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
-    '/(core)/dashboard/education/$educationId/edit': {
-      id: '/(core)/dashboard/education/$educationId/edit'
-      path: '/education/$educationId/edit'
-      fullPath: '/dashboard/education/$educationId/edit'
-      preLoaderRoute: typeof coreDashboardEducationEducationIdEditRouteImport
+    '/(core)/dashboard/experience/': {
+      id: '/(core)/dashboard/experience/'
+      path: '/experience'
+      fullPath: '/dashboard/experience/'
+      preLoaderRoute: typeof coreDashboardExperienceIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/experience/create': {
+      id: '/(core)/dashboard/experience/create'
+      path: '/experience/create'
+      fullPath: '/dashboard/experience/create'
+      preLoaderRoute: typeof coreDashboardExperienceCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/hero/': {
+      id: '/(core)/dashboard/hero/'
+      path: '/hero'
+      fullPath: '/dashboard/hero/'
+      preLoaderRoute: typeof coreDashboardHeroIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/projects/': {
+      id: '/(core)/dashboard/projects/'
+      path: '/projects'
+      fullPath: '/dashboard/projects/'
+      preLoaderRoute: typeof coreDashboardProjectsIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/projects/create': {
+      id: '/(core)/dashboard/projects/create'
+      path: '/projects/create'
+      fullPath: '/dashboard/projects/create'
+      preLoaderRoute: typeof coreDashboardProjectsCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/resume/': {
+      id: '/(core)/dashboard/resume/'
+      path: '/resume'
+      fullPath: '/dashboard/resume/'
+      preLoaderRoute: typeof coreDashboardResumeIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/seo/': {
+      id: '/(core)/dashboard/seo/'
+      path: '/seo'
+      fullPath: '/dashboard/seo/'
+      preLoaderRoute: typeof coreDashboardSeoIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/social-links/': {
+      id: '/(core)/dashboard/social-links/'
+      path: '/social-links'
+      fullPath: '/dashboard/social-links/'
+      preLoaderRoute: typeof coreDashboardSocialLinksIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/social-links/create': {
+      id: '/(core)/dashboard/social-links/create'
+      path: '/social-links/create'
+      fullPath: '/dashboard/social-links/create'
+      preLoaderRoute: typeof coreDashboardSocialLinksCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/tech-stack/': {
+      id: '/(core)/dashboard/tech-stack/'
+      path: '/tech-stack'
+      fullPath: '/dashboard/tech-stack/'
+      preLoaderRoute: typeof coreDashboardTechStackIndexRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/tech-stack/create': {
+      id: '/(core)/dashboard/tech-stack/create'
+      path: '/tech-stack/create'
+      fullPath: '/dashboard/tech-stack/create'
+      preLoaderRoute: typeof coreDashboardTechStackCreateRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/achievement/$achievementId/edit': {
+      id: '/(core)/dashboard/achievement/$achievementId/edit'
+      path: '/achievement/$achievementId/edit'
+      fullPath: '/dashboard/achievement/$achievementId/edit'
+      preLoaderRoute: typeof coreDashboardAchievementAchievementIdEditRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
     '/(core)/dashboard/certificate/$certificateId/edit': {
@@ -747,11 +719,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof coreDashboardCertificateCertificateIdEditRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
-    '/(core)/dashboard/achievement/$achievementId/edit': {
-      id: '/(core)/dashboard/achievement/$achievementId/edit'
-      path: '/achievement/$achievementId/edit'
-      fullPath: '/dashboard/achievement/$achievementId/edit'
-      preLoaderRoute: typeof coreDashboardAchievementAchievementIdEditRouteImport
+    '/(core)/dashboard/education/$educationId/edit': {
+      id: '/(core)/dashboard/education/$educationId/edit'
+      path: '/education/$educationId/edit'
+      fullPath: '/dashboard/education/$educationId/edit'
+      preLoaderRoute: typeof coreDashboardEducationEducationIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/experience/$experienceId/edit': {
+      id: '/(core)/dashboard/experience/$experienceId/edit'
+      path: '/experience/$experienceId/edit'
+      fullPath: '/dashboard/experience/$experienceId/edit'
+      preLoaderRoute: typeof coreDashboardExperienceExperienceIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/projects/$projectId/edit': {
+      id: '/(core)/dashboard/projects/$projectId/edit'
+      path: '/projects/$projectId/edit'
+      fullPath: '/dashboard/projects/$projectId/edit'
+      preLoaderRoute: typeof coreDashboardProjectsProjectIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/social-links/$socialLinkId/edit': {
+      id: '/(core)/dashboard/social-links/$socialLinkId/edit'
+      path: '/social-links/$socialLinkId/edit'
+      fullPath: '/dashboard/social-links/$socialLinkId/edit'
+      preLoaderRoute: typeof coreDashboardSocialLinksSocialLinkIdEditRouteImport
+      parentRoute: typeof coreDashboardRouteRoute
+    }
+    '/(core)/dashboard/tech-stack/$techStackId/edit': {
+      id: '/(core)/dashboard/tech-stack/$techStackId/edit'
+      path: '/tech-stack/$techStackId/edit'
+      fullPath: '/dashboard/tech-stack/$techStackId/edit'
+      preLoaderRoute: typeof coreDashboardTechStackTechStackIdEditRouteImport
       parentRoute: typeof coreDashboardRouteRoute
     }
   }
