@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { groupExperiences, summarizeGroup } from './experience-groups.ts'
+import { groupExperiences, summarizeGroup, supersededAt } from './experience-groups.ts'
 
 function position(id: string, groupId?: string | null, startDate: Date | string = '2020-01-01') {
   return {
@@ -134,4 +134,22 @@ test('group summary never lifts an empty location', () => {
     role('2023-01-01', '2023-06-01', { location: '' }),
   ])
   assert.equal(summary.location, undefined)
+})
+
+test('a later role supersedes an earlier role still flagged current', () => {
+  const positions = [
+    role('2026-04-01', null),
+    role('2025-12-15', null),
+    role('2024-01-01', '2025-12-14'),
+  ]
+  assert.deepEqual(supersededAt(positions), [null, '2026-04-01', null])
+})
+
+test('each stale current role ends at the next later start, not the newest', () => {
+  const positions = [role('2023-01-01', null), role('2025-01-01', null), role('2024-01-01', null)]
+  assert.deepEqual(supersededAt(positions), ['2024-01-01', null, '2025-01-01'])
+})
+
+test('concurrent roles with equal starts both stay current', () => {
+  assert.deepEqual(supersededAt([role('2024-01-01', null), role('2024-01-01', null)]), [null, null])
 })
