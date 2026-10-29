@@ -40,6 +40,16 @@ Integration with EXP-03 preserves both achievements and grouping in the schema a
 
 ## Verification
 
+### Public display (EXP-05)
+
+The landing page groups positions only by explicit non-null `groupId`, anchoring each group at its first occurrence in the API list. Within each group, positions sort by start date descending; equal dates retain API order. Missing membership in older caches behaves like null. Independent entries retain API order, and separate return stints never merge by company name.
+
+Multi-position groups show the company once with a semantic list of positions. Single-position groups keep the standalone card. Each position retains its localized content, dates, duration, metadata, achievements and skills. No overall tenure range or summed duration is shown, so gaps are not presented as continuous service. Dashboard labels and inferred promotion badges are not used.
+
+Run `pnpm --filter @portofolio/web exec node --test src/lib/experience-groups.test.ts` (Node 24) for the database-free grouping tests.
+
+### Schema and membership (EXP-04)
+
 Run `pnpm --filter @portofolio/db exec tsx --test tests/experience-group.test.ts` with DATABASE_PROVIDER unset/postgresql, then with DATABASE_PROVIDER=mysql. These are database-free contract/schema tests, covering legacy rows, explicit membership/switching/detachment, UUID/string validation, company consistency, returning employees, and both dialect FK/index metadata. They do not execute SQL against a database.
 
 The existing endDate schema rejects omitted values at runtime (drizzle-zod wraps its undefined union as nonoptional). Dated test fixtures avoid that pre-existing issue; EXP-04 does not change date validation.

@@ -1,0 +1,97 @@
+import assert from 'node:assert/strict'
+import { test } from 'node:test'
+import { groupExperiences } from './experience-groups.ts'
+
+function position(id: string, groupId?: string | null, startDate: Date | string = '2020-01-01') {
+  return {
+    id,
+    groupId,
+    startDate,
+    company: 'Same company',
+    title: `Title ${id}`,
+    description: `Description ${id}`,
+    achievements: [`Achievement ${id}`],
+    skills: ['TypeScript'],
+  }
+}
+
+test('null and legacy missing membership remain independent even at the same company', () => {
+  const legacy = { id: 'legacy', company: 'Same company', startDate: '2020-01-01' }
+  const records = [position('one', null), legacy, position('two', null)]
+  const entries = groupExperiences(records)
+  assert.deepEqual(
+    entries.map((entry) => entry.positions),
+    records.map((record) => [record]),
+  )
+  assert.equal(new Set(entries.map((entry) => entry.key)).size, records.length)
+})
+
+test('explicit groups anchor at first occurrence without reordering independent API entries', () => {
+  const records = [
+    position('old', 'stint', '2018-01-01'),
+    position('independent', null, '2025-01-01'),
+    position('new', 'stint', '2022-01-01'),
+    position('last', null, '2026-01-01'),
+  ]
+  assert.deepEqual(
+    groupExperiences(records).map((entry) => entry.positions.map((p) => p.id)),
+    [['new', 'old'], ['independent'], ['last']],
+  )
+})
+
+test('distinct explicit return stints at the same company stay separate', () => {
+  const records = [position('a', 'first'), position('b', 'return'), position('c', 'first')]
+  const entries = groupExperiences(records)
+  assert.deepEqual(
+    entries.map((entry) => entry.positions.map((p) => p.id)),
+    [['a', 'c'], ['b']],
+  )
+  assert.deepEqual(
+    entries.map((entry) => entry.key),
+    ['group:first', 'group:return'],
+  )
+})
+
+test('sorts dates chronologically across years, Date objects and offsets, with stable API ties', () => {
+  const records = [
+    position('older', 'g', '2023-12-01'),
+    position('tie-first', 'g', new Date('2024-01-01T00:00:00Z')),
+    position('tie-second', 'g', '2024-01-01T07:00:00+07:00'),
+    position('newest', 'g', '2024-02-01'),
+  ]
+  assert.deepEqual(
+    groupExperiences(records)[0]?.positions.map((p) => p.id),
+    ['newest', 'tie-first', 'tie-second', 'older'],
+  )
+})
+
+test('invalid cached dates sort last and retain input order on ties', () => {
+  const records = [
+    position('bad-a', 'g', ''),
+    position('valid', 'g'),
+    position('bad-b', 'g', 'bad'),
+  ]
+  assert.deepEqual(
+    groupExperiences(records)[0]?.positions.map((p) => p.id),
+    ['valid', 'bad-a', 'bad-b'],
+  )
+})
+
+test('preserves every complete record exactly once without mutating input or record content', () => {
+  const records = [
+    position('a', 'g'),
+    position('b', null),
+    position('c', 'g', '2025-01-01'),
+    position('d', 'solo'),
+  ]
+  const before = structuredClone(records)
+  const entries = groupExperiences(Object.freeze(records))
+  const flattened = entries.flatMap((entry) => entry.positions)
+  assert.equal(flattened.length, records.length)
+  for (const record of records) {
+    assert.equal(flattened.filter((candidate) => candidate === record).length, 1)
+  }
+  assert.deepEqual(records, before)
+  assert.deepEqual(groupExperiences(records), entries)
+  assert.deepEqual(groupExperiences([]), [])
+})

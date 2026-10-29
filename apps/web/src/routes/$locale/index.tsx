@@ -1,5 +1,5 @@
 import { CertificateCard } from '@/components/certificate-card'
-import { ExperienceCard } from '@/components/experience-card'
+import { ExperienceEntryCard } from '@/components/experience-card'
 import { FadeIn } from '@/components/fade-in'
 import { HomeSkeleton } from '@/components/loader'
 import { MainHeader } from '@/components/main-header'
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
 import { useLocale, useTranslations } from '@/i18n/locale-context'
+import { groupExperiences } from '@/lib/experience-groups'
 import { buildSeoMeta } from '@/lib/seo'
 import { trpc } from '@/utils/trpc'
 import { REFERRAL_SOURCES, SOCIAL_ICON_MAP } from '@portofolio/constants'
@@ -213,8 +214,8 @@ function HomeComponent() {
         <FadeIn className="mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0">
           <SectionHeading>{t.home.experienceHeading}</SectionHeading>
           <div className="flex flex-col gap-6">
-            {experiences.map((exp, i) => (
-              <ExperienceCard key={i} experience={exp} />
+            {groupExperiences(experiences).map((entry) => (
+              <ExperienceEntryCard key={entry.key} entry={entry} />
             ))}
           </div>
           {experiences.length === 0 && (
