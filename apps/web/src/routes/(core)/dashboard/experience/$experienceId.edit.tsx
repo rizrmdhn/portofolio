@@ -43,7 +43,8 @@ import type { TablerIcon } from '@tabler/icons-react'
 import { IconBriefcase, IconHistory, IconLanguage, IconSettings } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, redirect, useRouter } from '@tanstack/react-router'
+import { z } from 'zod'
 
 const EXPERIENCE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
   {
@@ -130,18 +131,43 @@ function ExperienceTranslationsTab({
   )
 }
 
+const EDIT_TABS = ['role-details', 'career-history', 'settings', 'translations'] as const
+type EditTab = (typeof EDIT_TABS)[number]
+const isEditTab = (value: unknown): value is EditTab => EDIT_TABS.includes(value as EditTab)
+
 export const Route = createFileRoute('/(core)/dashboard/experience/$experienceId/edit')({
-  beforeLoad: async ({ context, params }) => {
-    await context.queryClient.ensureQueryData(
+  // `position` edits another role of this entry's stint; `tab` keeps the active tab.
+  validateSearch: z.object({
+    position: z.uuid().optional().catch(undefined),
+    tab: z.enum(EDIT_TABS).optional().catch(undefined),
+  }),
+  beforeLoad: async ({ context, params, search }) => {
+    const entry = await context.queryClient.ensureQueryData(
       context.trpc.experience.getById.queryOptions({
         id: params.experienceId,
       }),
     )
+    if (!search.position) return
+    const position =
+      search.position === params.experienceId
+        ? undefined
+        : await context.queryClient
+            .ensureQueryData(context.trpc.experience.getById.queryOptions({ id: search.position }))
+            .catch(() => undefined)
+    // Only a role in the same employment group may be edited under this entry.
+    if (!position || !entry.groupId || position.groupId !== entry.groupId) {
+      throw redirect({
+        to: '/dashboard/experience/$experienceId/edit',
+        params,
+        search: { tab: search.tab },
+        replace: true,
+      })
+    }
   },
   component: RouteComponent,
 })
 
-const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
+const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: EditTab }> = [
   { icon: IconBriefcase, title: 'Role Details', value: 'role-details' },
   { icon: IconHistory, title: 'Career history', value: 'career-history' },
   { icon: IconSettings, title: 'Settings', value: 'settings' },
@@ -167,16 +193,19 @@ const TAB_FIELDS: Record<string, Array<string>> = {
 }
 
 function RouteComponent() {
-  const { experienceId } = Route.useParams()
-  return <ExperienceEditor key={experienceId} />
+  const { experienceId: entryId } = Route.useParams()
+  const { position } = Route.useSearch()
+  const experienceId = position ?? entryId
+  // Remount per edited record so the frozen form defaults always belong to it.
+  return <ExperienceEditor key={experienceId} entryId={entryId} experienceId={experienceId} />
 }
 
-function ExperienceEditor() {
+function ExperienceEditor({ entryId, experienceId }: { entryId: string; experienceId: string }) {
   const { t } = useTranslations()
   const queryClient = useQueryClient()
   const router = useRouter()
-
-  const { experienceId } = Route.useParams()
+  const navigate = Route.useNavigate()
+  const { tab: activeTab = 'role-details' } = Route.useSearch()
   const { data: experience } = useSuspenseQuery(
     trpc.experience.getById.queryOptions({ id: experienceId }),
   )
@@ -249,7 +278,17 @@ function ExperienceEditor() {
           }}
           className="flex w-full flex-1 flex-col overflow-hidden"
         >
-          <Tabs defaultValue="role-details" className="min-h-0 flex-1 gap-0">
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) => {
+              if (!isEditTab(value)) return
+              void navigate({
+                search: (prev) => ({ ...prev, tab: value === 'role-details' ? undefined : value }),
+                replace: true,
+              })
+            }}
+            className="min-h-0 flex-1 gap-0"
+          >
             <div className="shrink-0 overflow-x-auto px-4 pt-4 pb-2">
               <form.Subscribe
                 selector={(state) => state.fieldMeta}
@@ -517,6 +556,7 @@ function ExperienceEditor() {
                     })}
                     children={({ company, groupId }) => (
                       <ExperienceCareerHistory
+                        entryId={entryId}
                         source={experience}
                         disabled={
                           company !== experience.company || groupId !== (experience.groupId ?? null)
