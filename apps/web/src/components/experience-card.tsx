@@ -1,4 +1,4 @@
-import { summarizeGroup } from '@/lib/experience-groups'
+import { summarizeGroup, supersededAt } from '@/lib/experience-groups'
 import type { ExperienceEntry } from '@/lib/experience-groups'
 import { useTranslations } from '@/i18n/locale-context'
 import { cn } from '@/lib/utils'
@@ -46,6 +46,7 @@ export function ExperienceEntryCard({ entry }: { entry: ExperienceEntry<Experien
   if (!first) return null
   if (entry.positions.length === 1) return <ExperienceCard experience={first} />
   const summary = summarizeGroup(entry.positions)
+  const endedAt = supersededAt(entry.positions)
   return (
     <article className="border-border bg-card flex min-w-0 flex-col gap-4 rounded-lg border p-4 wrap-anywhere sm:p-5">
       <header className="flex min-w-0 flex-col gap-1">
@@ -75,6 +76,7 @@ export function ExperienceEntryCard({ entry }: { entry: ExperienceEntry<Experien
             <ExperiencePosition
               experience={experience}
               grouped
+              endedAt={endedAt[index]}
               // Shared type/location already sits in the group header.
               showType={!summary.type}
               showLocation={!summary.location}
@@ -111,19 +113,23 @@ function ExperiencePosition({
   grouped = false,
   showType = true,
   showLocation = true,
+  endedAt,
 }: {
   // Older cached records may predate the achievements field.
   experience: Omit<Experience, 'achievements'> & { achievements?: Experience['achievements'] }
   grouped?: boolean
   showType?: boolean
   showLocation?: boolean
+  /** Start of a later role in the same stint; ends a role still flagged current. */
+  endedAt?: string | null
 }) {
   const { t } = useTranslations()
   const Heading = grouped ? 'h4' : 'h3'
-  const endDate = experience.endDate ?? new Date()
+  const current = experience.currentlyWorking && !endedAt
+  const endDate = endedAt ?? experience.endDate ?? new Date()
   const duration = formatDuration(
     experience.startDate,
-    experience.currentlyWorking ? new Date() : endDate,
+    current ? new Date() : endDate,
     t.experienceCard,
   )
   return (
@@ -142,7 +148,7 @@ function ExperiencePosition({
               {format(experience.startDate, 'MMM yyyy')}
             </time>
             <span aria-hidden="true">&ndash;</span>
-            {experience.currentlyWorking ? (
+            {current ? (
               <Badge variant="outline">{t.experienceCard.present}</Badge>
             ) : (
               <time dateTime={format(endDate, 'yyyy-MM')}>{format(endDate, 'MMM yyyy')}</time>

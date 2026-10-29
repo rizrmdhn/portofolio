@@ -68,6 +68,27 @@ export function groupExperiences<T extends GroupableExperience>(
   return entries
 }
 
+/**
+ * Within one stint a later role supersedes an earlier one still flagged current
+ * (a promotion), so only the newest current role reads as ongoing. Returns, per
+ * input index, the start of the superseding role, or null when none applies.
+ * Equal starts never supersede each other.
+ */
+export function supersededAt<
+  T extends Pick<SummarizableExperience, 'startDate' | 'currentlyWorking'>,
+>(positions: ReadonlyArray<T>): Array<T['startDate'] | null> {
+  return positions.map((position) => {
+    if (!position.currentlyWorking) return null
+    const start = startTime(position.startDate)
+    let next: T | undefined
+    for (const other of positions) {
+      const otherStart = startTime(other.startDate)
+      if (otherStart > start && (!next || otherStart < startTime(next.startDate))) next = other
+    }
+    return next ? next.startDate : null
+  })
+}
+
 /** Total tenure of one employment stint: earliest start to latest end, or ongoing. */
 export function summarizeGroup<T extends SummarizableExperience>(
   positions: ReadonlyArray<T>,
