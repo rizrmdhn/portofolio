@@ -9,7 +9,14 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { addExperiencePositionSchema } from '@portofolio/schema/experience.schema'
-import type { AddExperiencePositionInput } from '@portofolio/schema/experience.schema'
+import { useForm } from '@tanstack/react-form'
+import {
+  newPositionDefaults,
+  newPositionSchema,
+  positionPayload,
+  refreshAfterCommit,
+} from '@/lib/experience-position-form'
+import { globalErrorToast } from '@/lib/toasts'
 import {
   EXPERIENCE_STATUS_LABELS,
   EXPERIENCE_STATUS_TYPES,
@@ -165,205 +172,235 @@ function NewPositionForm({
   const { t } = useTranslations()
   const m = t.experiencePosition
   const queryClient = useQueryClient()
-  const [stint, setStint] = useState<'same' | 'new'>('same')
-  const [values, setValues] = useState({
-    title: '',
-    description: '',
-    location: source.location,
-    type: source.type,
-    startDate: '',
-    endDate: '',
-    currentlyWorking: false,
-    skills: '',
-    achievements: '',
-    status: 'draft' as AddExperiencePositionInput['position']['status'],
+  const mutation = useMutation(trpc.experience.addPosition.mutationOptions())
+  const form = useForm({
+    defaultValues: newPositionDefaults(source),
+    // TanStack also runs onChange validators on submit. Sharing one error slot lets
+    // linked fields (current/end date) clear each other's validation errors.
+    validators: { onChange: newPositionSchema },
+    onSubmit: async ({ value }) => {
+      if (disabled) return
+      onBusy(true)
+      try {
+        const result = await mutation.mutateAsync(
+          addExperiencePositionSchema.parse(positionPayload(source.id, value)),
+        )
+        try {
+          // Update only membership, never the parent's unsaved role content.
+          onSaved(result.sourceGroupId)
+          await refreshAfterCommit(
+            () => invalidatePositionQueries(queryClient, trpc, source.id),
+            () => globalErrorToast(m.historyError),
+          )
+        } finally {
+          onClose()
+        }
+      } finally {
+        onBusy(false)
+      }
+    },
   })
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [refreshing, setRefreshing] = useState(false)
-  const mutation = useMutation(
-    trpc.experience.addPosition.mutationOptions({
-      onError: () => onBusy(false),
-      onSuccess: async (result) => {
-        setRefreshing(true)
-        // Update only membership, never reset the parent's title/content/date fields.
-        onSaved(result.sourceGroupId)
-        await invalidatePositionQueries(queryClient, trpc, source.id)
-        onClose()
-      },
-    }),
-  )
-  const pending = mutation.isPending || refreshing
-  const change = <TKey extends keyof typeof values>(key: TKey, value: (typeof values)[TKey]) =>
-    setValues((old) => ({ ...old, [key]: value }))
   const textField = (
     key: 'title' | 'location' | 'startDate' | 'endDate',
     label: string,
+    pending: boolean,
+    currentlyWorking: boolean,
     type = 'text',
   ) => (
-    <Field data-invalid={!!errors[key]}>
-      <FieldLabel htmlFor={`new-position-${key}`}>{label}</FieldLabel>
-      <Input
-        id={`new-position-${key}`}
-        type={type}
-        value={values[key]}
-        onChange={(e) => change(key, e.target.value)}
-        aria-invalid={!!errors[key]}
-        disabled={pending || (key === 'endDate' && values.currentlyWorking)}
-      />
-      {errors[key] && <FieldError>{errors[key]}</FieldError>}
-    </Field>
+    <form.Field name={key}>
+      {(field) => (
+        <Field data-invalid={!field.state.meta.isValid}>
+          <FieldLabel htmlFor={`new-position-${key}`}>{label}</FieldLabel>
+          <Input
+            id={`new-position-${key}`}
+            name={field.name}
+            type={type}
+            value={field.state.value}
+            onChange={(e) => field.handleChange(e.target.value)}
+            onBlur={field.handleBlur}
+            aria-invalid={!field.state.meta.isValid}
+            disabled={pending || (key === 'endDate' && currentlyWorking)}
+          />
+          <FieldError errors={field.state.meta.errors} />
+        </Field>
+      )}
+    </form.Field>
   )
   return (
-    <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-xl" showCloseButton={!pending}>
-      <DialogHeader>
-        <DialogTitle>{m.add}</DialogTitle>
-        <DialogDescription>{m.context}</DialogDescription>
-      </DialogHeader>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault()
-          // Portal events still bubble through React to the parent edit form.
-          event.stopPropagation()
-          if (pending || disabled) return
-          const lines = (text: string) =>
-            text
-              .split('\n')
-              .map((line) => line.trim())
-              .filter(Boolean)
-          const parsed = addExperiencePositionSchema.safeParse({
-            sourceId: source.id,
-            stint,
-            position: {
-              ...values,
-              startDate: values.startDate ? `${values.startDate}T00:00:00.000Z` : '',
-              endDate:
-                values.endDate && !values.currentlyWorking
-                  ? `${values.endDate}T00:00:00.000Z`
-                  : undefined,
-              skills: lines(values.skills),
-              achievements: lines(values.achievements),
-            },
-          })
-          if (!parsed.success) {
-            setErrors(
-              Object.fromEntries(
-                parsed.error.issues.map((issue) => [
-                  String(issue.path[1] ?? issue.path[0]),
-                  issue.message,
-                ]),
-              ),
-            )
-            return
-          }
-          setErrors({})
-          onBusy(true)
-          mutation.mutate(parsed.data)
-        }}
-      >
-        <FieldGroup>
-          <Field>
-            <FieldLabel htmlFor="new-position-company">{m.company}</FieldLabel>
-            <Input id="new-position-company" value={source.company} readOnly />
-          </Field>
-          <Field>
-            <FieldLabel id="new-position-stint">{m.employment}</FieldLabel>
-            <ToggleGroup
-              aria-labelledby="new-position-stint"
-              variant="outline"
-              value={[stint]}
-              disabled={pending}
-              onValueChange={(items) => {
-                const next = items.find((item) => item !== stint)
-                if (next === 'same' || next === 'new') setStint(next)
-              }}
-            >
-              <ToggleGroupItem value="same">{m.same}</ToggleGroupItem>
-              <ToggleGroupItem value="new">{m.newStint}</ToggleGroupItem>
-            </ToggleGroup>
-            <FieldDescription>{stint === 'same' ? m.sameHelp : m.newHelp}</FieldDescription>
-          </Field>
-          {textField('title', m.title)}
-          {textField('location', m.location)}
-          <Field>
-            <FieldLabel htmlFor="new-position-type">{m.type}</FieldLabel>
-            <Select
-              value={values.type}
-              disabled={pending}
-              onValueChange={(value) => {
-                if (EXPERIENCE_TYPES.includes(value as typeof values.type))
-                  change('type', value as typeof values.type)
-              }}
-            >
-              <SelectTrigger id="new-position-type">
-                <SelectValue>{EXPERIENCE_TYPE_LABELS[values.type]}</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {EXPERIENCE_TYPES.map((value) => (
-                    <SelectItem key={value} value={value}>
-                      {EXPERIENCE_TYPE_LABELS[value]}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </Field>
-          {textField('startDate', m.start, 'date')}
-          {textField('endDate', m.end, 'date')}
-          <Field>
-            <FieldLabel htmlFor="new-position-current">{m.current}</FieldLabel>
-            <Checkbox
-              id="new-position-current"
-              checked={values.currentlyWorking}
-              disabled={pending}
-              onCheckedChange={(checked) => change('currentlyWorking', checked)}
-            />
-          </Field>
-          {(['description', 'achievements', 'skills'] as const).map((key) => (
-            <Field key={key} data-invalid={!!errors[key]}>
-              <FieldLabel htmlFor={`new-position-${key}`}>{m[key]}</FieldLabel>
-              <Textarea
-                id={`new-position-${key}`}
-                value={values[key]}
-                disabled={pending}
-                aria-invalid={!!errors[key]}
-                onChange={(e) => change(key, e.target.value)}
-              />
-              {errors[key] && <FieldError>{errors[key]}</FieldError>}
-            </Field>
-          ))}
-          <Field>
-            <FieldLabel id="new-position-status">{m.status}</FieldLabel>
-            <ToggleGroup
-              aria-labelledby="new-position-status"
-              variant="outline"
-              value={[values.status]}
-              disabled={pending}
-              onValueChange={(items) => {
-                const next = items.find((item) => item !== values.status)
-                if (next && EXPERIENCE_STATUS_TYPES.includes(next as typeof values.status))
-                  change('status', next as typeof values.status)
-              }}
-            >
-              {EXPERIENCE_STATUS_TYPES.map((value) => (
-                <ToggleGroupItem key={value} value={value}>
-                  {EXPERIENCE_STATUS_LABELS[value]}
-                </ToggleGroupItem>
+    <form.Subscribe
+      selector={(state) =>
+        [state.isSubmitting, state.canSubmit, state.values.currentlyWorking] as const
+      }
+    >
+      {([pending, canSubmit, currentlyWorking]) => (
+        <DialogContent
+          className="max-h-[90svh] overflow-y-auto sm:max-w-xl"
+          showCloseButton={!pending}
+        >
+          <DialogHeader>
+            <DialogTitle>{m.add}</DialogTitle>
+            <DialogDescription>{m.context}</DialogDescription>
+          </DialogHeader>
+          <form
+            onSubmit={async (event) => {
+              event.preventDefault()
+              // Portal events still bubble through React to the parent edit form.
+              event.stopPropagation()
+              if (form.state.isSubmitting || disabled) return
+              try {
+                await form.handleSubmit()
+              } catch {
+                // Mutation errors remain visible; keep TanStack's failed-submit state.
+              }
+            }}
+          >
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="new-position-company">{m.company}</FieldLabel>
+                <Input id="new-position-company" value={source.company} readOnly />
+              </Field>
+              <form.Field name="stint">
+                {(field) => (
+                  <Field data-invalid={!field.state.meta.isValid}>
+                    <FieldLabel id="new-position-stint">{m.employment}</FieldLabel>
+                    <ToggleGroup
+                      aria-labelledby="new-position-stint"
+                      aria-invalid={!field.state.meta.isValid}
+                      variant="outline"
+                      value={[field.state.value]}
+                      disabled={pending}
+                      onBlur={field.handleBlur}
+                      onValueChange={(items) => {
+                        const next = items.find((item) => item !== field.state.value)
+                        if (next === 'same' || next === 'new') field.handleChange(next)
+                      }}
+                    >
+                      <ToggleGroupItem value="same">{m.same}</ToggleGroupItem>
+                      <ToggleGroupItem value="new">{m.newStint}</ToggleGroupItem>
+                    </ToggleGroup>
+                    <FieldDescription>
+                      {field.state.value === 'same' ? m.sameHelp : m.newHelp}
+                    </FieldDescription>
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </form.Field>
+              {textField('title', m.title, pending, currentlyWorking)}
+              {textField('location', m.location, pending, currentlyWorking)}
+              <form.Field name="type">
+                {(field) => (
+                  <Field data-invalid={!field.state.meta.isValid}>
+                    <FieldLabel htmlFor="new-position-type">{m.type}</FieldLabel>
+                    <Select
+                      value={field.state.value}
+                      disabled={pending}
+                      onValueChange={(value) => {
+                        if (EXPERIENCE_TYPES.includes(value as typeof field.state.value))
+                          field.handleChange(value as typeof field.state.value)
+                      }}
+                    >
+                      <SelectTrigger
+                        id="new-position-type"
+                        onBlur={field.handleBlur}
+                        aria-invalid={!field.state.meta.isValid}
+                      >
+                        <SelectValue>{EXPERIENCE_TYPE_LABELS[field.state.value]}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {EXPERIENCE_TYPES.map((value) => (
+                            <SelectItem key={value} value={value}>
+                              {EXPERIENCE_TYPE_LABELS[value]}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </form.Field>
+              {textField('startDate', m.start, pending, currentlyWorking, 'date')}
+              {textField('endDate', m.end, pending, currentlyWorking, 'date')}
+              <form.Field name="currentlyWorking">
+                {(field) => (
+                  <Field data-invalid={!field.state.meta.isValid}>
+                    <FieldLabel htmlFor="new-position-current">{m.current}</FieldLabel>
+                    <Checkbox
+                      id="new-position-current"
+                      checked={field.state.value}
+                      disabled={pending}
+                      onCheckedChange={field.handleChange}
+                      onBlur={field.handleBlur}
+                      aria-invalid={!field.state.meta.isValid}
+                    />
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </form.Field>
+              {(['description', 'achievements', 'skills'] as const).map((key) => (
+                <form.Field key={key} name={key}>
+                  {(field) => (
+                    <Field data-invalid={!field.state.meta.isValid}>
+                      <FieldLabel htmlFor={`new-position-${key}`}>{m[key]}</FieldLabel>
+                      <Textarea
+                        id={`new-position-${key}`}
+                        name={field.name}
+                        value={field.state.value}
+                        disabled={pending}
+                        aria-invalid={!field.state.meta.isValid}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                      <FieldError errors={field.state.meta.errors} />
+                    </Field>
+                  )}
+                </form.Field>
               ))}
-            </ToggleGroup>
-          </Field>
-          {disabled && <FieldError>{m.dirty}</FieldError>}
-          {mutation.isError && <FieldError role="alert">{mutation.error.message}</FieldError>}
-          <DialogFooter>
-            <Button type="button" variant="outline" disabled={pending} onClick={onClose}>
-              {m.cancel}
-            </Button>
-            <Button type="submit" disabled={pending || disabled}>
-              {pending ? m.saving : m.save}
-            </Button>
-          </DialogFooter>
-        </FieldGroup>
-      </form>
-    </DialogContent>
+              <form.Field name="status">
+                {(field) => (
+                  <Field data-invalid={!field.state.meta.isValid}>
+                    <FieldLabel id="new-position-status">{m.status}</FieldLabel>
+                    <ToggleGroup
+                      aria-labelledby="new-position-status"
+                      aria-invalid={!field.state.meta.isValid}
+                      variant="outline"
+                      value={[field.state.value]}
+                      disabled={pending}
+                      onBlur={field.handleBlur}
+                      onValueChange={(items) => {
+                        const next = items.find((item) => item !== field.state.value)
+                        if (
+                          next &&
+                          EXPERIENCE_STATUS_TYPES.includes(next as typeof field.state.value)
+                        )
+                          field.handleChange(next as typeof field.state.value)
+                      }}
+                    >
+                      {EXPERIENCE_STATUS_TYPES.map((value) => (
+                        <ToggleGroupItem key={value} value={value}>
+                          {EXPERIENCE_STATUS_LABELS[value]}
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
+                    <FieldError errors={field.state.meta.errors} />
+                  </Field>
+                )}
+              </form.Field>
+              {disabled && <FieldError>{m.dirty}</FieldError>}
+              {mutation.isError && <FieldError role="alert">{mutation.error.message}</FieldError>}
+              <DialogFooter>
+                <Button type="button" variant="outline" disabled={pending} onClick={onClose}>
+                  {m.cancel}
+                </Button>
+                <Button type="submit" disabled={pending || !canSubmit || disabled}>
+                  {pending ? m.saving : m.save}
+                </Button>
+              </DialogFooter>
+            </FieldGroup>
+          </form>
+        </DialogContent>
+      )}
+    </form.Subscribe>
   )
 }
