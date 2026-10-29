@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { groupExperiences } from './experience-groups.ts'
+import { groupExperiences, summarizeGroup } from './experience-groups.ts'
 
 function position(id: string, groupId?: string | null, startDate: Date | string = '2020-01-01') {
   return {
@@ -94,4 +94,44 @@ test('preserves every complete record exactly once without mutating input or rec
   assert.deepEqual(records, before)
   assert.deepEqual(groupExperiences(records), entries)
   assert.deepEqual(groupExperiences([]), [])
+})
+
+function role(startDate: string, endDate: string | null, extra: Record<string, unknown> = {}) {
+  return {
+    startDate,
+    endDate,
+    currentlyWorking: endDate === null,
+    type: 'full-time',
+    location: 'Remote',
+    ...extra,
+  }
+}
+
+test('group summary spans earliest start to latest end and lifts shared metadata', () => {
+  const summary = summarizeGroup([
+    role('2023-06-01', '2024-12-31'),
+    role('2022-01-01', '2023-05-31'),
+  ])
+  assert.equal(summary.start.toISOString().slice(0, 10), '2022-01-01')
+  assert.equal(summary.end?.toISOString().slice(0, 10), '2024-12-31')
+  assert.equal(summary.type, 'full-time')
+  assert.equal(summary.location, 'Remote')
+})
+
+test('group summary is ongoing when any position is current and drops differing metadata', () => {
+  const summary = summarizeGroup([
+    role('2024-01-01', null, { type: 'internship', location: 'Samarinda' }),
+    role('2022-01-01', '2023-12-31'),
+  ])
+  assert.equal(summary.end, null)
+  assert.equal(summary.type, undefined)
+  assert.equal(summary.location, undefined)
+})
+
+test('group summary never lifts an empty location', () => {
+  const summary = summarizeGroup([
+    role('2024-01-01', '2024-06-01', { location: '' }),
+    role('2023-01-01', '2023-06-01', { location: '' }),
+  ])
+  assert.equal(summary.location, undefined)
 })

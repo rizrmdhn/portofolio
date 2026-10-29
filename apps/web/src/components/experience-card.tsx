@@ -1,3 +1,4 @@
+import { summarizeGroup } from '@/lib/experience-groups'
 import type { ExperienceEntry } from '@/lib/experience-groups'
 import { useTranslations } from '@/i18n/locale-context'
 import { cn } from '@/lib/utils'
@@ -40,12 +41,23 @@ export function ExperienceCard({ experience, className, ...props }: ExperienceCa
 }
 
 export function ExperienceEntryCard({ entry }: { entry: ExperienceEntry<Experience> }) {
+  const { t } = useTranslations()
   const first = entry.positions[0]
   if (!first) return null
   if (entry.positions.length === 1) return <ExperienceCard experience={first} />
+  const summary = summarizeGroup(entry.positions)
   return (
     <article className="border-border bg-card flex min-w-0 flex-col gap-4 rounded-lg border p-4 wrap-anywhere sm:p-5">
-      <h3 className="text-foreground text-base leading-6 font-semibold">{first.company}</h3>
+      <header className="flex min-w-0 flex-col gap-1">
+        <h3 className="text-foreground text-base leading-6 font-semibold">{first.company}</h3>
+        <MetaLine
+          items={[
+            summary.type && t.experienceType[summary.type],
+            formatDuration(summary.start, summary.end ?? new Date(), t.experienceCard),
+            summary.location,
+          ]}
+        />
+      </header>
       <ol role="list" className="flex min-w-0 flex-col gap-6">
         {entry.positions.map((experience, index) => (
           <li key={experience.id} className="relative min-w-0 pl-5 sm:pl-6">
@@ -60,7 +72,13 @@ export function ExperienceEntryCard({ entry }: { entry: ExperienceEntry<Experien
               aria-hidden="true"
               className="border-border bg-card absolute top-2 left-0 size-2 rounded-full border"
             />
-            <ExperiencePosition experience={experience} grouped />
+            <ExperiencePosition
+              experience={experience}
+              grouped
+              // Shared type/location already sits in the group header.
+              showType={!summary.type}
+              showLocation={!summary.location}
+            />
           </li>
         ))}
       </ol>
@@ -68,13 +86,37 @@ export function ExperienceEntryCard({ entry }: { entry: ExperienceEntry<Experien
   )
 }
 
+function MetaLine({ items, className }: { items: Array<React.ReactNode>; className?: string }) {
+  const visible = items.filter(Boolean)
+  if (!visible.length) return null
+  return (
+    <p
+      className={cn(
+        'text-muted-foreground flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm leading-6',
+        className,
+      )}
+    >
+      {visible.map((item, index) => (
+        <span key={index} className="contents">
+          {index > 0 && <span aria-hidden="true">&middot;</span>}
+          <span className="min-w-0">{item}</span>
+        </span>
+      ))}
+    </p>
+  )
+}
+
 function ExperiencePosition({
   experience,
   grouped = false,
+  showType = true,
+  showLocation = true,
 }: {
   // Older cached records may predate the achievements field.
   experience: Omit<Experience, 'achievements'> & { achievements?: Experience['achievements'] }
   grouped?: boolean
+  showType?: boolean
+  showLocation?: boolean
 }) {
   const { t } = useTranslations()
   const Heading = grouped ? 'h4' : 'h3'
@@ -86,39 +128,34 @@ function ExperiencePosition({
   )
   return (
     <div className="flex min-w-0 flex-col gap-3">
-      <header className="flex min-w-0 flex-col items-start gap-2">
+      {/* Title and company on the left; dates and role metadata align right from sm. */}
+      <header className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div className="flex min-w-0 flex-col gap-1">
           <Heading className="text-foreground text-base leading-6 font-semibold">
             {experience.title}
           </Heading>
           {!grouped && <p className="text-foreground text-sm leading-6">{experience.company}</p>}
         </div>
-        <div className="text-muted-foreground flex min-w-0 flex-col gap-1 text-sm leading-6">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
-              <time dateTime={format(experience.startDate, 'yyyy-MM')}>
-                {format(experience.startDate, 'MMM yyyy')}
-              </time>
-              <span>&ndash;</span>
-              {experience.currentlyWorking ? (
-                <Badge variant="outline" className="h-auto max-w-full min-w-0 whitespace-normal">
-                  {t.experienceCard.present}
-                </Badge>
-              ) : (
-                <time dateTime={format(endDate, 'yyyy-MM')}>{format(endDate, 'MMM yyyy')}</time>
-              )}
-            </span>
-            <span>({duration})</span>
-          </div>
-          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-            <span>{t.experienceType[experience.type]}</span>
-            {experience.location && (
-              <>
-                <span aria-hidden="true">&middot;</span>
-                <span>{experience.location}</span>
-              </>
+        <div className="flex min-w-0 flex-col gap-1 sm:shrink-0 sm:items-end">
+          <p className="text-muted-foreground flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-sm leading-6 sm:justify-end">
+            <time dateTime={format(experience.startDate, 'yyyy-MM')}>
+              {format(experience.startDate, 'MMM yyyy')}
+            </time>
+            <span aria-hidden="true">&ndash;</span>
+            {experience.currentlyWorking ? (
+              <Badge variant="outline">{t.experienceCard.present}</Badge>
+            ) : (
+              <time dateTime={format(endDate, 'yyyy-MM')}>{format(endDate, 'MMM yyyy')}</time>
             )}
-          </div>
+            <span>({duration})</span>
+          </p>
+          <MetaLine
+            className="sm:justify-end"
+            items={[
+              showType && t.experienceType[experience.type],
+              showLocation && experience.location,
+            ]}
+          />
         </div>
       </header>
       <div className="flex w-full min-w-0 flex-col items-start gap-3">

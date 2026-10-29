@@ -9,6 +9,23 @@ export interface ExperienceEntry<T> {
   positions: Array<T>
 }
 
+interface SummarizableExperience {
+  startDate: Date | string
+  endDate?: Date | string | null
+  currentlyWorking: boolean
+  type: string
+  location?: string | null
+}
+
+export interface ExperienceGroupSummary<T extends SummarizableExperience> {
+  start: Date
+  /** null while any position is current. */
+  end: Date | null
+  /** Set only when every position shares it, so the card can lift it into the group header. */
+  type?: T['type']
+  location?: T['location']
+}
+
 function startTime(value: Date | string): number {
   const time = new Date(value).getTime()
   return Number.isFinite(time) ? time : -Infinity
@@ -49,4 +66,25 @@ export function groupExperiences<T extends GroupableExperience>(
     })
   }
   return entries
+}
+
+/** Total tenure of one employment stint: earliest start to latest end, or ongoing. */
+export function summarizeGroup<T extends SummarizableExperience>(
+  positions: ReadonlyArray<T>,
+): ExperienceGroupSummary<T> {
+  const starts = positions.map((position) => startTime(position.startDate)).filter(Number.isFinite)
+  const current = positions.some((position) => position.currentlyWorking)
+  const ends = positions
+    .map((position) => (position.endDate == null ? -Infinity : startTime(position.endDate)))
+    .filter(Number.isFinite)
+  const shared = <TKey extends 'type' | 'location'>(key: TKey) => {
+    const first = positions[0]?.[key]
+    return first && positions.every((position) => position[key] === first) ? first : undefined
+  }
+  return {
+    start: new Date(starts.length ? Math.min(...starts) : Date.now()),
+    end: current || !ends.length ? null : new Date(Math.max(...ends)),
+    type: shared('type'),
+    location: shared('location'),
+  }
 }
