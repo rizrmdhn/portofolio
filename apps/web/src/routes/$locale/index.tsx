@@ -213,7 +213,7 @@ function HomeComponent() {
       >
         <FadeIn className="mx-auto flex w-full flex-col justify-center gap-8 px-4 md:max-w-175 md:px-0">
           <SectionHeading>{t.home.experienceHeading}</SectionHeading>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             {groupExperiences(experiences).map((entry) => (
               <ExperienceEntryCard key={entry.key} entry={entry} />
             ))}
