@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { experiences, experienceTranslations } from '../src/schema/index'
+import { experienceTranslations, experiences } from '../src/schema/index'
 import {
   createExperienceSchema,
   experienceAchievementsSchema,
