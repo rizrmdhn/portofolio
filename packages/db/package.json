@@ -29,7 +29,7 @@
     "@portofolio/env": "workspace:*",
     "date-fns": "catalog:",
     "dotenv": "catalog:",
-    "drizzle-orm": "1.0.0-rc.3",
+    "drizzle-orm": "1.0.0-rc.5",
     "mysql2": "^3.11.0",
     "postgres": "^3.4.9",
     "zod": "catalog:",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@node-rs/argon2": "catalog:",
     "@portofolio/config": "workspace:*",
-    "drizzle-kit": "1.0.0-rc.3",
+    "drizzle-kit": "1.0.0-rc.5",
     "@types/node": "catalog:",
     "tsx": "^4.0.0",
     "typescript": "catalog:"
