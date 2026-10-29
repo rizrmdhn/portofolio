@@ -39,29 +39,32 @@ export function ExperienceCard({ experience, className, ...props }: ExperienceCa
       className={cn('flex min-w-0 flex-col gap-6 rounded-lg py-10 wrap-anywhere', className)}
       {...props}
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        {/* Years And Company */}
-        <div className="flex w-full min-w-0 shrink-0 flex-col items-start gap-2 self-start sm:w-36">
-          <span className="text-subtle flex max-w-full flex-wrap items-center gap-1.5 font-mono text-xs font-semibold">
-            {format(experience.startDate, 'MMM yyyy')} –{' '}
-            {experience.currentlyWorking ? (
-              <Badge variant="outline">{t.experienceCard.present}</Badge>
-            ) : (
-              format(endDate, 'MMM yyyy')
-            )}
-          </span>
-          <span className="text-muted-foreground/70 font-mono text-[11px]">{duration}</span>
-          <span className="text-muted-foreground max-w-full text-[13px]">{experience.company}</span>
+      <div className="flex min-w-0 flex-col gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_12rem]">
+          <div className="flex min-w-0 flex-col items-start gap-1">
+            <h3 className="text-foreground text-[15px] font-semibold">{experience.title}</h3>
+            <p className="text-foreground text-[13px]">{experience.company}</p>
+          </div>
+
+          <div className="flex min-w-0 flex-col items-start gap-2">
+            <span className="text-subtle flex max-w-full flex-wrap items-center gap-1.5 font-mono text-[11px]">
+              {format(experience.startDate, 'MMM yyyy')} –{' '}
+              {experience.currentlyWorking ? (
+                <Badge variant="outline">{t.experienceCard.present}</Badge>
+              ) : (
+                format(endDate, 'MMM yyyy')
+              )}
+            </span>
+            <span className="text-muted-foreground/70 font-mono text-[11px]">{duration}</span>
+            <div className="text-subtle flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px]">
+              <span>{t.experienceType[experience.type]}</span>
+              <span aria-hidden>·</span>
+              <span>{experience.location}</span>
+            </div>
+          </div>
         </div>
 
-        {/* Role, Description And Skills */}
-        <div className="flex w-full max-w-lg min-w-0 flex-col items-start gap-2 sm:w-auto">
-          <span className="text-foreground text-[15px] font-semibold">{experience.title}</span>
-          <div className="text-subtle flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px]">
-            <span>{t.experienceType[experience.type]}</span>
-            <span aria-hidden>·</span>
-            <span>{experience.location}</span>
-          </div>
+        <div className="flex w-full max-w-lg min-w-0 flex-col items-start gap-2">
           <p className="text-muted-foreground text-[13px]">{experience.description}</p>
           <div className="flex max-w-full flex-wrap gap-2">
             {experience.skills.map((skill, index) => (
