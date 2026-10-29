@@ -1,10 +1,11 @@
 import { summarizeGroup, supersededAt } from '@/lib/experience-groups'
 import type { ExperienceEntry } from '@/lib/experience-groups'
-import { useTranslations } from '@/i18n/locale-context'
+import { useLocale, useTranslations } from '@/i18n/locale-context'
 import { cn } from '@/lib/utils'
 import type { Messages } from '@portofolio/i18n'
 import type { Experience } from '@portofolio/types/experience.types'
 import { format, intervalToDuration } from 'date-fns'
+import { enUS, id } from 'date-fns/locale'
 import { Badge } from './ui/badge'
 
 interface ExperienceCardProps extends React.HTMLAttributes<HTMLElement> {
@@ -124,6 +125,7 @@ function ExperiencePosition({
   endedAt?: string | null
 }) {
   const { t } = useTranslations()
+  const dateLocale = useLocale() === 'id' ? id : enUS
   const Heading = grouped ? 'h4' : 'h3'
   const current = experience.currentlyWorking && !endedAt
   const endDate = endedAt ?? experience.endDate ?? new Date()
@@ -145,13 +147,15 @@ function ExperiencePosition({
         <div className="flex min-w-0 flex-col gap-1 sm:shrink-0 sm:items-end">
           <p className="text-muted-foreground flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-sm leading-6 sm:justify-end">
             <time dateTime={format(experience.startDate, 'yyyy-MM')}>
-              {format(experience.startDate, 'MMM yyyy')}
+              {format(experience.startDate, 'MMM yyyy', { locale: dateLocale })}
             </time>
             <span aria-hidden="true">&ndash;</span>
             {current ? (
               <Badge variant="outline">{t.experienceCard.present}</Badge>
             ) : (
-              <time dateTime={format(endDate, 'yyyy-MM')}>{format(endDate, 'MMM yyyy')}</time>
+              <time dateTime={format(endDate, 'yyyy-MM')}>
+                {format(endDate, 'MMM yyyy', { locale: dateLocale })}
+              </time>
             )}
             <span>({duration})</span>
           </p>
