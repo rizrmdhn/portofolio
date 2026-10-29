@@ -1,0 +1,1 @@
+import{An as e,Sn as t,it as n}from"./index-C6a3kUit.js";import{t as r}from"./locale-context-DAeS4NDD.js";var i=e();function a(){let{locale:e}=n.useParams();return(0,i.jsx)(r,{locale:e,children:(0,i.jsx)(t,{})})}export{a as component};

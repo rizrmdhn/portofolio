@@ -1,0 +1,1 @@
+import{Fn as e,Mn as t,kt as n}from"./index-C6a3kUit.js";var r=e(t()),i=r.createContext(void 0);function a(e){let t=r.useContext(i);if(t===void 0&&!e)throw Error(n(69));return t}export{a as t};

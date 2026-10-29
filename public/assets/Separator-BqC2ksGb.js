@@ -1,0 +1,1 @@
+import{Fn as e,Mn as t,bt as n}from"./index-C6a3kUit.js";var r=e(t()).forwardRef(function(e,t){let{className:r,render:i,orientation:a=`horizontal`,style:o,...s}=e;return n(`div`,e,{state:{orientation:a},ref:t,props:[{role:`separator`,"aria-orientation":a},s]})});export{r as t};

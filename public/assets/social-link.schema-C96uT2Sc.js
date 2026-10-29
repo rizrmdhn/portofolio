@@ -1,0 +1,1 @@
+import{D as e,T as t,U as n,et as r}from"./index-C6a3kUit.js";var i=e(t,{title:n.string().min(2).max(256),url:n.url(),icon:n.enum(r),order:n.number()}).omit({createdAt:!0,updatedAt:!0}),a=i.extend({id:n.string()});n.array(n.object({id:n.string(),order:n.number().int().min(0)})).min(1);export{a as n,i as t};

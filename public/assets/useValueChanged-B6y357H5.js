@@ -1,0 +1,1 @@
+import{Fn as e,Mn as t,Nt as n,jt as r}from"./index-C6a3kUit.js";function i(e,t,n,r){return e.addEventListener(t,n,r),()=>{e.removeEventListener(t,n,r)}}var a=e(t());function o(e,t){let i=a.useRef(e),o=n(t);r(()=>{i.current!==e&&o(i.current)},[e,o]),r(()=>{i.current=e},[e])}export{i as n,o as t};

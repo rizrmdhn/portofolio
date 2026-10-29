@@ -1,0 +1,1 @@
+import{bt as e}from"./index-C6a3kUit.js";function t(t){return e(t.defaultTagName??`div`,t,t)}export{t};

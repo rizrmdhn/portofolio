@@ -1,0 +1,1 @@
+import{Fn as e,Mn as t}from"./index-C6a3kUit.js";var n=e(t()),r=[];function i(e){n.useEffect(e,r)}export{i as t};

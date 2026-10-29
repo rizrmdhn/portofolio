@@ -1,0 +1,1 @@
+import{Ct as e,Fn as t,Mn as n}from"./index-C6a3kUit.js";var r=t(n()),i=r.createContext({formRef:{current:{fields:new Map}},errors:{},clearErrors:e,validationMode:`onSubmit`,submitAttemptedRef:{current:!1}});function a(){return r.useContext(i)}export{a as t};
