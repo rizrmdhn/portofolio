@@ -10,8 +10,9 @@ import {
   IconEye,
 } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
-import { Card, CardContent, CardFooter } from './ui/card'
+import { Link } from '@tanstack/react-router'
+import { Badge } from './ui/badge'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Separator } from './ui/separator'
 
 interface ProjectCardProps {
@@ -19,99 +20,81 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const navigate = useNavigate()
   const locale = useLocale()
-  const { t } = useTranslations()
+  const { t, format } = useTranslations()
   const incrementViews = useMutation(trpc.project.updateView.mutationOptions())
+  const detailParams = { locale, slug: project.slug }
+  const externalLinks = [
+    { href: project.githubUrl, label: t.projectDetail.linkGithub, icon: IconBrandGithub },
+    { href: project.liveUrl, label: t.projectDetail.linkLive, icon: IconExternalLink },
+    { href: project.playstoreUrl, label: t.projectDetail.linkPlayStore, icon: IconBrandGooglePlay },
+    { href: project.appstoreUrl, label: t.projectDetail.linkAppStore, icon: IconBrandAppstore },
+  ]
+  const viewCount = Number(project.viewCount) || 0
 
   return (
-    <Card
-      className="hover:bg-project-hover hover:border-card-hover-border flex h-full max-w-md cursor-pointer flex-col rounded-lg border border-transparent p-5 transition-all hover:shadow-sm"
-      onClick={() =>
-        navigate({ to: '/$locale/projects/$slug', params: { locale, slug: project.slug } })
-      }
-    >
-      <CardContent className="flex flex-1 flex-col gap-4 p-0">
-        <h3 className="text-sm font-semibold">{project.title}</h3>
-        <p className="text-muted-foreground text-xs">{project.description}</p>
-        <div className="flex flex-wrap gap-2">
-          {project.tech.map((tech, index) => (
-            <span
-              key={index}
-              className="bg-tag text-tag-foreground border-tag-border rounded border px-2 py-1 font-mono text-[10px] font-semibold"
+    <Card className="h-full min-w-0 gap-4 wrap-anywhere">
+      <CardHeader className="gap-2">
+        <CardTitle>
+          <h3 className="text-base leading-6 font-semibold">
+            <Link
+              to="/$locale/projects/$slug"
+              params={detailParams}
+              className="focus-visible:ring-ring rounded-sm underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
             >
-              {tech}
-            </span>
-          ))}
-        </div>
+              {project.title}
+            </Link>
+          </h3>
+        </CardTitle>
+        <CardDescription>
+          <p className="line-clamp-3 text-sm leading-6">{project.description}</p>
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-1 flex-wrap content-start items-start gap-1.5">
+        {project.tech.slice(0, 4).map((tech, index) => (
+          <Badge
+            key={index}
+            variant="outline"
+            className="h-auto max-w-full min-w-0 whitespace-normal"
+          >
+            {tech}
+          </Badge>
+        ))}
+        {project.tech.length > 4 && (
+          <Badge
+            variant="link"
+            className="h-auto max-w-full min-w-0 whitespace-normal"
+            render={<Link to="/$locale/projects/$slug" params={detailParams} />}
+          >
+            {format(t.projects.showMore, { count: project.tech.length - 4 })}
+          </Badge>
+        )}
       </CardContent>
       <Separator />
-      <CardFooter className="flex items-center justify-between p-0">
-        <div className="flex gap-4">
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.stopPropagation()
-                incrementViews.mutate({ projectId: project.id, slug: project.slug })
-              }}
-              className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
-            >
-              <IconBrandGithub className="size-3.25" />
-              {t.projectDetail.linkGithub}
-            </a>
-          )}
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.stopPropagation()
-                incrementViews.mutate({ projectId: project.id, slug: project.slug })
-              }}
-              className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
-            >
-              <IconExternalLink className="size-3.25" />
-              {t.projectDetail.linkLive}
-            </a>
-          )}
-          {project.playstoreUrl && (
-            <a
-              href={project.playstoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.stopPropagation()
-                incrementViews.mutate({ projectId: project.id, slug: project.slug })
-              }}
-              className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
-            >
-              <IconBrandGooglePlay className="size-3.25" />
-              {t.projectDetail.linkPlayStore}
-            </a>
-          )}
-          {project.appstoreUrl && (
-            <a
-              href={project.appstoreUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.stopPropagation()
-                incrementViews.mutate({ projectId: project.id, slug: project.slug })
-              }}
-              className="group text-subtle inline-flex items-center gap-1.25 font-mono text-[11px] transition-all hover:brightness-80"
-            >
-              <IconBrandAppstore className="size-3.25" />
-              {t.projectDetail.linkAppStore}
-            </a>
+      <CardFooter className="flex-wrap justify-between gap-x-4 gap-y-2">
+        <div className="flex min-w-0 flex-wrap gap-x-4 gap-y-2">
+          {externalLinks.map(({ href, label, icon: Icon }) =>
+            href ? (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => incrementViews.mutate({ projectId: project.id, slug: project.slug })}
+                className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex items-center gap-1.5 rounded-sm py-1 text-xs leading-5 underline-offset-4 transition-colors hover:underline focus-visible:ring-2 focus-visible:outline-none"
+              >
+                <Icon aria-hidden="true" className="size-3.5 shrink-0" />
+                {label}
+              </a>
+            ) : null,
           )}
         </div>
-        <span className="text-subtle inline-flex items-center gap-1.25 font-mono text-[11px]">
-          <IconEye className="size-3.25" />
-          {toCompactNumber(Number(project.viewCount) || 0)}
+        <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs leading-5">
+          <IconEye aria-hidden="true" className="size-3.5 shrink-0" />
+          <span aria-hidden="true">{toCompactNumber(viewCount)}</span>
+          <span className="sr-only">
+            {format(t.projectDetail.viewsLabel, { count: viewCount })}
+          </span>
         </span>
       </CardFooter>
     </Card>
