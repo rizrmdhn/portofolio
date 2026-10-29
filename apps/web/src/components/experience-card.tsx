@@ -29,7 +29,7 @@ function formatDuration(
 export function ExperienceCard({ experience, className, ...props }: ExperienceCardProps) {
   return (
     <div
-      className={cn('flex min-w-0 flex-col gap-6 rounded-lg py-10 wrap-anywhere', className)}
+      className={cn('flex min-w-0 flex-col gap-4 rounded-lg py-6 wrap-anywhere', className)}
       {...props}
     >
       <ExperiencePosition experience={experience} />
@@ -44,21 +44,21 @@ export function ExperienceEntryCard({ entry }: { entry: ExperienceEntry<Experien
   if (entry.positions.length === 1) return <ExperienceCard experience={first} />
 
   return (
-    <div className="flex min-w-0 flex-col gap-6 rounded-lg py-10 wrap-anywhere">
-      <h3 className="text-foreground text-[15px] font-semibold">{first.company}</h3>
-      <ol role="list" className="flex min-w-0 flex-col gap-8">
+    <div className="flex min-w-0 flex-col gap-4 rounded-lg py-6 wrap-anywhere">
+      <h3 className="text-foreground text-[15px] leading-6 font-semibold">{first.company}</h3>
+      <ol role="list" className="flex min-w-0 flex-col gap-5">
         {entry.positions.map((experience, index) => (
           <li key={experience.id} className="relative min-w-0 pl-5 sm:pl-6">
+            {/* Join heading centers across the role body and the list's gap-5. */}
+            {index < entry.positions.length - 1 && (
+              <span
+                aria-hidden="true"
+                className="bg-border absolute top-3 -bottom-8 left-[3.5px] w-px"
+              />
+            )}
             <span
               aria-hidden="true"
-              className={cn(
-                'bg-border absolute top-1 left-0 w-px',
-                index < entry.positions.length - 1 ? '-bottom-9' : 'bottom-0',
-              )}
-            />
-            <span
-              aria-hidden="true"
-              className="border-border bg-background absolute top-1 left-[-3px] size-2 rounded-full border"
+              className="border-border bg-background absolute top-2 left-0 size-2 rounded-full border"
             />
             <ExperiencePosition experience={experience} grouped />
           </li>
@@ -86,29 +86,31 @@ function ExperiencePosition({
   )
 
   return (
-    <div className="flex min-w-0 flex-col gap-4">
-      <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_12rem]">
+    <div className="flex min-w-0 flex-col gap-3">
+      <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_12rem] sm:gap-4">
         <div className="flex min-w-0 flex-col items-start gap-1">
-          <Heading className="text-foreground text-[15px] font-semibold">
+          <Heading className="text-foreground text-[15px] leading-6 font-semibold">
             {experience.title}
           </Heading>
           {!grouped && <p className="text-foreground text-[13px]">{experience.company}</p>}
         </div>
 
-        <div className="flex min-w-0 flex-col items-start gap-2">
-          <span className="text-subtle flex max-w-full flex-wrap items-center gap-1.5 font-mono text-[11px]">
+        <div className="text-muted-foreground flex min-w-0 flex-col items-start gap-1 font-mono text-xs">
+          <span className="flex max-w-full min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
             {format(experience.startDate, 'MMM yyyy')} –{' '}
             {experience.currentlyWorking ? (
-              <Badge variant="outline">{t.experienceCard.present}</Badge>
+              <Badge variant="outline" className="h-auto max-w-full min-w-0 whitespace-normal">
+                {t.experienceCard.present}
+              </Badge>
             ) : (
               format(endDate, 'MMM yyyy')
             )}
           </span>
-          <span className="text-muted-foreground/70 font-mono text-[11px]">{duration}</span>
-          <div className="text-subtle flex max-w-full flex-wrap items-center gap-2 font-mono text-[11px]">
-            <span>{t.experienceType[experience.type]}</span>
+          <span>{duration}</span>
+          <div className="flex max-w-full min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="min-w-0">{t.experienceType[experience.type]}</span>
             <span aria-hidden>·</span>
-            <span>{experience.location}</span>
+            <span className="min-w-0">{experience.location}</span>
           </div>
         </div>
       </div>
@@ -116,20 +118,21 @@ function ExperiencePosition({
       <div className="flex w-full max-w-lg min-w-0 flex-col items-start gap-2">
         <p className="text-muted-foreground text-[13px]">{experience.description}</p>
         {!!experience.achievements.length && (
-          <ul className="text-muted-foreground flex list-disc flex-col gap-1 pl-5 text-[13px]">
+          <ul className="text-muted-foreground flex max-w-full min-w-0 list-disc flex-col gap-1 pl-5 text-[13px]">
             {experience.achievements.map((achievement, index) => (
               <li key={index}>{achievement}</li>
             ))}
           </ul>
         )}
-        <div className="flex max-w-full flex-wrap gap-2">
+        <div className="flex max-w-full min-w-0 flex-wrap gap-1.5 font-mono">
           {experience.skills.map((skill, index) => (
-            <span
+            <Badge
               key={index}
-              className="bg-tag text-tag-foreground border-tag-border max-w-full min-w-0 rounded border px-2 py-1 font-mono text-[10px] font-semibold"
+              variant="outline"
+              className="h-auto max-w-full min-w-0 whitespace-normal"
             >
               {skill}
-            </span>
+            </Badge>
           ))}
         </div>
       </div>
