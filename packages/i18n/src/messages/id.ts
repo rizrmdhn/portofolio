@@ -6,6 +6,7 @@ import type { Messages } from './en'
  */
 export const id: Messages = {
   experiencePosition: {
+    editing: 'Sedang diedit',
     history: 'Riwayat karier',
     context:
       'Tambah jabatan baru di perusahaan tersimpan. Perubahan dan jabatan yang ada tetap dipertahankan.',

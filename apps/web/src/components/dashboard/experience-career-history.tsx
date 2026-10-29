@@ -1,4 +1,17 @@
 import { invalidatePositionQueries } from '@/lib/experience-position-cache'
+import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { IconPlus } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { enUS, id } from 'date-fns/locale'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -12,7 +25,7 @@ import {
   EXPERIENCE_TYPE_LABELS,
 } from '@portofolio/constants'
 import type { Experience } from '@portofolio/types/experience.types'
-import { useTranslations } from '@/i18n/locale-context'
+import { useLocale, useTranslations } from '@/i18n/locale-context'
 import { trpc } from '@/utils/trpc'
 import { Button } from '@/components/ui/button'
 import {
@@ -47,13 +60,14 @@ export function ExperienceCareerHistory({
   onSaved: (groupId: string | null) => void
 }) {
   const { t } = useTranslations()
+  const locale = useLocale() === 'id' ? id : enUS
   const m = t.experiencePosition
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(false)
   const history = useQuery(trpc.experience.getForDashboard.queryOptions({}))
-  const roles = source.groupId
-    ? (history.data?.filter((role) => role.groupId === source.groupId) ?? [])
-    : [source]
+  const roles = (source.groupId
+    ? history.data?.filter((role) => role.groupId === source.groupId)
+    : undefined) ?? [source]
   return (
     <Dialog
       open={open}
@@ -61,37 +75,75 @@ export function ExperienceCareerHistory({
         if (!busy) setOpen(value)
       }}
     >
-      <section className="flex flex-col gap-3" aria-labelledby="career-history-title">
-        <h3 id="career-history-title">
-          {m.history}: {source.company}
-        </h3>
-        <p>{m.context}</p>
-        {history.isError && <FieldError>{m.historyError}</FieldError>}
-        <ul className="flex flex-col gap-2">
-          {roles.map((role) => (
-            <li key={role.id}>
-              <Link
-                to="/dashboard/experience/$experienceId/edit"
-                params={{ experienceId: role.id }}
-              >
-                {role.title} · {role.startDate.slice(0, 10)} –{' '}
-                {role.currentlyWorking ? m.present : role.endDate?.slice(0, 10)}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <DialogTrigger
-          render={
-            <Button
-              type="button"
-              disabled={disabled}
-              aria-describedby={disabled ? 'add-position-guidance' : undefined}
-            />
-          }
-        >
-          {m.add}
-        </DialogTrigger>
-        {disabled && <p id="add-position-guidance">{m.dirty}</p>}
+      <section className="min-w-0" aria-labelledby="career-history-title">
+        <Card>
+          <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex min-w-0 flex-col gap-1">
+              <CardTitle>
+                <h3 id="career-history-title">{m.history}</h3>
+              </CardTitle>
+              <CardDescription className="wrap-anywhere">{source.company}</CardDescription>
+            </div>
+            <DialogTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-fit shrink-0"
+                  disabled={disabled}
+                  aria-describedby={disabled ? 'add-position-guidance' : undefined}
+                />
+              }
+            >
+              <IconPlus data-icon="inline-start" aria-hidden="true" />
+              {m.add}
+            </DialogTrigger>
+          </CardHeader>
+          <CardContent>
+            {history.isError && <FieldError>{m.historyError}</FieldError>}
+            <ul className="flex min-w-0 flex-col gap-1">
+              {roles.map((role) => (
+                <li key={role.id} className="min-w-0">
+                  <Link
+                    to="/dashboard/experience/$experienceId/edit"
+                    params={{ experienceId: role.id }}
+                    aria-current={role.id === source.id ? 'page' : undefined}
+                    className={cn(
+                      'hover:bg-muted focus-visible:ring-ring flex min-w-0 flex-col gap-1 rounded-md px-3 py-2.5 wrap-anywhere focus-visible:ring-2 focus-visible:outline-none sm:flex-row sm:items-center sm:justify-between sm:gap-4',
+                      role.id === source.id && 'bg-muted',
+                    )}
+                  >
+                    <span className="flex min-w-0 flex-wrap items-center gap-2">
+                      <span className="font-medium">{role.title}</span>
+                      {role.id === source.id && <Badge variant="secondary">{m.editing}</Badge>}
+                    </span>
+                    <span className="text-muted-foreground shrink-0 text-xs">
+                      <time dateTime={role.startDate.slice(0, 10)}>
+                        {format(role.startDate, 'dd MMM yyyy', { locale })}
+                      </time>
+                      {' – '}
+                      {role.currentlyWorking ? (
+                        m.present
+                      ) : role.endDate ? (
+                        <time dateTime={role.endDate.slice(0, 10)}>
+                          {format(role.endDate, 'dd MMM yyyy', { locale })}
+                        </time>
+                      ) : null}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+          {disabled && (
+            <CardFooter>
+              <p id="add-position-guidance" className="text-muted-foreground text-xs">
+                {m.dirty}
+              </p>
+            </CardFooter>
+          )}
+        </Card>
         {open && (
           <NewPositionForm
             source={source}
