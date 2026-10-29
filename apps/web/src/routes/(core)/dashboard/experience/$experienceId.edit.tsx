@@ -1,3 +1,4 @@
+import { ExperienceAchievements } from '@/components/dashboard/experience-achievements'
 import { TranslationEditor } from '@/components/dashboard/translation-editor'
 import type { TranslationFieldDef } from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
@@ -30,7 +31,10 @@ import {
   EXPERIENCE_TYPE_LABELS,
 } from '@portofolio/constants'
 import type { Locale } from '@portofolio/i18n'
-import { updateExperienceSchema } from '@portofolio/schema/experience.schema'
+import {
+  experienceAchievementsSchema,
+  updateExperienceSchema,
+} from '@portofolio/schema/experience.schema'
 import type { TablerIcon } from '@tabler/icons-react'
 import { IconBriefcase, IconLanguage, IconSettings } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
@@ -38,6 +42,12 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 
 const EXPERIENCE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
+  {
+    name: 'achievements',
+    label: 'Achievements (one per line; leave blank to use English)',
+    type: 'textarea',
+    optional: true,
+  },
   {
     name: 'title',
     label: 'Role / Title',
@@ -61,9 +71,7 @@ function ExperienceTranslationsTab({
   sourceValues: Record<string, string>
 }) {
   const queryClient = useQueryClient()
-  const translationsQuery = useQuery(
-    trpc.experience.getTranslations.queryOptions({ experienceId }),
-  )
+  const translationsQuery = useQuery(trpc.experience.getTranslations.queryOptions({ experienceId }))
 
   const invalidate = () =>
     queryClient.invalidateQueries(trpc.experience.getTranslations.queryFilter({ experienceId }))
@@ -91,7 +99,10 @@ function ExperienceTranslationsTab({
   return (
     <TranslationEditor
       fields={EXPERIENCE_TRANSLATION_FIELDS}
-      translations={translationsQuery.data ?? []}
+      translations={(translationsQuery.data ?? []).map((row) => ({
+        ...row,
+        achievements: row.achievements?.join('\n') ?? '',
+      }))}
       sourceValues={sourceValues}
       isLoading={translationsQuery.isLoading}
       savingLocale={upsert.isPending ? upsert.variables.locale : null}
@@ -102,6 +113,12 @@ function ExperienceTranslationsTab({
           locale,
           title: values.title ?? '',
           description: values.description ?? '',
+          achievements: values.achievements?.trim()
+            ? values.achievements
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean)
+            : null,
         })
       }
       onRemove={(locale: Locale) => remove.mutate({ experienceId, locale })}
@@ -137,6 +154,7 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'endDate',
     'currentlyWorking',
     'skills',
+    'achievements',
   ],
   settings: ['status'],
   translations: [],
@@ -166,7 +184,9 @@ function RouteComponent() {
   )
 
   const form = useForm({
-    validators: { onSubmit: updateExperienceSchema },
+    validators: {
+      onSubmit: updateExperienceSchema.extend({ achievements: experienceAchievementsSchema }),
+    },
     defaultValues: {
       id: experience.id,
       title: experience.title,
@@ -178,6 +198,7 @@ function RouteComponent() {
       endDate: experience.endDate ? new Date(experience.endDate).toISOString() : undefined,
       currentlyWorking: experience.currentlyWorking,
       skills: experience.skills,
+      achievements: experience.achievements,
       status: experience.status,
       order: experience.order,
     },
@@ -422,6 +443,25 @@ function RouteComponent() {
                     />
 
                     <form.Field
+                      name="achievements"
+                      children={(field) => {
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel>Achievements</FieldLabel>
+                            <ExperienceAchievements
+                              value={field.state.value}
+                              onChange={field.handleChange}
+                              onBlur={field.handleBlur}
+                              invalid={isInvalid}
+                            />
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                          </Field>
+                        )
+                      }}
+                    />
+
+                    <form.Field
                       name="skills"
                       children={(field) => {
                         const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -482,6 +522,7 @@ function RouteComponent() {
                     sourceValues={{
                       title: experience.title,
                       description: experience.description,
+                      achievements: experience.achievements.join('\n'),
                     }}
                   />
                 </TabsContent>

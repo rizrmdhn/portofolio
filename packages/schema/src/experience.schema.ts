@@ -3,6 +3,8 @@ import { createInsertSchema } from '@portofolio/db'
 import { experiences } from '@portofolio/db/schema/index'
 import z from 'zod'
 
+export const experienceAchievementsSchema = z.array(z.string().trim().min(1).max(1000)).max(50)
+
 export const createExperienceSchema = createInsertSchema(experiences, {
   title: z.string().max(256),
   description: z.string().max(5000),
@@ -13,6 +15,7 @@ export const createExperienceSchema = createInsertSchema(experiences, {
   endDate: z.iso.datetime().or(z.undefined()),
   currentlyWorking: z.boolean(),
   skills: z.string().array(),
+  achievements: experienceAchievementsSchema.optional(),
   status: z.enum(EXPERIENCE_STATUS_TYPES),
   order: z.number(),
 }).omit({ createdAt: true, updatedAt: true })

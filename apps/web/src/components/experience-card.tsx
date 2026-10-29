@@ -66,6 +66,13 @@ export function ExperienceCard({ experience, className, ...props }: ExperienceCa
 
         <div className="flex w-full max-w-lg min-w-0 flex-col items-start gap-2">
           <p className="text-muted-foreground text-[13px]">{experience.description}</p>
+          {!!experience.achievements.length && (
+            <ul className="text-muted-foreground flex list-disc flex-col gap-1 pl-5 text-[13px]">
+              {experience.achievements.map((achievement, index) => (
+                <li key={index}>{achievement}</li>
+              ))}
+            </ul>
+          )}
           <div className="flex max-w-full flex-wrap gap-2">
             {experience.skills.map((skill, index) => (
               <span

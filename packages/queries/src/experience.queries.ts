@@ -1,8 +1,8 @@
 import { eq } from '@portofolio/db'
 import { db } from '@portofolio/db/client'
 import { experiences } from '@portofolio/db/schema/index'
-import { DEFAULT_LOCALE  } from '@portofolio/i18n'
-import type {Locale} from '@portofolio/i18n';
+import { DEFAULT_LOCALE } from '@portofolio/i18n'
+import type { Locale } from '@portofolio/i18n'
 import type {
   CreateExperienceInput,
   UpdateExperienceInput,
@@ -25,7 +25,12 @@ export async function getAllExperiences(locale: Locale = DEFAULT_LOCALE) {
   return results.map(({ translations, ...experience }) => {
     const translation = translations[0]
     return translation
-      ? { ...experience, title: translation.title, description: translation.description }
+      ? {
+          ...experience,
+          title: translation.title,
+          description: translation.description,
+          achievements: translation.achievements ?? experience.achievements,
+        }
       : experience
   })
 }

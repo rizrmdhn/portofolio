@@ -39,6 +39,7 @@ import {
   varchar as pgVarchar,
 } from 'drizzle-orm/pg-core'
 import { v7 as uuidv7 } from 'uuid'
+import { sql } from 'drizzle-orm'
 
 import { activeDialect } from './active'
 
@@ -123,6 +124,15 @@ export function indexableText(name: string) {
 /** String array. Postgres native `text[]`; MySQL `json` typed as `string[]`. */
 export function stringArray(name: string) {
   return pick(pgText(name).array(), () => myJson(name).$type<Array<string>>())
+}
+
+/** An ordered string list with a database default for legacy rows and imports. */
+export function emptyStringArray(name: string) {
+  return pick(pgText(name).array().default([]), () =>
+    myJson(name)
+      .$type<Array<string>>()
+      .default(sql`(JSON_ARRAY())`),
+  )
 }
 
 // ========== Scalars ==========

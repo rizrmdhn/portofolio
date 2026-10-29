@@ -63,6 +63,7 @@ const IMPORT_ORDER = [
   'projectImages',
   'viewEvents',
   'experiences',
+  'experienceTranslations',
   'certifications',
   'education',
   'achievements',
