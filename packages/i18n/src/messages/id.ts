@@ -5,6 +5,35 @@ import type { Messages } from './en'
  * missing or misspelled key fails typechecking.
  */
 export const id: Messages = {
+  experiencePosition: {
+    history: 'Riwayat karier',
+    context:
+      'Tambah jabatan baru di perusahaan tersimpan. Perubahan dan jabatan yang ada tetap dipertahankan.',
+    historyError: 'Gagal memuat riwayat karier.',
+    present: 'Sekarang',
+    add: 'Tambah jabatan',
+    dirty: 'Simpan perubahan perusahaan atau grup masa kerja sebelum menambah jabatan.',
+    company: 'Perusahaan tersimpan',
+    employment: 'Masa kerja',
+    same: 'Masa kerja yang sama',
+    newStint: 'Masa kerja baru',
+    sameHelp: 'Lanjutkan masa kerja ini. Grup bersama dibuat hanya saat disimpan jika diperlukan.',
+    newHelp:
+      'Kembali setelah keluar? Buat masa kerja terpisah. Jabatan yang ada tetap di grup semula.',
+    title: 'Jabatan',
+    location: 'Lokasi',
+    type: 'Jenis pekerjaan',
+    start: 'Tanggal mulai',
+    end: 'Tanggal selesai',
+    current: 'Masih bekerja dalam jabatan ini',
+    description: 'Deskripsi',
+    achievements: 'Pencapaian (satu per baris)',
+    skills: 'Keahlian (satu per baris)',
+    status: 'Status',
+    cancel: 'Batal',
+    saving: 'Menyimpan�',
+    save: 'Simpan jabatan baru',
+  },
   nav: {
     about: 'Tentang',
     experience: 'Pengalaman',
@@ -37,7 +66,7 @@ export const id: Messages = {
   },
 
   experienceGroup: {
-    label: 'Grup masa kerja (opsional)',
+    label: 'Grup masa kerja (metadata penulis, opsional)',
     help: 'Kelompokkan posisi hanya jika berada dalam satu masa kerja berkelanjutan. Jika kembali ke perusahaan yang sama, buat grup terpisah. Pilih Tanpa grup untuk melepas posisi tanpa menghapusnya.',
     none: 'Tanpa grup',
     newLabel: 'Label grup baru',

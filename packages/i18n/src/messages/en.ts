@@ -10,6 +10,35 @@
  * `@portofolio/constants` so the public site can render them per-locale.
  */
 export const en = {
+  experiencePosition: {
+    history: 'Career history',
+    context:
+      'Add a new role at the saved company. Your current edits and existing roles stay intact.',
+    historyError: 'Could not load career history.',
+    present: 'Present',
+    add: 'Add position',
+    dirty: 'Save your company or employment group changes before adding a position.',
+    company: 'Saved company',
+    employment: 'Employment',
+    same: 'Same employment stint',
+    newStint: 'New employment stint',
+    sameHelp: 'Continue this employment. A shared group is created only when you save, if needed.',
+    newHelp:
+      'Returning after leaving? Create a separate employment stint. Existing roles stay in their current group.',
+    title: 'Role / Title',
+    location: 'Location',
+    type: 'Employment type',
+    start: 'Start date',
+    end: 'End date',
+    current: 'Currently working in this role',
+    description: 'Description',
+    achievements: 'Achievements (one per line)',
+    skills: 'Skills (one per line)',
+    status: 'Status',
+    cancel: 'Cancel',
+    saving: 'Saving�',
+    save: 'Save new position',
+  },
   nav: {
     about: 'About',
     experience: 'Experience',
@@ -42,7 +71,7 @@ export const en = {
   },
 
   experienceGroup: {
-    label: 'Employment group (optional)',
+    label: 'Employment group (author metadata, optional)',
     help: 'Group positions only when they belong to one continuous employment stint. For a return to the same company, create a separate group. Choose No group to detach without deleting the position.',
     none: 'No group',
     newLabel: 'New group label',

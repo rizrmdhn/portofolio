@@ -34,3 +34,46 @@ export const createExperienceGroupSchema = z.object({
   label: z.string().trim().min(1).max(256),
 })
 export type CreateExperienceGroupInput = z.infer<typeof createExperienceGroupSchema>
+
+// Independent schema: drizzle's nullable column wrapper must not make an omitted endDate required.
+export const addExperiencePositionSchema = z.object({
+  sourceId: z.uuid(),
+  stint: z.enum(['same', 'new']).default('same'),
+  position: z
+    .object({
+      title: z.string().trim().min(1).max(256),
+      description: z.string().trim().min(1).max(5000),
+      location: z.string().trim().max(256),
+      type: z.enum(EXPERIENCE_TYPES),
+      startDate: z.iso.datetime(),
+      endDate: z.iso.datetime().optional(),
+      currentlyWorking: z.boolean(),
+      skills: z.array(z.string().trim().min(1).max(256)).max(100),
+      achievements: experienceAchievementsSchema,
+      status: z.enum(EXPERIENCE_STATUS_TYPES).default('draft'),
+    })
+    .superRefine((value, ctx) => {
+      if (value.currentlyWorking && value.endDate) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['endDate'],
+          message: 'A current position cannot have an end date.',
+        })
+      }
+      if (!value.currentlyWorking && !value.endDate) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['endDate'],
+          message: 'Enter an end date or mark this position as current.',
+        })
+      }
+      if (value.endDate && value.endDate < value.startDate) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['endDate'],
+          message: 'End date must be on or after start date.',
+        })
+      }
+    }),
+})
+export type AddExperiencePositionInput = z.infer<typeof addExperiencePositionSchema>

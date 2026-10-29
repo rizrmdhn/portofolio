@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { ExperienceCareerHistory } from '@/components/dashboard/experience-career-history'
 import { ExperienceAchievements } from '@/components/dashboard/experience-achievements'
 import { ExperienceGroupField } from '@/components/dashboard/experience-group-field'
 import { TranslationEditor } from '@/components/dashboard/translation-editor'
@@ -149,7 +151,6 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'title',
     'description',
     'company',
-    'groupId',
     'location',
     'type',
     'startDate',
@@ -158,11 +159,16 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'skills',
     'achievements',
   ],
-  settings: ['status'],
+  settings: ['status', 'groupId'],
   translations: [],
 }
 
 function RouteComponent() {
+  const { experienceId } = Route.useParams()
+  return <ExperienceEditor key={experienceId} />
+}
+
+function ExperienceEditor() {
   const queryClient = useQueryClient()
   const router = useRouter()
 
@@ -189,6 +195,8 @@ function RouteComponent() {
     }),
   )
 
+  // Freeze initial defaults: background history refresh must never replace unsaved edits.
+  const [initialExperience] = useState(experience)
   const form = useForm({
     validators: {
       onSubmit: updateExperienceSchema.extend({
@@ -197,20 +205,22 @@ function RouteComponent() {
       }),
     },
     defaultValues: {
-      id: experience.id,
-      title: experience.title,
-      description: experience.description,
-      company: experience.company,
-      groupId: experience.groupId ?? null,
-      location: experience.location,
-      type: experience.type,
-      startDate: new Date(experience.startDate).toISOString(),
-      endDate: experience.endDate ? new Date(experience.endDate).toISOString() : undefined,
-      currentlyWorking: experience.currentlyWorking,
-      skills: experience.skills,
-      achievements: experience.achievements,
-      status: experience.status,
-      order: experience.order,
+      id: initialExperience.id,
+      title: initialExperience.title,
+      description: initialExperience.description,
+      company: initialExperience.company,
+      groupId: initialExperience.groupId ?? null,
+      location: initialExperience.location,
+      type: initialExperience.type,
+      startDate: new Date(initialExperience.startDate).toISOString(),
+      endDate: initialExperience.endDate
+        ? new Date(initialExperience.endDate).toISOString()
+        : undefined,
+      currentlyWorking: initialExperience.currentlyWorking,
+      skills: initialExperience.skills,
+      achievements: initialExperience.achievements,
+      status: initialExperience.status,
+      order: initialExperience.order,
     },
     onSubmit: async ({ value }) => {
       await editExperienceMutation.mutateAsync(value)
@@ -226,6 +236,16 @@ function RouteComponent() {
           showcase your work history and skills effectively.
         </p>
       </div>
+      <form.Subscribe
+        selector={(state) => ({ company: state.values.company, groupId: state.values.groupId })}
+        children={({ company, groupId }) => (
+          <ExperienceCareerHistory
+            source={experience}
+            disabled={company !== experience.company || groupId !== (experience.groupId ?? null)}
+            onSaved={(savedGroupId) => form.setFieldValue('groupId', savedGroupId)}
+          />
+        )}
+      />
       <div className="flex flex-1">
         <form
           onSubmit={(e) => {
@@ -304,22 +324,6 @@ function RouteComponent() {
                           </Field>
                         )
                       }}
-                    />
-
-                    <form.Subscribe
-                      selector={(state) => state.values.company}
-                      children={(company) => (
-                        <form.Field
-                          name="groupId"
-                          children={(field) => (
-                            <ExperienceGroupField
-                              company={company}
-                              value={field.state.value ?? null}
-                              onChange={field.handleChange}
-                            />
-                          )}
-                        />
-                      )}
                     />
 
                     <div className="grid gap-4 md:grid-cols-2">
@@ -512,6 +516,22 @@ function RouteComponent() {
                 {/* Settings Content */}
                 <TabsContent value="settings">
                   <FieldGroup className="gap-4">
+                    <form.Subscribe
+                      selector={(state) => state.values.company}
+                      children={(company) => (
+                        <form.Field
+                          name="groupId"
+                          children={(field) => (
+                            <ExperienceGroupField
+                              company={company}
+                              value={field.state.value ?? null}
+                              onChange={field.handleChange}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+
                     <form.Field
                       name="status"
                       children={(field) => {

@@ -1,14 +1,16 @@
+import { addPositionInTransaction } from './experience-position'
+import type {
+  AddExperiencePositionInput,
+  CreateExperienceGroupInput,
+  CreateExperienceInput,
+  UpdateExperienceInput,
+} from '@portofolio/schema/experience.schema'
 import { eq } from '@portofolio/db'
 import { experienceGroupIssue } from '@portofolio/db/experience-group'
 import { db } from '@portofolio/db/client'
 import { experienceGroups, experiences } from '@portofolio/db/schema/index'
 import { DEFAULT_LOCALE } from '@portofolio/i18n'
 import type { Locale } from '@portofolio/i18n'
-import type {
-  CreateExperienceGroupInput,
-  CreateExperienceInput,
-  UpdateExperienceInput,
-} from '@portofolio/schema/experience.schema'
 import { NotFoundError, QueryError, ValidationError } from '@portofolio/errors'
 import { insensitiveContains } from './utils/dialect'
 import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
@@ -118,4 +120,30 @@ async function validateExperienceGroup(groupId: string | null | undefined, compa
       'groupId',
     )
   }
+}
+
+export async function addExperiencePosition(input: AddExperiencePositionInput) {
+  // Both postgres-js and mysql2 builders support .for('update'). Use a locking
+  // read rather than the relational query API, including on MySQL repeatable read.
+  return db.transaction(async (tx) =>
+    addPositionInTransaction(
+      {
+        lockSource: async (id) =>
+          (await tx.select().from(experiences).where(eq(experiences.id, id)).for('update'))[0],
+        getGroup: async (id) =>
+          (
+            await tx
+              .select()
+              .from(experienceGroups)
+              .where(eq(experienceGroups.id, id))
+              .for('update')
+          )[0],
+        createGroup: (data) => insertReturning(tx, experienceGroups, data),
+        attachSource: (id, groupId) =>
+          tx.update(experiences).set({ groupId }).where(eq(experiences.id, id)),
+        insertPosition: (data) => insertReturning(tx, experiences, data),
+      },
+      input,
+    ),
+  )
 }
