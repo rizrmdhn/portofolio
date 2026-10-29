@@ -1,9 +1,11 @@
 import { createActivityLog } from "@portofolio/queries/activity-log.queries";
 import {
   createExperience,
+  createExperienceGroup,
   deleteExperience,
   getAllExperiences,
   getExperienceById,
+  getExperienceGroups,
   getExperiencesForDashboard,
   updateExperience,
 } from "@portofolio/queries/experience.queries";
@@ -13,6 +15,7 @@ import {
   upsertExperienceTranslation,
 } from "@portofolio/queries/translation.queries";
 import {
+  createExperienceGroupSchema,
   createExperienceSchema,
   experienceAchievementsSchema,
   updateExperienceSchema,
@@ -27,6 +30,18 @@ import { toTRPCError } from "../utils/to-trpc-error";
 const CACHE_PREFIX = CACHE_KEYS.EXPERIENCE_PREFIX
 
 export const experienceRouter = createTRPCRouter({
+  getGroups: protectedProcedure.query(async () => {
+    const [groups, err] = await tryCatchAsync(() => getExperienceGroups())
+    if (err) throw toTRPCError(err)
+    return groups
+  }),
+
+  createGroup: protectedProcedure.input(createExperienceGroupSchema).mutation(async ({ input }) => {
+    const [group, err] = await tryCatchAsync(() => createExperienceGroup(input))
+    if (err) throw toTRPCError(err)
+    return group
+  }),
+
   getAll: publicProcedure.input(localeInputSchema.optional()).query(async ({ ctx, input }) => {
     const locale = input?.locale ?? ctx.locale
     const [experiences, err] = await tryCatchAsync(() =>

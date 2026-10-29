@@ -1,13 +1,15 @@
 import { eq } from '@portofolio/db'
+import { experienceGroupIssue } from '@portofolio/db/experience-group'
 import { db } from '@portofolio/db/client'
-import { experiences } from '@portofolio/db/schema/index'
+import { experienceGroups, experiences } from '@portofolio/db/schema/index'
 import { DEFAULT_LOCALE } from '@portofolio/i18n'
 import type { Locale } from '@portofolio/i18n'
 import type {
+  CreateExperienceGroupInput,
   CreateExperienceInput,
   UpdateExperienceInput,
 } from '@portofolio/schema/experience.schema'
-import { NotFoundError, QueryError } from '@portofolio/errors'
+import { NotFoundError, QueryError, ValidationError } from '@portofolio/errors'
 import { insensitiveContains } from './utils/dialect'
 import { deleteReturning, insertReturning, updateReturning } from './utils/returning'
 
@@ -62,6 +64,7 @@ export async function getExperienceById(id: string) {
 }
 
 export async function createExperience(data: CreateExperienceInput) {
+  await validateExperienceGroup(data.groupId, data.company)
   const experience = await insertReturning(db, experiences, data)
 
   if (!experience) throw new QueryError('Failed to create experience')
@@ -70,7 +73,12 @@ export async function createExperience(data: CreateExperienceInput) {
 }
 
 export async function updateExperience(data: UpdateExperienceInput) {
-  await getExperienceById(data.id)
+  const current = await getExperienceById(data.id)
+  // Omitted membership preserves it for older clients; null explicitly detaches.
+  await validateExperienceGroup(
+    data.groupId === undefined ? current.groupId : data.groupId,
+    data.company,
+  )
 
   const experience = await updateReturning(db, experiences, data, eq(experiences.id, data.id))
 
@@ -87,4 +95,27 @@ export async function deleteExperience(id: string) {
   if (!experience) throw new QueryError('Failed to delete experience')
 
   return experience
+}
+
+export async function getExperienceGroups() {
+  return db.select().from(experienceGroups).orderBy(experienceGroups.createdAt, experienceGroups.id)
+}
+
+export async function createExperienceGroup(data: CreateExperienceGroupInput) {
+  const group = await insertReturning(db, experienceGroups, data)
+  if (!group) throw new QueryError('Failed to create experience group')
+  return group
+}
+
+async function validateExperienceGroup(groupId: string | null | undefined, company: string) {
+  if (!groupId) return
+  const [group] = await db.select().from(experienceGroups).where(eq(experienceGroups.id, groupId))
+  const issue = experienceGroupIssue(groupId, company, group)
+  if (issue === 'missing') throw new NotFoundError('Experience group', groupId)
+  if (issue === 'company') {
+    throw new ValidationError(
+      'The employment group must belong to the same company. Change or remove the group before changing company.',
+      'groupId',
+    )
+  }
 }

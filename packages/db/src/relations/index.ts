@@ -1,5 +1,5 @@
-import { defineRelations } from "drizzle-orm";
-import * as schema from "../schema";
+import { defineRelations } from 'drizzle-orm'
+import * as schema from '../schema'
 
 export const relations = defineRelations(schema, (r) => ({
   projects: {
@@ -24,7 +24,11 @@ export const relations = defineRelations(schema, (r) => ({
       to: r.projects.id,
     }),
   },
+  experienceGroups: {
+    positions: r.many.experiences({ from: r.experienceGroups.id, to: r.experiences.groupId }),
+  },
   experiences: {
+    group: r.one.experienceGroups({ from: r.experiences.groupId, to: r.experienceGroups.id }),
     translations: r.many.experienceTranslations({
       from: r.experiences.id,
       to: r.experienceTranslations.experienceId,
@@ -72,4 +76,4 @@ export const relations = defineRelations(schema, (r) => ({
       to: r.techStackCategories.id,
     }),
   },
-}));
+}))

@@ -1,4 +1,5 @@
 import { ExperienceAchievements } from '@/components/dashboard/experience-achievements'
+import { ExperienceGroupField } from '@/components/dashboard/experience-group-field'
 import type {
   TranslationDraft,
   TranslationFieldDef,
@@ -64,6 +65,7 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'title',
     'description',
     'company',
+    'groupId',
     'location',
     'type',
     'startDate',
@@ -109,7 +111,10 @@ function RouteComponent() {
   const createExperienceMutation = useMutation(
     trpc.experience.create.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.experience.getForDashboard.queryFilter())
+        await Promise.all([
+          queryClient.invalidateQueries(trpc.experience.getForDashboard.queryFilter()),
+          queryClient.invalidateQueries(trpc.experience.getAll.queryFilter()),
+        ])
       },
       onError: (data) => {
         globalErrorToast(data.message)
@@ -124,12 +129,16 @@ function RouteComponent() {
 
   const form = useForm({
     validators: {
-      onSubmit: createExperienceSchema.extend({ achievements: experienceAchievementsSchema }),
+      onSubmit: createExperienceSchema.extend({
+        achievements: experienceAchievementsSchema,
+        groupId: createExperienceSchema.shape.groupId.nonoptional(),
+      }),
     },
     defaultValues: {
       title: '',
       description: '',
       company: '',
+      groupId: null as string | null,
       location: '',
       type: 'contract' as ExperienceType,
       startDate: new Date().toISOString(),
@@ -262,6 +271,22 @@ function RouteComponent() {
                           </Field>
                         )
                       }}
+                    />
+
+                    <form.Subscribe
+                      selector={(state) => state.values.company}
+                      children={(company) => (
+                        <form.Field
+                          name="groupId"
+                          children={(field) => (
+                            <ExperienceGroupField
+                              company={company}
+                              value={field.state.value ?? null}
+                              onChange={field.handleChange}
+                            />
+                          )}
+                        />
+                      )}
                     />
 
                     <div className="grid gap-4 md:grid-cols-2">

@@ -23,6 +23,7 @@
  * regenerate them.
  */
 import dotenv from 'dotenv'
+import { experienceGroupIssue } from './experience-group'
 import { isValid, parseISO } from 'date-fns'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -62,6 +63,7 @@ const IMPORT_ORDER = [
   'projects',
   'projectImages',
   'viewEvents',
+  'experienceGroups',
   'experiences',
   'experienceTranslations',
   'certifications',
@@ -149,6 +151,43 @@ const truncate = process.argv.includes('--truncate')
 console.log(
   `Importing into ${activeDialect} from ${dumpDir}${truncate ? ' (truncate mode)' : ''}\n`,
 )
+
+// Validate the resulting membership before any writes (including --truncate).
+// Merge existing rows for incremental imports, since a group company change in a
+// dump must not invalidate positions already in the target.
+async function rowsAfterImport(key: 'experienceGroups' | 'experiences'): Promise<Array<Row>> {
+  const table = schema[key]
+  const existing = truncate
+    ? []
+    : await exec
+        .select({
+          id: table.id,
+          company: table.company,
+          ...(key === 'experiences' ? { groupId: schema.experiences.groupId } : {}),
+        })
+        .from(table)
+  const rows = new Map(existing.map((row) => [row.id, row]))
+  const file = join(dumpDir, `${key}.json`)
+  if (existsSync(file)) {
+    for (const row of JSON.parse(readFileSync(file, 'utf8')) as Array<Row>) {
+      rows.set(row.id, { ...rows.get(row.id), ...row })
+    }
+  }
+  return [...rows.values()]
+}
+const importedGroups = new Map(
+  (await rowsAfterImport('experienceGroups')).map((row) => [row.id, row]),
+)
+for (const row of await rowsAfterImport('experiences')) {
+  if (!row.groupId) continue
+  const group = importedGroups.get(row.groupId)
+  const issue = experienceGroupIssue(
+    String(row.groupId),
+    String(row.company),
+    group ? { company: String(group.company) } : undefined,
+  )
+  if (issue) throw new Error(`Invalid experience group (${issue}) for experience ${String(row.id)}`)
+}
 
 // Optional truncate, in reverse FK order so children go first.
 if (truncate) {
@@ -243,7 +282,9 @@ for (const key of IMPORT_ORDER) {
     .filter(Boolean)
     .join(', ')
 
-  console.log(`  ${ok ? '✓' : '✗'} ${key}: dump ${ids.size} → target ${targetIds.size}${notes ? ` (${notes})` : ''}`)
+  console.log(
+    `  ${ok ? '✓' : '✗'} ${key}: dump ${ids.size} → target ${targetIds.size}${notes ? ` (${notes})` : ''}`,
+  )
 }
 
 await (db as unknown as { $client?: { end?: () => Promise<void> } }).$client?.end?.()
