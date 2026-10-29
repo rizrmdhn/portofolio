@@ -17,6 +17,7 @@ import { deleteReturning, insertReturning, updateReturning } from './utils/retur
 
 export async function getAllExperiences(locale: Locale = DEFAULT_LOCALE) {
   const results = await db.query.experiences.findMany({
+    where: { status: 'published' },
     with: { translations: { where: { locale } } },
     orderBy: {
       currentlyWorking: 'desc',
