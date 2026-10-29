@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { hasTabError } from '@/lib/has-tab-error'
+import { useTranslations } from '@/i18n/locale-context'
 import { globalErrorToast, globalSuccessToast } from '@/lib/toasts'
 import { trpc } from '@/utils/trpc'
 import type { ExperienceType } from '@portofolio/constants'
@@ -39,7 +40,7 @@ import {
   updateExperienceSchema,
 } from '@portofolio/schema/experience.schema'
 import type { TablerIcon } from '@tabler/icons-react'
-import { IconBriefcase, IconLanguage, IconSettings } from '@tabler/icons-react'
+import { IconBriefcase, IconHistory, IconLanguage, IconSettings } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
@@ -142,6 +143,7 @@ export const Route = createFileRoute('/(core)/dashboard/experience/$experienceId
 
 const TAB_TRIGGERS: Array<{ icon: TablerIcon; title: string; value: string }> = [
   { icon: IconBriefcase, title: 'Role Details', value: 'role-details' },
+  { icon: IconHistory, title: 'Career history', value: 'career-history' },
   { icon: IconSettings, title: 'Settings', value: 'settings' },
   { icon: IconLanguage, title: 'Translations', value: 'translations' },
 ]
@@ -160,6 +162,7 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'achievements',
   ],
   settings: ['status', 'groupId'],
+  'career-history': [],
   translations: [],
 }
 
@@ -169,6 +172,7 @@ function RouteComponent() {
 }
 
 function ExperienceEditor() {
+  const { t } = useTranslations()
   const queryClient = useQueryClient()
   const router = useRouter()
 
@@ -236,16 +240,6 @@ function ExperienceEditor() {
           showcase your work history and skills effectively.
         </p>
       </div>
-      <form.Subscribe
-        selector={(state) => ({ company: state.values.company, groupId: state.values.groupId })}
-        children={({ company, groupId }) => (
-          <ExperienceCareerHistory
-            source={experience}
-            disabled={company !== experience.company || groupId !== (experience.groupId ?? null)}
-            onSaved={(savedGroupId) => form.setFieldValue('groupId', savedGroupId)}
-          />
-        )}
-      />
       <div className="flex flex-1">
         <form
           onSubmit={(e) => {
@@ -256,7 +250,7 @@ function ExperienceEditor() {
           className="flex w-full flex-1 flex-col overflow-hidden"
         >
           <Tabs defaultValue="role-details" className="min-h-0 flex-1 gap-0">
-            <div className="shrink-0 px-4 pt-4 pb-2">
+            <div className="shrink-0 overflow-x-auto px-4 pt-4 pb-2">
               <form.Subscribe
                 selector={(state) => state.fieldMeta}
                 children={(fieldMeta) => (
@@ -269,7 +263,9 @@ function ExperienceEditor() {
                       return (
                         <TabsTrigger key={tab.value} value={tab.value}>
                           <tab.icon />
-                          {tab.title}
+                          {tab.value === 'career-history'
+                            ? t.experiencePosition.history
+                            : tab.title}
                           {hasError && <span className="bg-destructive size-1.5 rounded-full" />}
                         </TabsTrigger>
                       )
@@ -511,6 +507,24 @@ function ExperienceEditor() {
                       }}
                     />
                   </FieldGroup>
+                </TabsContent>
+
+                <TabsContent value="career-history">
+                  <form.Subscribe
+                    selector={(state) => ({
+                      company: state.values.company,
+                      groupId: state.values.groupId,
+                    })}
+                    children={({ company, groupId }) => (
+                      <ExperienceCareerHistory
+                        source={experience}
+                        disabled={
+                          company !== experience.company || groupId !== (experience.groupId ?? null)
+                        }
+                        onSaved={(savedGroupId) => form.setFieldValue('groupId', savedGroupId)}
+                      />
+                    )}
+                  />
                 </TabsContent>
 
                 {/* Settings Content */}
