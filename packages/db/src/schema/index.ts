@@ -23,6 +23,7 @@ import {
   boolCol,
   createTable,
   dateCol,
+  emptyStringArray,
   enumCol,
   idx,
   indexableText,
@@ -191,6 +192,7 @@ export const experiences = createTable(
     endDate: dateCol('end_date'),
     currentlyWorking: boolCol('currently_working').default(false).notNull(),
     skills: stringArray('skills').notNull(),
+    achievements: emptyStringArray('achievements').notNull(),
 
     // ========== Settings ==========
     status: enumCol(experienceStatusEnum, 'status').notNull().default('draft'),
@@ -451,6 +453,8 @@ export const experienceTranslations = createTable(
     locale: str('locale', 5).notNull(),
     title: str('title', 256).notNull(),
     description: longText('description').notNull(),
+    // Null preserves the base list for translations authored before achievements.
+    achievements: stringArray('achievements'),
     createdAt: tsTz('created_at')
       .$default(() => sql`CURRENT_TIMESTAMP`)
       .notNull(),

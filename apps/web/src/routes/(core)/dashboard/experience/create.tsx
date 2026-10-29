@@ -1,3 +1,4 @@
+import { ExperienceAchievements } from '@/components/dashboard/experience-achievements'
 import type {
   TranslationDraft,
   TranslationFieldDef,
@@ -37,7 +38,10 @@ import {
   EXPERIENCE_TYPE_LABELS,
 } from '@portofolio/constants'
 import type { Locale } from '@portofolio/i18n'
-import { createExperienceSchema } from '@portofolio/schema/experience.schema'
+import {
+  createExperienceSchema,
+  experienceAchievementsSchema,
+} from '@portofolio/schema/experience.schema'
 import type { TablerIcon } from '@tabler/icons-react'
 import { IconBriefcase, IconLanguage, IconSettings } from '@tabler/icons-react'
 import { useForm } from '@tanstack/react-form'
@@ -66,12 +70,19 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'endDate',
     'currentlyWorking',
     'skills',
+    'achievements',
   ],
   settings: ['status'],
   translations: [],
 }
 
 const EXPERIENCE_TRANSLATION_FIELDS: ReadonlyArray<TranslationFieldDef> = [
+  {
+    name: 'achievements',
+    label: 'Achievements (one per line; leave blank to use English)',
+    type: 'textarea',
+    optional: true,
+  },
   {
     name: 'title',
     label: 'Role / Title',
@@ -112,7 +123,9 @@ function RouteComponent() {
     setTranslations((prev) => ({ ...prev, [locale]: { ...prev[locale], [name]: value } }))
 
   const form = useForm({
-    validators: { onSubmit: createExperienceSchema },
+    validators: {
+      onSubmit: createExperienceSchema.extend({ achievements: experienceAchievementsSchema }),
+    },
     defaultValues: {
       title: '',
       description: '',
@@ -123,6 +136,7 @@ function RouteComponent() {
       endDate: undefined as string | undefined,
       currentlyWorking: false,
       skills: [] as Array<string>,
+      achievements: [] as Array<string>,
       status: 'draft' as ExperienceStatusType,
       order: 0,
     },
@@ -131,7 +145,11 @@ function RouteComponent() {
 
       // Persist any fully-filled translations against the new experience id. The
       // base values seed `noTranslate` fields (e.g. the title) so they carry over.
-      const source = { title: value.title, description: value.description }
+      const source = {
+        title: value.title,
+        description: value.description,
+        achievements: value.achievements.join('\n'),
+      }
       for (const locale of completeDraftLocales(
         translations,
         EXPERIENCE_TRANSLATION_FIELDS,
@@ -143,6 +161,12 @@ function RouteComponent() {
           locale,
           title: tr.title ?? '',
           description: tr.description ?? '',
+          achievements: tr.achievements?.trim()
+            ? tr.achievements
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean)
+            : null,
         })
       }
 
@@ -387,6 +411,25 @@ function RouteComponent() {
                     />
 
                     <form.Field
+                      name="achievements"
+                      children={(field) => {
+                        const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel>Achievements</FieldLabel>
+                            <ExperienceAchievements
+                              value={field.state.value}
+                              onChange={field.handleChange}
+                              onBlur={field.handleBlur}
+                              invalid={isInvalid}
+                            />
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                          </Field>
+                        )
+                      }}
+                    />
+
+                    <form.Field
                       name="skills"
                       children={(field) => {
                         const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid
@@ -446,12 +489,17 @@ function RouteComponent() {
                     selector={(s) => ({
                       title: s.values.title,
                       description: s.values.description,
+                      achievements: s.values.achievements,
                     })}
                     children={(v) => (
                       <TranslationDraftEditor
                         fields={EXPERIENCE_TRANSLATION_FIELDS}
                         value={translations}
-                        sourceValues={{ title: v.title, description: v.description }}
+                        sourceValues={{
+                          title: v.title,
+                          description: v.description,
+                          achievements: v.achievements.join('\n'),
+                        }}
                         onChange={setTranslationField}
                       />
                     )}

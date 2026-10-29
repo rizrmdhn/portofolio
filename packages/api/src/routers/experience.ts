@@ -14,6 +14,7 @@ import {
 } from "@portofolio/queries/translation.queries";
 import {
   createExperienceSchema,
+  experienceAchievementsSchema,
   updateExperienceSchema,
 } from "@portofolio/schema/experience.schema";
 import { localeInputSchema, translationLocaleSchema } from "@portofolio/schema/locale.schema";
@@ -105,6 +106,7 @@ export const experienceRouter = createTRPCRouter({
         locale: translationLocaleSchema,
         title: z.string().min(1),
         description: z.string().min(1),
+        achievements: experienceAchievementsSchema.nullable().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

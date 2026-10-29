@@ -68,6 +68,7 @@ export interface ExperienceTranslationInput {
   locale: Locale
   title: string
   description: string
+  achievements?: Array<string> | null | undefined
 }
 
 export async function getExperienceTranslations(experienceId: string) {
