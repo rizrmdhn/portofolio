@@ -1,1294 +1,855 @@
 {
-  "version": "8",
+  "type": "diff",
+  "version": "9",
   "dialect": "postgres",
   "id": "b4db6a0a-7456-4dfc-9902-84bb4e1a7542",
   "prevIds": [
     "abc3d8f3-9078-4165-b0e7-5ca468fdd860"
   ],
-  "ddl": [
+  "footprints": [
     {
-      "values": [
-        "internship",
-        "full-time",
-        "freelance",
-        "part-time",
-        "contract",
-        "temporary",
-        "volunteer"
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_application_settings"
       ],
-      "name": "experience_type",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "application_settings",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "certifications",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "experiences",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "project_views",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "projects",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "refresh_tokens",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "tech_stack",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "users",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_settings"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "key",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_settings"
-    },
-    {
-      "type": "jsonb",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "data",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_settings"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_settings"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "application_settings"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "issuer",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "certificate_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "certificate_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "date",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "issue_date",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "date",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "expiry_date",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "certifications"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "title",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "company",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "experience_type",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "date",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "start_date",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "date",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "end_date",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "boolean",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "false",
-      "generated": null,
-      "identity": null,
-      "name": "currently_working",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "experiences"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "project_views"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "project_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "project_views"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "0",
-      "generated": null,
-      "identity": null,
-      "name": "count",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "project_views"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 1,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "tech",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "github_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "live_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "playstore_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "appstore_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "image_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "projects"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "token",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "device_info",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "os",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "varchar(100)",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "version",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "varchar(45)",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "ip_address",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_agent",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "last_used_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "boolean",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "false",
-      "generated": null,
-      "identity": null,
-      "name": "revoked",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "revoked_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "refresh_tokens"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tech_stack"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tech_stack"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 1,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "list",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tech_stack"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tech_stack"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "tech_stack"
-    },
-    {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "email",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "varchar(256)",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "password",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "users"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_application_settings",
+        "n|tbl|public.portofolio-webpage-v5_application_settings",
+        "n|rel|public.portofolio-webpage-v5_application_settings",
+        "n|type|public.portofolio-webpage-v5_application_settings",
+        "s|tbl|public.application_settings",
+        "n|tbl|public.application_settings",
+        "n|rel|public.application_settings",
+        "n|type|public.application_settings"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "application_settings_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "application_settings"
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "key",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_certifications"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "application_settings_key_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "application_settings"
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_certifications",
+        "n|tbl|public.portofolio-webpage-v5_certifications",
+        "n|rel|public.portofolio-webpage-v5_certifications",
+        "n|type|public.portofolio-webpage-v5_certifications",
+        "s|tbl|public.certifications",
+        "n|tbl|public.certifications",
+        "n|rel|public.certifications",
+        "n|type|public.certifications"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_experiences"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "certifications_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "certifications"
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_experiences",
+        "n|tbl|public.portofolio-webpage-v5_experiences",
+        "n|rel|public.portofolio-webpage-v5_experiences",
+        "n|type|public.portofolio-webpage-v5_experiences",
+        "s|tbl|public.experiences",
+        "n|tbl|public.experiences",
+        "n|rel|public.experiences",
+        "n|type|public.experiences"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_project_views"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "experiences_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "experiences"
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_project_views",
+        "n|tbl|public.portofolio-webpage-v5_project_views",
+        "n|rel|public.portofolio-webpage-v5_project_views",
+        "n|type|public.portofolio-webpage-v5_project_views",
+        "s|tbl|public.project_views",
+        "n|tbl|public.project_views",
+        "n|rel|public.project_views",
+        "n|type|public.project_views"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_projects"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "project_views_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "project_views"
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_projects",
+        "n|tbl|public.portofolio-webpage-v5_projects",
+        "n|rel|public.portofolio-webpage-v5_projects",
+        "n|type|public.portofolio-webpage-v5_projects",
+        "s|tbl|public.projects",
+        "n|tbl|public.projects",
+        "n|rel|public.projects",
+        "n|type|public.projects"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_refresh_tokens"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "projects_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "projects"
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_refresh_tokens",
+        "n|tbl|public.portofolio-webpage-v5_refresh_tokens",
+        "n|rel|public.portofolio-webpage-v5_refresh_tokens",
+        "n|type|public.portofolio-webpage-v5_refresh_tokens",
+        "s|tbl|public.refresh_tokens",
+        "n|tbl|public.refresh_tokens",
+        "n|rel|public.refresh_tokens",
+        "n|type|public.refresh_tokens"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "user_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_tech_stack"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "refresh_token_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "refresh_tokens"
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_tech_stack",
+        "n|tbl|public.portofolio-webpage-v5_tech_stack",
+        "n|rel|public.portofolio-webpage-v5_tech_stack",
+        "n|type|public.portofolio-webpage-v5_tech_stack",
+        "s|tbl|public.tech_stack",
+        "n|tbl|public.tech_stack",
+        "n|rel|public.tech_stack",
+        "n|type|public.tech_stack"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "token",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "portofolio-webpage-v5_users"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "refresh_token_token_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "refresh_tokens"
+      "writes": [
+        "s|tbl|public.portofolio-webpage-v5_users",
+        "n|tbl|public.portofolio-webpage-v5_users",
+        "n|rel|public.portofolio-webpage-v5_users",
+        "n|type|public.portofolio-webpage-v5_users",
+        "s|tbl|public.users",
+        "n|tbl|public.users",
+        "n|rel|public.users",
+        "n|type|public.users"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "expires_at",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "application_settings",
+        "createdAt"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "refresh_token_expires_at_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "refresh_tokens"
+      "writes": [
+        "s|col|public.application_settings.createdAt",
+        "n|col|public.application_settings.createdAt",
+        "s|col|public.application_settings.created_at",
+        "n|col|public.application_settings.created_at"
+      ],
+      "reads": [
+        "n|tbl|public.application_settings",
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "application_settings",
+        "updatedAt"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "tech_stack_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "tech_stack"
+      "writes": [
+        "s|col|public.application_settings.updatedAt",
+        "n|col|public.application_settings.updatedAt",
+        "s|col|public.application_settings.updated_at",
+        "n|col|public.application_settings.updated_at"
+      ],
+      "reads": [
+        "n|tbl|public.application_settings",
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "certifications",
+        "issueDate"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "users_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "users"
+      "writes": [
+        "s|col|public.certifications.issueDate",
+        "n|col|public.certifications.issueDate",
+        "s|col|public.certifications.issue_date",
+        "n|col|public.certifications.issue_date"
+      ],
+      "reads": [
+        "n|tbl|public.certifications",
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "email",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "certifications",
+        "expiryDate"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "users_email_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "users"
+      "writes": [
+        "s|col|public.certifications.expiryDate",
+        "n|col|public.certifications.expiryDate",
+        "s|col|public.certifications.expiry_date",
+        "n|col|public.certifications.expiry_date"
+      ],
+      "reads": [
+        "n|tbl|public.certifications",
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": false,
-      "columns": [
-        "project_id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "certifications",
+        "createdAt"
       ],
-      "schemaTo": "public",
-      "tableTo": "projects",
-      "columnsTo": [
-        "id"
+      "writes": [
+        "s|col|public.certifications.createdAt",
+        "n|col|public.certifications.createdAt",
+        "s|col|public.certifications.created_at",
+        "n|col|public.certifications.created_at"
       ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "portofolio-webpage-v5_project_views_OKHu9x47q1e2_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "project_views"
+      "reads": [
+        "n|tbl|public.certifications",
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "certifications",
+        "updatedAt"
       ],
-      "schemaTo": "public",
-      "tableTo": "users",
-      "columnsTo": [
-        "id"
+      "writes": [
+        "s|col|public.certifications.updatedAt",
+        "n|col|public.certifications.updatedAt",
+        "s|col|public.certifications.updated_at",
+        "n|col|public.certifications.updated_at"
       ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "portofolio-webpage-v5_refresh_tokens_F5WAf0PRZdG7_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "refresh_tokens"
+      "reads": [
+        "n|tbl|public.certifications",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "experiences",
+        "startDate"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_application_settings_pkey",
-      "schema": "public",
-      "table": "application_settings",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.experiences.startDate",
+        "n|col|public.experiences.startDate",
+        "s|col|public.experiences.start_date",
+        "n|col|public.experiences.start_date"
+      ],
+      "reads": [
+        "n|tbl|public.experiences",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "experiences",
+        "endDate"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_certifications_pkey",
-      "schema": "public",
-      "table": "certifications",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.experiences.endDate",
+        "n|col|public.experiences.endDate",
+        "s|col|public.experiences.end_date",
+        "n|col|public.experiences.end_date"
+      ],
+      "reads": [
+        "n|tbl|public.experiences",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "experiences",
+        "currentlyWorking"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_experiences_pkey",
-      "schema": "public",
-      "table": "experiences",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.experiences.currentlyWorking",
+        "n|col|public.experiences.currentlyWorking",
+        "s|col|public.experiences.currently_working",
+        "n|col|public.experiences.currently_working"
+      ],
+      "reads": [
+        "n|tbl|public.experiences",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "experiences",
+        "createdAt"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_project_views_pkey",
-      "schema": "public",
-      "table": "project_views",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.experiences.createdAt",
+        "n|col|public.experiences.createdAt",
+        "s|col|public.experiences.created_at",
+        "n|col|public.experiences.created_at"
+      ],
+      "reads": [
+        "n|tbl|public.experiences",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "experiences",
+        "updatedAt"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_projects_pkey",
-      "schema": "public",
-      "table": "projects",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.experiences.updatedAt",
+        "n|col|public.experiences.updatedAt",
+        "s|col|public.experiences.updated_at",
+        "n|col|public.experiences.updated_at"
+      ],
+      "reads": [
+        "n|tbl|public.experiences",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "project_views",
+        "projectId"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_refresh_tokens_pkey",
-      "schema": "public",
-      "table": "refresh_tokens",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.project_views.projectId",
+        "n|col|public.project_views.projectId",
+        "s|col|public.project_views.project_id",
+        "n|col|public.project_views.project_id"
+      ],
+      "reads": [
+        "n|tbl|public.project_views",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "projects",
+        "createdAt"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_tech_stack_pkey",
-      "schema": "public",
-      "table": "tech_stack",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.projects.createdAt",
+        "n|col|public.projects.createdAt",
+        "s|col|public.projects.created_at",
+        "n|col|public.projects.created_at"
+      ],
+      "reads": [
+        "n|tbl|public.projects",
+        "n|sch|public"
+      ]
     },
     {
-      "columns": [
-        "id"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "projects",
+        "updatedAt"
       ],
-      "nameExplicit": false,
-      "name": "portofolio-webpage-v5_users_pkey",
-      "schema": "public",
-      "table": "users",
-      "entityType": "pks"
+      "writes": [
+        "s|col|public.projects.updatedAt",
+        "n|col|public.projects.updatedAt",
+        "s|col|public.projects.updated_at",
+        "n|col|public.projects.updated_at"
+      ],
+      "reads": [
+        "n|tbl|public.projects",
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": false,
-      "columns": [
-        "key"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "tech_stack",
+        "createdAt"
       ],
-      "nullsNotDistinct": false,
-      "name": "portofolio-webpage-v5_application_settings_key_key",
-      "schema": "public",
-      "table": "application_settings",
-      "entityType": "uniques"
+      "writes": [
+        "s|col|public.tech_stack.createdAt",
+        "n|col|public.tech_stack.createdAt",
+        "s|col|public.tech_stack.created_at",
+        "n|col|public.tech_stack.created_at"
+      ],
+      "reads": [
+        "n|tbl|public.tech_stack",
+        "n|sch|public"
+      ]
     },
     {
-      "nameExplicit": false,
-      "columns": [
-        "token"
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "tech_stack",
+        "updatedAt"
       ],
-      "nullsNotDistinct": false,
-      "name": "portofolio-webpage-v5_refresh_tokens_token_key",
-      "schema": "public",
-      "table": "refresh_tokens",
-      "entityType": "uniques"
+      "writes": [
+        "s|col|public.tech_stack.updatedAt",
+        "n|col|public.tech_stack.updatedAt",
+        "s|col|public.tech_stack.updated_at",
+        "n|col|public.tech_stack.updated_at"
+      ],
+      "reads": [
+        "n|tbl|public.tech_stack",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "users",
+        "createdAt"
+      ],
+      "writes": [
+        "s|col|public.users.createdAt",
+        "n|col|public.users.createdAt",
+        "s|col|public.users.created_at",
+        "n|col|public.users.created_at"
+      ],
+      "reads": [
+        "n|tbl|public.users",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "users",
+        "updatedAt"
+      ],
+      "writes": [
+        "s|col|public.users.updatedAt",
+        "n|col|public.users.updatedAt",
+        "s|col|public.users.updated_at",
+        "n|col|public.users.updated_at"
+      ],
+      "reads": [
+        "n|tbl|public.users",
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "application_settings",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.application_settings.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.application_settings",
+        "n|sch|public",
+        "n|col|public.application_settings.created_at"
+      ],
+      "sqlHash": "f0f6241222fbfab4"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "certifications",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.certifications.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.certifications",
+        "n|sch|public",
+        "n|col|public.certifications.created_at"
+      ],
+      "sqlHash": "9dc746def9592684"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "experiences",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.experiences.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.experiences",
+        "n|sch|public",
+        "n|col|public.experiences.created_at"
+      ],
+      "sqlHash": "fcf65747b721b765"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "projects",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.projects.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.projects",
+        "n|sch|public",
+        "n|col|public.projects.created_at"
+      ],
+      "sqlHash": "623d36490d7a4a73"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "tech_stack",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.tech_stack.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.tech_stack",
+        "n|sch|public",
+        "n|col|public.tech_stack.created_at"
+      ],
+      "sqlHash": "00c58ed00d81c9a6"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "users",
+        "created_at"
+      ],
+      "writes": [
+        "s|colprop|public.users.created_at.default"
+      ],
+      "reads": [
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.users.created_at"
+      ],
+      "sqlHash": "36441c6308000cc8"
     }
   ],
-  "renames": [
-    "public.portofolio-webpage-v5_application_settings->public.application_settings",
-    "public.portofolio-webpage-v5_certifications->public.certifications",
-    "public.portofolio-webpage-v5_experiences->public.experiences",
-    "public.portofolio-webpage-v5_project_views->public.project_views",
-    "public.portofolio-webpage-v5_projects->public.projects",
-    "public.portofolio-webpage-v5_refresh_tokens->public.refresh_tokens",
-    "public.portofolio-webpage-v5_tech_stack->public.tech_stack",
-    "public.portofolio-webpage-v5_users->public.users",
-    "public.application_settings.createdAt->public.application_settings.created_at",
-    "public.application_settings.updatedAt->public.application_settings.updated_at",
-    "public.certifications.issueDate->public.certifications.issue_date",
-    "public.certifications.expiryDate->public.certifications.expiry_date",
-    "public.certifications.createdAt->public.certifications.created_at",
-    "public.certifications.updatedAt->public.certifications.updated_at",
-    "public.experiences.startDate->public.experiences.start_date",
-    "public.experiences.endDate->public.experiences.end_date",
-    "public.experiences.currentlyWorking->public.experiences.currently_working",
-    "public.experiences.createdAt->public.experiences.created_at",
-    "public.experiences.updatedAt->public.experiences.updated_at",
-    "public.project_views.projectId->public.project_views.project_id",
-    "public.projects.createdAt->public.projects.created_at",
-    "public.projects.updatedAt->public.projects.updated_at",
-    "public.tech_stack.createdAt->public.tech_stack.created_at",
-    "public.tech_stack.updatedAt->public.tech_stack.updated_at",
-    "public.users.createdAt->public.users.created_at",
-    "public.users.updatedAt->public.users.updated_at"
+  "deltas": [
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_application_settings\"]",
+      "set": {
+        "name": "application_settings"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_certifications\"]",
+      "set": {
+        "name": "certifications"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_experiences\"]",
+      "set": {
+        "name": "experiences"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_project_views\"]",
+      "set": {
+        "name": "project_views"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_projects\"]",
+      "set": {
+        "name": "projects"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_refresh_tokens\"]",
+      "set": {
+        "name": "refresh_tokens"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_tech_stack\"]",
+      "set": {
+        "name": "tech_stack"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "tables\u0000[\"public\",\"portofolio-webpage-v5_users\"]",
+      "set": {
+        "name": "users"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"application_settings\",\"createdAt\"]",
+      "set": {
+        "name": "created_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"application_settings\",\"updatedAt\"]",
+      "set": {
+        "name": "updated_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"certifications\",\"issueDate\"]",
+      "set": {
+        "name": "issue_date"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"certifications\",\"expiryDate\"]",
+      "set": {
+        "name": "expiry_date"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"certifications\",\"createdAt\"]",
+      "set": {
+        "name": "created_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"certifications\",\"updatedAt\"]",
+      "set": {
+        "name": "updated_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"experiences\",\"startDate\"]",
+      "set": {
+        "name": "start_date"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"experiences\",\"endDate\"]",
+      "set": {
+        "name": "end_date"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"experiences\",\"currentlyWorking\"]",
+      "set": {
+        "name": "currently_working"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"experiences\",\"createdAt\"]",
+      "set": {
+        "name": "created_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"experiences\",\"updatedAt\"]",
+      "set": {
+        "name": "updated_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"project_views\",\"projectId\"]",
+      "set": {
+        "name": "project_id"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"projects\",\"createdAt\"]",
+      "set": {
+        "name": "created_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"projects\",\"updatedAt\"]",
+      "set": {
+        "name": "updated_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"tech_stack\",\"createdAt\"]",
+      "set": {
+        "name": "created_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"tech_stack\",\"updatedAt\"]",
+      "set": {
+        "name": "updated_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"users\",\"createdAt\"]",
+      "set": {
+        "name": "created_at"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"users\",\"updatedAt\"]",
+      "set": {
+        "name": "updated_at"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"application_settings\",\"created_at\"]",
+      "set": {
+        "default": null
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"certifications\",\"created_at\"]",
+      "set": {
+        "default": null
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"experiences\",\"created_at\"]",
+      "set": {
+        "default": null
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"projects\",\"created_at\"]",
+      "set": {
+        "default": null
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"tech_stack\",\"created_at\"]",
+      "set": {
+        "default": null
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"users\",\"created_at\"]",
+      "set": {
+        "default": null
+      }
+    }
   ]
 }

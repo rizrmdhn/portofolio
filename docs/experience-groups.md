@@ -34,6 +34,8 @@ Additive migrations and generated snapshots are included for both dialects:
 
 No migrations were applied. Generation discovered existing referral enum drift (instagram in schema but absent from the previous snapshots); that unrelated change was excluded from both migration SQL and snapshots.
 
+Drizzle ORM and Kit now use `1.0.0-rc.5`. PostgreSQL snapshots were upgraded offline with `drizzle-kit up` to version 9; MySQL snapshots remain version 6. This converts snapshot metadata only: existing migration SQL, migration IDs, and parent chains are unchanged. Both migration histories pass the RC.5 `drizzle-kit check` command. The existing referral enum drift is still outside this feature's scope.
+
 EXP-05 should group only records sharing a non-null groupId; all null rows are independent, including matching companies. Use each position's localized text and dates and calculate any group display bounds in the timeline consumer. Labels are dashboard metadata, not public headings. The group relationship is available to queries as `group`, and its inverse is `positions`.
 
 Integration with EXP-03 preserves both achievements and grouping in the schema and forms. Each dialect's group migration follows its achievements migration; the group snapshots include both achievement columns and reference the achievements snapshot as their parent. The Postgres group directory was moved after the achievements migration before deployment to keep timestamp order consistent with that chain. Do not apply migrations to a live database as part of integration verification.
