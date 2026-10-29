@@ -11,6 +11,7 @@
  */
 export const en = {
   experiencePosition: {
+    editing: 'Editing',
     history: 'Career history',
     context:
       'Add a new role at the saved company. Your current edits and existing roles stay intact.',
