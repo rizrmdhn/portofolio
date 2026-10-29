@@ -41,6 +41,19 @@ export const en = {
     volunteer: 'Volunteer',
   },
 
+  experienceGroup: {
+    label: 'Employment group (optional)',
+    help: 'Group positions only when they belong to one continuous employment stint. For a return to the same company, create a separate group. Choose No group to detach without deleting the position.',
+    none: 'No group',
+    newLabel: 'New group label',
+    placeholder: 'e.g. First stint - 2020-2022',
+    create: 'Create and select group',
+    mismatch:
+      'This group belongs to a different company. Change or remove the group before saving.',
+    loadError: 'Unable to load employment groups. Please try again.',
+    retry: 'Try again',
+  },
+
   experienceCard: {
     present: 'Present',
     yearShort: 'yr',

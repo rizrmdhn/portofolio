@@ -36,6 +36,18 @@ export const id: Messages = {
     volunteer: 'Sukarelawan',
   },
 
+  experienceGroup: {
+    label: 'Grup masa kerja (opsional)',
+    help: 'Kelompokkan posisi hanya jika berada dalam satu masa kerja berkelanjutan. Jika kembali ke perusahaan yang sama, buat grup terpisah. Pilih Tanpa grup untuk melepas posisi tanpa menghapusnya.',
+    none: 'Tanpa grup',
+    newLabel: 'Label grup baru',
+    placeholder: 'mis. Masa kerja pertama - 2020-2022',
+    create: 'Buat dan pilih grup',
+    mismatch: 'Grup ini milik perusahaan lain. Ganti atau lepaskan grup sebelum menyimpan.',
+    loadError: 'Grup masa kerja tidak dapat dimuat. Silakan coba lagi.',
+    retry: 'Coba lagi',
+  },
+
   experienceCard: {
     present: 'Sekarang',
     yearShort: 'thn',

@@ -176,10 +176,21 @@ export const projectImages = createTable(
   ],
 )
 
+// Explicit continuous employment stints; company names alone never imply membership.
+export const experienceGroups = createTable('experience_groups', {
+  id: uuidPk(),
+  company: str('company', 256).notNull(),
+  label: str('label', 256).notNull(),
+  createdAt: tsTz('created_at')
+    .$default(() => sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+})
+
 export const experiences = createTable(
   'experiences',
   {
     id: uuidPk(),
+    groupId: uuidRef('group_id').references(() => experienceGroups.id, { onDelete: 'set null' }),
 
     // ========== Details ==========
     title: str('title', 256).notNull(),
@@ -202,7 +213,7 @@ export const experiences = createTable(
       .notNull(),
     updatedAt: tsTz('updated_at').$onUpdate(() => new Date().toISOString()),
   },
-  (table) => [idx('experiences_id_idx', table.id)],
+  (table) => [idx('experiences_id_idx', table.id), idx('experiences_group_id_idx', table.groupId)],
 )
 
 export const certifications = createTable(

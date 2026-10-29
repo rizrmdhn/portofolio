@@ -1,3 +1,4 @@
+import { ExperienceGroupField } from '@/components/dashboard/experience-group-field'
 import { TranslationEditor } from '@/components/dashboard/translation-editor'
 import type { TranslationFieldDef } from '@/components/dashboard/translation-editor'
 import { Button } from '@/components/ui/button'
@@ -61,9 +62,7 @@ function ExperienceTranslationsTab({
   sourceValues: Record<string, string>
 }) {
   const queryClient = useQueryClient()
-  const translationsQuery = useQuery(
-    trpc.experience.getTranslations.queryOptions({ experienceId }),
-  )
+  const translationsQuery = useQuery(trpc.experience.getTranslations.queryOptions({ experienceId }))
 
   const invalidate = () =>
     queryClient.invalidateQueries(trpc.experience.getTranslations.queryFilter({ experienceId }))
@@ -131,6 +130,7 @@ const TAB_FIELDS: Record<string, Array<string>> = {
     'title',
     'description',
     'company',
+    'groupId',
     'location',
     'type',
     'startDate',
@@ -154,7 +154,11 @@ function RouteComponent() {
   const editExperienceMutation = useMutation(
     trpc.experience.update.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.experience.getForDashboard.queryFilter())
+        await Promise.all([
+          queryClient.invalidateQueries(trpc.experience.getForDashboard.queryFilter()),
+          queryClient.invalidateQueries(trpc.experience.getById.queryFilter({ id: experienceId })),
+          queryClient.invalidateQueries(trpc.experience.getAll.queryFilter()),
+        ])
 
         globalSuccessToast('Experience updated successfully!')
         router.history.back()
@@ -166,12 +170,17 @@ function RouteComponent() {
   )
 
   const form = useForm({
-    validators: { onSubmit: updateExperienceSchema },
+    validators: {
+      onSubmit: updateExperienceSchema.extend({
+        groupId: updateExperienceSchema.shape.groupId.nonoptional(),
+      }),
+    },
     defaultValues: {
       id: experience.id,
       title: experience.title,
       description: experience.description,
       company: experience.company,
+      groupId: experience.groupId ?? null,
       location: experience.location,
       type: experience.type,
       startDate: new Date(experience.startDate).toISOString(),
@@ -273,6 +282,22 @@ function RouteComponent() {
                           </Field>
                         )
                       }}
+                    />
+
+                    <form.Subscribe
+                      selector={(state) => state.values.company}
+                      children={(company) => (
+                        <form.Field
+                          name="groupId"
+                          children={(field) => (
+                            <ExperienceGroupField
+                              company={company}
+                              value={field.state.value ?? null}
+                              onChange={field.handleChange}
+                            />
+                          )}
+                        />
+                      )}
                     />
 
                     <div className="grid gap-4 md:grid-cols-2">

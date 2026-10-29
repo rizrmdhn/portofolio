@@ -4,6 +4,7 @@ import { experiences } from '@portofolio/db/schema/index'
 import z from 'zod'
 
 export const createExperienceSchema = createInsertSchema(experiences, {
+  groupId: z.uuid().nullable().optional(),
   title: z.string().max(256),
   description: z.string().max(5000),
   company: z.string().max(256),
@@ -23,3 +24,10 @@ export const updateExperienceSchema = createExperienceSchema.extend({
 
 export type CreateExperienceInput = z.infer<typeof createExperienceSchema>
 export type UpdateExperienceInput = z.infer<typeof updateExperienceSchema>
+
+// The company identity of a group is immutable. Create another group for a return stint.
+export const createExperienceGroupSchema = z.object({
+  company: z.string().trim().min(1).max(256),
+  label: z.string().trim().min(1).max(256),
+})
+export type CreateExperienceGroupInput = z.infer<typeof createExperienceGroupSchema>
